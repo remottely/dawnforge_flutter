@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../game/sfx.dart';
 import '../player/player.dart';
 import '../world/godot_camera.dart';

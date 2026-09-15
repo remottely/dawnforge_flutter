@@ -4,7 +4,7 @@
 import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/world/chunk_mesher.dart';
 import 'package:cubeworld_poc/src/world/terrain_generator.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';

@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../world/voxel_world.dart';
 
 /// One row of a loot table: [chance] to appear at all, then [min]..[max] of it.

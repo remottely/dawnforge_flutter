@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 
 /// The block table. INDEX IS THE SAVE CONTRACT: a chunk stores bytes and a save
 /// file stores those bytes, so entries are appended, never reordered or removed.

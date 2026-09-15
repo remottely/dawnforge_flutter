@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/species.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';
 import '../game/game_state.dart';

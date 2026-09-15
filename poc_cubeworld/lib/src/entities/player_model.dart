@@ -4,7 +4,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
 import '../core/items.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import 'voxel_mesh_builder.dart';
 
 /// A pivot with Euler angles applied every frame (Godot's Node3D rotation).

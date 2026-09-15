@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_scene/noise.dart';
 
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 
 /// Pure (seed, position) terrain: biomes from temperature/humidity/continental
 /// noise, a height field with hills and ridged mountains, 3D caves, ores by

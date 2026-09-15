@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../game/game.dart';
 import '../world/voxel_world.dart';
 import 'voxel_body.dart';

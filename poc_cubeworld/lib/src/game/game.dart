@@ -10,7 +10,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import '../core/items.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../core/species.dart';
 import '../entities/boat.dart';
 import '../entities/item_drop.dart';

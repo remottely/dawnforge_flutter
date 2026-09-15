@@ -5,7 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import '../core/items.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 
 /// Builds a MeshGeometry from a small voxel map {IVec3: colour} at a given
 /// scale. Used for creatures, the player, held items and drops (Cube World

@@ -1,5 +1,5 @@
 import '../core/blocks.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../world/voxel_world.dart';
 import 'sfx.dart';
 

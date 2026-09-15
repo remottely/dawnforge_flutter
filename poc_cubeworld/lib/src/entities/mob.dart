@@ -4,7 +4,7 @@ import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../core/species.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';

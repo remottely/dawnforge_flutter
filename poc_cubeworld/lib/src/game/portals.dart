@@ -1,7 +1,7 @@
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../world/voxel_world.dart';
 
 /// Stage 29: the obsidian portal and the arrival spot, pure over a

@@ -6,7 +6,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
-import '../core/ivec3.dart';
+import 'package:voxel_core/voxel_core.dart';
 import '../game/circuits.dart';
 import 'chunk_mesher.dart';
 import 'chunk_worker.dart';

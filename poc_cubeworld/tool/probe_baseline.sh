@@ -32,7 +32,9 @@ run() {
 }
 
 # Lines that move between runs: clocks (ms, seconds), frame rates, the temp screenshot path.
-stable() { grep -vE '[0-9] ?ms|[0-9] s\b|fps|screenshot saved' "$1"; }
+# The stage 32 crit count comes from the game's unseeded Random (game.dart `random`), so only
+# its number is masked; the line and its 10-40 range stay compared.
+stable() { grep -vE '[0-9] ?ms|[0-9] s\b|fps|screenshot saved' "$1" | sed -E 's/crits=[0-9]+/crits=N/'; }
 
 run stage31 --stage31
 run stage32 --stage32
