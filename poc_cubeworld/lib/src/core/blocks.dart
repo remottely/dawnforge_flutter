@@ -377,25 +377,41 @@ class Blocks {
 
   // --- tables handed to the mesher isolate ------------------------------------
 
-  static Float32List palette() {
-    final out = Float32List(defs.length * 4);
-    for (var i = 0; i < defs.length; i++) {
-      out[i * 4] = defs[i].r;
-      out[i * 4 + 1] = defs[i].g;
-      out[i * 4 + 2] = defs[i].b;
-      out[i * 4 + 3] = defs[i].a;
-    }
-    return out;
+  /// The liquid kinds, in the order voxel_core indexes them. A source and its
+  /// `_flow` form share a kind.
+  static const List<String> liquidKinds = ['water', 'lava'];
+
+  /// The engine's view of this table (VP1.4): shape, solidity, light, colour
+  /// and liquid kind per id. Everything else stays in [BlockDef].
+  static final VoxelBlockTable table = VoxelBlockTable([
+    for (var i = 0; i < defs.length; i++)
+      VoxelBlockDef(
+        shape: defs[i].shape,
+        solid: defs[i].solid,
+        opaque: defs[i].opaque,
+        r: defs[i].r,
+        g: defs[i].g,
+        b: defs[i].b,
+        a: defs[i].a,
+        emission: defs[i].light,
+        liquidKind: isLiquid(i) ? _liquidKindIndex(liquidKind(i)) : VoxelBlockDef.noLiquid,
+        liquidSource: isLiquidSource(i),
+      ),
+  ]);
+
+  static int _liquidKindIndex(String kind) {
+    final k = liquidKinds.indexOf(kind);
+    if (k < 0) throw StateError('liquid kind "$kind" is not in Blocks.liquidKinds');
+    return k;
   }
 
-  static Uint8List shapes() =>
-      Uint8List.fromList([for (final d in defs) d.shape.index]);
+  static Float32List palette() => table.palette;
 
-  static Uint8List opaqueTable() =>
-      Uint8List.fromList([for (final d in defs) d.opaque ? 1 : 0]);
+  static Uint8List shapes() => table.shapes;
 
-  static Uint8List emission() =>
-      Uint8List.fromList([for (final d in defs) d.light]);
+  static Uint8List opaqueTable() => table.opaque;
+
+  static Uint8List emission() => table.emission;
 
   /// Every block id the generator needs, resolved once so the generator never
   /// spells a byte.
