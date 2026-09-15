@@ -88,6 +88,61 @@ void main() {
     expect(wall.position.y, closeTo(10.001, 1e-6), reason: 'vector_math stores float32');
   });
 
+  test('a climber pushing into a wall three blocks high ends standing on top of it', () {
+    for (var y = 10; y <= 12; y++) {
+      world.cells[IVec3(7, y, 4)] = _stone;
+    }
+    body.position = Vector3(5.5, 10.001, 4.5);
+    final push = Vector3(1, 0, 0);
+    // The player's climb: while the wall is ahead, rise at 3.2; otherwise fall.
+    for (var tick = 0; tick < 240; tick++) {
+      if (body.wallAhead(push)) {
+        body.velocity.y = 3.2;
+      } else {
+        body.applyGravity(1 / 60);
+      }
+      body.velocity.x = 3.0;
+      body.move(1 / 60);
+      if (body.position.x > 7.6) break;
+    }
+    expect(body.position.x, greaterThan(7.3), reason: 'past the wall face, on its top');
+    body.velocity.x = 0;
+    run(0.5, () {});
+    expect(body.onFloor, isTrue);
+    expect(body.position.y, closeTo(13.0 + VoxelBody.skin, 1e-3));
+  });
+
+  test('with the full lift off, a one-block step is jumped, never lifted in one tick', () {
+    world.cells[const IVec3(7, 10, 4)] = _stone;
+    world.cells[const IVec3(8, 10, 4)] = _stone;
+    body.position = Vector3(5.5, 10.001, 4.5);
+    var maxRise = 0.0;
+    for (var tick = 0; tick < 120 && body.position.x < 7.6; tick++) {
+      final before = body.position.y;
+      body.applyGravity(1 / 60);
+      body.velocity.x = 3.0;
+      body.move(1 / 60);
+      if (body.hitWall && !body.tryStepUp(fullBlock: false) && body.onFloor && body.stepFits(1.02)) body.velocity.y = 8.6;
+      maxRise = body.position.y - before > maxRise ? body.position.y - before : maxRise;
+    }
+    expect(body.position.x, greaterThan(7.3));
+    expect(maxRise, lessThan(0.3), reason: 'a jump rises over several ticks');
+    body.velocity.x = 0;
+    run(0.5, () {});
+    expect(body.position.y, closeTo(11.0 + VoxelBody.skin, 1e-3));
+
+    world.cells[const IVec3(9, 11, 4)] = _stone;
+    world.cells[const IVec3(9, 12, 4)] = _stone;
+    final wall = VoxelBody()
+      ..setup(world, 0.3, 1.8)
+      ..position = Vector3(8.5, 11.001, 4.5);
+    for (var tick = 0; tick < 20 && !wall.hitWall; tick++) {
+      wall.velocity.x = 3.0;
+      wall.move(1 / 60);
+    }
+    expect(wall.stepFits(1.02), isFalse, reason: 'a two-block wall is not jumped');
+  });
+
   test('fluid sensing reports the liquid kind at feet and head', () {
     world.cells[const IVec3(4, 10, 4)] = _water;
     body.position = Vector3(4.5, 10.001, 4.5);

@@ -6,6 +6,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
+import '../game/settings.dart';
 import '../core/items.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../entities/boat.dart';
@@ -473,9 +474,10 @@ class Player extends SceneBody implements Target {
       _finishTick(dt, input, gameplay, fwd, wish, sprinting);
       return;
     }
-    // Climbing (Cube World): push into a wall while holding jump.
+    // Climbing (Cube World): push into a wall while holding jump. Behind the
+    // `climbWalls` setting, off by default.
     climbing = false;
-    if (jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5) {
+    if (Settings.instance.climbWalls && jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5) {
       climbing = true;
       velocity.y = climbSpeed;
       stamina = math.max(stamina - 10.0 * dt, 0.0);
@@ -525,7 +527,15 @@ class Player extends SceneBody implements Target {
       final d = position - posBefore;
       GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
     }
-    if (hitWall && wish.length > 0.1 && !climbing && !inLiquid) tryStepUp();
+    if (hitWall && wish.length > 0.1 && !climbing && !inLiquid) {
+      // A half step is always lifted onto; a full block is lifted onto only with
+      // `stepTeleport`, otherwise the player jumps it (Minecraft's auto-jump).
+      final teleport = Settings.instance.stepTeleport;
+      if (!tryStepUp(fullBlock: teleport) && !teleport && onFloor && !sneaking && stepFits(1.02)) {
+        velocity.y = jumpVelocity;
+        _fallStartY = position.y;
+      }
+    }
     // Fall damage.
     if (!wasFloor && onFloor) {
       final fall = _fallStartY - position.y;

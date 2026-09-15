@@ -464,6 +464,14 @@ class HudPainter extends CustomPainter {
     if (!game.ready) return;
     final player = game.player;
     final c = Offset(size.width * 0.5, size.height * 0.5);
+    // The camera's eye inside a liquid: a blue wash over the screen (the fog does
+    // the distance), an orange one in lava.
+    switch (game.eyeLiquid) {
+      case 'water':
+        canvas.drawRect(Offset.zero & size, Paint()..color = const Color.fromRGBO(16, 64, 150, 0.22));
+      case 'lava':
+        canvas.drawRect(Offset.zero & size, Paint()..color = const Color.fromRGBO(210, 70, 0, 0.55));
+    }
     // Stage 32: the red vignette (Godot's radial GradientTexture2D stretched over
     // the screen: clear to 45% of the half-height, 0.85 red at the edge and past
     // it) — a hit fades it over 0.4 s, low health keeps it pulsing.

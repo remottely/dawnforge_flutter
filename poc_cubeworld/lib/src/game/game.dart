@@ -370,6 +370,8 @@ class Game extends ChangeNotifier {
     GameState.instance.freshWorld = false;
     _prevTimeOfDay = timeOfDay;
     flyMode = _hasArg('--fly');
+    if (_hasArg('--step-teleport')) Settings.instance.stepTeleport = true;
+    if (_hasArg('--climb')) Settings.instance.climbWalls = true;
     if (_hasArg('--fp')) player.setFirstPerson(true);
     final fogd = double.tryParse(_arg('--fogd=', ''));
     if (fogd != null) {
@@ -384,6 +386,7 @@ class Game extends ChangeNotifier {
       final parts = _arg('--look=', '').split(',');
       player.setLook(double.parse(parts[0]) * math.pi / 180.0, double.parse(parts[1]) * math.pi / 180.0);
     }
+    if (_hasArg('--underwater')) _placeUnderwater();
     player.syncNode();
     world.updateAround(player.position);
 
@@ -523,11 +526,14 @@ class Game extends ChangeNotifier {
       sky.sunColor = sunColor * (2.5 * day + 0.4);
     } else {
       sky.sunDirection = -sunDir;
+      // The moon and the night ambient are raised so the engine's own lighting
+      // does not darken the night a second time: the terrain shader's
+      // Minecraft light map already sets how dark a moonlit field is.
       sun.color = Vector3(0.55, 0.65, 0.95);
-      sun.intensity = (3.0 * 0.18 * (1.0 - day) + 0.02) * sunScale;
+      sun.intensity = (3.0 * 0.45 * (1.0 - day) + 0.02) * sunScale;
       sky.sunColor = Vector3(0.5, 0.6, 0.9) * 0.9;
     }
-    final ambientEnergy = (0.10 + 0.30 * day) * (1.0 - dark * 0.5) + bolt * 0.6;
+    final ambientEnergy = (0.9 - 0.5 * day) * (1.0 - dark * 0.5) + bolt * 0.6;
     final ambientColor = _mix(Vector3(0.35, 0.40, 0.60), Vector3(0.80, 0.84, 0.92), day);
     final radiance = ambientColor * (ambientEnergy * 1.25 * ambientScale);
     if ((radiance - _ambient).length > 0.02 && _ambientTimer > 0.5) {
@@ -537,6 +543,42 @@ class Game extends ChangeNotifier {
     }
     scene.fog.color = hor;
     if (ready) scene.fog.density = 0.003 + 0.012 * dark;
+  }
+
+  /// The liquid the camera's eye is in: 'water', 'lava' or ''. The HUD washes
+  /// the screen with it.
+  String eyeLiquid = '';
+
+  /// Under a liquid the fog closes in and takes its colour: water fades to a
+  /// deep blue over about 20 m (60% at 18 m), lava to orange in about 2 m. Runs after
+  /// [_updateSky], which sets the open-air fog every frame.
+  void _updateSubmerged() {
+    final eye = player.cameraPosition;
+    final cell = IVec3(eye.x.floor(), eye.y.floor(), eye.z.floor());
+    final id = world.getBlockXYZ(cell.x, cell.y, cell.z);
+    var kind = Blocks.liquidKind(id);
+    // The top cell of a pool is drawn 0.875 high: an eye above that surface is in air.
+    if (kind != '' && Blocks.liquidKind(world.getBlockXYZ(cell.x, cell.y + 1, cell.z)) == '' && eye.y - cell.y > 0.875) kind = '';
+    eyeLiquid = kind;
+    final fog = scene.fog;
+    switch (kind) {
+      case 'water':
+        fog
+          ..color = Vector3(0.03, 0.12, 0.28) * (0.25 + 0.75 * skyIntensity)
+          ..density = 0.05
+          ..skyColorInfluence = 0.0
+          ..maxOpacity = 1.0;
+      case 'lava':
+        fog
+          ..color = Vector3(0.75, 0.22, 0.02)
+          ..density = 1.2
+          ..skyColorInfluence = 0.0
+          ..maxOpacity = 1.0;
+      default:
+        fog
+          ..skyColorInfluence = 1.0
+          ..maxOpacity = 0.9;
+    }
   }
 
   String timeLabel() {
@@ -592,6 +634,7 @@ class Game extends ChangeNotifier {
     world.update();
     _ambientTimer += dt;
     _updateSky();
+    _updateSubmerged();
     hud.update(dt, this); // stage 32: Godot's hud `_process`
     frame.value++;
     if (_frameWaiters.isNotEmpty) {
@@ -2173,6 +2216,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage25') && net.isHost && net.puppetPositions().isNotEmpty) await _probeStage25Host();
     if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
+    if (_hasArg('--move-probe')) await _probeMovement();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
@@ -2629,6 +2673,116 @@ class Game extends ChangeNotifier {
   /// spawn. Three walks along +x (onto a slab, up a stairs onto a block, into a
   /// fence with a jump), then a water source that spreads and drains, then lava
   /// meeting water. The camera ends above the pad.
+  /// `--underwater`: fly the first-person eye 2.5 m under the sea surface over
+  /// the nearest column whose sea floor is at least 6 m down, looking slightly
+  /// down, for a capture of the underwater fog and wash.
+  void _placeUnderwater() {
+    const sea = TerrainGenerator.seaLevel;
+    final ox = player.position.x.floor();
+    final oz = player.position.z.floor();
+    for (var ring = 0; ring < 200; ring++) {
+      for (var i = 0; i < 16; i++) {
+        final a = i * math.pi * 2 / 16.0;
+        final x = ox + (math.cos(a) * ring * 4).toInt();
+        final z = oz + (math.sin(a) * ring * 4).toInt();
+        if (world.surfaceHeight(x, z) > sea - 6) continue;
+        flyMode = true;
+        player.setFirstPerson(true);
+        player.position = Vector3(x + 0.5, sea - 2.5 - Player.eyeHeight, z + 0.5);
+        player.setLook(0.0, -0.6);
+        debugPrint('[probe] underwater at $x,$z floor ${world.surfaceHeight(x, z)} sea $sea eye ${player.cameraPosition}');
+        return;
+      }
+    }
+    throw StateError('no sea within 800 m');
+  }
+
+  /// `--move-probe`: the two movement settings on a flat stone pad. A one-block
+  /// step is walked into with the step teleport off (the body must rise over
+  /// several ticks, a jump) and on (one tick lifts it the whole block); a wall
+  /// three blocks high is pushed into with jump held, climbing off (a jump, no
+  /// higher) and on (the climber must stand on top of the wall, past its face).
+  Future<void> _probeMovement() async {
+    final x0 = player.position.x.floor() + 3;
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 2; x < x0 + 12; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 2; x < x0 + 12; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 8; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final floorY = y0 + 1.0;
+    // Returns the highest feet, the largest one-tick rise, the final feet and x.
+    Future<({double maxY, double maxRise, double y, double x, bool floor})> walk(double stopX, int ticks, bool holdJump) async {
+      player.position = Vector3(x0 + 0.5, floorY + 0.01, z0 + 0.5);
+      player.velocity = Vector3.zero();
+      player.syncNode();
+      await _ticks(5);
+      player.probeWalk(Vector3(1, 0, 0));
+      input.probeHold(GameAction.jump, holdJump);
+      var maxY = player.position.y;
+      var maxRise = 0.0;
+      var last = player.position.y;
+      for (var i = 0; i < ticks && player.position.x < stopX; i++) {
+        await _ticks(1);
+        maxY = math.max(maxY, player.position.y);
+        maxRise = math.max(maxRise, player.position.y - last);
+        last = player.position.y;
+      }
+      player.probeWalk(Vector3.zero());
+      input.probeHold(GameAction.jump, false);
+      await _ticks(60);
+      return (maxY: maxY, maxRise: maxRise, y: player.position.y, x: player.position.x, floor: player.onFloor);
+    }
+
+    final settings = Settings.instance;
+    // Step and wall are three blocks deep, so the walker stops on top of them
+    // instead of crossing and dropping off the far side.
+    for (var x = x0 + 3; x < x0 + 6; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        world.setBlock(IVec3(x, y0 + 1, z), stone);
+      }
+    }
+    await _ticks(10);
+    settings.stepTeleport = false;
+    final jumped = await walk(x0 + 4.6, 120, false);
+    debugPrint('[probe] move step teleport=off: top y=${jumped.y.toStringAsFixed(3)} (expect ${(floorY + 1).toStringAsFixed(1)}) '
+        'largest one-tick rise=${jumped.maxRise.toStringAsFixed(3)} (a jump: < 0.3) x=${jumped.x.toStringAsFixed(2)}');
+    settings.stepTeleport = true;
+    final lifted = await walk(x0 + 4.6, 120, false);
+    debugPrint('[probe] move step teleport=on: top y=${lifted.y.toStringAsFixed(3)} (expect ${(floorY + 1).toStringAsFixed(1)}) '
+        'largest one-tick rise=${lifted.maxRise.toStringAsFixed(3)} (a lift: >= 1.0) x=${lifted.x.toStringAsFixed(2)}');
+    settings.stepTeleport = false;
+    for (var x = x0 + 3; x < x0 + 6; x++) {
+      for (var z = z0 - 2; z < z0 + 3; z++) {
+        for (var y = y0 + 1; y <= y0 + 3; y++) {
+          world.setBlock(IVec3(x, y, z), stone);
+        }
+      }
+    }
+    await _ticks(10);
+    final wallTop = floorY + 3;
+    settings.climbWalls = false;
+    final blocked = await walk(x0 + 4.6, 180, true);
+    debugPrint('[probe] move climb=off: highest feet=${blocked.maxY.toStringAsFixed(3)} (a jump only: < ${(floorY + 1.5).toStringAsFixed(1)}) '
+        'x=${blocked.x.toStringAsFixed(2)} (wall face ${x0 + 3})');
+    settings.climbWalls = true;
+    player.stamina = player.maxStamina;
+    final climbed = await walk(x0 + 4.6, 300, true);
+    debugPrint('[probe] move climb=on: final feet y=${climbed.y.toStringAsFixed(3)} (expect ${wallTop.toStringAsFixed(1)}) '
+        'on floor=${climbed.floor} x=${climbed.x.toStringAsFixed(2)} (past the face ${x0 + 3}: ${climbed.x > x0 + 3.3})');
+    settings.climbWalls = false;
+  }
+
   Future<void> _probeStage22() async {
     final x0 = player.position.x.floor() + 3;
     final z0 = player.position.z.floor();

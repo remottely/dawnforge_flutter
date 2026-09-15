@@ -66,6 +66,29 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-15** — four requests from a hand play. (1) **Night**: the terrain shader's curve is now Minecraft's light
+  map (`l / (4 - 3l)`, sky factor 0.24 night .. 1.0 noon mapped from the game's 0.35 .. 1.0 `skyIntensity`,
+  gamma 0.5, `x 0.96 + 0.03`, raised to 2.2 for the linear albedo) instead of Godot's `0.02 + 0.98 * level^4`,
+  and `_updateSky` raises the moon (0.18 -> 0.45) and the night ambient (energy 0.10 -> 0.90 at night, 0.40 by
+  day as before) so the engine's lighting stops darkening the night a second time. `skyIntensity` itself is
+  unchanged, so the spawn gate and the daylight burn read the same numbers. Plain boot seed 42, mean luma of the
+  lower screen band: noon 142.8, midnight 34.6 before -> 40.4 (curve + moon) -> **47.9** (0.34 of noon); the
+  Minecraft map gives about 0.46 for a moonlit field at default brightness, ACES keeps the rest. (2) **Step
+  teleport** behind `Settings.stepTeleport` (`[gameplay] step_teleport`, switch in the panel, `--step-teleport`),
+  off: `VoxelBody.tryStepUp(fullBlock: false)` still lifts the half step, and a full block the body fits over
+  (`VoxelBody.stepFits(1.02)`) is jumped instead. (3) **Wall climbing** behind `Settings.climbWalls`
+  (`climb_walls`, `--climb`), off; the tutorial and the menu line stop mentioning it. It also stalled under the
+  top (Godot's `wall_ahead` has the same bug): the lowest probe was 0.3 above the feet, lost the wall with the
+  feet still below its top, gravity pulled the climber back and it climbed again. The probe now reads the feet
+  cell. (4) **Underwater**: `Game._updateSubmerged` reads the camera's eye cell (a pool's top cell counts only
+  under its 0.875 surface) and turns the fog deep blue at density 0.05 with no sky influence (lava: orange,
+  1.2), and the HUD washes the screen blue (orange in lava). `--move-probe` on seed 42: teleport off, the step
+  is climbed with a largest one-tick rise of 0.265 m (a jump) to y 59.001; on, 1.020 in one tick to the same
+  top; climbing off, a jump to 59.495 against the 3-high wall; on, feet 61.001 on the wall top, on floor. Unit
+  tests in `voxel_core/test/physics/physics_test.dart` (the climber stands on a 3-high wall, the step is jumped,
+  a 2-high wall is not). `--underwater` frames the sea floor through the blue; `--stage22` unchanged (slab 67.5,
+  stairs 68, fence blocked); `--stage31 --shot=room --time=0.0` still reads the torch room.
+
 - **2026-09-14** — deterministic loot seeds. Stage 26 noted that a structure chest seeded its loot from
   `IVec3.hashCode ^ seed`. Dart's `hashCode` / `Object.hash` are seeded per process, so the same chest held
   different items after a restart, and a host and its client could roll it differently. `LootTables.seedFor(at,

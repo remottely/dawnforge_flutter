@@ -24,7 +24,7 @@ class Tutorial extends ChangeNotifier {
   static const List<TutorialStep> steps = [
     TutorialStep('move', 'Walk', 'Press W A S D to walk around.'),
     TutorialStep('look', 'Look', 'Move the mouse to look around.'),
-    TutorialStep('jump', 'Jump', 'Press Space to jump. Hold it against a wall to climb.'),
+    TutorialStep('jump', 'Jump', 'Press Space to jump. Walk into a one-block step to hop up.'),
     TutorialStep('break', 'Break a block', 'Hold the left mouse button on a block until it breaks.'),
     TutorialStep('inventory', 'Open your bag', 'Press E to open the inventory and the crafting list.'),
     TutorialStep('craft', 'Craft a tool', 'Logs make planks, planks make sticks, planks + sticks make a pickaxe. Click a recipe.'),

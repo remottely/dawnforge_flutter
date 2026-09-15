@@ -186,19 +186,25 @@ class VoxelBody {
   }
 
   /// Step up onto a low obstacle when walking into it: half a block first (a
-  /// slab, the low step of stairs), then a full block. The lifted body is also
-  /// tested a hair further in the blocked direction, so a half step never wins
-  /// against a full-height wall.
-  bool tryStepUp() {
+  /// slab, the low step of stairs), then a full block unless [fullBlock] is
+  /// false. The lifted body is also tested a hair further in the blocked
+  /// direction, so a half step never wins against a full-height wall.
+  bool tryStepUp({bool fullBlock = true}) {
     if (!hitWall || !onFloor) return false;
-    final nudge = _blocked * 0.05;
-    for (final lift in const [0.52, 1.02]) {
-      final up = position + Vector3(0, lift, 0);
-      if (_overlapsSolid(up) || _overlapsSolid(up + nudge)) continue;
-      position = up;
+    for (final lift in fullBlock ? const [0.52, 1.02] : const [0.52]) {
+      if (!stepFits(lift)) continue;
+      position = position + Vector3(0, lift, 0);
       return true;
     }
     return false;
+  }
+
+  /// Would the body, lifted by [lift] and nudged a hair toward the wall it just
+  /// hit, stand clear of every block? A game that jumps a full step instead of
+  /// lifting onto it asks this with 1.02.
+  bool stepFits(double lift) {
+    final up = position + Vector3(0, lift, 0);
+    return !_overlapsSolid(up) && !_overlapsSolid(up + _blocked * 0.05);
   }
 
   /// Cube-based on purpose: callers ask "is the body in this CELL" (a block
@@ -252,9 +258,12 @@ class VoxelBody {
 
   /// Is there a solid block directly in front (for climbing)? Cube-based on
   /// purpose: climbing reads the cell, the shape inside it does not matter.
+  /// The lowest probe is the feet cell itself: a probe above the feet loses the
+  /// wall while the feet are still below its top, and a climber stalls there,
+  /// falling back and climbing again, instead of reaching the top.
   bool wallAhead(Vector3 direction) {
     final probe = position + direction.normalized() * (halfWidth + 0.35);
-    for (final dy in [0.3, 1.0, height - 0.2]) {
+    for (final dy in [0.0, 1.0, height - 0.2]) {
       if (_solidCell(probe.x.floor(), (position.y + dy).floor(), probe.z.floor())) return true;
     }
     return false;

@@ -50,11 +50,30 @@ uniform TerrainInfo {
 }
 terrain_info;
 
-// Godot's terrain_light(): max(sky * sky_intensity, block), then 0.02 + 0.98 * level^4.
+// Minecraft's light map, replacing Godot's 0.02 + 0.98 * level^4 (which left a
+// moonlit field almost black once ACES had its toe on it).
+//   brightness(l) = l / (4 - 3 l)                    l = level / 15
+//   sky factor    = 0.24 at night .. 1.0 at noon     (0.2 * 0.95 + 0.05)
+//   value         = min(sky * factor + block, 1)
+//   gamma 0.5     = mix(v, 1 - (1 - v)^4, 0.5)       (the default brightness)
+//   floor         = v * 0.96 + 0.03                  (a cave is never pure black)
+// Minecraft multiplies the sRGB texture by that value; the albedo here is linear,
+// so the value is raised to 2.2 before it multiplies.
+// sky_intensity arrives as the game's own scale (0.35 night, 1.0 noon, 0.0 in
+// the underworld) and is mapped onto Minecraft's 0.24 .. 1.0 sky factor.
+float McBrightness(float l) {
+  return l / (4.0 - 3.0 * l);
+}
+
 float TerrainLight(vec2 uv1) {
-  float level = max(uv1.x * terrain_info.sky_intensity, uv1.y);
-  float l2 = level * level;
-  return 0.02 + 0.98 * l2 * l2;
+  float s = terrain_info.sky_intensity;
+  float sky_factor = s >= 0.35 ? mix(0.24, 1.0, (s - 0.35) / 0.65)
+                               : s / 0.35 * 0.24;
+  float v = min(McBrightness(uv1.x) * sky_factor + McBrightness(uv1.y), 1.0);
+  float inv = 1.0 - v;
+  v = mix(v, 1.0 - inv * inv * inv * inv, 0.5);
+  v = v * 0.96 + 0.03;
+  return pow(v, 2.2);
 }
 
 void Surface(inout MaterialInputs material) {
