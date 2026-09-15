@@ -66,30 +66,6 @@ class HillsGenerator implements ChunkGenerator {
 /// the pool sends it to each isolate.
 ChunkGenerator makeGenerator() => const HillsGenerator();
 
-/// voxel_core meshes wind clockwise (a right-handed world), and flutter_scene's
-/// view is left-handed, so this camera negates clip-space x once: the world
-/// keeps +X on screen-right and the faces cull the right way. The sun's shadow
-/// pass is not mirrored, so it draws front faces ([ShadowCasterFaces.front]).
-class MirroredCamera extends PerspectiveCamera {
-  MirroredCamera({required super.position, required super.target, super.fovRadiansY, super.fovNear, super.fovFar})
-      : super(up: vm.Vector3(0, 1, 0));
-
-  @override
-  CameraProjection get projection => _MirroredProjection(fovRadiansY: fovRadiansY, near: fovNear, far: fovFar);
-}
-
-// A subclass, because the shadow cascades cast the projection to PerspectiveProjection.
-class _MirroredProjection extends PerspectiveProjection {
-  _MirroredProjection({required super.fovRadiansY, required super.near, required super.far});
-
-  @override
-  vm.Matrix4 getProjectionMatrix(double aspectRatio, {vm.Vector2? jitter}) {
-    final m = super.getProjectionMatrix(aspectRatio, jitter: jitter);
-    m.setRow(0, -m.getRow(0));
-    return m;
-  }
-}
-
 class HillsView extends StatefulWidget {
   const HillsView({super.key});
 
@@ -135,7 +111,9 @@ class _HillsViewState extends State<HillsView> {
         shadowSoftness: 0.04,
         shadowDepthBias: 0.02,
         shadowNormalBias: 0.06,
-        shadowCasterFaces: ShadowCasterFaces.front,
+        // voxel_core meshes wind clockwise; MirroredCamera shows them the right
+        // way round, and the unmirrored shadow pass draws their front faces.
+        shadowCasterFaces: MirroredCamera.shadowCasterFaces,
       )
         ..color = vm.Vector3(1.0, 0.95, 0.85)
         ..intensity = 2.5)
