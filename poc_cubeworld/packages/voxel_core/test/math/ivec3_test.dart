@@ -29,9 +29,10 @@ void main() {
     expect(const IVec3(0, 0, 0).distanceTo(Vector3(0, 3, 4)), closeTo(5.0, 1e-9));
   });
 
-  test('key round-trips through parse; a malformed key is null', () {
+  test('key round-trips through parse; a malformed key throws', () {
     const b = IVec3(-7, 64, 12);
     expect(IVec3.parse(b.key), b);
-    expect(IVec3.parse('1,2'), isNull);
+    expect(() => IVec3.parse('1,2'), throwsFormatException);
+    expect(() => IVec3.parse('1,2,x'), throwsFormatException);
   });
 }

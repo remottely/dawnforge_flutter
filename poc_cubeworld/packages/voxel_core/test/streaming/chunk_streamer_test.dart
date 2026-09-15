@@ -16,8 +16,16 @@ final _table = VoxelBlockTable(const [
 class _Jobs implements ChunkJobs {
   final List<(int, int, int)> generated = [];
 
+  /// The next generate job fails with this, once.
+  Object? failNext;
+
   @override
   Future<Uint8List> generate(int cx, int cz, [int dimension = 0]) {
+    final fail = failNext;
+    if (fail != null) {
+      failNext = null;
+      return Future.error(fail);
+    }
     generated.add((cx, cz, dimension));
     return Future.value(Uint8List(ChunkSize.volume)..fillRange(0, ChunkSize.sizeX * ChunkSize.sizeZ * 40, _stone));
   }
@@ -141,6 +149,25 @@ void main() {
     expect(s.getBlockXYZ(5, 45, 5), _stone);
     expect(s.getBlockXYZ(2, 50, 2), 0);
     expect(s.editsByDimension.keys, containsAll([0, 1]));
+  });
+
+  test('a failed job is rethrown by the next update, and the chunk is dispatched again', () async {
+    jobs.failNext = StateError('generator bug');
+    s.updateAround((x: 0, z: 0));
+    s.update();
+    await Future<void>.delayed(Duration.zero);
+    expect(s.update, throwsStateError);
+    await _settle(s);
+    expect(s.meshCount, 9);
+  });
+
+  test('a cancelled job is not an error', () async {
+    jobs.failNext = const ChunkJobCancelled('pool disposed');
+    s.updateAround((x: 0, z: 0));
+    s.update();
+    await Future<void>.delayed(Duration.zero);
+    await _settle(s);
+    expect(s.meshCount, 9);
   });
 
   test('replaceEdits swaps every delta, the live one included', () async {

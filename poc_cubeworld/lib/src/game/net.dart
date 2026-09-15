@@ -316,14 +316,14 @@ class Net {
       case 'bag':
         (_peerBags[sender] ??= Inventory()).fromJson(msg['data'] as List<dynamic>);
       case 'chest_open':
-        final at = IVec3.parse(msg['at'] as String)!;
+        final at = IVec3.parse(msg['at'] as String);
         _chestWatchers.putIfAbsent(at, () => <int>{}).add(sender);
         _toPeer(sender, {'t': 'chest_state', 'at': at.key, 'data': m.chestInventory(at).toJson()});
       case 'chest_close':
-        _chestWatchers[IVec3.parse(msg['at'] as String)!]?.remove(sender);
+        _chestWatchers[IVec3.parse(msg['at'] as String)]?.remove(sender);
         _chestEscrow.remove(sender); // the cursor went back to the peer's bag
       case 'chest_set':
-        _onChestSet(sender, IVec3.parse(msg['at'] as String)!, msg['slot'] as int,
+        _onChestSet(sender, IVec3.parse(msg['at'] as String), msg['slot'] as int,
             msg['stack'] as Map<String, dynamic>, msg['from_bag'] == true);
       case 'mount_req':
         _onMountRequest(sender, msg['net'] as int);
@@ -341,7 +341,7 @@ class Net {
         m.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
         b.removed = true;
       case 'cart_req':
-        m.spawnMinecart(IVec3.parse(msg['cell'] as String)!, msg['kind'] as String);
+        m.spawnMinecart(IVec3.parse(msg['cell'] as String), msg['kind'] as String);
       case 'cart_board_req':
         _onCartBoardRequest(sender, msg['net'] as int);
       case 'cart_unboard_req':
@@ -422,7 +422,7 @@ class Net {
         _onGive(msg['item'] as String, msg['n'] as int, msg['bonus'] as int);
       case 'chest_state':
         _bump('chest_states');
-        final at = IVec3.parse(msg['at'] as String)!;
+        final at = IVec3.parse(msg['at'] as String);
         _chestViews[at]?.fromJson(msg['data'] as List<dynamic>);
       case 'weather':
         main?.weather.follow(WeatherKind.values[msg['kind'] as int], (msg['target'] as num).toDouble());
@@ -1169,7 +1169,7 @@ class Net {
     final c = Minecart()
       ..replica = true
       ..netId = id;
-    c.setupCart(m.world, IVec3.parse(msg['cell'] as String)!, msg['kind'] as String);
+    c.setupCart(m.world, IVec3.parse(msg['cell'] as String), msg['kind'] as String);
     c.setNetPose(_vec(msg['pos']), (msg['yaw'] as num).toDouble());
     _cartReplicas[id] = c;
     m.carts.add(c);

@@ -1776,8 +1776,7 @@ class Game extends ChangeNotifier {
   static Map<IVec3, int> decodeStructures(Map<String, dynamic> data) {
     final out = <IVec3, int>{};
     for (final e in data.entries) {
-      final k = IVec3.parse(e.key);
-      if (k != null) out[k] = (e.value as num).toInt();
+      out[IVec3.parse(e.key)] = (e.value as num).toInt();
     }
     return out;
   }
@@ -1805,23 +1804,16 @@ class Game extends ChangeNotifier {
     player.fromJson(data['player'] as Map<String, dynamic>);
     quests.fromJson((data['quests'] as Map<String, dynamic>?) ?? {});
     for (final e in ((data['crops'] as Map<String, dynamic>?) ?? {}).entries) {
-      final k = IVec3.parse(e.key);
-      if (k != null) crops[k] = (e.value as num).toDouble();
+      crops[IVec3.parse(e.key)] = (e.value as num).toDouble();
     }
     for (final e in ((data['chests'] as Map<String, dynamic>?) ?? {}).entries) {
-      final k = IVec3.parse(e.key);
-      if (k == null) continue;
-      final inv = Inventory();
-      inv.fromJson(e.value as List<dynamic>);
-      chests[k] = inv;
+      chests[IVec3.parse(e.key)] = Inventory()..fromJson(e.value as List<dynamic>);
     }
     for (final e in ((data['waypoints'] as Map<String, dynamic>?) ?? {}).entries) {
-      final k = IVec3.parse(e.key);
-      if (k != null) waypoints[k] = e.value.toString();
+      waypoints[IVec3.parse(e.key)] = e.value.toString();
     }
     for (final k in (data['bosses'] as List<dynamic>? ?? const [])) {
-      final p = IVec3.parse(k.toString());
-      if (p != null) _bossesSpawned.add(p);
+      _bossesSpawned.add(IVec3.parse(k.toString()));
     }
     // Stage 24: the entities and the explored map.
     visitedChunks.addAll(decodeVisited(data['visited'] as List<dynamic>? ?? const []));

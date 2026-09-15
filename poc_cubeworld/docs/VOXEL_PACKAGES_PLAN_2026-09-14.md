@@ -26,7 +26,7 @@
 | VP1 `voxel_core` by moves | **gate met** 2026-09-14 (VP1.1–VP1.9; VP1.5b pool size pending): 10 source files, 43 package tests, zero Flutter imports; the POC's `world/` keeps only `godot_camera`, `terrain_generator`, `terrain_material` and the `voxel_world` facade | every pure world file imported from `package:voxel_core`; POC tests, parity hashes and probe logs unchanged |
 | VP2 `voxel_scene` by moves | pending | no `flutter_scene` import left in the POC's `world/`; radius 8/12/16 within 10% of the baseline |
 | VP3 The render gap | in progress (VP3.0 gate fixed; VP3.1 stepped sun: 69 → 84 settle fps at radius 16, gate met) | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
-| VP4 Release prep `0.0.1` | pending | `dart pub publish --dry-run` clean for both; a standalone example runs without the POC |
+| VP4 Release prep `0.0.1` | in progress (VP4.1a: the silent failures throw) | `dart pub publish --dry-run` clean for both; a standalone example runs without the POC |
 
 ---
 
@@ -426,6 +426,12 @@ measurement (below).
   `dart pub publish --dry-run` clean.
 - **VP4.4** Export: copy both packages into a new repository as one commit. The POC may then
   consume them from that repository or stay on the workspace copy (developer's call then).
+
+**VP4 log:**
+
+| Step | Notes |
+|:---|:---|
+| VP4.1a the three silent failures | **Worker pool:** each job runs in a `try` on its worker and a throw comes back as a `RemoteError` with the worker's stack; the worker keeps serving. Workers spawn paused with error and exit listeners, so a generator factory that throws makes `start()` throw instead of waiting forever, and a worker that dies later fails only its own jobs (`StateError`) and leaves the pool. `dispose` fails what is left with the new `ChunkJobCancelled`. **Streamer:** it used to swallow every job error. It now ignores `ChunkJobCancelled` and rethrows any other from the next `update()`; the failed chunk is dispatched again. **`EditDeltaCodec.decode`** throws `FormatException` for another magic, an unknown version, a cut-short file or bytes left over (a cut file used to throw `RangeError` from `ByteData`). **`IVec3.parse`** throws `FormatException`. The POC follows: `loadEditsFromBytes` returns `int`, and the save loader and net handlers lose their null checks, so a corrupt save or message now fails loudly. Checks clean (voxel_core 48 tests, POC 104, voxel_scene 3). **Flake seen:** the first `probe_baseline.sh --check` differed on stage 31's camera line in the third decimal (9.050 against 9.052); the rerun matched. The camera line is frame-time dependent, and `--check` does not filter it |
 
 ---
 

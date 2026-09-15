@@ -408,10 +408,10 @@ class VoxelWorld implements VoxelQuery {
 
   Uint8List editsToBytes() => saveCodec.encode(seedValue, _streamer.editsByDimension);
 
-  /// Returns the seed the edits were made against, or null when unreadable.
-  int? loadEditsFromBytes(Uint8List bytes) {
+  /// Returns the seed the edits were made against. Unreadable bytes throw
+  /// (voxel_core's [EditDeltaCodec.decode], VP4.1).
+  int loadEditsFromBytes(Uint8List bytes) {
     final read = saveCodec.decode(bytes);
-    if (read == null) return null;
     _streamer.replaceEdits(read.edits);
     return read.seed;
   }
@@ -426,7 +426,6 @@ class VoxelWorld implements VoxelQuery {
     final f = File(path);
     if (!await f.exists()) return false;
     final seed = loadEditsFromBytes(await f.readAsBytes());
-    if (seed == null) return false;
     if (seed != seedValue) await setWorldSeed(seed);
     return true;
   }

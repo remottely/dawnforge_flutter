@@ -31,9 +31,10 @@ class IVec3 {
 
   String get key => '$x,$y,$z';
 
-  static IVec3? parse(String s) {
-    final p = s.split(',');
-    if (p.length != 3) return null;
+  /// The position a [key] names. Throws a [FormatException] for anything else.
+  static IVec3 parse(String key) {
+    final p = key.split(',');
+    if (p.length != 3) throw FormatException('an IVec3 key is "x,y,z"', key);
     return IVec3(int.parse(p[0]), int.parse(p[1]), int.parse(p[2]));
   }
 

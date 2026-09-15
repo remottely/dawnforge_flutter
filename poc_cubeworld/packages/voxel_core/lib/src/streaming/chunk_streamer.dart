@@ -11,6 +11,17 @@ typedef ChunkPos = ({int x, int z});
 /// (sky, block) light of a cell, 0..15 each.
 typedef CellLight = ({int sky, int block});
 
+/// What a [ChunkJobs] fails a job with when it drops the job on purpose (a
+/// disposed pool). The streamer ignores it; any other job error is a bug and
+/// [ChunkStreamer.update] rethrows it.
+class ChunkJobCancelled implements Exception {
+  const ChunkJobCancelled(this.message);
+  final String message;
+
+  @override
+  String toString() => 'ChunkJobCancelled: $message';
+}
+
 /// Where generation and meshing jobs run. [ChunkWorkerPool] is the isolate
 /// implementation; a test can answer synchronously.
 abstract interface class ChunkJobs {
@@ -87,6 +98,10 @@ class ChunkStreamer {
   /// result waiting): that job meshed the old blocks, so landing it must not
   /// clear the request.
   final Set<ChunkPos> _remeshAgain = {};
+
+  /// The first job that failed since the last [update], other than a
+  /// [ChunkJobCancelled]. [update] throws it.
+  (Object, StackTrace)? _jobError;
 
   bool get isIdle => _pending.isEmpty && _genInflight.isEmpty && _meshInflight.isEmpty && _surfaceReady.isEmpty;
   int get loadedChunkCount => chunks.length;
@@ -169,7 +184,15 @@ class ChunkStreamer {
 
   /// Once per frame: hand finished meshes to the sink within the frame budget,
   /// then dispatch more work.
+  ///
+  /// Throws the error of a job that failed since the last call (a generator or
+  /// mesher bug). The failed chunk is dispatched again on a later call.
   void update() {
+    final failed = _jobError;
+    if (failed != null) {
+      _jobError = null;
+      Error.throwWithStackTrace(failed.$1, failed.$2);
+    }
     final sw = Stopwatch()..start();
     final applied = <ChunkPos>[];
     for (final e in _surfaceReady.entries) {
@@ -205,8 +228,9 @@ class ChunkStreamer {
             if (jobs != j) return;
             _applyEdits(n, blocks);
             chunks[n] = blocks;
-          }).catchError((Object e) {
+          }).catchError((Object e, StackTrace st) {
             if (epoch == _genEpoch) _genInflight.remove(n);
+            _jobFailed(e, st);
           });
         }
       }
@@ -219,10 +243,16 @@ class ChunkStreamer {
         _meshInflight.remove(pos);
         if (jobs != j) return;
         _surfaceReady[pos] = surface;
-      }).catchError((Object e) {
+      }).catchError((Object e, StackTrace st) {
         if (epoch == _genEpoch) _meshInflight.remove(pos);
+        _jobFailed(e, st);
       });
     }
+  }
+
+  void _jobFailed(Object e, StackTrace st) {
+    if (e is ChunkJobCancelled) return;
+    _jobError ??= (e, st);
   }
 
   void _apply(ChunkPos pos, ChunkMeshResult surface) {

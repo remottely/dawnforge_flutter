@@ -41,6 +41,10 @@ class _Worker {
 
 /// A fixed pool of isolates running chunk generation and meshing. Requests
 /// are answered by futures; each goes to the least busy worker.
+///
+/// A job that throws on its worker fails its future with a [RemoteError]
+/// carrying the worker's message and stack. A worker that dies fails every job
+/// it held with a [StateError] and leaves the pool; the others keep working.
 class ChunkWorkerPool implements ChunkJobs {
   /// [workers] defaults to [defaultWorkers].
   ChunkWorkerPool(this.config, {int? workers}) : workers = workers ?? defaultWorkers;
@@ -53,21 +57,39 @@ class ChunkWorkerPool implements ChunkJobs {
   final WorkerConfig config;
   final int workers;
   final List<_Worker> _workers = [];
+  final Map<int, _Worker> _byIndex = {};
   final ReceivePort _inbox = ReceivePort();
+  final ReceivePort _exits = ReceivePort();
   final Map<int, Completer<Object?>> _waiting = {};
   final Map<int, _Worker> _owner = {};
   int _nextId = 1;
   bool _disposed = false;
 
+  /// Spawns the workers. Throws a [RemoteError] when a worker fails while
+  /// building its generator or mesher.
   Future<void> start() async {
     _inbox.listen(_onReply);
+    _exits.listen(_onExit);
     for (var i = 0; i < workers; i++) {
       final ready = ReceivePort();
       final isolate = await Isolate.spawn(_workerMain, [ready.sendPort, _inbox.sendPort, config],
-          debugName: 'chunk-worker-$i');
-      final port = await ready.first as SendPort;
+          paused: true, debugName: 'chunk-worker-$i');
+      // Listeners go on before the worker runs a line, so a start-up failure
+      // reaches [ready] as [error, stack] instead of leaving it waiting forever.
+      isolate.addErrorListener(ready.sendPort);
+      isolate.addOnExitListener(ready.sendPort, response: 'exit');
+      isolate.resume(isolate.pauseCapability!);
+      final first = await ready.first;
       ready.close();
-      _workers.add(_Worker(isolate, port));
+      if (first is! SendPort) {
+        isolate.kill(priority: Isolate.immediate);
+        if (first is List<Object?>) throw RemoteError(first[0] as String, first[1] as String);
+        throw StateError('chunk-worker-$i exited while starting');
+      }
+      final worker = _Worker(isolate, first);
+      _byIndex[i] = worker;
+      isolate.addOnExitListener(_exits.sendPort, response: i);
+      _workers.add(worker);
     }
   }
 
@@ -76,10 +98,30 @@ class ChunkWorkerPool implements ChunkJobs {
     final id = list[0] as int;
     final c = _waiting.remove(id);
     _owner.remove(id)?.pending--;
-    c?.complete(list[1]);
+    if (c == null) return;
+    if (list.length == 4) {
+      c.completeError(RemoteError(list[2] as String, list[3] as String));
+    } else {
+      c.complete(list[1]);
+    }
+  }
+
+  void _onExit(Object? message) {
+    final index = message as int;
+    final w = _byIndex.remove(index)!;
+    _workers.remove(w);
+    final lost = [
+      for (final e in _owner.entries)
+        if (e.value == w) e.key,
+    ];
+    for (final id in lost) {
+      _owner.remove(id);
+      _waiting.remove(id)!.completeError(StateError('chunk-worker-$index exited with this job unfinished'));
+    }
   }
 
   _Worker _pick() {
+    if (_workers.isEmpty) throw StateError(_disposed ? 'worker pool disposed' : 'no chunk worker alive');
     _Worker best = _workers.first;
     for (final w in _workers) {
       if (w.pending < best.pending) best = w;
@@ -88,10 +130,10 @@ class ChunkWorkerPool implements ChunkJobs {
   }
 
   Future<T> _request<T>(List<Object?> body) {
+    final w = _pick();
     final id = _nextId++;
     final c = Completer<Object?>();
     _waiting[id] = c;
-    final w = _pick();
     w.pending++;
     _owner[id] = w;
     w.port.send([id, ...body]);
@@ -121,17 +163,21 @@ class ChunkWorkerPool implements ChunkJobs {
 
   int get inflight => _waiting.length;
 
+  /// Kills the workers. Jobs still waiting fail with [ChunkJobCancelled].
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    _exits.close();
     for (final w in _workers) {
       w.isolate.kill(priority: Isolate.immediate);
     }
+    _workers.clear();
     _inbox.close();
     for (final c in _waiting.values) {
-      if (!c.isCompleted) c.completeError(StateError('worker pool disposed'));
+      if (!c.isCompleted) c.completeError(const ChunkJobCancelled('worker pool disposed'));
     }
     _waiting.clear();
+    _owner.clear();
   }
 }
 
@@ -146,31 +192,36 @@ void _workerMain(List<Object?> args) {
   port.listen((message) {
     final list = message as List<Object?>;
     final id = list[0] as int;
-    final kind = list[1] as String;
-    if (kind == 'gen') {
-      final blocks = generator.generateIn(list[2] as int, list[3] as int, list[4] as int);
-      out.send([id, TransferableTypedData.fromList([blocks])]);
-    } else if (kind == 'mesh') {
-      final ring = (list[4] as List<Object?>).cast<Uint8List?>();
-      final r = mesher.build(list[2] as int, list[3] as int, ring[0]!, ring[1], ring[2], ring[3], ring[4], ring[5],
-          ring[6], ring[7], ring[8]);
-      List<Object?> pack(MeshSurface s) => [
-            TransferableTypedData.fromList([s.positions]),
-            TransferableTypedData.fromList([s.normals]),
-            TransferableTypedData.fromList([s.colors]),
-            TransferableTypedData.fromList([s.light]),
-            TransferableTypedData.fromList([s.indices]),
-          ];
-      out.send([
-        id,
-        [
-          ...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout), ...pack(r.glow),
-          TransferableTypedData.fromList([r.sky]),
-          TransferableTypedData.fromList([r.block]),
-          r.aoVerts,
-          r.ms,
-        ]
-      ]);
+    try {
+      out.send([id, _run(generator, mesher, list)]);
+    } catch (e, st) {
+      out.send([id, null, e.toString(), st.toString()]);
     }
   });
+}
+
+Object? _run(ChunkGenerator generator, ChunkMesher mesher, List<Object?> list) {
+  final kind = list[1] as String;
+  if (kind == 'gen') {
+    final blocks = generator.generateIn(list[2] as int, list[3] as int, list[4] as int);
+    return TransferableTypedData.fromList([blocks]);
+  }
+  if (kind != 'mesh') throw ArgumentError.value(kind, 'kind', 'unknown chunk job');
+  final ring = (list[4] as List<Object?>).cast<Uint8List?>();
+  final r = mesher.build(list[2] as int, list[3] as int, ring[0]!, ring[1], ring[2], ring[3], ring[4], ring[5],
+      ring[6], ring[7], ring[8]);
+  List<Object?> pack(MeshSurface s) => [
+        TransferableTypedData.fromList([s.positions]),
+        TransferableTypedData.fromList([s.normals]),
+        TransferableTypedData.fromList([s.colors]),
+        TransferableTypedData.fromList([s.light]),
+        TransferableTypedData.fromList([s.indices]),
+      ];
+  return [
+    ...pack(r.solid), ...pack(r.liquid), ...pack(r.cutout), ...pack(r.glow),
+    TransferableTypedData.fromList([r.sky]),
+    TransferableTypedData.fromList([r.block]),
+    r.aoVerts,
+    r.ms,
+  ];
 }

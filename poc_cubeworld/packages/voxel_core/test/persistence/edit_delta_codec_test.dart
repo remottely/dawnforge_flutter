@@ -18,7 +18,7 @@ void main() {
 
   test('encode then decode returns the seed and every dimension, cell for cell', () {
     final bytes = _codec.encode(-4242424242, edits);
-    final back = _codec.decode(bytes)!;
+    final back = _codec.decode(bytes);
     expect(back.seed, -4242424242);
     expect(back.edits, edits);
   });
@@ -35,23 +35,27 @@ void main() {
   });
 
   test('a dimension with no edits is written as zero chunks and read back empty', () {
-    final back = _codec.decode(_codec.encode(7, {0: edits[0]!}))!;
+    final back = _codec.decode(_codec.encode(7, {0: edits[0]!}));
     expect(back.edits[1], isEmpty);
   });
 
   test('a version-1 file holds dimension 0 only and still loads', () {
     const v1 = EditDeltaCodec(magic: 0x4342574F, version: 1, dimensions: 1);
-    final back = _codec.decode(v1.encode(9, {0: edits[0]!}))!;
+    final back = _codec.decode(v1.encode(9, {0: edits[0]!}));
     expect(back.seed, 9);
     expect(back.edits.keys, [0]);
     expect(back.edits[0], edits[0]);
   });
 
-  test('not this format reads as null', () {
-    expect(_codec.decode(Uint8List(8)), isNull);
+  test('not this format throws a FormatException', () {
+    expect(() => _codec.decode(Uint8List(8)), throwsFormatException);
     final wrongMagic = _codec.encode(1, edits)..[0] ^= 0xFF;
-    expect(_codec.decode(wrongMagic), isNull);
+    expect(() => _codec.decode(wrongMagic), throwsFormatException);
     const v3 = EditDeltaCodec(magic: 0x4342574F, version: 3, dimensions: 2);
-    expect(_codec.decode(v3.encode(1, edits)), isNull);
+    expect(() => _codec.decode(v3.encode(1, edits)), throwsFormatException);
+    final whole = _codec.encode(1, edits);
+    expect(() => _codec.decode(Uint8List.sublistView(whole, 0, whole.length - 3)), throwsFormatException,
+        reason: 'cut inside the last edit');
+    expect(() => _codec.decode(Uint8List.fromList([...whole, 0])), throwsFormatException, reason: 'a byte left over');
   });
 }

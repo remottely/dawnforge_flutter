@@ -68,32 +68,40 @@ class EditDeltaCodec {
     return d.buffer.asUint8List();
   }
 
-  /// The seed the edits were made against and the edits, or null when the
-  /// bytes are not this format (too short, another magic, an unknown version).
-  ({int seed, EditsByDimension edits})? decode(Uint8List bytes) {
-    if (bytes.length < _headerBytes + 4) return null;
+  /// The seed the edits were made against and the edits. Throws a
+  /// [FormatException] when the bytes are not this format: another magic, an
+  /// unknown version, cut short, or bytes left over.
+  ({int seed, EditsByDimension edits}) decode(Uint8List bytes) {
     final d = ByteData.sublistView(bytes);
     var o = 0;
-    if (d.getUint32(o, Endian.little) != magic) return null;
+    void need(int n) {
+      if (o + n > bytes.length) throw FormatException('edit delta cut short', bytes, o);
+    }
+
+    need(_headerBytes);
+    if (d.getUint32(o, Endian.little) != magic) throw FormatException('not an edit delta: wrong magic', bytes, o);
     o += 4;
     final fileVersion = d.getUint32(o, Endian.little);
     final legacy = legacySingleDimensionVersion != null && fileVersion == legacySingleDimensionVersion;
-    if (fileVersion != version && !legacy) return null;
+    if (fileVersion != version && !legacy) throw FormatException('unknown edit delta version $fileVersion', bytes, o);
     o += 4;
     final seed = d.getInt64(o, Endian.little);
     o += 8;
     final edits = <int, Map<ChunkPos, Map<int, int>>>{};
     for (var dim = 0; dim < (legacy ? 1 : dimensions); dim++) {
       final all = <ChunkPos, Map<int, int>>{};
+      need(4);
       final n = d.getUint32(o, Endian.little);
       o += 4;
       for (var c = 0; c < n; c++) {
+        need(8 + 8 + 4);
         final cx = d.getInt64(o, Endian.little);
         o += 8;
         final cz = d.getInt64(o, Endian.little);
         o += 8;
         final count = d.getUint32(o, Endian.little);
         o += 4;
+        need(count * 5);
         final cells = <int, int>{};
         for (var e = 0; e < count; e++) {
           final i = d.getUint32(o, Endian.little);
@@ -105,6 +113,7 @@ class EditDeltaCodec {
       }
       edits[dim] = all;
     }
+    if (o != bytes.length) throw FormatException('${bytes.length - o} bytes after the edit delta', bytes, o);
     return (seed: seed, edits: edits);
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
@@ -12,8 +13,14 @@ class _FlatGenerator implements ChunkGenerator {
 
   static int stamp(int cx, int cz, int dimension) => (cx * 16 + cz + dimension * 100) % 80;
 
+  /// Chunk x that makes the job throw, and chunk x that kills its worker.
+  static const int throws = 13;
+  static const int kills = 666;
+
   @override
   Uint8List generateIn(int cx, int cz, int dimension) {
+    if (cx == throws) throw StateError('no terrain at x $throws');
+    if (cx == kills) Isolate.current.kill(priority: Isolate.immediate);
     final v = Uint8List(ChunkSize.volume);
     v.fillRange(0, ChunkSize.sizeX * ChunkSize.sizeZ * height, 1);
     for (var y = height; y < height + stamp(cx, cz, dimension); y++) {
@@ -25,6 +32,8 @@ class _FlatGenerator implements ChunkGenerator {
 
 /// Made in a top-level function, so the closure captures only [height].
 ChunkGeneratorFactory _flatFactory(int height) => () => _FlatGenerator(height);
+
+ChunkGenerator _brokenFactory() => throw StateError('the generator could not be built');
 
 final _table = VoxelBlockTable(const [
   VoxelBlockDef(shape: BlockShape.cube, solid: false, opaque: false, r: 0, g: 0, b: 0, a: 0),
@@ -70,9 +79,31 @@ void main() {
     expect(pool.inflight, 0);
   });
 
-  test('dispose fails the jobs still waiting', () async {
+  test('dispose cancels the jobs still waiting', () async {
     final pending = pool.generate(9, 9);
     pool.dispose();
-    await expectLater(pending, throwsStateError);
+    await expectLater(pending, throwsA(isA<ChunkJobCancelled>()));
+  });
+
+  test('a job that throws fails with the worker error, and the worker keeps serving', () async {
+    await expectLater(
+        pool.generate(_FlatGenerator.throws, 0),
+        throwsA(isA<RemoteError>().having((e) => e.toString(), 'message', contains('no terrain at x 13'))));
+    expect(pool.inflight, 0);
+    expect(await pool.generate(1, 2), hasLength(ChunkSize.volume));
+  });
+
+  test('a worker that dies fails its jobs and leaves the pool; the other keeps serving', () async {
+    await expectLater(pool.generate(_FlatGenerator.kills, 0), throwsStateError);
+    expect(pool.inflight, 0);
+    for (var i = 0; i < 4; i++) {
+      expect(await pool.generate(i, 0), hasLength(ChunkSize.volume));
+    }
+  });
+
+  test('a generator factory that throws makes start throw instead of hanging', () async {
+    final broken = ChunkWorkerPool(WorkerConfig(generator: _brokenFactory, table: _table), workers: 1);
+    await expectLater(broken.start(), throwsA(isA<RemoteError>()));
+    broken.dispose();
   });
 }
