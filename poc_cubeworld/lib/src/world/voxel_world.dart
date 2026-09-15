@@ -455,66 +455,23 @@ class VoxelWorld implements ChunkMeshSink {
   static const int saveVersion = 2;
   static const int saveDimensions = 2;
 
-  Uint8List editsToBytes() {
-    final byDimension = _streamer.editsByDimension;
-    var size = 4 + 4 + 8;
-    for (var dim = 0; dim < saveDimensions; dim++) {
-      size += 4;
-      for (final e in (byDimension[dim] ?? const <ChunkPos, Map<int, int>>{}).values) {
-        size += 8 + 8 + 4 + e.length * 5;
-      }
-    }
-    final d = ByteData(size);
-    var o = 0;
-    d.setUint32(o, saveMagic, Endian.little); o += 4;
-    d.setUint32(o, saveVersion, Endian.little); o += 4;
-    d.setInt64(o, seedValue, Endian.little); o += 8;
-    for (var dim = 0; dim < saveDimensions; dim++) {
-      final all = byDimension[dim] ?? const <ChunkPos, Map<int, int>>{};
-      d.setUint32(o, all.length, Endian.little); o += 4;
-      for (final e in all.entries) {
-        d.setInt64(o, e.key.x, Endian.little); o += 8;
-        d.setInt64(o, e.key.z, Endian.little); o += 8;
-        d.setUint32(o, e.value.length, Endian.little); o += 4;
-        for (final b in e.value.entries) {
-          d.setUint32(o, b.key, Endian.little); o += 4;
-          d.setUint8(o, b.value); o += 1;
-        }
-      }
-    }
-    return d.buffer.asUint8List();
-  }
+  /// VP1.7: the byte layout lives in voxel_core's [EditDeltaCodec]; the POC
+  /// supplies its magic, its version and the version-1 files it still reads.
+  static const EditDeltaCodec saveCodec = EditDeltaCodec(
+    magic: saveMagic,
+    version: saveVersion,
+    dimensions: saveDimensions,
+    legacySingleDimensionVersion: 1,
+  );
+
+  Uint8List editsToBytes() => saveCodec.encode(seedValue, _streamer.editsByDimension);
 
   /// Returns the seed the edits were made against, or null when unreadable.
   int? loadEditsFromBytes(Uint8List bytes) {
-    if (bytes.length < 20) return null;
-    final d = ByteData.sublistView(bytes);
-    var o = 0;
-    if (d.getUint32(o, Endian.little) != saveMagic) return null;
-    o += 4;
-    final version = d.getUint32(o, Endian.little);
-    if (version != saveVersion && version != 1) return null;
-    o += 4;
-    final seed = d.getInt64(o, Endian.little); o += 8;
-    final byDimension = <int, Map<ChunkPos, Map<int, int>>>{};
-    for (var dim = 0; dim < (version >= 2 ? saveDimensions : 1); dim++) {
-      final all = <ChunkPos, Map<int, int>>{};
-      final n = d.getUint32(o, Endian.little); o += 4;
-      for (var c = 0; c < n; c++) {
-        final cx = d.getInt64(o, Endian.little); o += 8;
-        final cz = d.getInt64(o, Endian.little); o += 8;
-        final count = d.getUint32(o, Endian.little); o += 4;
-        final edits = <int, int>{};
-        for (var e = 0; e < count; e++) {
-          final i = d.getUint32(o, Endian.little); o += 4;
-          edits[i] = d.getUint8(o); o += 1;
-        }
-        all[(x: cx, z: cz)] = edits;
-      }
-      byDimension[dim] = all;
-    }
-    _streamer.replaceEdits(byDimension);
-    return seed;
+    final read = saveCodec.decode(bytes);
+    if (read == null) return null;
+    _streamer.replaceEdits(read.edits);
+    return read.seed;
   }
 
   Future<void> saveEdits(String path) async {

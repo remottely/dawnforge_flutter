@@ -210,7 +210,8 @@ the perf loop at VP1.5 lands within 10% of the baseline.
 | VP1.3 `ChunkMesher` | `08c2c599` | **Deviation:** the mesher's `shapeX` ints stay `const`, because `BlockShape.index` is not a constant expression and would sit in the hottest loop. A package test pins all 25 to `BlockShape.index` instead |
 | VP1.4 `VoxelBlockTable` | `79554dfb` | `Blocks.table` is built from the 125 rows; liquid kinds indexed by `Blocks.liquidKinds` (water 0, lava 1); the four array getters return the table's arrays, byte-identical |
 | VP1.5 `ChunkWorkerPool` | `cc3cc4ce` | `TerrainGenerator implements ChunkGenerator`. The factory is made in a static on `VoxelWorld`: a closure made in an instance method may capture `this` and its unsendable scene nodes |
-| VP1.6 `ChunkStreamer` | pending | `VoxelWorld` becomes the facade and the streamer's `ChunkMeshSink`. It keeps nodes, materials, generator, flow, circuits, dimension rules and the save format. `ChunkPos` / `CellLight` move to the package. The pool implements `ChunkJobs`, so the streamer's tests answer jobs synchronously |
+| VP1.7 `EditDeltaCodec` | pending | the byte layout moves as is; magic, version, dimensions and the accepted legacy version are parameters. Unreadable bytes still decode to null (VD2); the throw waits for VP4.1 |
+| VP1.6 `ChunkStreamer` | `05917308` | `VoxelWorld` becomes the facade and the streamer's `ChunkMeshSink`. It keeps nodes, materials, generator, flow, circuits, dimension rules and the save format. `ChunkPos` / `CellLight` move to the package. The pool implements `ChunkJobs`, so the streamer's tests answer jobs synchronously |
 
 **VP1.5 performance gate** (`tool/perf_loop.sh`, release, 3 workers), against `9b722064` built
 in a temporary worktree on the same machine. The 2026-09-11 figures are not comparable: stage 32
