@@ -14,7 +14,7 @@ import '../entities/bobber.dart';
 import '../entities/mob.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
-import '../entities/voxel_body.dart';
+import '../entities/scene_body.dart';
 import '../entities/voxel_mesh_builder.dart';
 import '../game/achievements.dart';
 import '../game/effects.dart';
@@ -48,17 +48,9 @@ class PlayerClass {
   Vector3 get shirt => Vector3(shirtR, shirtG, shirtB);
 }
 
-/// A voxel raycast hit.
-class RayHit {
-  RayHit(this.block, this.normal, this.distance);
-  final IVec3 block;
-  final IVec3 normal;
-  final double distance;
-}
-
 /// The hero: third person orbit camera (V toggles first person), sweep body,
 /// mine / place / attack, climb, swim, glide, sprint, stats and levelling.
-class Player extends VoxelBody implements Target {
+class Player extends SceneBody implements Target {
   static const double walkSpeed = 4.6;
   static const double sprintSpeed = 7.6;
   static const double sneakSpeed = 2.0;
@@ -343,44 +335,9 @@ class Player extends VoxelBody implements Target {
     return hit?.distance ?? -1.0;
   }
 
-  RayHit? voxelRaycast(Vector3 origin, Vector3 direction, double reachDist) {
-    var bx = origin.x.floor(), by = origin.y.floor(), bz = origin.z.floor();
-    final sx = direction.x > 0.0 ? 1 : -1, sy = direction.y > 0.0 ? 1 : -1, sz = direction.z > 0.0 ? 1 : -1;
-    final tdx = direction.x.abs() < 1e-9 ? double.infinity : (1.0 / direction.x).abs();
-    final tdy = direction.y.abs() < 1e-9 ? double.infinity : (1.0 / direction.y).abs();
-    final tdz = direction.z.abs() < 1e-9 ? double.infinity : (1.0 / direction.z).abs();
-    var tmx = _distToBoundary(origin.x, direction.x, bx);
-    var tmy = _distToBoundary(origin.y, direction.y, by);
-    var tmz = _distToBoundary(origin.z, direction.z, bz);
-    var normal = IVec3.zero;
-    var travelled = 0.0;
-    while (travelled <= reachDist) {
-      final id = world.getBlockXYZ(bx, by, bz);
-      if (id != Blocks.air && !Blocks.isLiquid(id)) return RayHit(IVec3(bx, by, bz), normal, travelled);
-      if (tmx < tmy && tmx < tmz) {
-        bx += sx;
-        travelled = tmx;
-        tmx += tdx;
-        normal = IVec3(-sx, 0, 0);
-      } else if (tmy < tmz) {
-        by += sy;
-        travelled = tmy;
-        tmy += tdy;
-        normal = IVec3(0, -sy, 0);
-      } else {
-        bz += sz;
-        travelled = tmz;
-        tmz += tdz;
-        normal = IVec3(0, 0, -sz);
-      }
-    }
-    return null;
-  }
-
-  double _distToBoundary(double o, double d, int cell) {
-    if (d.abs() < 1e-9) return double.infinity;
-    return d > 0.0 ? ((cell + 1.0 - o) / d) : ((cell - o) / d);
-  }
+  /// VP1.9: voxel_core's grid traversal over this world.
+  RayHit? voxelRaycast(Vector3 origin, Vector3 direction, double reachDist) =>
+      VoxelRaycast.solid(world, origin, direction, reachDist);
 
   void _updateAim() {
     final origin = aimOrigin();
@@ -1973,36 +1930,8 @@ class Player extends VoxelBody implements Target {
 
   /// The first liquid cell along a ray, stopping at the first solid; null when
   /// there is none.
-  IVec3? liquidRaycast(Vector3 origin, Vector3 direction, double reachDist) {
-    var block = IVec3.floor(origin);
-    final stepX = direction.x > 0 ? 1 : -1, stepY = direction.y > 0 ? 1 : -1, stepZ = direction.z > 0 ? 1 : -1;
-    final tdx = direction.x == 0 ? double.infinity : (1.0 / direction.x).abs();
-    final tdy = direction.y == 0 ? double.infinity : (1.0 / direction.y).abs();
-    final tdz = direction.z == 0 ? double.infinity : (1.0 / direction.z).abs();
-    var tmx = _distToBoundary(origin.x, direction.x, block.x);
-    var tmy = _distToBoundary(origin.y, direction.y, block.y);
-    var tmz = _distToBoundary(origin.z, direction.z, block.z);
-    var travelled = 0.0;
-    while (travelled <= reachDist) {
-      final id = world.getBlock(block);
-      if (Blocks.isLiquid(id)) return block;
-      if (id != Blocks.air && Blocks.isSolid(id)) return null;
-      if (tmx < tmy && tmx < tmz) {
-        block = block + IVec3(stepX, 0, 0);
-        travelled = tmx;
-        tmx += tdx;
-      } else if (tmy < tmz) {
-        block = block + IVec3(0, stepY, 0);
-        travelled = tmy;
-        tmy += tdy;
-      } else {
-        block = block + IVec3(0, 0, stepZ);
-        travelled = tmz;
-        tmz += tdz;
-      }
-    }
-    return null;
-  }
+  IVec3? liquidRaycast(Vector3 origin, Vector3 direction, double reachDist) =>
+      VoxelRaycast.liquid(world, origin, direction, reachDist);
 
   /// Cast the line at a water cell: the bobber flies there and waits for a bite.
   void castFishing(IVec3 cell) {

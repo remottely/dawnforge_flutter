@@ -23,7 +23,7 @@
 | Phase | State | Gate |
 |:---|:---|:---|
 | VP0 Scaffold & baseline | pending — VP0.1 can start now, VP0.2–VP0.3 wait on stage 32's commit | workspace resolves; empty packages analyze clean; baseline logs and parity hashes committed |
-| VP1 `voxel_core` by moves | pending | every pure world file imported from `package:voxel_core`; POC tests, parity hashes and probe logs unchanged |
+| VP1 `voxel_core` by moves | **gate met** 2026-09-14 (VP1.1–VP1.9; VP1.5b pool size pending): 10 source files, 43 package tests, zero Flutter imports; the POC's `world/` keeps only `godot_camera`, `terrain_generator`, `terrain_material` and the `voxel_world` facade | every pure world file imported from `package:voxel_core`; POC tests, parity hashes and probe logs unchanged |
 | VP2 `voxel_scene` by moves | pending | no `flutter_scene` import left in the POC's `world/`; radius 8/12/16 within 10% of the baseline |
 | VP3 The render gap | pending | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
 | VP4 Release prep `0.0.1` | pending | `dart pub publish --dry-run` clean for both; a standalone example runs without the POC |
@@ -210,7 +210,8 @@ the perf loop at VP1.5 lands within 10% of the baseline.
 | VP1.3 `ChunkMesher` | `08c2c599` | **Deviation:** the mesher's `shapeX` ints stay `const`, because `BlockShape.index` is not a constant expression and would sit in the hottest loop. A package test pins all 25 to `BlockShape.index` instead |
 | VP1.4 `VoxelBlockTable` | `79554dfb` | `Blocks.table` is built from the 125 rows; liquid kinds indexed by `Blocks.liquidKinds` (water 0, lava 1); the four array getters return the table's arrays, byte-identical |
 | VP1.5 `ChunkWorkerPool` | `cc3cc4ce` | `TerrainGenerator implements ChunkGenerator`. The factory is made in a static on `VoxelWorld`: a closure made in an instance method may capture `this` and its unsendable scene nodes |
-| VP1.7 `EditDeltaCodec` | pending | the byte layout moves as is; magic, version, dimensions and the accepted legacy version are parameters. Unreadable bytes still decode to null (VD2); the throw waits for VP4.1 |
+| VP1.8 `VoxelBody` + VP1.9 `VoxelRaycast` | pending | one commit: the body and the rays share `VoxelQuery`, which `VoxelWorld` implements. The POC's `SceneBody extends VoxelBody` adds `node`, `syncNode`, `world` typed as the facade, and `inLava` from the liquid kind; `Player`, `Mob`, `Boat` and `ItemDrop` extend it. `inLava`'s string compare became `feetLiquid` / `headLiquid` kind indices. The rays are static (`VoxelRaycast.solid` / `.liquid`): a top-level function named like `Player`'s methods would be shadowed inside the class, and the delegation would recurse |
+| VP1.7 `EditDeltaCodec` | `804ff0f0` | the byte layout moves as is; magic, version, dimensions and the accepted legacy version are parameters. Unreadable bytes still decode to null (VD2); the throw waits for VP4.1 |
 | VP1.6 `ChunkStreamer` | `05917308` | `VoxelWorld` becomes the facade and the streamer's `ChunkMeshSink`. It keeps nodes, materials, generator, flow, circuits, dimension rules and the save format. `ChunkPos` / `CellLight` move to the package. The pool implements `ChunkJobs`, so the streamer's tests answer jobs synchronously |
 
 **VP1.5 performance gate** (`tool/perf_loop.sh`, release, 3 workers), against `9b722064` built
@@ -235,9 +236,12 @@ moved unchanged; the fix is an `onError` port that fails the pending futures.
 
 - **VP2.1** `TerrainMaterial`, `terrain.frag`, `terrain_cube.frag`, `tool/build_shaders.dart`
   and the bundle → `voxel_scene`. The asset key becomes
-  `packages/voxel_scene/assets/shaders/terrain.shaderbundle`. **Risk checked first:** whether
-  `gpu.loadShaderLibraryAsync` resolves a package asset key. If it does not, the package
-  exposes `loadLibrary(String assetKey)` and the POC keeps listing the asset.
+  `packages/voxel_scene/assets/shaders/terrain.shaderbundle`. **Risk checked (2026-09-14):**
+  `gpu.loadShaderLibraryAsync` is `ShaderLibrary.fromAsset(assetName)` on native, and
+  flutter_scene 0.23.0 loads its own engine bundle by the package key
+  `packages/flutter_scene/flutter_gpu_shaders/shaderbundles/base.shaderbundle`
+  (`lib/src/shaders.dart:12`). So a package asset key resolves. The package lists the
+  bundle in its own pubspec, and the POC stops listing `assets/shaders/`.
 - **VP2.2** `VoxelChunkView implements ChunkMeshSink`. It holds:
   - the root `Node` and one node per chunk;
   - `MeshGeometry.fromArrays` with light in `texCoords1`;

@@ -19,7 +19,7 @@ typedef StructureAt = ({int x, int y, int z, int type});
 /// one flutter_scene Node per chunk under [root] (it is the streamer's sink),
 /// the terrain materials, the terrain generator, liquid flow, circuits,
 /// dimension rules and the save format.
-class VoxelWorld implements ChunkMeshSink {
+class VoxelWorld implements ChunkMeshSink, VoxelQuery {
   VoxelWorld({required this.seedValue, int loadRadius = 8}) {
     _streamer = ChunkStreamer(table: Blocks.table, sink: this, loadRadius: loadRadius);
     _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue);
@@ -211,6 +211,11 @@ class VoxelWorld implements ChunkMeshSink {
 
   int getBlock(IVec3 b) => getBlockXYZ(b.x, b.y, b.z);
 
+  /// VP1.8: bodies and rays read the world through voxel_core's [VoxelQuery].
+  @override
+  VoxelBlockTable get table => Blocks.table;
+
+  @override
   int getBlockXYZ(int x, int y, int z) => _streamer.getBlockXYZ(x, y, z);
 
   bool isLoaded(IVec3 b) => chunks.containsKey(chunkOf(b));

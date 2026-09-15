@@ -9,7 +9,6 @@ import '../player/player.dart';
 import '../world/godot_camera.dart';
 import '../world/voxel_world.dart';
 import 'mob.dart';
-import 'voxel_body.dart';
 import 'voxel_mesh_builder.dart';
 
 /// Arrows and magic bolts: a segment swept against blocks and body boxes on

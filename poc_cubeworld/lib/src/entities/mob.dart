@@ -17,7 +17,7 @@ import '../world/voxel_world.dart';
 import 'player_model.dart';
 import 'remote_player.dart';
 import 'target.dart';
-import 'voxel_body.dart';
+import 'scene_body.dart';
 import '../game/pathfinder.dart';
 import 'voxel_mesh_builder.dart';
 
@@ -25,7 +25,7 @@ enum MobState { idle, wander, chase, attack, flee, dead }
 
 /// A creature: voxel model by body type, a small state machine, health bar,
 /// drops and XP.
-class Mob extends VoxelBody {
+class Mob extends SceneBody {
   late SpeciesDef species;
   double hp = 1;
   double maxHp = 1;

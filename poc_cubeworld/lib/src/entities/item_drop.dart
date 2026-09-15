@@ -13,7 +13,7 @@ import '../player/player.dart';
 import '../ui/hud.dart';
 import '../world/voxel_world.dart';
 import 'target.dart';
-import 'voxel_body.dart';
+import 'scene_body.dart';
 import 'voxel_mesh_builder.dart';
 
 /// An item lying in the world: bobs, spins, is pulled to a near player and
@@ -22,7 +22,7 @@ import 'voxel_mesh_builder.dart';
 /// [replica] (client side) never simulates — it lerps to the pose the host
 /// streams ([setNetPose]) and only spins; a puppet is pulled only when its
 /// peer's declared bag has room.
-class ItemDrop extends VoxelBody {
+class ItemDrop extends SceneBody {
   String itemId = '';
   int count = 1;
   int bonus = 0;

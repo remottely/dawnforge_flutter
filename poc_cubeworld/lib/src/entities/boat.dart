@@ -6,7 +6,7 @@ import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/game.dart';
 import '../world/voxel_world.dart';
-import 'voxel_body.dart';
+import 'scene_body.dart';
 import 'voxel_mesh_builder.dart';
 
 /// A rowing boat: floats on liquid, driven by whoever sits in it (F to board /
@@ -14,7 +14,7 @@ import 'voxel_mesh_builder.dart';
 /// simulates — it lerps to the pose the host streams ([setNetPose]); a client
 /// that boards one sends its steer input inside its pose and the host's boat
 /// carries its puppet.
-class Boat extends VoxelBody {
+class Boat extends SceneBody {
   /// The local player or, on the host, a peer's puppet (stage 25).
   Object? driver;
   double throttle = 0.0;

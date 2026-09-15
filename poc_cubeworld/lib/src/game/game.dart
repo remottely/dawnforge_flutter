@@ -20,7 +20,6 @@ import '../entities/projectile.dart';
 import '../entities/remote_player.dart';
 import '../entities/spawner.dart';
 import '../entities/target.dart';
-import '../entities/voxel_body.dart';
 import '../player/player.dart';
 import '../world/godot_camera.dart';
 import '../world/terrain_generator.dart';

@@ -1,48 +1,58 @@
 import 'dart:math' as math;
 
-import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
-import '../core/blocks.dart';
-import 'package:voxel_core/voxel_core.dart';
-import '../world/voxel_world.dart';
+import '../grid/block_shape.dart';
+import '../grid/voxel_block_table.dart';
+import '../math/ivec3.dart';
+
+/// What a body or a ray needs to read from a world: the block at a cell and
+/// what that block is.
+abstract interface class VoxelQuery {
+  VoxelBlockTable get table;
+
+  /// The block id at a world cell; air where nothing is generated.
+  int getBlockXYZ(int x, int y, int z);
+}
 
 /// An AABB anchored at the feet, swept against the block volume one axis at a
-/// time. Owns the scene node that carries its visuals.
+/// time. Knows nothing of rendering: a game moves its visuals from [position].
 class VoxelBody {
   static const double skin = 0.001;
   static const double gravity = 26.0;
   static const double waterGravity = 4.0;
 
-  final Node node = Node();
   Vector3 position = Vector3.zero();
   double halfWidth = 0.3;
   double height = 1.75;
   Vector3 velocity = Vector3.zero();
   bool onFloor = false;
+
+  /// In any liquid, at the feet or the head.
   bool inWater = false;
   bool headInWater = false;
-  bool inLava = false;
+
+  /// The liquid kind at the feet / head cell, or [VoxelBlockDef.noLiquid].
+  int feetLiquid = VoxelBlockDef.noLiquid;
+  int headLiquid = VoxelBlockDef.noLiquid;
+
   bool hitWall = false;
-  late VoxelWorld world;
+  late VoxelQuery query;
   bool removed = false;
 
-  /// Stage 23: a ghost passes through every block.
+  /// A ghost passes through every block.
   bool noclip = false;
 
   /// The horizontal direction the last move was stopped in.
   Vector3 _blocked = Vector3.zero();
 
-  void setup(VoxelWorld w, double hw, double h) {
-    world = w;
+  void setup(VoxelQuery q, double hw, double h) {
+    query = q;
     halfWidth = hw;
     height = h;
   }
 
   Vector3 centre() => position + Vector3(0, height * 0.5, 0);
-
-  /// Pushes the position into the scene node. Call after moving.
-  void syncNode() => node.position = position.clone();
 
   double rayDistance(Vector3 origin, Vector3 direction, [double inflate = 0.0]) {
     final mn = position - Vector3(halfWidth + inflate, inflate, halfWidth + inflate);
@@ -134,11 +144,13 @@ class VoxelBody {
   }
 
   void _senseFluids() {
-    final feetId = world.getBlockXYZ(position.x.floor(), (position.y + 0.3).floor(), position.z.floor());
-    final headId = world.getBlockXYZ(position.x.floor(), (position.y + height - 0.15).floor(), position.z.floor());
-    inWater = Blocks.isLiquid(feetId) || Blocks.isLiquid(headId);
-    headInWater = Blocks.isLiquid(headId);
-    inLava = Blocks.liquidKind(feetId) == 'lava' || Blocks.liquidKind(headId) == 'lava';
+    final feetId = query.getBlockXYZ(position.x.floor(), (position.y + 0.3).floor(), position.z.floor());
+    final headId = query.getBlockXYZ(position.x.floor(), (position.y + height - 0.15).floor(), position.z.floor());
+    final t = query.table;
+    feetLiquid = t.liquidKind(feetId);
+    headLiquid = t.liquidKind(headId);
+    inWater = t.isLiquid(feetId) || t.isLiquid(headId);
+    headInWater = t.isLiquid(headId);
   }
 
   /// Step up onto a low obstacle when walking into it: half a block first (a
@@ -187,11 +199,12 @@ class VoxelBody {
     final maxY = by1.floor();
     final minZ = bz0.floor();
     final maxZ = bz1.floor();
+    final table = query.table;
     for (var y = minY; y <= maxY; y++) {
       for (var z = minZ; z <= maxZ; z++) {
         for (var x = minX; x <= maxX; x++) {
           // y < 0 is solid rock.
-          final boxes = y < 0 ? const [Blocks.fullBox] : Blocks.collisionBoxes(world.getBlockXYZ(x, y, z));
+          final boxes = y < 0 ? const [CollisionBox.full] : table.collisionBoxes(query.getBlockXYZ(x, y, z));
           for (final box in boxes) {
             final p = box.shifted(x, y, z);
             if (p.x0 < bx1 && p.x1 > bx0 && p.y0 < by1 && p.y1 > by0 && p.z0 < bz1 && p.z1 > bz0) {
@@ -210,8 +223,11 @@ class VoxelBody {
   bool wallAhead(Vector3 direction) {
     final probe = position + direction.normalized() * (halfWidth + 0.35);
     for (final dy in [0.3, 1.0, height - 0.2]) {
-      if (world.isSolidXYZ(probe.x.floor(), (position.y + dy).floor(), probe.z.floor())) return true;
+      if (_solidCell(probe.x.floor(), (position.y + dy).floor(), probe.z.floor())) return true;
     }
     return false;
   }
+
+  /// y < 0 is solid rock.
+  bool _solidCell(int x, int y, int z) => y < 0 || query.table.isSolid(query.getBlockXYZ(x, y, z));
 }

@@ -5,7 +5,6 @@ import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
-import 'package:cubeworld_poc/src/entities/voxel_body.dart';
 import 'package:cubeworld_poc/src/game/inventory.dart';
 import 'package:cubeworld_poc/src/game/loot.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
