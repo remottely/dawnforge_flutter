@@ -25,7 +25,7 @@
 | VP0 Scaffold & baseline | pending — VP0.1 can start now, VP0.2–VP0.3 wait on stage 32's commit | workspace resolves; empty packages analyze clean; baseline logs and parity hashes committed |
 | VP1 `voxel_core` by moves | **gate met** 2026-09-14 (VP1.1–VP1.9; VP1.5b pool size pending): 10 source files, 43 package tests, zero Flutter imports; the POC's `world/` keeps only `godot_camera`, `terrain_generator`, `terrain_material` and the `voxel_world` facade | every pure world file imported from `package:voxel_core`; POC tests, parity hashes and probe logs unchanged |
 | VP2 `voxel_scene` by moves | pending | no `flutter_scene` import left in the POC's `world/`; radius 8/12/16 within 10% of the baseline |
-| VP3 The render gap | in progress (VP3.0 done: baseline 67 settle fps at radius 16) | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
+| VP3 The render gap | in progress (VP3.0 gate fixed; VP3.1 stepped sun: 69 → 84 settle fps at radius 16, gate met) | radius-16 sustained fps above the baseline's 70 (release, 3 workers) |
 | VP4 Release prep `0.0.1` | pending | `dart pub publish --dry-run` clean for both; a standalone example runs without the POC |
 
 ---
@@ -348,6 +348,51 @@ measurement (below).
     `--noshadow` anyway, because a moving camera changes coverage.
   - The probe's `fps` is the last 0.5 s window only (`game.dart:571`), so one hitch at the end of
     the run moves it. Part of the ±15% is the metric, not the machine.
+  **Measured (2026-09-14, radius 16, release with `FLUTTER_SCENE_PROFILE`, one run each, pass
+  times are the engine's means over 120 frames):**
+
+  | Run | ShadowPass ms | ScenePass ms | Encode ms | Draws | Settle fps |
+  |:--|--:|--:|--:|--:|--:|
+  | shadows, cache on (default) | 7.1–7.3 | 4.3 | 3.4 | 809 | 65.3 |
+  | shadows, `--shadowcache=0` | 4.0 | 4.3 | — | — | 75.8 |
+  | `--noshadow` | — | 4.4 | 3.4 | 809–819 | 118.8 (vsync) |
+
+  **The render gap is the sun's shadow, not vertices and not draw calls.** Frustum culling
+  already brings 4,900 nodes down to about 810 draws, and the scene pass fits in 4.4 ms. Worse,
+  the static shadow cache costs 3 ms more than no cache. Cause: `plan()` drops every tile when
+  the light direction moves more than 1e-5 (`shadow_cache.dart:106`), and the POC advances the
+  sun on every tick (`game.dart` `timeOfDay`, day = 600 s, ≈1.7e-4 rad per frame). So each frame
+  re-renders all four cascades, then copies them and walks every item once per cascade for the
+  dynamic casters. Fix in the POC: the sun turns in 0.5° steps (`--sunstep=`, 0 = smooth), so
+  the cache holds for about 0.8 s of game time between rebuilds. VP3.2 and VP3.3 wait until
+  this is measured.
+  **Gate A/B, cache on against `--shadowcache=0` (a67e9a28 binary, radius 16, 5 alternated runs):**
+  settle fps 76 (9) against 82.1 (7.4). The 6 fps gap is inside both spreads, so by the VP3.0 rule
+  it is not proven, though it points the same way as the pass times. The same cache-on binary read
+  67 in the VP3.0 A/A an hour earlier: absolute numbers drift between sessions, so only builds
+  measured in the same alternated run may be compared.
+  **Gate A/B, stepped sun (one binary, radius 16, 5 alternated rounds of three configs):**
+
+  | Config | Fill ms | Settle fps | Runs (settle fps) |
+  |:--|--:|--:|:--|
+  | `step` (default, 0.5°) | 2503 (397) | **83.6 (5.5)** | 87.3 · 86.9 · 82.7 · 81.8 · 83.6 |
+  | `smooth` (`--sunstep=0`, the old behaviour) | 2590 (127) | 69.1 (11.3) | 62.2 · 69.1 · 69.1 · 73.3 · 73.5 |
+  | `nocache` (`--sunstep=0 --shadowcache=0`) | 2553 (213) | 77.4 (13.6) | 73.2 · 86.8 · 77.1 · 83.2 · 77.4 |
+
+  **Gate passed.** Stepped against smooth is +14.5 fps (+21%), more than both spreads, and every
+  stepped run beats every smooth run. Radius-16 settle fps is above the 70 target. Fill is
+  unchanged (inside spreads), and tests, parity hashes and probe logs are unchanged. A stepped sun
+  also beats no cache at all, so the static cache now pays for itself.
+  **Profile with the stepped sun (same run shape as the table above):** ShadowPass mean 0.63–0.78 ms
+  (was 7.1), max 6.2–7.7 ms on the frame a step rebuilds the four cascades; ScenePass 4.4–4.7 ms;
+  one run read 88.7 settle fps.
+  **What this leaves for VP3.2 / VP3.3.** The scene pass is now the largest per-frame cost, and
+  3.4 ms of it is encoding about 810 draws. That is region batching's target (VP3.3: fewer, larger
+  nodes → fewer draws), not greedy meshing's (VP3.2: fewer vertices per draw). A second, smaller
+  item: the rebuild spike of about 7 ms every 0.8 s of game time. flutter_scene would refresh one
+  stale tile per frame if only the signature changed (`maxAmortizedRefreshes`), but a light
+  direction change rebuilds all four at once. Record it before deciding whether a 1–2 frame hitch
+  at that rate matters.
 - **VP3.2** If vertex cost dominates, use greedy meshing. **Known blocker:** `_noise`
   multiplies every voxel's colour by a positional hash (±7%), so no two neighbouring faces share
   a colour and nothing can merge. Move the jitter into the terrain shader first, as a hash of

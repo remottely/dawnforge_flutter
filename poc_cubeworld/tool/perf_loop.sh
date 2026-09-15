@@ -8,6 +8,7 @@
 #   tool/perf_loop.sh --repeat 5 --cooldown 20 A=DIR_A B=DIR_B
 #                                              # A/B: launches alternate A,B then B,A per round
 #   tool/perf_loop.sh --radii "16" ...         # only these radii
+#   tool/perf_loop.sh A=. B=.,--shadowcache=0   # one tree, extra launch flags after commas
 #
 # One launch carries about ±15% on sustained fps (thermal state, launch order), so a gate reads
 # the medians of --repeat runs and holds only when the gap exceeds both spreads (VP3.0).
@@ -16,19 +17,20 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 repeat=1 cooldown=0 radii="8 12 16" build=1
-labels=() dirs=()
+labels=() dirs=() extras=()
 while (($#)); do
   case $1 in
     --repeat) repeat=${2:?}; shift 2 ;;
     --cooldown) cooldown=${2:?}; shift 2 ;;
     --radii) radii=${2:?}; shift 2 ;;
-    --no-build) build=0; if [[ ${2:-} && ${2:-} != -* && ${2:-} != *=* ]]; then labels+=(poc); dirs+=("$2"); shift; fi; shift ;;
-    *=*) build=0; labels+=("${1%%=*}"); dirs+=("${1#*=}"); shift ;;
+    --no-build) build=0; if [[ ${2:-} && ${2:-} != -* && ${2:-} != *=* ]]; then labels+=(poc); dirs+=("$2"); extras+=(""); shift; fi; shift ;;
+    *=*) build=0; spec=${1#*=}; labels+=("${1%%=*}"); dirs+=("${spec%%,*}")
+      extra=${spec#"${spec%%,*}"}; extras+=("${extra//,/ }"); shift ;;
     *) echo "unknown argument: $1" >&2; exit 64 ;;
   esac
 done
 if ((${#labels[@]} == 0)); then
-  labels=(poc) dirs=(.)
+  labels=(poc) dirs=(.) extras=("")
 fi
 if ((build)); then flutter build macos --release >/dev/null; fi
 
@@ -36,11 +38,11 @@ shots=$(mktemp -d)
 raw=$shots/raw.tsv
 : >"$raw"
 
-measure() { # label dir radius
+measure() { # label dir radius extra-flags
   local app=$2/build/macos/Build/Products/Release/cubeworld_poc.app/Contents/MacOS/cubeworld_poc out
   [[ -x $app ]] || { echo "no release build at $app" >&2; exit 66; }
   out=$( { perl -e 'alarm 300; exec @ARGV' /usr/bin/time -l "$app" --new --seed=42 --radius="$3" \
-    --frames=3000 --settle=900 --screenshot="$shots/$1-r$3.png"; } 2>&1 || true)
+    --frames=3000 --settle=900 --screenshot="$shots/$1-r$3.png" $4; } 2>&1 || true)
   local fill faces fps sfps rss
   fill=$(grep -oE 'faces in [0-9]+ ms' <<<"$out" | grep -oE '[0-9]+' | head -1 || true)
   faces=$(grep -oE 'chunks, [0-9]+ faces' <<<"$out" | grep -oE '[0-9]+' | head -1 || true)
@@ -57,7 +59,7 @@ for ((round = 0; round < repeat; round++)); do
     for ((k = 0; k < n; k++)); do
       i=$(( round % 2 ? n - 1 - k : k ))
       if ((first)); then first=0; elif ((cooldown)); then sleep "$cooldown"; fi
-      measure "${labels[$i]}" "${dirs[$i]}" "$r"
+      measure "${labels[$i]}" "${dirs[$i]}" "$r" "${extras[$i]}"
     done
   done
 done

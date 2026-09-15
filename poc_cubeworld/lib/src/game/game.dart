@@ -179,6 +179,10 @@ class Game extends ChangeNotifier {
   final QuestLog quests = QuestLog();
   final math.Random random = math.Random();
   double timeOfDay = 0.3;
+  // The sun turns in steps of this many radians (`--sunstep=` degrees, 0 = smooth). flutter_scene
+  // keeps its static shadow tiles only while the light direction holds still
+  // (shadow_cache.dart:106); a sun moving every frame rebuilt all four cascades every frame.
+  double _sunStep = 0.0;
   bool flyMode = false;
   Mob? boss;
   final Map<IVec3, Inventory> chests = {};
@@ -336,6 +340,7 @@ class Game extends ChangeNotifier {
     scene.add(world.root);
     await world.start();
     timeOfDay = double.tryParse(_arg('--time=', '')) ?? 0.3;
+    _sunStep = (double.tryParse(_arg('--sunstep=', '')) ?? 0.5) * math.pi / 180.0;
 
     player = Player();
     player.setupPlayer(world, this, _arg('--class=', GameState.instance.playerClass));
@@ -481,7 +486,8 @@ class Game extends ChangeNotifier {
       world.setSkyIntensity(skyIntensity);
       return;
     }
-    final angle = (timeOfDay - 0.25) * math.pi * 2; // 0.25 = sunrise, 0.5 = noon
+    var angle = (timeOfDay - 0.25) * math.pi * 2; // 0.25 = sunrise, 0.5 = noon
+    if (_sunStep > 0.0) angle = (angle / _sunStep).roundToDouble() * _sunStep;
     final sunDir = Vector3(math.cos(angle) * 0.6, math.sin(angle), -0.5).normalized();
     final elevation = sunDir.y;
     final day = (elevation * 3.0 + 0.15).clamp(0.0, 1.0);
