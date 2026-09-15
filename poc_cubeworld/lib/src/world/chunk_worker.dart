@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
 
-import 'chunk_mesher.dart';
+import 'package:voxel_core/voxel_core.dart';
 import 'terrain_generator.dart';
 
 /// Everything a worker isolate needs to build its own generator and mesher.

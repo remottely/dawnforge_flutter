@@ -8,7 +8,6 @@ import 'package:vector_math/vector_math.dart';
 import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/circuits.dart';
-import 'chunk_mesher.dart';
 import 'chunk_worker.dart';
 import 'terrain_generator.dart';
 import 'terrain_material.dart';

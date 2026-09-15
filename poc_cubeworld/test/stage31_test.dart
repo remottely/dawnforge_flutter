@@ -6,7 +6,6 @@ import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/spawner.dart';
 import 'package:cubeworld_poc/src/game/pathfinder.dart';
-import 'package:cubeworld_poc/src/world/chunk_mesher.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';

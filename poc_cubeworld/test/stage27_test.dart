@@ -4,7 +4,6 @@ import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/core/recipes.dart';
-import 'package:cubeworld_poc/src/world/chunk_mesher.dart';
 import 'package:cubeworld_poc/src/world/terrain_generator.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';

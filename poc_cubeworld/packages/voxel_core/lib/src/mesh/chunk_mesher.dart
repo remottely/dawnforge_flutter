@@ -1,8 +1,9 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart' show visibleForTesting;
-import 'package:voxel_core/voxel_core.dart';
+import 'package:meta/meta.dart';
+
+import '../grid/chunk_size.dart';
 
 /// One vertex-coloured triangle list, ready for `MeshGeometry.fromArrays`.
 /// Stage 31: [light] is the second texture coordinate set (Godot's UV2), two
