@@ -15,7 +15,10 @@ typedef CellLight = ({int sky, int block});
 /// disposed pool). The streamer ignores it; any other job error is a bug and
 /// [ChunkStreamer.update] rethrows it.
 class ChunkJobCancelled implements Exception {
+  /// A cancellation, and why.
   const ChunkJobCancelled(this.message);
+
+  /// Why the job was dropped.
   final String message;
 
   @override
@@ -25,7 +28,10 @@ class ChunkJobCancelled implements Exception {
 /// Where generation and meshing jobs run. [ChunkWorkerPool] is the isolate
 /// implementation; a test can answer synchronously.
 abstract interface class ChunkJobs {
+  /// The block volume of chunk ([cx], [cz]) in [dimension], [ChunkSize.volume] bytes.
   Future<Uint8List> generate(int cx, int cz, [int dimension = 0]);
+
+  /// The mesh of chunk ([cx], [cz]); [ring] is as [ChunkMesher.build] reads it.
   Future<ChunkMeshResult> mesh(int cx, int cz, List<Uint8List?> ring);
 }
 
@@ -43,6 +49,8 @@ abstract interface class ChunkMeshSink {
 /// deltas and the light volumes each mesh job returns. Finished meshes go to
 /// [sink] within a per-frame budget.
 class ChunkStreamer {
+  /// A streamer for [table]'s blocks that hands meshes to [sink]. Nothing
+  /// streams until [jobs] is set and [updateAround] names a centre.
   ChunkStreamer({required this.table, required this.sink, this.loadRadius = 8}) : unloadRadius = loadRadius + 2;
 
   /// Microseconds [update] may spend handing meshes to the sink per frame.
@@ -54,13 +62,26 @@ class ChunkStreamer {
     (x: -1, z: -1), (x: 1, z: -1), (x: -1, z: 1), (x: 1, z: 1),
   ];
 
+  /// The chunk holding cell [b].
   static ChunkPos chunkOf(IVec3 b) => chunkOfXZ(b.x, b.z);
+
+  /// The chunk holding the column at world ([x], [z]).
   static ChunkPos chunkOfXZ(int x, int z) => (x: (x / ChunkSize.sizeX).floor(), z: (z / ChunkSize.sizeZ).floor());
 
+  /// What each block id is: which edits change light and remesh the ring.
   final VoxelBlockTable table;
+
+  /// Where finished meshes go.
   final ChunkMeshSink sink;
+
+  /// Chunks meshed on each side of the centre: a (2r + 1)² window.
   int loadRadius;
+
+  /// A mesh further than this from the centre is removed; the gap above
+  /// [loadRadius] keeps a walk along a border from reloading chunks.
   int unloadRadius;
+
+  /// Jobs dispatched and not yet returned, at most.
   int maxInflight = 24;
 
   /// Where jobs run; nothing dispatches while it is null. Replacing it drops
@@ -115,8 +136,13 @@ class ChunkStreamer {
   /// [ChunkJobCancelled]. [update] throws it.
   (Object, StackTrace)? _jobError;
 
+  /// Nothing pending, in flight or waiting for the sink.
   bool get isIdle => _pending.isEmpty && _genInflight.isEmpty && _meshInflight.isEmpty && _surfaceReady.isEmpty;
+
+  /// Generated chunk volumes held, the ring around the window included.
   int get loadedChunkCount => chunks.length;
+
+  /// Chunks waiting for a mesh, remeshes included.
   int get pendingCount => _pending.length;
 
   /// Chunks with a mesh handed to the sink.
@@ -148,6 +174,7 @@ class ChunkStreamer {
 
   // --- window ---------------------------------------------------------------------
 
+  /// Centres the window on [centre]. Cheap when the centre has not changed.
   void updateAround(ChunkPos centre) {
     if (centre == _center) return;
     _center = centre;
@@ -383,6 +410,7 @@ class ChunkStreamer {
     return edits.values.fold(0, (a, e) => a + e.length);
   }
 
+  /// Edited cells of the live dimension.
   int get editCount => _edits.values.fold(0, (a, e) => a + e.length);
 
   /// An edit for a dimension that is not the live one: it waits in that

@@ -7,9 +7,17 @@ import 'voxel_body.dart';
 /// A voxel raycast hit: the cell, the face normal it was entered through, and
 /// the distance travelled to that face.
 class RayHit {
+  /// A hit on [block], entered through the face whose normal is [normal].
   RayHit(this.block, this.normal, this.distance);
+
+  /// The cell hit.
   final IVec3 block;
+
+  /// The normal of the face the ray entered through, one axis at ±1; zero when
+  /// the ray starts inside the block.
   final IVec3 normal;
+
+  /// The ray parameter at that face: a distance when the direction is a unit vector.
   final double distance;
 }
 

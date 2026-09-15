@@ -20,6 +20,7 @@ import 'package:flutter_scene/src/gpu/gpu.dart' as gpu;
 /// draws is constructed. A material built without it (unit tests, which never
 /// draw) stays a stock PBR material.
 class TerrainMaterial extends PhysicallyBasedMaterial {
+  /// A terrain material; without [loadLibrary] it draws as stock PBR.
   TerrainMaterial({this.emissionMix = 0.5}) {
     final lib = _library;
     if (lib == null) return;
@@ -33,8 +34,12 @@ class TerrainMaterial extends PhysicallyBasedMaterial {
   static const String asset = 'packages/voxel_scene/assets/shaders/terrain.shaderbundle';
   static gpu.ShaderLibrary? _library;
 
+  /// [loadLibrary] has finished.
   static bool get loaded => _library != null;
 
+  /// Loads the terrain shader bundle once. Throws when the bundle holds no
+  /// shader this Flutter engine can read: a bundle is tied to the engine that
+  /// compiled it.
   static Future<void> loadLibrary() async {
     if (_library != null) return;
     final lib = await gpu.loadShaderLibraryAsync(asset);
@@ -45,7 +50,7 @@ class TerrainMaterial extends PhysicallyBasedMaterial {
     _library = lib;
   }
 
-  /// How much of the baked skylight shows: 1.0 noon, 0.35 night, 0.0 underworld.
+  /// How much of the baked skylight shows: 1.0 noon, 0.35 night, 0.0 none.
   double skyIntensity = 1.0;
 
   /// The share of the lit albedo added back as emission, so a torch-lit wall

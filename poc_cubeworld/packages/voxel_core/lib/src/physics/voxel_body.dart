@@ -9,6 +9,7 @@ import '../math/ivec3.dart';
 /// What a body or a ray needs to read from a world: the block at a cell and
 /// what that block is.
 abstract interface class VoxelQuery {
+  /// What each block id is.
   VoxelBlockTable get table;
 
   /// The block id at a world cell; air where nothing is generated.
@@ -18,6 +19,8 @@ abstract interface class VoxelQuery {
 /// An AABB anchored at the feet, swept against the block volume one axis at a
 /// time. Knows nothing of rendering: a game moves its visuals from [position].
 class VoxelBody {
+  /// The gap a body keeps from what it touches, so a resting body does not
+  /// count as overlapping the floor.
   static const double skin = 0.001;
 
   /// Downward acceleration in air, cells per second squared.
@@ -26,10 +29,19 @@ class VoxelBody {
   /// Downward acceleration in a liquid; the sink speed there is capped at 3.
   double liquidGravity = 4.0;
 
+  /// The middle of the body's feet, in world cells.
   Vector3 position = Vector3.zero();
+
+  /// Half the box's width on x and on z.
   double halfWidth = 0.3;
+
+  /// The box's height above [position].
   double height = 1.75;
+
+  /// Cells per second, applied by [move].
   Vector3 velocity = Vector3.zero();
+
+  /// The last [move] ended standing on something.
   bool onFloor = false;
 
   /// In any liquid, at the feet or the head.
@@ -38,11 +50,16 @@ class VoxelBody {
   /// The head cell holds a liquid.
   bool headInLiquid = false;
 
-  /// The liquid kind at the feet / head cell, or [VoxelBlockDef.noLiquid].
+  /// The liquid kind at the feet cell, or [VoxelBlockDef.noLiquid].
   int feetLiquid = VoxelBlockDef.noLiquid;
+
+  /// The liquid kind at the head cell, or [VoxelBlockDef.noLiquid].
   int headLiquid = VoxelBlockDef.noLiquid;
 
+  /// The last [move] was stopped on x or z.
   bool hitWall = false;
+
+  /// The world the body moves in; set by [setup].
   late VoxelQuery query;
 
   /// A ghost passes through every block.
@@ -51,14 +68,19 @@ class VoxelBody {
   /// The horizontal direction the last move was stopped in.
   Vector3 _blocked = Vector3.zero();
 
+  /// Places the body in world [q] with half width [hw] and height [h]. Call
+  /// before the first [move].
   void setup(VoxelQuery q, double hw, double h) {
     query = q;
     halfWidth = hw;
     height = h;
   }
 
+  /// The middle of the box.
   Vector3 centre() => position + Vector3(0, height * 0.5, 0);
 
+  /// The ray parameter at which the ray enters the body's box grown by
+  /// [inflate] on every side: 0 when [origin] is inside, -1 when it misses.
   double rayDistance(Vector3 origin, Vector3 direction, [double inflate = 0.0]) {
     final mn = position - Vector3(halfWidth + inflate, inflate, halfWidth + inflate);
     final mx = position + Vector3(halfWidth + inflate, height + inflate, halfWidth + inflate);
@@ -78,6 +100,8 @@ class VoxelBody {
     return near > 0.0 ? near : 0.0;
   }
 
+  /// Accelerates [velocity] down for [dt] seconds: [gravity] in air,
+  /// [liquidGravity] in a liquid with the sink speed capped at 3.
   void applyGravity(double dt) {
     if (inLiquid) {
       velocity.y = (velocity.y - liquidGravity * dt).clamp(-3.0, double.infinity);
@@ -86,6 +110,9 @@ class VoxelBody {
     }
   }
 
+  /// Moves by [velocity] for [dt] seconds, x then z then y, stopping flush
+  /// against every collision box. Updates [onFloor], [hitWall] and the liquid
+  /// senses; a blocked axis loses its velocity. [noclip] skips the collisions.
   void move(double dt) {
     final next = position.clone();
     hitWall = false;

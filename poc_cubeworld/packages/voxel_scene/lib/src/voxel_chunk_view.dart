@@ -8,6 +8,7 @@ import 'terrain_material.dart';
 /// [ChunkStreamer] hands finished meshes to. One [Node] per chunk under [root],
 /// one child per non-empty surface on its material, light in the second UV set.
 class VoxelChunkView implements ChunkMeshSink {
+  /// A view with an empty [root] named [rootName]. Add [root] to a scene.
   VoxelChunkView({String rootName = 'World'}) : root = Node(name: rootName) {
     // The three lit surfaces share the terrain shader's light term fed by
     // [setSkyIntensity]; specular 0 turns off sky reflections (the dielectric F0
@@ -30,10 +31,19 @@ class VoxelChunkView implements ChunkMeshSink {
     matGlow = UnlitMaterial()..vertexColorWeight = 1.0;
   }
 
+  /// The parent of every chunk node.
   final Node root;
+
+  /// Draws [ChunkMeshResult.solid]: rough, no specular.
   late final TerrainMaterial matSolid;
+
+  /// Draws [ChunkMeshResult.cutout]: as [matSolid], double-sided.
   late final TerrainMaterial matCutout;
+
+  /// Draws [ChunkMeshResult.liquid]: blended, double-sided, a little glossy.
   late final TerrainMaterial matLiquid;
+
+  /// Draws [ChunkMeshResult.glow]: unlit vertex colour.
   late final UnlitMaterial matGlow;
 
   final Map<ChunkPos, Node> _nodes = {};

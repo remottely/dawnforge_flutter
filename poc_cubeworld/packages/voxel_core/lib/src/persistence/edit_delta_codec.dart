@@ -16,6 +16,8 @@ typedef EditsByDimension = Map<int, Map<ChunkPos, Map<int, int>>>;
 /// [legacySingleDimensionVersion], when given, is an older version whose file
 /// holds dimension 0 only, still accepted by [decode].
 class EditDeltaCodec {
+  /// A codec for one game's files: its own [magic] and [version], and the
+  /// number of [dimensions] every file holds.
   const EditDeltaCodec({
     required this.magic,
     required this.version,
@@ -23,13 +25,23 @@ class EditDeltaCodec {
     this.legacySingleDimensionVersion,
   });
 
+  /// The first four bytes of every file this codec writes and reads.
   final int magic;
+
+  /// The version written, and the one [decode] expects.
   final int version;
+
+  /// Dimensions in a file, numbered 0 to [dimensions] - 1.
   final int dimensions;
+
+  /// An older version holding dimension 0 only, still read; null for none.
   final int? legacySingleDimensionVersion;
 
   static const int _headerBytes = 4 + 4 + 8;
 
+  /// The file for [edits] made against [seed]. A dimension missing from
+  /// [edits] is written as zero chunks; a dimension past [dimensions] is not
+  /// written.
   Uint8List encode(int seed, EditsByDimension edits) {
     var size = _headerBytes;
     for (var dim = 0; dim < dimensions; dim++) {

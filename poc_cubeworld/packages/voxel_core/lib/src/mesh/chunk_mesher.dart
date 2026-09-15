@@ -5,42 +5,76 @@ import 'package:meta/meta.dart';
 
 import '../grid/chunk_size.dart';
 
-/// One vertex-coloured triangle list, ready for `MeshGeometry.fromArrays`.
-/// Stage 31: [light] is the second texture coordinate set (Godot's UV2), two
-/// floats per vertex: sky / 15 and block / 15 of the cell the face is lit from.
+/// One vertex-coloured, indexed triangle list, in chunk-local coordinates
+/// (x and z 0..16, y 0..128). Every face is a quad of four vertices and six
+/// indices. Triangles wind clockwise seen from the side the normal points to,
+/// so a renderer whose front faces are counter-clockwise must mirror the
+/// handedness at its camera or cull the other side.
 class MeshSurface {
+  /// A surface over the given arrays, which it keeps without copying.
   MeshSurface(this.positions, this.normals, this.colors, this.light, this.indices);
+
+  /// Three floats per vertex.
   final Float32List positions;
+
+  /// Three floats per vertex, a unit axis for every face.
   final Float32List normals;
+
+  /// Four floats per vertex: linear rgba of block colour × face tint × ambient
+  /// occlusion. The light is not in it; see [light].
   final Float32List colors;
+
+  /// Two floats per vertex, meant for a second texture coordinate set: sky / 15
+  /// and block / 15 of the cell the face looks into, so a shader can scale the
+  /// sky half by the time of day.
   final Float32List light;
+
+  /// Six indices per face.
   final Int32List indices;
+
+  /// Vertices in [positions].
   int get vertexCount => positions.length ~/ 3;
+
+  /// Quads in [indices].
   int get faceCount => indices.length ~/ 6;
+
+  /// No geometry at all.
   bool get isEmpty => positions.isEmpty;
 }
 
+/// Everything a mesh job produces for one chunk: four surfaces, one per way
+/// they draw, and the chunk's light volumes.
 class ChunkMeshResult {
+  /// A result; [ChunkMesher.build] makes these.
   ChunkMeshResult(this.solid, this.liquid, this.cutout, this.glow,
       {required this.sky, required this.block, this.aoVerts = 0, this.ms = 0.0});
+
+  /// Opaque, lit faces.
   final MeshSurface solid;
+
+  /// Liquids and every block with alpha below 1: blended and double-sided.
   final MeshSurface liquid;
+
+  /// Plants: double-sided quads, lit from their own cell.
   final MeshSurface cutout;
 
-  /// Stage 27: strong emitters (light >= [ChunkMesher.glowThreshold]), drawn
-  /// unlit so a lamp reads at night.
+  /// Strong emitters (emission at or above [ChunkMesher.glowThreshold]), meant
+  /// to be drawn unlit so a lamp still reads at night.
   final MeshSurface glow;
 
-  /// Stage 31: the chunk's own light volumes (no padding, 0..15 per cell,
-  /// indexed like the block volume) for `VoxelWorld.lightAt`.
+  /// The chunk's skylight volume, 0..15 per cell, indexed like the block volume.
   final Uint8List sky;
+
+  /// The chunk's block light volume, 0..15 per cell, indexed like the block volume.
   final Uint8List block;
 
-  /// Stage 31: vertices of the lit faces whose AO is below 1 (the probe's proof).
+  /// Vertices of lit faces whose ambient occlusion is below 1.
   final int aoVerts;
 
-  /// Stage 31: the job's own clock, fill + light + mesh + volume copy.
+  /// Milliseconds the job took: fill, light, mesh and volume copy.
   final double ms;
+
+  /// Faces over the four surfaces.
   int get faces => solid.faceCount + liquid.faceCount + cutout.faceCount + glow.faceCount;
 }
 
@@ -101,11 +135,9 @@ class _Surface {
     l.add(block);
   }
 
-  /// Two triangles for the quad a-b-c-d, Godot's `Quad` index for index
-  /// (clockwise seen from the normal side; `GodotCamera` renders Godot's
-  /// handedness, so its winding is the front). Unflipped the shared diagonal is
-  /// 0-2, flipped it is 1-3 (Godot's choice for an anisotropic AO:
-  /// `flip = ao0 + ao2 < ao1 + ao3`).
+  /// Two triangles for the quad a-b-c-d, clockwise seen from the normal side.
+  /// Unflipped the shared diagonal is 0-2, flipped it is 1-3, the choice for an
+  /// anisotropic AO: `flip = ao0 + ao2 < ao1 + ao3`.
   void quadIndices(int f, bool flip) {
     if (!flip) {
       i.add(f); i.add(f + 1); i.add(f + 2);
@@ -126,15 +158,21 @@ class _Surface {
 /// horizontal side, filled from the eight neighbour chunks, so a border face
 /// and its AO corners never guess.
 ///
-/// Stage 31: the light is no longer baked into the vertex colour. The colour
-/// carries block tint x face tint x AO; the second UV set carries (sky / 15,
-/// block / 15) so the terrain shader can scale the sky half by the time of day.
-/// The two light volumes (chunk-sized) ride the result for `lightAt`.
+/// The light is not baked into the vertex colour: the colour carries block tint
+/// × face tint × AO, and [MeshSurface.light] carries (sky / 15, block / 15). The
+/// two light volumes (chunk-sized) ride the result.
 ///
-/// Stage 32: the _pad is the whole 3x3 ring ([pad] = 16, 48x48x128), so the light
-/// BFS sees every emitter within reach of this chunk and a torch beside a border
-/// lights both sides alike (no seam).
+/// The padding is the whole 3×3 ring (48×48×128 cells), so the light flood sees
+/// every emitter within reach of this chunk and a torch beside a border lights
+/// both sides alike.
+///
+/// Its work buffers are static, so one set exists per isolate: build on one
+/// isolate at a time from one mesher, as a worker isolate does.
 class ChunkMesher {
+  /// A mesher over one block table's arrays, indexed by block id: [palette]
+  /// holds four linear floats (rgba) per id, [shape] a [BlockShape] index,
+  /// [opaque] 1 where the id occludes faces and light, [emission] 0..15.
+  /// [VoxelBlockTable.mesher] builds one from a table.
   ChunkMesher({
     required this.palette,
     required this.shape,
@@ -145,11 +183,11 @@ class ChunkMesher {
 
   static const int _sizeX = ChunkSize.sizeX, _sizeZ = ChunkSize.sizeZ, _sizeY = ChunkSize.sizeY;
 
-  /// Stage 32: the padded volume holds the whole 3x3 ring (16 cells a side), so
+  /// The padded volume holds the whole 3x3 ring (16 cells a side), so
   /// a torch up to 15 cells past a border still reaches this chunk's faces and
   /// the light BFS is seam-free. The mesh loop and the AO reads are unchanged;
   /// only the fill and the two BFS grew, and their buffers are per isolate
-  /// (static, Godot's `[ThreadStatic]`) rather than per mesher.
+  /// (static) rather than per mesher.
   static const int _pad = 16;
   static const int _px = _sizeX + 2 * _pad, _pz = _sizeZ + 2 * _pad;
   static const int _padVolume = _px * _pz * _sizeY;
@@ -194,21 +232,25 @@ class ChunkMesher {
     _shapeRailSlopeN, _shapeRailSlopeE, _shapeRailSlopeS, _shapeRailSlopeW,
   ];
 
-  /// Emission at or above this draws on the unlit glow surface (stage 27).
+  /// A cube whose emission is at or above this goes on [ChunkMeshResult.glow].
   static const int glowThreshold = 10;
 
-  /// 4 floats per block (rgba, linear).
+  /// Four floats per block id (rgba, linear).
   final Float32List palette;
+
+  /// The [BlockShape] index of every block id.
   final Uint8List shape;
   final List<bool> _opaque;
+
+  /// The emitted light of every block id, 0..15.
   final Uint8List emission;
 
-  /// Stage 31, `--no-light`: skylight everywhere, no block light, no BFS — the
-  /// probe's cost comparison.
+  /// False skips the light flood: skylight 15 everywhere, no block light. For
+  /// measuring what the light costs.
   final bool lighting;
 
-  /// Stage 32: one 48x48x128 set per isolate (a worker isolate reuses it for
-  /// every job; Dart statics are per isolate like C#'s `[ThreadStatic]`).
+  /// One 48x48x128 set per isolate (a worker isolate reuses it for
+  /// every job; Dart statics are per isolate).
   static Uint8List? _tBlocks, _tSky, _tGlow;
   static Int32List? _tQueue;
   Uint8List _blocks = Uint8List(0);
@@ -217,8 +259,9 @@ class ChunkMesher {
   Int32List _queue = Int32List(0);
   final List<int> _emitters = [];
 
-  /// Stage 32, tests only: seed the sky BFS from every lit cell (stage 31's
-  /// rule) instead of only the cells with a darker side neighbour.
+  /// Tests only: seed the sky flood from every lit cell instead of only the
+  /// cells with a darker side neighbour. Both give the same light; this is the
+  /// slow reference the fast seeding is checked against.
   @visibleForTesting
   static bool fullSkySeed = false;
 
@@ -277,7 +320,7 @@ class ChunkMesher {
     _copyChunk(pxpz, _sizeX, _sizeZ);
   }
 
-  /// Stage 32: one whole chunk volume into the padded buffer at the given cell
+  /// One whole chunk volume into the padded buffer at the given cell
   /// offset (a missing neighbour stays air).
   void _copyChunk(Uint8List? vol, int ox, int oz) {
     if (vol == null || vol.length < _chunkVolume) return;
@@ -291,7 +334,7 @@ class ChunkMesher {
 
   /// Skylight floods each column from the top (a liquid takes 2), then both
   /// lights spread sideways and down at -1 a step (-2 through a liquid); block
-  /// light starts at every emitter's `Blocks.emission()`.
+  /// light starts at every emitter's [emission].
   void _computeLight() {
     _sky.fillRange(0, _padVolume, 0);
     _glow.fillRange(0, _padVolume, 0);
@@ -346,7 +389,7 @@ class ChunkMesher {
       }
     }
     if (!fullSkySeed) {
-      // Stage 32: only a cell with a darker side neighbour can hand light
+      // Only a cell with a darker side neighbour can hand light
       // sideways (the column pass already settled the vertical): full sky beside
       // full sky is the common case over the 48x48 columns and would spread
       // nothing, so it stays out of the queue.
@@ -558,7 +601,7 @@ class ChunkMesher {
     final solid = _Surface();
     final liquid = _Surface();
     final cutout = _Surface();
-    final glow = _Surface(); // stage 27: strong emitters, drawn unlit so a lamp glows at night
+    final glow = _Surface(); // strong emitters, drawn unlit
     final aos = List<int>.filled(4, 0);
 
     for (var y = 0; y < _sizeY; y++) {
@@ -652,7 +695,7 @@ class ChunkMesher {
             // against a neighbour's empty half.
             final cullSame = sh == _shapeSlab || sh == _shapeFence || isRail;
             if (isRail) {
-              // Stage 28: two thin bars over wooden ties. A straight runs the
+              // Two thin bars over wooden ties. A straight runs the
               // bars the whole cell; a curve draws the half of each axis it
               // joins; a slope stacks four steps rising toward its high side
               // (the cart interpolates the real line, the steps only read as a
@@ -724,7 +767,7 @@ class ChunkMesher {
             } else if (sh == _shapeSlab) {
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.5, 1, br, bg, bb);
             } else if (sh == _shapeWire) {
-              // Stage 27: redstone wire, an eighth of a block lying on the floor.
+              // A wire, an eighth of a block lying on the floor.
               _subBox(solid, x, y, z, id, cullSame, aos, 0, 0, 0, 1, 0.125, 1, br, bg, bb);
             } else if (sh == _shapeFence) {
               // Centre post, then two rails toward every horizontal neighbour
@@ -825,7 +868,7 @@ class ChunkMesher {
         }
       }
     }
-    // The chunk's own light volumes (no padding) for `VoxelWorld.lightAt`.
+    // The chunk's own light volumes (no padding), returned with the meshes.
     final skyOut = Uint8List(_chunkVolume);
     final blockOut = Uint8List(_chunkVolume);
     for (var y = 0; y < _sizeY; y++) {

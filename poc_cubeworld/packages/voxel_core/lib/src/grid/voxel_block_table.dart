@@ -7,6 +7,7 @@ import 'block_shape.dart';
 /// it stops a body or light, the light it gives, and whether it is a liquid.
 /// Names, drops, tools and every other gameplay fact stay with the game.
 class VoxelBlockDef {
+  /// One block's engine facts. [r], [g], [b] and [a] are linear, 0..1.
   const VoxelBlockDef({
     required this.shape,
     required this.solid,
@@ -23,6 +24,7 @@ class VoxelBlockDef {
   /// [liquidKind] of a block that is not a liquid.
   static const int noLiquid = -1;
 
+  /// How it is drawn, and its collision boxes when [solid].
   final BlockShape shape;
 
   /// Stops a body.
@@ -49,6 +51,9 @@ class VoxelBlockDef {
 /// Built once from the game's definitions; the typed arrays are what a mesher
 /// on a worker isolate is handed.
 class VoxelBlockTable {
+  /// The table of [defs], where `defs[i]` is block id i. Throws an
+  /// [ArgumentError] for more than 256 blocks, a block 0 that is not air, an
+  /// emission outside 0..15, or a liquid source with no liquid kind.
   VoxelBlockTable(List<VoxelBlockDef> defs)
       : _defs = List.unmodifiable(defs),
         _boxes = List.unmodifiable([for (final d in defs) collisionBoxesOf(d.shape, solid: d.solid)]),
@@ -97,20 +102,35 @@ class VoxelBlockTable {
   /// 0..15 per id.
   final Uint8List emission;
 
+  /// The number of block ids.
   int get count => _defs.length;
 
+  /// The definition of [id].
   VoxelBlockDef def(int id) => _defs[id];
+
+  /// [VoxelBlockDef.shape] of [id].
   BlockShape shapeOf(int id) => _defs[id].shape;
+
+  /// [VoxelBlockDef.solid] of [id].
   bool isSolid(int id) => _defs[id].solid;
+
+  /// [VoxelBlockDef.opaque] of [id].
   bool isOpaque(int id) => _defs[id].opaque;
+
+  /// [VoxelBlockDef.emission] of [id].
   int emissionOf(int id) => _defs[id].emission;
 
   /// The boxes a body collides with, in the block's own 0..1 space. Shared:
   /// never mutate.
   List<CollisionBox> collisionBoxes(int id) => _boxes[id];
 
+  /// Whether [id] is a liquid, source or flowing.
   bool isLiquid(int id) => _defs[id].liquidKind != VoxelBlockDef.noLiquid;
+
+  /// [VoxelBlockDef.liquidKind] of [id].
   int liquidKind(int id) => _defs[id].liquidKind;
+
+  /// [VoxelBlockDef.liquidSource] of [id].
   bool isLiquidSource(int id) => _defs[id].liquidSource;
 
   /// A mesher reading this table.

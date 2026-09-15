@@ -12,6 +12,7 @@ import 'chunk_streamer.dart';
 /// ([cx], [cz]) of [dimension]. Runs on a worker isolate: it must be pure in
 /// (seed, position) and touch nothing outside itself.
 abstract interface class ChunkGenerator {
+  /// The block volume of chunk ([cx], [cz]) in [dimension].
   Uint8List generateIn(int cx, int cz, int dimension);
 }
 
@@ -23,12 +24,16 @@ typedef ChunkGeneratorFactory = ChunkGenerator Function();
 
 /// Everything a worker isolate needs to build its own generator and mesher.
 class ChunkWorkerConfig {
+  /// A config sent to every worker; all of it must be sendable to an isolate.
   ChunkWorkerConfig({required this.generator, required this.table, this.lighting = true});
 
+  /// Builds each worker's generator.
   final ChunkGeneratorFactory generator;
+
+  /// The block table each worker's mesher reads.
   final VoxelBlockTable table;
 
-  /// False skips both light BFS (skylight everywhere): the probe's cost comparison.
+  /// False skips the light flood in every mesher ([ChunkMesher.lighting]).
   final bool lighting;
 }
 
@@ -49,12 +54,14 @@ class ChunkWorkerPool implements ChunkJobs {
   /// [workers] defaults to [defaultWorkers].
   ChunkWorkerPool(this.config, {int? workers}) : workers = workers ?? defaultWorkers;
 
-  /// One isolate per core, leaving one for the UI and raster threads (VP1.5b:
-  /// the 2026-09-11 measurement took radius-16 fill from 2,981 to 1,956 ms going
-  /// from 3 isolates to 10 on a 12-core machine).
+  /// One isolate per core, leaving one for the UI and raster threads. Chunk
+  /// fill time falls almost linearly with workers up to the core count.
   static int get defaultWorkers => math.max(1, Platform.numberOfProcessors - 1);
 
+  /// What every worker is built from.
   final ChunkWorkerConfig config;
+
+  /// Isolates [start] spawns.
   final int workers;
   final List<_Worker> _workers = [];
   final Map<int, _Worker> _byIndex = {};
@@ -161,6 +168,7 @@ class ChunkWorkerPool implements ChunkJobs {
         sky: bytes(20).asUint8List(), block: bytes(21).asUint8List(), aoVerts: reply[22] as int, ms: reply[23] as double);
   }
 
+  /// Jobs sent and not yet answered.
   int get inflight => _waiting.length;
 
   /// Kills the workers. Jobs still waiting fail with [ChunkJobCancelled].
