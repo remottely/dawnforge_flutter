@@ -10,14 +10,30 @@
 | `python3 scripts/ai/index_project_knowledge.py [--dry-run\|--stats]` | build the knowledge index (docs + pack + skills + changelogs + full git history) |
 | `python3 scripts/ai/search_project_knowledge.py "<q>" [--k N] [--sources docs,git,…] [--json]` | BM25 search over everything the repo knows; auto-rebuilds a stale index |
 | `scripts/ai/hooks/block_forbidden_git.py` | PreToolUse Bash guard (see `docs/AI_HARNESS.md` §3) |
-| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse Edit/Write tripwire (rules 30, 11) |
+| `scripts/ai/hooks/check_edited_file_rules.py` | PostToolUse Edit/Write tripwire (rules 30, 11, 4) |
 
 ## scripts/project/ — whole-project operations
 
 | Command | What |
 |:---|:---|
 | `python3 scripts/project/check_test_suite_is_clean.py [--analyze-only\|--test-only]` | the suite: `flutter analyze --fatal-infos` + `flutter test`; exit 0 = green |
+| `python3 scripts/project/commit_merge.py -F <msgfile> [--dry-run]` | the only route to a commit with two parents: proves the merge is finished, that every staged path is one the merge itself brought, and that the message carries no AI attribution — then commits. `git merge --continue` is refused by the hook and points here (`L-008`) |
+| `python3 scripts/project/reset_local_save.py [--dry-run\|--all]` | rule 32's ritual: wipe this machine's world state so the next launch starts fresh. The app's identity is READ from the four platform files (macOS bundle id, Linux application id, Windows company+product) and a disagreement between them is refused, never guessed; settings survive unless `--all` |
 | `python3 scripts/project/check_ledger_ids_are_unique.py [--check\|--next]` | refuse a LEDGER.md with duplicate IDs; hand out the next free one |
+| `python3 scripts/project/check_changelog_is_ordered.py [--check]` | both changelogs newest-first, no version twice, categories in the fixed order, en/pt-BR mirrored; `--check` also refuses a surviving `0.0.0-NEXT` (runs from the suite without it) |
+| `python3 scripts/project/check_translation_keys.py [--check]` | every literal `tr('key')` under `lib/` exists in every `assets/generated/<game>/locales/*.json`; non-literal calls are counted and printed (runs from the suite) |
+
+## scripts/docs/ — the documents the player reads
+
+| Command | What |
+|:---|:---|
+| `python3 scripts/docs/check_manual_mirrors.py [--check]` | `games/<game>/docs/manual/en/` and `pt-BR/` hold the same filenames with the same heading levels in the same order (rule 34; runs from the suite). The section-map half prints **NOT CHECKED** until `manual/README.md` exists — it waits on `D-4` |
+
+## scripts/content/ — the pack, against its source
+
+| Command | What |
+|:---|:---|
+| `python3 scripts/content/check_pack_snapshot_matches_spec.py [--check\|--report PATH\|--accept PATH]` | every pack document's frontmatter against its twin in `SPEC_REPO_ROOT` (paired by `id`): a key both sides author with different values, or a key only this pack authors, fails unless recorded with a reason in `pack_snapshot_deltas.yaml`; keys only the SPEC authors are the port's backlog and never fail. No sibling repo = **not applicable**, never a pass |
 
 ## scripts/pipeline/ — the content build
 
@@ -32,6 +48,7 @@ shared with the Godot repo. Runs via the repo `.venv` (`requirements.txt`).
 | `.venv/bin/python dawnforge.py translations [--dry-run\|--check]` | step 05: the almanac's `translations:` blocks **and** the `strings:` blocks under `data/ui/` → `assets/generated/<game>/locales/<locale>.json`; `--check` also fails on cross-locale holes |
 | `.venv/bin/python dawnforge.py component-keys [--dry-run\|--check]` | step 10: component classes → `lib/src/generated/component_keys.dart` (rule 16) |
 | `.venv/bin/python dawnforge.py biome-terrain [--dry-run\|--check]` | step 11: `world/procedural/*.md` terrain densities → `assets/generated/<game>/world/biomes/**.json` + `manifest.json` |
+| `.venv/bin/python dawnforge.py loadouts [--dry-run\|--check]` | step 26: `progression/*.md` starting loadouts → `assets/generated/<game>/progression/*.json` + `manifest.json`; every entry id must be an authored item document |
 | `.venv/bin/python dawnforge.py full [--check]` | every ported step, in order |
 
 ## scripts/lib/ — shared modules (not commands)

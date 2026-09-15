@@ -30,6 +30,8 @@ class ItemBuildableData extends ItemCraftableData {
   ItemBuildableData({
     required super.id,
     required this.blueprintId,
+    super.displayNameKey,
+    super.descriptionKey,
     super.ingredients,
     super.craftedAt,
     super.craftTime,
@@ -111,6 +113,8 @@ class ItemBuildableData extends ItemCraftableData {
   @override
   ItemBuildableData clone() => ItemBuildableData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         blueprintId: blueprintId,
         ingredients: List<ItemAmount>.of(ingredients),
         craftedAt: craftedAt,

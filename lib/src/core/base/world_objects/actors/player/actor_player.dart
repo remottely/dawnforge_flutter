@@ -1,7 +1,10 @@
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
+import 'package:dawnforge/src/core/components/i_interactable/workstation_component.dart';
+import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/drop/world_drop_helper.dart';
 import 'package:dawnforge/src/core/systems/input/input_helper.dart';
 import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 
@@ -18,6 +21,37 @@ import 'package:dawnforge/src/core/systems/managers/game_input_manager.dart';
 /// minigame surfaces and every network half. This class carries the reach, the
 /// aim and the pace, and nothing else yet.
 final class ActorPlayer extends IActor {
+  /// What this player is making with their own two hands — the hand-craft
+  /// (`D-2`), and the same component a station uses, because a player's soul
+  /// IS a bench: type NONE, speed 1.0.
+  ///
+  /// Mounted here and not on `IActor` for the `L-005` reason a station's
+  /// interactable is mounted on the station: a boar has no menu to open, and a
+  /// component whose surface can never be reached is a component that ticks
+  /// for nobody.
+  late final WorkstationComponent handCraft;
+
+  @override
+  void setupComponents() {
+    super.setupComponents();
+    handCraft = addComponent(WorkstationComponent())
+      ..itemsSpilled.connect(_onHandCraftFinished);
+  }
+
+  /// Where a hand-made thing goes: into the bag.
+  ///
+  /// This is the one place the hands differ from a bench, and `D-2` is why —
+  /// there is no station to drop it in front of. What does not FIT falls at
+  /// the player's feet rather than being eaten: a full bag is an ordinary
+  /// state, and silently swallowing the output of a batch the player paid for
+  /// is the kind of loss no message can undo.
+  void _onHandCraftFinished((ItemData item, int amount) made) {
+    final (item, amount) = made;
+    final leftOver = inventory.addItem(item, amount);
+    if (leftOver == 0) return;
+    WorldDropHelper.spawnPickup(item, leftOver, position, position);
+  }
+
   /// Seconds before this player may act again. A never-serialized internal
   /// (rule 8) — a cooldown mid-flight is not state a save has any use for.
   double _actionCooldown = 0;
@@ -66,6 +100,31 @@ final class ActorPlayer extends IActor {
     // free.
     if (outcome != ActionOutcome.none) _actionCooldown = actionSpeedCooldown;
     return outcome == ActionOutcome.landed;
+  }
+
+  /// The reach — the press `D-1` binds to `E`.
+  ///
+  /// It costs no cadence and takes none: reaching for a bench is not a swing,
+  /// and the spec paces neither. What it does share with the swing is the
+  /// blocker gate (rule 30): a press made while a surface holds the player is
+  /// not the world's press.
+  ///
+  /// Returns whether anything answered, which the touch path below reads.
+  bool performInteract() {
+    if (!locator<GameInputManager>().isGameplayEnabled) return false;
+    return tryInteract(aimAtCursor());
+  }
+
+  /// A FINGER went down here — one press that has to mean both verbs,
+  /// because a touch screen has no second key to put the other on (rule 12).
+  ///
+  /// The order is what the plan's sentence says and what a player expects: if
+  /// the tap is on something that answers a reach, and it is close enough, it
+  /// reaches; otherwise it swings. A mouse never arrives here — it has the
+  /// `E` key — so the click keeps meaning exactly one thing on a desktop.
+  bool performContextualAction() {
+    if (performInteract()) return true;
+    return performPrimaryAction();
   }
 
   @override

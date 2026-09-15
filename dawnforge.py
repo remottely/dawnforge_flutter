@@ -35,11 +35,12 @@ STEP_MODULES: dict[str, str] = {
     "translations": "05_build_translation_tables",
     "component-keys": "10_generate_component_keys",
     "biome-terrain": "11_import_biome_terrain_to_json",
+    "loadouts": "26_import_loadouts_to_json",
 }
 
 # Steps that can verify the generated files against their SSOT without writing.
 CHECKABLE: tuple[str, ...] = (
-    "import", "translations", "component-keys", "biome-terrain")
+    "import", "translations", "component-keys", "biome-terrain", "loadouts")
 
 
 def run_step(command: str, dry_run: bool, check: bool) -> int:

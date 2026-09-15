@@ -1,7 +1,9 @@
 import 'dart:ui' as ui show Image;
 
 import 'package:dawnforge/src/core/base/world_objects/actors/i_actor.dart';
+import 'package:dawnforge/src/core/base/world_objects/props/prop_crop.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
+import 'package:dawnforge/src/core/domain/farming/crop_rules.dart';
 import 'package:dawnforge/src/core/render/animation_creator.dart';
 import 'package:dawnforge/src/core/render/sprite_loader.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
@@ -49,6 +51,50 @@ base class WorldObjectRenderer extends PositionComponent {
     super.update(dt);
     position.setValues(host.position.x, host.position.y);
     priority = host.position.y.round();
+  }
+}
+
+/// Renderer of a [PropCrop]: the still frame of the stage it is AT, off a
+/// sheet laid out as variant blocks of `realStageCount` rows each (the
+/// spec's `setup_crop_atlas`). Which block is a visual-only choice, the
+/// spec's "random from all rows": derived from the host's position so two
+/// palms side by side differ and the same palm looks the same every boot.
+///
+/// Until this class every crop drew row 0 — a PLANTED seedling — whatever
+/// stage it was at, because the base renderer knows no stage.
+base class CropRenderer extends WorldObjectRenderer {
+  CropRenderer(PropCrop super.host);
+
+  PropCrop get crop => host as PropCrop;
+
+  @override
+  Future<List<Component>> buildVisuals(ui.Image sheet) async {
+    final data = crop.cropData;
+    final rows = sheet.height ~/ data.frameHeight;
+    final stageCount = data.realStageCount;
+    assert(
+      rows >= stageCount,
+      '[CropRenderer] ${data.id}: the sheet has $rows rows for $stageCount '
+      'stages — step 02 cut fewer frames than the crop has stages',
+    );
+    final blocks = rows ~/ stageCount;
+    final block = (host.position.x.round() * 31 + host.position.y.round() * 17)
+            .abs() %
+        blocks;
+    return [
+      SpriteComponent(
+        sprite: AnimationCreator.createStill(
+          data,
+          sheet,
+          rowIndex: CropRules.calculateTargetFrame(
+            block,
+            stageCount,
+            data.currentStage,
+          ),
+        ),
+        size: size,
+      ),
+    ];
   }
 }
 

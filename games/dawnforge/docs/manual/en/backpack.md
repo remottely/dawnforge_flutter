@@ -54,7 +54,9 @@ Two things happen at once:
 Inside the tools, the ones you work with come before the ones you fight with —
 axe, pickaxe, shovel, hoe, and so on, then sword, bow, staff. And when you have
 two of the same kind, **the better one goes first**. Your good axe is never
-hiding behind your old one.
+hiding behind your old one. And when two are just as good as each other, they
+go **in the order of their names**, the way words go in a list — so the same
+two always sit the same way round.
 
 **Watch your hand.** The item bar is the same pockets, so sorting moves things
 under it too. What you were holding before you pressed Sort is probably not

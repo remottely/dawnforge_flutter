@@ -2,10 +2,13 @@
 // One constant per concrete component class under lib/src/core/components/;
 // the value is the class name, which IS the container key (rule 16).
 abstract final class ComponentKeys {
+  static const String cropDrop = 'CropDropComponent';
   static const String direction = 'DirectionComponent';
   static const String drop = 'DropComponent';
   static const String health = 'HealthComponent';
   static const String heldItem = 'HeldItemComponent';
+  static const String interactable = 'InteractableComponent';
   static const String inventory = 'InventoryComponent';
   static const String movement = 'MovementComponent';
+  static const String workstation = 'WorkstationComponent';
 }

@@ -1,0 +1,10 @@
+{
+  "generated_by": "scripts/pipeline/26_import_loadouts_to_json.py",
+  "entries": [
+    {
+      "id": "starting_loadout_default",
+      "type": "i_starting_loadout_data",
+      "path": "starting_loadout_default.json"
+    }
+  ]
+}

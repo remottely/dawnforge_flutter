@@ -141,6 +141,15 @@ final class JsonReader {
     return _objectList(key, value);
   }
 
+  /// A nested object keyed by name, absent meaning the declared default `{}`
+  /// (a per-stage table most props simply do not have).
+  Map<String, Object?> mapOr(String key) {
+    final value = _json[key];
+    if (value == null) return <String, Object?>{};
+    if (value is! Map<String, Object?>) _wrongType(key, 'an object');
+    return value;
+  }
+
   /// A list of nested objects the emitter always writes — absence is drift
   /// between the pipeline and this reader, never authored content.
   List<Map<String, Object?>> requiredObjectList(String key) {

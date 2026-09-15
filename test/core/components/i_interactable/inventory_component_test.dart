@@ -9,6 +9,7 @@ import 'package:dawnforge/src/core/resources/items/item_data.dart';
 import 'package:dawnforge/src/core/resources/world_objects/actors/i_actor_data.dart';
 import 'package:dawnforge/src/core/shared_logic/definitions/spatial.dart';
 import 'package:dawnforge/src/core/systems/boot.dart';
+import 'package:dawnforge/src/core/systems/localization/localization_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// FP4.2a: slot state lives in the actor's data soul; the component is the
@@ -23,10 +24,12 @@ void main() {
     locator<ItemRegistry>().registerJson(<String, Object?>{
       'id': 't1_item_pebble',
       'max_stack': 10,
+      'display_name_key': 'item.pebble',
     });
     locator<ItemRegistry>().registerJson(<String, Object?>{
       'id': 't1_item_hand_axe',
       'max_stack': 1,
+      'display_name_key': 'item.hand_axe',
     });
   });
   tearDown(resetCoreSystems);
@@ -291,6 +294,22 @@ void main() {
 
   group('sortItems', () {
     setUp(() {
+      // The fourth axis is the item's NAME in the player's language, so a
+      // sort needs a locale the way it needs a registry. Every id below
+      // authors a key, as every document in the pack does.
+      locator<LocalizationSystem>().loadLocale('en', <String, Object?>{
+        'strings': <String, Object?>{
+          'item.pebble': 'Pebble',
+          'item.hand_axe': 'Bare hands',
+          'item.axe_copper': 'Copper axe',
+          'item.axe_iron': 'Iron axe',
+          'item.sword_copper': 'Copper sword',
+          'item.torch': 'Torch',
+          // Two swords whose alphabet disagrees with their ids on purpose.
+          'item.sword_yew': 'Ashen sword',
+          'item.sword_ash': 'Yew sword',
+        },
+      });
       locator<ActorRegistry>().registerJson(<String, Object?>{
         'id': 't1_actor_hoarder',
         'inventory_size': 8,
@@ -299,23 +318,39 @@ void main() {
         'id': 't1_item_tool_axe_copper',
         'max_stack': 1,
         'tool_type': 'AXE',
+        'display_name_key': 'item.axe_copper',
       });
       locator<ItemRegistry>().registerJson(<String, Object?>{
         'id': 't2_item_tool_axe_iron',
         'max_stack': 1,
         'tool_type': 'AXE',
         'tier': 2,
+        'display_name_key': 'item.axe_iron',
       });
       locator<ItemRegistry>().registerJson(<String, Object?>{
         'id': 't1_item_tool_sword_copper',
         'max_stack': 1,
         'tool_type': 'SWORD',
+        'display_name_key': 'item.sword_copper',
       });
       locator<ItemRegistry>().registerJson(<String, Object?>{
         'id': 't1_item_buildable_torch',
         'type': 'item_buildable_data',
         'blueprint_id': 't1_prop_torch',
         'max_stack': 10,
+        'display_name_key': 'item.torch',
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_tool_sword_yew',
+        'max_stack': 1,
+        'tool_type': 'SWORD',
+        'display_name_key': 'item.sword_yew',
+      });
+      locator<ItemRegistry>().registerJson(<String, Object?>{
+        'id': 't1_item_tool_sword_ash',
+        'max_stack': 1,
+        'tool_type': 'SWORD',
+        'display_name_key': 'item.sword_ash',
       });
     });
 
@@ -465,6 +500,23 @@ void main() {
       expect(inventory.selectedSlot, 0);
       expect(selections, <int>[0]);
       expect(inventory.selectedStack.itemId, 't1_item_pebble');
+    });
+
+    test('two of one shelf and one tier are ordered by the NAME, not the id',
+        () {
+      // Same category, same shelf, same tier: the first three axes all tie,
+      // and the fourth is the only one that can answer. The ids sort the
+      // other way round, which is what makes the answer readable.
+      final inventory = hoarderHolding(<int, (String, int)>{
+        0: ('t1_item_tool_sword_yew', 1),
+        1: ('t1_item_tool_sword_ash', 1),
+      })
+        ..sortItems();
+
+      expect(idsOf(inventory).take(2), <String>[
+        't1_item_tool_sword_yew',
+        't1_item_tool_sword_ash',
+      ], reason: '"Ashen sword" reads before "Yew sword" in this language');
     });
 
     test('an empty container sorts to an empty container', () {

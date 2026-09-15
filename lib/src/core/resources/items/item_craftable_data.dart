@@ -26,6 +26,8 @@ import 'package:dawnforge/src/core/shared_logic/definitions/enums.dart';
 class ItemCraftableData extends ItemData {
   ItemCraftableData({
     required super.id,
+    super.displayNameKey,
+    super.descriptionKey,
     this.ingredients = const <ItemAmount>[],
     this.craftedAt = WorkstationType.none,
     this.craftTime = 1.0,
@@ -107,6 +109,8 @@ class ItemCraftableData extends ItemData {
   @override
   ItemCraftableData clone() => ItemCraftableData(
         id: id,
+        displayNameKey: displayNameKey,
+        descriptionKey: descriptionKey,
         // The entries are immutable, so the copy that matters is the LIST —
         // an instance must never share the container its recipe lives in.
         ingredients: List<ItemAmount>.of(ingredients),

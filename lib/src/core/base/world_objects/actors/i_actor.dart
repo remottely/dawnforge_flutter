@@ -1,9 +1,11 @@
+import 'package:dawnforge/src/core/base/world_objects/helpers/world_object_permission_helper.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/aim_snapshot.dart';
 import 'package:dawnforge/src/core/base/world_objects/items_hand/item_hand.dart';
 import 'package:dawnforge/src/core/base/world_objects/world_object.dart';
 import 'package:dawnforge/src/core/components/i_actor/direction_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/held_item_component.dart';
 import 'package:dawnforge/src/core/components/i_actor/movement_component.dart';
+import 'package:dawnforge/src/core/components/i_interactable/interactable_component.dart';
 import 'package:dawnforge/src/core/components/i_interactable/inventory_component.dart';
 import 'package:dawnforge/src/core/components/i_world_object/health_component.dart';
 import 'package:dawnforge/src/core/domain/movement/world_collision_rules.dart';
@@ -13,6 +15,7 @@ import 'package:dawnforge/src/core/shared_logic/definitions/game_constants.dart'
 import 'package:dawnforge/src/core/systems/boot.dart';
 import 'package:dawnforge/src/core/systems/world/actor_tracker.dart';
 import 'package:dawnforge/src/core/systems/world/grid_manager.dart';
+import 'package:dawnforge/src/generated/component_keys.dart';
 
 /// Host of every actor (player, creature, NPC). Created only by
 /// `ActorFactory.create()` (rule 1). Composes its behavior from components
@@ -70,6 +73,40 @@ class IActor extends WorldObject {
     final hand = heldItem.hand;
     if (hand == null) return ActionOutcome.none;
     return hand.primaryAction(aim);
+  }
+
+  /// Reaches for what [aim] is over — the port of `IActor`'s side of the
+  /// interact verb, and the third press this class knows how to spend.
+  ///
+  /// It answers `false` four ways and none of them is an error: this actor is
+  /// dead, the aim is over open ground, what it is over does not answer to a
+  /// reach, or it does and this actor is too far from it. A caller reads the
+  /// refusal (rule 20) — the touch path turns it into a swing.
+  ///
+  /// The reach is the OBJECT's here, not the hand's, which is the one place
+  /// this verb differs from the swing: a bench you can use from two tiles
+  /// away says so on its own document, and the empty hand reaching for it has
+  /// no opinion. It is measured by the same edge-to-edge gate the swing and
+  /// the build use, so a station you may use is a station you could have
+  /// broken from where you stand.
+  bool tryInteract(AimSnapshot aim) {
+    if (!health.isAlive) return false;
+    final grid = locator<GridManager>();
+    final target = grid.getPropAt(grid.worldToGrid(aim.point));
+    if (target == null) return false;
+    final reachable = target.getComponent<InteractableComponent>(
+      ComponentKeys.interactable,
+    );
+    if (reachable == null) return false;
+    if (!WorldObjectPermissionHelper.isWithinRange(
+      this,
+      ObjectTarget(target),
+      reachable.rangePixels,
+    )) {
+      return false;
+    }
+    reachable.interact(this);
+    return true;
   }
 
   /// Leaves the world. Actors do not despawn yet — chunk unloading only

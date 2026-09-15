@@ -18,6 +18,10 @@ Every thing in the world says what may break it. A tree wants an axe. A rock
 wants a pickaxe. Pointing at a tree with a watering can does nothing at all,
 and that is not a mistake: it is the tree saying no.
 
+**You start with a copper pickaxe.** It is in the first pocket of your bag,
+already in your hand when the world begins. It breaks rocks and ore — the two
+things you need first — and it is the only tool you own until you make more.
+
 There is a second question, and it is a different one. Even the right kind of
 tool can be **too weak**. A first tool will not scratch a stronger rock — you
 need a better one of the same kind, not a different kind.
@@ -44,6 +48,11 @@ help — the wait belongs to your character, not to your finger.
 When a thing finally breaks, what it was made of lands on the ground where it
 stood, and comes to you when you walk near. What each thing gives is its own —
 a palm tree gives logs, a bush gives fibre.
+
+Plants have an age, and the age decides. A grown palm gives logs and sometimes
+a seed; a young one gives a seed at most, and no wood. You can tell them apart
+by looking: a sprout is small and a grown tree is tall. If you need wood, look
+for the tall ones.
 
 ## Careful with what holds you up
 

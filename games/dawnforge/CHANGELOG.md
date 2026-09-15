@@ -8,6 +8,515 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The people making it wrote down a decision: the
+  flat 2D version of this game on Flutter stops here, at 0.77.0, and the next
+  thing built on this side is the block world — the cube game that already runs
+  as a test. The reasons, the four questions asked and the order of what comes
+  next are in the study document (decisions D8–D10). Nothing was deleted.
+
+## 0.77.0
+
+### ✨ New
+
+- **You can make things now.** Open your backpack and press Make: a window
+  shows everything your own two hands can build. You start with a copper
+  pickaxe, and that one tool opens the whole chain — mine ore and coal, punch a
+  palm for logs, make a smelter and a workshop with your hands, and those two
+  make everything else.
+- **You can put them down.** A smelter or a workshop you made goes into the
+  world: hold it, point, and a see-through copy shows you where it lands. Green
+  means yes, red means no. This worked inside the game before today and nobody
+  could reach it, because nothing gave you the first one.
+- **Walk up to a bench and press E, or tap it,** and the same window opens for
+  that bench. A bench only makes its own things, and makes them faster than
+  your hands do.
+- Picking a recipe tells you what it needs — how many you have next to how many
+  you need — what comes out, and how long it takes. Ask for more than one with
+  plus, minus and All. While the bar fills, **the world keeps going**, and you
+  can close the window and come back. Press Stop and everything the batch had
+  not used up yet comes back to you.
+- Two new pages in the guide: **Making things** and **Putting things down**.
+
+## 0.76.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The part that knows how to make things was
+  sitting inside the workbench, and the player's own two hands are about to
+  need the same part. It moved out into one place that both can use, so the
+  hands and the bench can never end up disagreeing about what making something
+  means.
+
+## 0.75.0
+
+### 🧹 Internal
+
+- The bench has a screen now. It lists what this bench can make, and picking
+  one shows you what it costs — how many you have of each thing next to how
+  many you need — what comes out, and how long it takes at this bench. You say
+  how many you want, press Make it, and a bar fills while the world outside
+  keeps going. You can stop a batch and get back everything it had not used
+  yet. **You still cannot reach one**, because nothing in the world gives you a
+  bench yet, so this is written down here and not in the guide. The guide page
+  comes with the commit that puts a bench in your hands.
+- Every button in the game is now the same button underneath, so they all
+  answer a finger and a mouse the same way and a button you cannot use looks
+  the part instead of disappearing.
+
+## 0.74.0
+
+### 🔧 Changed
+
+- When you press Sort and two things are just as good as each other, they now
+  line up by their names, the way words line up in a list. Before, they lined
+  up by a code the game only uses inside itself, which nobody can read.
+
+### 🧹 Internal
+
+- Every thing in the game has always carried the name it shows you, in your
+  language, and nothing in the game had ever read it. Now the game can read it.
+  That is what the crafting bench needs to say what it is about to make.
+
+## 0.73.1
+
+### 🐛 Fixed
+
+- One version of the game went into the diary with no page of its own. The
+  page is written below, under the number it belongs to.
+
+## 0.73.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The helpers who build the game now have three
+  written routines. One says where everything stands when somebody sits down
+  to work, so nobody has to guess. One searches everything the project has
+  already written down, so the same question is not worked out twice. One runs
+  all five checks and explains what a red one means — including a check that
+  can go red just because the computer was busy with something else, which
+  used to cost a whole afternoon every time somebody ran into it.
+
+## 0.72.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The game now has one page that writes down how
+  it is built on the inside: what each folder is for, what happens in order
+  when the game starts, how the clock that runs the world works, and how a
+  menu stops you from acting without ever freezing the world behind it. The
+  page is only allowed to say things that are already true, and each part of
+  it says which version it was checked against — so nobody reads an old
+  promise and believes it. Checking every line before writing it down found
+  one rule that points at a piece of the game nobody ever built.
+
+## 0.71.0
+
+### 🐛 Fixed
+
+- The list of changes had two entries in the wrong place. The note about the
+  new "reach for it" key was missing, and the note about counting the machine
+  was filed under the wrong number. Both are back where they belong. Nothing in
+  the game itself was wrong — only the diary of it.
+
+## 0.70.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Somebody counted the machine. The big brother
+  game is built out of **560 pieces of code**; this smaller game has **112** of
+  them, which is one in five. The count was done one kind of piece at a time, so
+  now there is a list of exactly what is missing and which future job brings it.
+  The surprise: the pieces that decide **how things are made** are almost all
+  here, and the pieces that make **screens and menus** are almost all missing —
+  4 out of 87. That is one reason the game still looks so plain.
+- Two notes came out of the counting. There is one folder of drawing code here
+  that the big brother game does not need at all, because in that engine a thing
+  draws itself and in this one somebody has to draw it. And the big game is
+  allowed **one single exception** to its "never guess, just stop" rule, used
+  only when loading an old save. This game does not need that exception yet,
+  because old saves here are simply thrown away.
+
+## 0.69.0
+
+### 🔧 Changed
+
+- The keys that slide the yellow edge along your item bar moved. They used to
+  be `Q` and `E`; now they are `[` and `]`, the two keys just right of `P`.
+  `E` had to be free, because from now on it is the key that means "use the
+  thing I am pointing at".
+
+### 🧹 Internal
+
+- The game learned the idea of reaching for something instead of hitting it.
+  Point at a workbench, press `E`, and the bench now hears you — from as far
+  away as that kind of bench says it can be used from, which the game reads
+  from the bench itself rather than guessing. On a phone or a tablet there is
+  no `E` key, so one tap does both: tap something you can use and you use it,
+  tap anything else and you swing at it as before. Nothing opens on screen
+  yet — the window the bench will show you is the next piece of work.
+
+## 0.68.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The big brother game knows **51 different button
+  presses** — walk, swing, reach, open the bag, throw a thing away, turn the
+  page of your belt. This smaller game answers **22** of them. Somebody sat down
+  and listed every single one: which ones are here, which ones are missing, and
+  which ones will never come (a few belong to the block-world game and there is
+  no jumping here). Three of them are on purpose different: `Tab` opens your bag
+  here and flips your belt over there, and it is much easier to pick one now
+  than after a help page has told players the wrong thing.
+- Two surprises came out of the list. The big brother game can be played with a
+  **controller** and never with a finger. This game can be played with a
+  **finger** and not at all with a controller. And when your bag is open,
+  pressing a number key still swaps the tool in your hand, because the game
+  decides "is this allowed right now?" in five different places instead of one.
+  Both are written down with the fix beside them.
+
+## 0.67.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When new pictures or data are added, the game
+  also has to be TOLD to pack them into the app — and if nobody writes that
+  line, everything looks fine right up until the game reaches for the picture
+  and finds nothing. All 27 of those lines are correct today. A note now says
+  that every future batch of new content owes one, and that a small checker
+  should watch it, so the good streak is kept by a machine instead of by
+  memory.
+
+## 0.66.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The whole reason this smaller version of the
+  game exists is to find out whether a brand-new game can be built on top of it
+  just by writing new pages — without changing the machine underneath. Nobody
+  had ever tried. It is now a real task with a clear finish line: make a tiny
+  pretend game of two pages, start it, and check that not a single line of the
+  machine had to move. A first look says the machine writes its own game's name
+  in exactly one spot, which is a very good sign.
+
+## 0.65.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The plan promised that three things would be
+  built in a way that leaves room for playing together over the internet one
+  day. Two of them are being kept. The third — where a button press becomes a
+  little written order that the game then carries out, instead of the game
+  reaching over and reading the keyboard itself — was never started, and every
+  new action makes it a bit more work to add later. That is now written down as
+  a question for the developer, with the reasons on both sides.
+
+## 0.64.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When this version of the game was first planned,
+  somebody wrote down five things that could go wrong. Seventeen days later
+  nobody had gone back to see which ones did. Now they have: three went the way
+  the plan hoped, one was struck, and one actually happened — the written pages
+  this game shares with its bigger sibling had quietly drifted apart, and the
+  safety net named in the plan was never the kind of net that could catch it.
+  The real net exists now. Two problems nobody had thought of are written down
+  too.
+
+## 0.63.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The little book that explains how to play is
+  written twice, once in English and once in Portuguese, and the two copies are
+  supposed to have the same pages with the same parts in the same order. Nobody
+  was checking. A page that went missing in one language would only be noticed
+  by a child reading that language, which is far too late. Now the check runs
+  before any work is filed. One piece of it still waits on a decision, and it
+  says so out loud instead of pretending everything was checked.
+
+## 0.62.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Yesterday's count of missing written pages got
+  a second half: even the pages we DID copy were trimmed on the way in, because
+  a page can only mention things the game already knows how to read. Somebody
+  counted the trimmed-off lines — 932 of them — and sorted them by what they
+  are for. Most are about drawing baby animals and shadow variants, which needs
+  one new drawing routine, not 500 decisions. Twenty-six tools already say how
+  their swing should look, and nothing reads it yet.
+
+## 0.61.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. When two lines of work are joined back together,
+  the note that records the joining could only be written by a command nobody
+  was allowed to check — so the one moment that saves the most work at once was
+  the one moment nobody was watching. There is now a command that looks first:
+  it makes sure nothing has been slipped in that the joining did not bring, and
+  only then writes the note. While building it we found that putting a setting
+  in front of a command made the whole guard look the other way. That is fixed
+  too.
+
+## 0.60.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The bigger version of this game keeps a set of
+  written routines that tell a helper how to do each recurring job properly —
+  how to start a work session, how to write down a decision, how to finish and
+  file everything. There are 21 of them over there and none here, and the note
+  that promised to bring them over listed ten and forgot five. The full list is
+  now written down in six batches, in the order that makes each one useful.
+
+## 0.59.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. All the words and numbers that describe this
+  game — every plant, every tool, every recipe — live in a big pile of written
+  pages, and this version of the game copied only a small corner of that pile:
+  64 pages out of 930. Nobody had ever counted, so nobody knew which corners
+  were missing. Now there is a list, grouped so each batch of pages arrives
+  with the part of the game that needs it. It turned up one surprise: the
+  workbench has 115 pages and we copied one of them.
+
+## 0.58.0
+
+### 🧹 Internal
+
+- Nothing in the game changed yet, but something the rules have been promising
+  finally exists. When we change the way a saved world is written down, the old
+  one on this computer stops making sense, and the rule says to throw it away in
+  the same breath. The command that does the throwing away had never been
+  written. Now it has — and it works out the game's own name from the app itself
+  instead of being told, so it keeps working after a rename. Your settings stay
+  put unless you ask for them to go too.
+
+## 0.57.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. There is a little watchman that reads every file
+  right after it is written and complains if it spots one of the shapes we have
+  promised never to use. It knew three of them. It now knows a fourth: a value
+  whose type nobody wrote down. A fifth one we had promised is written off on
+  purpose, with the reason in the watchman's own notes, because no way of
+  spotting it could tell a real mistake from ordinary honest code.
+
+## 0.56.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every page of this game's recipe book was copied
+  by hand from the bigger version of the game, one page at a time, and nobody
+  ever went back to see whether a page had been rewritten over there afterwards.
+  Now a checker compares all sixty-one pages at once. Anything the two books
+  disagree about has to be written down with a reason, so a difference nobody
+  chose can never sit there quietly again. The first run found sixty-seven of
+  them, including one that had been noticed once and never followed up.
+
+## 0.55.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every part of the game is supposed to come with
+  a little program that pokes it and checks it still behaves — that is how we
+  notice when something we fixed breaks again later. Somebody counted for the
+  first time: out of 109 parts, 88 are poked by something and 21 are never
+  touched at all. The list of those 21 is now written down, in the order that
+  matters most, with what each check has to prove. Four of them hold up almost
+  everything else, including the one that makes the same world come back when
+  you use the same seed.
+
+## 0.54.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The bigger version of this game has a whole
+  toolbox of little helper programs that check the game's own files for
+  mistakes — one asks whether a picture really exists, another asks whether
+  two notes about the same thing still agree. We have far fewer of those, and
+  nobody had ever sat down and compared the two toolboxes. Now somebody has:
+  every tool over there is written down here as either "we need this one",
+  "we already have it" or "we will never need it, and here is why". Three
+  things we could not check before are on the list, and each one already
+  found a real problem while it was being written down.
+
+## 0.53.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The folder holding the older, bigger version of
+  this game was renamed a while ago, and our notes still pointed at the old
+  name — so anyone looking something up there found an empty shelf and had to
+  find the new one by hand. The address is now written down in exactly one
+  place, and every note points at that place instead of spelling it out again.
+
+## 0.52.1
+
+### 🧹 Internal
+
+- Nothing in the game changed. The word-checker from the previous version was
+  counting the two places that DEFINE the word-lookup as if they were words
+  it could not check, and the previous version's note said the count was
+  zero when it was two. Both are fixed: the count is now truly zero.
+
+## 0.52.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. Every word the screen asks for by name is now
+  checked against all three language tables before any work is filed. Until
+  now a word nobody had translated would only be found when a player opened
+  the screen that needed it, and the game would stop there.
+
+## 0.51.0
+
+### 🧹 Internal
+
+- Nothing in the game changed. The history book now checks its own shape
+  before any work is filed: newest page first, no page twice, the seven
+  headings in their fixed order, and the English and Portuguese books telling
+  the same pages with the same headings. Two pages sat out of order for three
+  versions before a person noticed; from now on the checker notices first.
+
+## 0.50.0
+
+### ✨ New
+
+- **You start with a copper pickaxe.** It sits in the first pocket of your bag
+  and is already in your hand when a new world begins. It breaks rocks and
+  ore, which are the first things everything else is made from. Until now you
+  started with nothing, and nothing in the world could be mined at all.
+- The copper pickaxe itself came in from the design pack. You cannot make one
+  yet — that needs the workshop — but you own one.
+
+### 🧹 Internal
+
+- What a new player starts with is a page in the design pack, read by the
+  game's tools the same way the original game reads its own, so a second
+  page beside it would be a second way to start. The original's page grants
+  nothing; ours grants the pickaxe, and the difference is written down on the
+  page itself.
+- A start page that names an item the pack does not have stops the tools
+  before it can stop the game.
+
+## 0.49.0
+
+### ✨ New
+
+- **Palm trees give logs.** A grown palm now leaves logs behind when it falls,
+  and a young one gives seeds instead. Until now no tree in the world gave any
+  wood at all — the logs were written in the design under "what a grown palm
+  gives", and the game never read that page.
+- **Forests have young and old trees.** Every wild plant now comes into the
+  world at some point in its life, from a fresh sprout to fully grown, so a
+  forest is no longer all the same age. Grown ones give the most.
+- Seeds exist: palm, green-leaf, clover, wheat, apple, tomato and plum seeds
+  came in from the design pack, because plants can drop them. You cannot plant
+  them yet — that is the farming chapter.
+
+### 🐛 Fixed
+
+- Every palm drew as a seedling, whatever age it was. A plant now shows the
+  picture for the age it actually is.
+
+### 🧹 Internal
+
+- Plants learned their life on paper: which age is grown, whether they can die
+  of neglect, whether a hand may pick them, and what each age gives. Only the
+  "what does it give" part is used so far; growing over days, watering and
+  picking by hand wait for the farming chapter.
+- A plant's loot is two lists that ADD — what it gives at any age, and what
+  this age gives on top. They roll one after the other, never the same list
+  twice.
+
+## 0.48.2
+
+### 🧹 Internal
+
+- Nothing in the game changed. The folder where the project keeps its plans got
+  its front page: which plan is the one being worked on, what the drawers are
+  for, and what a new plan must contain before it counts as one.
+
+## 0.48.1
+
+### 🧹 Internal
+
+- Nothing in the game changed. The project's to-do book got a lot longer and a lot
+  more exact: every next step of the port — farming, the door to the bench, the
+  screens, saving your world, and the big list of things after that — is now
+  written as small numbered jobs, each with the page of the original game it
+  copies and the test that proves it. One earlier note was wrong and is fixed:
+  the original game already has a "what you start with" list, so this game will
+  read that list instead of inventing a new one. The questions only the developer
+  can answer are collected in one table, each with a suggested answer.
+
+## 0.48.0
+
+### 🧹 Internal
+
+- **A bench can now work.** Give a smelter a recipe and the ore and coal it
+  asks for, and it takes them all at once, works through the batch one bar at
+  a time, and puts each finished bar on the ground in front of itself — never on
+  top of itself. Nobody can ask a bench to do this yet: the way you talk to one
+  (walking up and pressing a key) does not exist in this build. The engine is
+  ready for it; the door is the next step.
+- You pay for the whole batch up front, and the bench keeps what it has not used
+  yet. Stop it halfway and everything it had not burned comes back onto the
+  ground. Break a working bench and the same happens, before its own pieces
+  fall.
+- A bench refuses two things and quietly: a recipe it does not make, and a
+  batch you cannot afford. Neither takes a single item from your bag.
+- Fixed a mistake copied straight from the design: while making five bars the
+  design counted "bar 1 of 1" five times, because it never wrote down how many
+  were ordered. This game writes it down, so the count reads 1 of 5, 2 of 5, and
+  so on.
+- Whether a bench is busy is no longer a separate note that could disagree with
+  what is on the bench — a bench is busy exactly when it holds a recipe.
+- The history book had two pages out of order (0.45.4 and 0.45.3 sat above
+  0.47.0); they are back in place.
+
+## 0.47.0
+
+### 🧹 Internal
+
+- **A smelter knows it is a smelter.** The design pack has said so since the
+  day it was imported, and the game had been reading it as an ordinary lump of
+  furniture and throwing that word away. Nothing had noticed, because nothing
+  had asked yet.
+- A bench keeps no list of what it makes. It asks which recipes name it, so
+  adding a recipe later means writing one file and touching nothing else.
+- A better bench still makes the humble things: a tier 2 smelter melts tier 1
+  bars as well as tier 2 ones. And the list you would be shown is built from
+  exactly the same rule that allows the work — a list and a permission that
+  disagree is how you end up making something you were never offered.
+- Two things a bench cannot be: one that answers to "made by hand", which would
+  offer the one list it must never own, and one that works infinitely fast. Both
+  now stop the game at the moment the design is read rather than much later.
+
+## 0.46.0
+
+### 🧹 Internal
+
+- The game can now work out whether you can afford a recipe, and how many you
+  could make in one go. The scarcest ingredient decides: ore enough for five
+  bars and coal enough for one makes one bar.
+- One order stops at a hundred, however full your bag is — that ceiling comes
+  straight from the design and is a number a player can actually reach.
+- Two answers are written down on purpose because the obvious code gets them
+  backwards. A thing with NO recipe cannot be made out of nothing, and it
+  cannot be made a hundred times either. Both would have been the accidental
+  answer, and both would have been silly rather than loud.
+- Nothing asks these questions yet. The bench that will ask them is next.
+
 ## 0.45.4
 
 ### 🧹 Internal

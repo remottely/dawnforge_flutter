@@ -2,7 +2,8 @@
 
 > **IMPORTANT:** This file contains non-negotiable coding and workflow rules for the
 > Tessera-Dart study track. It is the sibling of the Godot repo's `CLAUDE.md`
-> (`~/Documents/godot/remottely/dawnforge_project`): **same rule numbers, same spirit,
+> (`~/Documents/godot/remottely/tessera_project` — `SPEC_REPO_ROOT`): **same rule
+> numbers, same spirit,
 > Dart/Flame bodies.** Rules that cannot apply in Dart are marked *N/A* — the number is
 > reserved so cross-repo references stay valid.
 >
@@ -222,6 +223,7 @@ holds for every message the repo produces — commits, tags, PR bodies. The
 | **Founding study (decisions D1–D7)** | `docs/study/GODOT_TO_FLUTTER_PORT_STUDY.md` |
 | **Port plan (SSOT for FP steps)** | `docs/refactoring/implementation_plan/FLUTTER_PORT_PLAN_2026-08-25.md` |
 | **The AI harness (SSOT)** | `docs/AI_HARNESS.md` |
+| **What the code IS (verified, never intended)** | `docs/ARCHITECTURE.md` |
 | **Game content (SSOT) — the `.md` pack** | `games/dawnforge/data/` |
 | Generated content (never hand-edited) | `assets/generated/` + `lib/src/generated/` |
 | Every path automation may use | `scripts/lib/project_paths.py` |
@@ -229,5 +231,5 @@ holds for every message the repo produces — commits, tags, PR bodies. The
 | Architecture ledger (rule 27) | `docs/refactoring/LEDGER.md` |
 | Everything documented, not yet done | `docs/refactoring/PENDING.md` |
 | Player changelogs + manual (rule 34) | `games/dawnforge/CHANGELOG*.md` · `games/dawnforge/docs/manual/` |
-| **The Godot sibling (the spec being ported)** | `~/Documents/godot/remottely/dawnforge_project` — read-only from here |
+| **The Godot sibling (the spec being ported)** | `~/Documents/godot/remottely/tessera_project` — read-only from here; the path is `SPEC_REPO_ROOT` in `scripts/lib/project_paths.py`, overridable by `TESSERA_SPEC_ROOT` |
 | Archived pre-port code (rule 10) | `reference/legacy_flutter/` |

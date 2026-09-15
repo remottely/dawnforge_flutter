@@ -9,6 +9,58 @@ strings:
     en: Inventory
     pt_BR: Inventário
     es: Inventario
+  ui.inventory.craft:
+    en: Make
+    pt_BR: Fazer
+    es: Hacer
+  ui.workstation.hand_craft_title:
+    en: Your own two hands
+    pt_BR: Suas duas mãos
+    es: Tus propias manos
+  ui.workstation.select_recipe:
+    en: Pick something to make
+    pt_BR: Escolha uma coisa para fazer
+    es: Elige algo para hacer
+  ui.workstation.requires:
+    en: 'You need:'
+    pt_BR: 'Você precisa de:'
+    es: 'Necesitas:'
+  ui.workstation.ingredient_have_need:
+    en: '{have} of {need} {item}'
+    pt_BR: '{have} de {need} {item}'
+    es: '{have} de {need} {item}'
+  ui.workstation.output_format:
+    en: 'Makes {amount} {item}'
+    pt_BR: 'Faz {amount} {item}'
+    es: 'Hace {amount} {item}'
+  ui.workstation.time_seconds:
+    en: 'Takes {seconds} seconds'
+    pt_BR: 'Leva {seconds} segundos'
+    es: 'Tarda {seconds} segundos'
+  ui.workstation.quantity:
+    en: 'How many:'
+    pt_BR: 'Quantas:'
+    es: 'Cuántas:'
+  ui.workstation.max:
+    en: All
+    pt_BR: Tudo
+    es: Todo
+  ui.workstation.start_production:
+    en: Make it
+    pt_BR: Fazer
+    es: Hacer
+  ui.workstation.cancel:
+    en: Stop
+    pt_BR: Parar
+    es: Parar
+  ui.workstation.producing:
+    en: 'Making {item}'
+    pt_BR: 'Fazendo {item}'
+    es: 'Haciendo {item}'
+  ui.workstation.producing_progress:
+    en: 'Making {item}: {current} of {total}'
+    pt_BR: 'Fazendo {item}: {current} de {total}'
+    es: 'Haciendo {item}: {current} de {total}'
 ---
 
 # Interface strings
@@ -46,6 +98,26 @@ a generated root, and rule 31 makes `games/<game>/data/` the pack and therefore 
 only place a human authors content. So the file moved into the pack and took the
 pack's format (Markdown + YAML) with it. The keys are unchanged, which is the part
 that has to match.
+
+## Holes in a string
+
+A string with `{name}` in it is filled by `LocalizationSystem.trFormat`, which
+replaces each named hole and CRASHES on one it was not given a value for. The Godot
+repo writes the same strings with positional `%s`/`%d`; the keys still match, the
+holes do not, and the reason is in `localization_system.dart`: a positional hole
+cannot be moved, so a language that needs the count before the name has no way to
+say so.
+
+## Port deltas in the workstation block
+
+Three, each deliberate. **No `ui.workstation.title`** — the spec builds the panel
+with that word and then overwrites it with the station's own name the moment a
+station is opened, so here the name is the title and the key has no reader.
+**No glyphs** — the spec's buttons read `🔥 START PRODUCTION` and `❌ CANCEL`; rule
+19 says a decorative glyph is an icon, not text, and a screen reader says "fire
+emoji" out loud. **`ingredient_have_need` is new here**: the spec draws only the
+amount a recipe needs and paints it green or red, which tells a colour-blind
+seven-year-old nothing. The line says both numbers in words.
 
 ## Audience
 
