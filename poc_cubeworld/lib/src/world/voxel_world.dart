@@ -20,9 +20,9 @@ typedef StructureAt = ({int x, int y, int z, int type});
 /// class keeps what is the game's: the terrain generator, liquid flow,
 /// circuits, dimension rules and the save format.
 class VoxelWorld implements VoxelQuery {
-  VoxelWorld({required this.seedValue, int loadRadius = 8}) {
+  VoxelWorld({required this.seedValue, int loadRadius = 8, this.playground = false}) {
     _streamer = ChunkStreamer(table: Blocks.table, sink: _view, loadRadius: loadRadius);
-    _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue);
+    _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue, playground: playground);
     circuits = Circuits(this);
   }
 
@@ -40,6 +40,9 @@ class VoxelWorld implements VoxelQuery {
   /// The chunk nodes, under voxel_scene's view.
   Node get root => _view.root;
   int seedValue;
+
+  /// Stage 33: the generator flattens the playground's plaza.
+  final bool playground;
   BlockChanged? onBlockChanged;
 
   int get loadRadius => _streamer.loadRadius;
@@ -87,13 +90,13 @@ class VoxelWorld implements VoxelQuery {
 
   /// VP1.5: made in a static so the closure sent to the worker isolates
   /// captures only [ids] and [seed], never this world and its scene nodes.
-  static ChunkGeneratorFactory _generatorFactory(Map<String, int> ids, int seed) =>
-      () => TerrainGenerator(ids: ids, seed: seed);
+  static ChunkGeneratorFactory _generatorFactory(Map<String, int> ids, int seed, bool playground) =>
+      () => TerrainGenerator(ids: ids, seed: seed, playground: playground);
 
   Future<void> start() async {
     _pool?.dispose();
     final pool = ChunkWorkerPool(ChunkWorkerConfig(
-      generator: _generatorFactory(Blocks.generatorIds(), seedValue),
+      generator: _generatorFactory(Blocks.generatorIds(), seedValue, playground),
       table: Blocks.table,
       lighting: lightingEnabled,
     ));

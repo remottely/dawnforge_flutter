@@ -43,6 +43,10 @@ class Mob extends SceneBody {
   double _age = 0.0;
   double _hopCd = 0.0;
   bool tamed = false;
+
+  /// Stage 33: the playground exhibit that placed this creature ('' for none):
+  /// the spawner never despawns or counts it, and the save does not keep it.
+  String exhibit = '';
   bool puppet = false;
   double _puppetYaw = 0.0;
   Mob? _petTarget;

@@ -23,7 +23,7 @@ import 'credits_screen.dart';
 import 'settings_panel.dart';
 import 'world_list.dart';
 
-enum _Panel { none, worlds, multiplayer, settings, credits }
+enum _Panel { none, worlds, playground, multiplayer, settings, credits }
 
 /// Stage 30: the title screen — Play (the world list), Multiplayer (host a
 /// world / join an address), Settings (the shared `SettingsPanel`), Credits,
@@ -49,7 +49,7 @@ class TitleScreen extends StatefulWidget {
   static const double orbitHeight = 16.0;
   static const double orbitSpeed = 0.06; // rad/s
   static const String probe30StatsSlot = 'probe30_stats';
-  static const List<String> buttonLabels = ['Play', 'Multiplayer', 'Settings', 'Credits', 'Quit'];
+  static const List<String> buttonLabels = ['Play', 'Playground', 'Multiplayer', 'Settings', 'Credits', 'Quit'];
 
   @override
   State<TitleScreen> createState() => _TitleScreenState();
@@ -71,6 +71,7 @@ class _TitleScreenState extends State<TitleScreen> {
   final TextEditingController _ip = TextEditingController(text: '127.0.0.1');
   int _hostPick = 0;
   String _joinClass = 'warrior';
+  String _playgroundClass = 'warrior';
   bool _busy = false;
 
   Map<String, String> get args => widget.args;
@@ -190,6 +191,7 @@ class _TitleScreenState extends State<TitleScreen> {
     const shadow = [Shadow(color: Color.fromRGBO(0, 0, 0, 0.7), offset: Offset(3, 3))];
     final actions = <VoidCallback>[
       () => setState(() => _panel = _Panel.worlds),
+      () => setState(() => _panel = _Panel.playground),
       () => setState(() {
             _hostPick = 0;
             _panel = _Panel.multiplayer;
@@ -255,6 +257,39 @@ class _TitleScreenState extends State<TitleScreen> {
           _close();
         }, height: 44),
       ]);
+
+  /// Stage 33: the playground — a new creative world with every feature laid
+  /// out around the spawn.
+  Widget _playground() {
+    const white = TextStyle(fontSize: 14, color: Colors.white);
+    return _framed('Playground', [
+      const Text(
+          'A new creative world built to show everything the game can do. You start in a hub, surrounded by nine exhibits: '
+          'every block, shapes and building, redstone, rails and minecarts, water, lava and the portal, a farm with animals '
+          'and villagers, a monster arena with bosses to summon, and light and mining.',
+          style: white),
+      const SizedBox(height: 6),
+      const Text('F5 fly · F7 weather · F8 time of day · F9 rebuild the exhibit you stand in · the hub waypoint opens a world tour',
+          style: TextStyle(fontSize: 13, color: Color.fromRGBO(191, 217, 255, 1))),
+      const SizedBox(height: 8),
+      Row(children: [
+        for (final e in Player.classes.entries)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(3),
+              child: SizedBox(
+                height: 36,
+                child: _playgroundClass == e.key
+                    ? FilledButton(onPressed: () => setState(() => _playgroundClass = e.key), child: Text(e.value.name))
+                    : OutlinedButton(onPressed: () => setState(() => _playgroundClass = e.key), child: Text(e.value.name)),
+              ),
+            ),
+          ),
+      ]),
+      SettingsPanel.button('Build a new playground', () => _playSlot(Worlds.createPlayground(_playgroundClass)), height: 44),
+      SettingsPanel.button('Back', _close, height: 44),
+    ]);
+  }
 
   Widget _multiplayer() {
     final entries = Worlds.list();
@@ -348,6 +383,8 @@ class _TitleScreenState extends State<TitleScreen> {
         return null;
       case _Panel.worlds:
         return WorldList(onStart: _playSlot, onClosed: _close, showForm: _worldsForm);
+      case _Panel.playground:
+        return _playground();
       case _Panel.multiplayer:
         return _multiplayer();
       case _Panel.settings:
@@ -407,6 +444,8 @@ class _TitleScreenState extends State<TitleScreen> {
         _worldsForm = true;
         _panel = _Panel.worlds;
       });
+    } else if (args.containsKey('--open-playground')) {
+      setState(() => _panel = _Panel.playground);
     } else if (args.containsKey('--open-credits')) {
       setState(() {
         _creditsStart = double.tryParse(args['--credits-t='] ?? '') ?? 20.0;

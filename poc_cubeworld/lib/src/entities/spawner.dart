@@ -28,10 +28,10 @@ class Spawner {
     if (_timer > 0.0) return;
     _timer = 1.2;
     for (final m in main.mobs) {
-      if (m.species.persistent) continue; // stage 26: a villager never despawns
+      if (m.species.persistent || m.exhibit != '') continue; // stage 26: a villager never despawns; stage 33: nor an exhibit
       if ((m.position - player.position).length > 96.0) m.removed = true;
     }
-    if (main.mobs.length >= cap) return;
+    if (main.mobs.where((m) => m.exhibit == '').length >= cap) return;
     _trySpawn();
   }
 

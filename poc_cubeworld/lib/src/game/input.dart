@@ -33,6 +33,9 @@ enum GameAction {
   dodge,
   journal,
   skipTutorial, // stage 30
+  cycleWeather, // stage 33: playground F7
+  cycleTime, // stage 33: playground F8
+  rebuildExhibit, // stage 33: playground F9
 }
 
 /// Held keys, one-shot presses, mouse buttons, wheel and the captured mouse
@@ -76,6 +79,9 @@ class GameInput {
     GameAction.dodge: [PhysicalKeyboardKey.altLeft, PhysicalKeyboardKey.altRight],
     GameAction.journal: [PhysicalKeyboardKey.keyJ],
     GameAction.skipTutorial: [PhysicalKeyboardKey.f6],
+    GameAction.cycleWeather: [PhysicalKeyboardKey.f7],
+    GameAction.cycleTime: [PhysicalKeyboardKey.f8],
+    GameAction.rebuildExhibit: [PhysicalKeyboardKey.f9],
   };
 
   static const List<PhysicalKeyboardKey> _digits = [

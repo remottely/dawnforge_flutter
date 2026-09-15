@@ -12,6 +12,7 @@ import 'journal_screen.dart';
 import 'menus.dart';
 import 'trade_screen.dart';
 import 'tutorial_card.dart';
+import 'zone_card.dart';
 
 /// The play session: the 3D view, the HUD painted over it, and whichever
 /// screen is open (inventory, pause, death). Keyboard focus lives here.
@@ -174,6 +175,7 @@ class _GameSessionState extends State<_GameSession> {
                     ),
                     CustomPaint(painter: HudPainter(game, _minimap, _worldMap, repaint: game.frame)),
                     const TutorialCard(), // stage 30
+                    if (game.playground != null) ZoneCard(playground: game.playground!), // stage 33
                     ?overlay,
                   ],
                 ),

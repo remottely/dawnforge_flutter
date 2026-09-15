@@ -33,6 +33,7 @@ import 'loot.dart';
 import 'music.dart';
 import 'net.dart';
 import 'pathfinder.dart';
+import 'playground.dart';
 import 'portals.dart';
 import 'quests.dart';
 import 'rails.dart';
@@ -235,6 +236,11 @@ class Game extends ChangeNotifier {
   final Set<IVec3> _platesFired = {};
   Spawner? spawner;
 
+  /// Stage 33: the showcase world's exhibits and keys (null outside a
+  /// playground), and its save block read by [_loadGame].
+  Playground? playground;
+  Map<String, dynamic>? _playgroundSave;
+
   /// Stage 31: how much of the baked skylight shows right now (1.0 noon, 0.35
   /// night, 0.0 in the underworld); the terrain shader and the spawner's light
   /// gate both read it. Night is 0.35 rather than lower because the shader
@@ -329,8 +335,13 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage30')) Settings.instance.tutorialDone = false; // the probe drives the chain from step 1
     Tutorial.instance.notify = notify;
 
+    if (_hasArg('--playground')) {
+      GameState.instance.playground = true; // stage 33: the probe's way in
+      GameState.instance.creative = true;
+    }
     await TerrainMaterial.loadLibrary(); // stage 31: before the world builds its materials
     world = VoxelWorld(
+      playground: GameState.instance.playground,
       seedValue: int.tryParse(_arg('--seed=', '')) ?? GameState.instance.seedValue,
       // A probe run keeps radius 8 so its chunk counts never depend on this
       // machine's settings.cfg.
@@ -353,18 +364,25 @@ class Game extends ChangeNotifier {
     quests.player = player;
     Achievements.instance.notify = notify;
 
+    if (GameState.instance.playground) playground = Playground(this);
     final loaded = await _loadGame();
     if (!loaded) {
-      final spawn = _findSpawn();
+      final spawn = playground != null ? Playground.spawn : _findSpawn();
       player.position = spawn;
       player.spawnPoint = spawn.clone();
+    }
+    final pg = playground;
+    if (pg != null) {
+      final saved = _playgroundSave;
+      if (saved != null) pg.fromJson(saved);
+      if (!loaded) pg.startFresh();
     }
     // Stage 30: the tutorial on a world the title screen just created (a probe's
     // bare `--new` stays quiet; `--stage30` drives it); once the world exists, a
     // reload is a load. The launcher also marks a bare `--new` fresh (Godot's
     // title does not), so `--new` is excluded here explicitly.
     final titleFresh = GameState.instance.freshWorld && !_hasArg('--new');
-    if ((titleFresh || _hasArg('--stage30')) && !_hasArg('--no-tutorial') && _stage30Saved == null && !Net.instance.isClient) {
+    if ((titleFresh || _hasArg('--stage30')) && !_hasArg('--no-tutorial') && _stage30Saved == null && !Net.instance.isClient && playground == null) {
       Tutorial.instance.begin();
     }
     GameState.instance.freshWorld = false;
@@ -670,6 +688,13 @@ class Game extends ChangeNotifier {
       }
     }
     if (input.justPressed(GameAction.skipTutorial)) Tutorial.instance.skipAll(); // stage 30: F6
+    final pg = playground;
+    if (pg != null && !Net.instance.isClient) {
+      // Stage 33: the showcase keys.
+      if (input.justPressed(GameAction.cycleWeather)) pg.cycleWeather();
+      if (input.justPressed(GameAction.cycleTime)) pg.cycleTime();
+      if (input.justPressed(GameAction.rebuildExhibit)) pg.rebuildHere();
+    }
     if (input.justPressed(GameAction.pause)) {
       if (screen != ScreenKind.none) {
         if (screen != ScreenKind.death) closeScreen();
@@ -767,6 +792,7 @@ class Game extends ChangeNotifier {
     weather.process(dt);
     _tickVisuals(dt);
     if (!spawnerPaused) spawner?.update(dt);
+    if (!Net.instance.isClient) playground?.tick(dt); // stage 33
     // Stage 25: the tick's flow edits leave as one `blocks` message.
     Net.instance.beginBlockBatch();
     world.tickFlow(dt);
@@ -1770,6 +1796,7 @@ class Game extends ChangeNotifier {
         // Stage 24: boats, tamed mobs (the mount by its index), dropped items,
         // the explored map.
         ...entityData(),
+        if (playground != null) 'playground': playground!.toJson(), // stage 33
       };
       await File('$saveDir/player.json').writeAsString(jsonEncode(data), flush: true);
     } catch (e) {
@@ -1843,6 +1870,7 @@ class Game extends ChangeNotifier {
     if (savedDim != world.dimension) world.switchDimension(savedDim);
     await world.loadEdits('$saveDir/blocks.bin');
     timeOfDay = (data['time'] as num?)?.toDouble() ?? 0.3;
+    _playgroundSave = data['playground'] as Map<String, dynamic>?; // stage 33
     GameState.instance.fromJson((data['stats'] as Map<String, dynamic>?) ?? {});
     player.fromJson(data['player'] as Map<String, dynamic>);
     quests.fromJson((data['quests'] as Map<String, dynamic>?) ?? {});
@@ -2242,6 +2270,7 @@ class Game extends ChangeNotifier {
     }
     if (_hasArg('--stage31')) await _probeStage31();
     if (_hasArg('--stage32')) await _probeStage32();
+    if (playground != null && _hasArg('--playground')) await _probePlayground();
     await nextFrame();
     await nextFrame();
     debugPrint('[probe] fps ${fps.toStringAsFixed(0)} mobs ${mobs.length} drops ${drops.length} projectiles ${projectiles.length}');
@@ -2262,6 +2291,156 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] no screenshotter, nothing captured');
     }
     exit(0);
+  }
+
+  // --- stage 33: the playground ---------------------------------------------------------
+
+  /// `--new --playground --screenshot=<png> [--shot=aerial|<zone id>|underwater|arena_inside|hall]`:
+  /// waits for all nine exhibits, prints what they hold, and frames the shot.
+  Future<void> _probePlayground() async {
+    final pg = playground!;
+    final t0 = DateTime.now();
+    for (var i = 0; i < 3000 && pg.built.length < Playground.zones.length; i++) {
+      await nextFrame();
+    }
+    for (var i = 0; i < 30 || (!world.isIdle && i < 1200); i++) {
+      await nextFrame();
+    }
+    var exhibits = 0;
+    for (final m in mobs) {
+      if (m.exhibit != '') exhibits += 1;
+    }
+    final villagers = mobs.where((m) => m.species.persistent).length;
+    debugPrint('[probe] playground: zones built=${pg.built.length}/${Playground.zones.length} in ${DateTime.now().difference(t0).inMilliseconds} ms, '
+        'edits=${pg.edits} exhibit mobs=$exhibits villagers=$villagers pets=${pets.length} carts=${carts.length} boats=${boats.length} '
+        'chests=${chests.length} waypoints=${waypoints.length} gallery=${Playground.galleryBlocks().length} library=${Playground.libraryItems().length}');
+    debugPrint('[probe] playground tour: ${pg.tour.join(', ')}');
+    debugPrint('[probe] playground kit: ${[for (var i = 0; i < 9; i++) player.inventory.idAt(i)].join(' ')} level=${player.level} creative=${GameState.instance.creative}');
+    final hub = Playground.zone('hub');
+    debugPrint('[probe] playground floor: surface=${world.surfaceHeight(hub.cx, hub.cz)} ground=${world.groundHeight(hub.cx + 20, hub.cz + 20)} '
+        'biome=${world.biomeAt(hub.cx, hub.cz)} structures inside the plaza=${world.structuresNear(VoxelWorld.chunkOf(IVec3(hub.cx, 64, hub.cz))).where((st) => TerrainGenerator.inPlaza(st.x, st.z)).length}');
+    if (_hasArg('--pg-checks')) await _playgroundChecks(pg);
+    // `--shots=a,b,c`: one capture per shot beside the `--screenshot=` file
+    // (`<name>_<shot>.png`) in the same run, then the main shot as usual.
+    final shots = _arg('--shots=', '');
+    final shoot = screenshotter;
+    if (shots != '' && shoot != null) {
+      final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+      for (final name in shots.split(',')) {
+        final v = _playgroundView(name);
+        if (v == null) continue;
+        await _playgroundFrame(v);
+        await shoot('${base}_$name.png');
+        debugPrint('[probe] playground capture $name from ${v.eye} -> ${base}_$name.png');
+      }
+    }
+    final view = _playgroundView(_arg('--shot=', 'aerial'));
+    if (view == null) return;
+    await _playgroundFrame(view);
+    _pinCameraTo = () => view.eye.clone();
+    debugPrint('[probe] playground capture ${_arg('--shot=', 'aerial')} from ${view.eye}');
+  }
+
+  /// `--pg-checks`: the playground's interactive pieces, driven through the
+  /// same calls the keys and the blocks use.
+  Future<void> _playgroundChecks(Playground pg) async {
+    const f = Playground.floor;
+    String idAt(int x, int y, int z) => Blocks.idOf(world.getBlock(IVec3(x, y, z)));
+    final b = Playground.zone('building');
+    debugPrint('[probe] playground check shapes: step top ${idAt(b.cx + 14, f + 4, b.cz - 14)} half-step ${idAt(b.cx + 10, f + 2, b.cz - 14)} '
+        'climb wall ${idAt(b.cx + 5, f + 2, b.cz + 4)} ladder ${idAt(b.cx + 13, f + 4, b.cz + 7)} roof ${idAt(b.cx - 14, f + 5, b.cz - 12)} '
+        'iron door ${idAt(b.cx + 3, f, b.cz + 14)} stairs ${idAt(b.cx + 5, f + 4, b.cz - 14)}');
+    flyMode = false;
+    // A boss plate: one step summons, a second step while it lives does not.
+    final arena = Playground.zone('arena');
+    final plate = Playground.bossPlateCell(arena, 1);
+    int trolls() => mobs.where((m) => m.species.id == 'troll' && m.exhibit == 'arena' && !m.removed).length;
+    _probePlace(plate.toVector3() + Vector3(0.5, 0.6, 0.5));
+    await _ticks(6);
+    final first = trolls();
+    _probePlace(plate.toVector3() + Vector3(0.5, 0.1, 3.5));
+    await _ticks(3);
+    _probePlace(plate.toVector3() + Vector3(0.5, 0.6, 0.5));
+    await _ticks(6);
+    debugPrint('[probe] playground check boss plate: troll summoned=$first, second step keeps ${trolls()}, boss bar ${boss?.species.id}');
+    // The gold button refills what died.
+    int arenaCount() => mobs.where((m) => m.exhibit == 'arena' && !m.removed && !m.isDead).length;
+    final before = arenaCount();
+    for (final m in mobs) {
+      if (m.exhibit == 'arena' && m.species.id == 'zombie' && m.affix == '') m.removed = true;
+    }
+    await _ticks(2);
+    final killed = arenaCount();
+    final refill = Playground.arenaRefillCell(arena);
+    world.circuits.useBlock(refill);
+    await _ticks(4);
+    debugPrint('[probe] playground check refill: arena $before -> one zombie gone $killed -> gold button ${arenaCount()} (button ${idAt(refill.x, refill.y, refill.z)})');
+    // F7 / F8.
+    pg.cycleWeather();
+    final w1 = weather.label;
+    pg.cycleTime();
+    final t1 = timeOfDay;
+    pg.cycleTime();
+    debugPrint('[probe] playground check keys: F7 -> $w1, F8 -> ${t1.toStringAsFixed(2)} then ${timeOfDay.toStringAsFixed(2)}');
+    weather.force('clear');
+    timeOfDay = 0.3;
+    // F9: a cottage wall plank broken, then the exhibit rebuilt.
+    final wall = IVec3(b.cx - 17, f + 1, b.cz - 18);
+    world.setBlock(wall, Blocks.air);
+    _probePlace(Vector3(b.cx + 0.5, f + 0.1, b.cz + 0.5));
+    await _ticks(3);
+    final broken = idAt(wall.x, wall.y, wall.z);
+    pg.rebuildHere();
+    await _ticks(3);
+    debugPrint('[probe] playground check F9: wall $broken -> ${idAt(wall.x, wall.y, wall.z)}, player moved to ${player.position}, zone ${pg.current?.id}');
+    // The save carries the built zones and the flag.
+    await saveGame();
+    final saved = jsonDecode(File('$saveDir/player.json').readAsStringSync()) as Map<String, dynamic>;
+    debugPrint('[probe] playground check save: built=${(saved['playground'] as Map<String, dynamic>)['built']} '
+        'flag=${(saved['stats'] as Map<String, dynamic>)['playground']} waypoints=${(saved['waypoints'] as Map<String, dynamic>).length} '
+        'pets=${(saved['pets'] as List<dynamic>).length} carts=${(saved['carts'] as List<dynamic>).length} boats=${(saved['boats'] as List<dynamic>).length}');
+    _probePlace(Playground.spawn);
+    await _ticks(2);
+  }
+
+  /// Hovers the first-person camera at [view]'s eye, looking at its target,
+  /// until the chunks around it are meshed.
+  Future<void> _playgroundFrame(({Vector3 eye, Vector3 target}) view) async {
+    flyMode = true;
+    player.setFirstPerson(true);
+    final dir = view.target - view.eye;
+    player.setLook(math.atan2(-dir.x, -dir.z), math.atan2(dir.y, math.sqrt(dir.x * dir.x + dir.z * dir.z)));
+    world.updateAround(view.eye);
+    for (var i = 0; i < 40 || (!world.isIdle && i < 1200); i++) {
+      _probePlace(view.eye);
+      await nextFrame();
+    }
+  }
+
+  ({Vector3 eye, Vector3 target})? _playgroundView(String shot) {
+    const f = Playground.floor;
+    Vector3 c(String id) => Vector3(Playground.zone(id).cx.toDouble(), f.toDouble(), Playground.zone(id).cz.toDouble());
+    switch (shot) {
+      case 'aerial':
+        return (eye: Vector3(8.0, f + 62.0, 118.0), target: Vector3(8.0, f.toDouble(), 4.0));
+      case 'underwater':
+        final w = c('water');
+        return (eye: w + Vector3(-9.5, -3.0, 4.5), target: w + Vector3(-3.0, -5.5, -5.0));
+      case 'arena_inside':
+        final a = c('arena');
+        return (eye: a + Vector3(0.5, 2.6, 11.0), target: a + Vector3(0.5, 0.8, -4.0));
+      case 'hall':
+        final h = c('caves');
+        return (eye: h + Vector3(-6.5, 2.2, -5.0), target: h + Vector3(-6.5, 1.0, -15.0));
+      case 'steps':
+        final b = c('building');
+        return (eye: b + Vector3(19.5, 7.0, -3.0), target: b + Vector3(11.0, 1.0, -13.0));
+      case 'spawn':
+        return null;
+    }
+    if (!Playground.zones.any((z) => z.id == shot)) return null;
+    final z = c(shot);
+    return (eye: z + Vector3(0.5, 17.0, 31.0), target: z + Vector3(0.5, 1.0, 0.0));
   }
 
   // --- stage 32: polish -----------------------------------------------------------------

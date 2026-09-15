@@ -634,6 +634,13 @@ class HudPainter extends CustomPainter {
     if (am != null) {
       Hud.text(canvas, '${am.displayName()}  ${am.hp.ceil()}/${am.maxHp.toInt()}', Offset(c.dx - 150, c.dy - 40),
           size: 16, align: TextAlign.center, width: 300, color: const Color.fromRGBO(255, 204, 204, 1));
+    } else if (game.playground != null && player.isAiming) {
+      // Stage 33: the playground names the block under the crosshair.
+      final aimed = game.world.getBlock(player.aimedBlock);
+      if (aimed != Blocks.air) {
+        Hud.text(canvas, Blocks.displayName(aimed), Offset(c.dx - 150, c.dy - 40),
+            size: 15, align: TextAlign.center, width: 300, color: const Color.fromRGBO(204, 230, 255, 1));
+      }
     }
 
     // Boss bar (stage 32: a portrait block in the species' colour, and it shakes on a hit)

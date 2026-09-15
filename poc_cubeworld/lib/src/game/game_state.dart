@@ -15,6 +15,7 @@ class GameState {
   int deaths = 0;
   double playTime = 0.0; // seconds of play in this world (the stats block's play time)
   bool creative = false; // stage 30: no damage, no hunger, free blocks, fly allowed
+  bool playground = false; // stage 33: the showcase world (flat plaza, exhibits, F7-F9)
   double distanceWalked = 0.0; // stage 30: metres on the ground, saved with the stats
   int dimensionVisits = 0; // stage 30: portal trips taken
   final Set<String> placedChests = {};
@@ -31,6 +32,7 @@ class GameState {
         'play_time': playTime,
         'class': playerClass,
         'creative': creative,
+        'playground': playground,
         'distance_walked': distanceWalked,
         'dimension_visits': dimensionVisits,
         'placed_chests': placedChests.toList(),
@@ -46,6 +48,7 @@ class GameState {
     deaths = (d['deaths'] as num?)?.toInt() ?? 0;
     playTime = (d['play_time'] as num?)?.toDouble() ?? 0.0;
     creative = d['creative'] == true;
+    playground = d['playground'] == true;
     distanceWalked = (d['distance_walked'] as num?)?.toDouble() ?? 0.0;
     dimensionVisits = (d['dimension_visits'] as num?)?.toInt() ?? 0;
     playerClass = d['class']?.toString() ?? playerClass;

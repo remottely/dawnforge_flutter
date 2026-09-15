@@ -202,14 +202,18 @@ class _JournalPainter extends CustomPainter {
       Hud.text(canvas, 'No waypoints yet. Craft one: 4 stone bricks + 2 magic dust.',
           Offset(body.left, y + 20), size: 15, color: _dim);
     }
-    for (final e in entries) {
-      final r = Rect.fromLTWH(body.left, y, body.width, 40);
+    // Stage 33: more than ten (the playground's world tour) run in two columns.
+    final cols = entries.length > 10 ? 2 : 1;
+    final perCol = (entries.length / cols).ceil();
+    final colW = (body.width - 12.0 * (cols - 1)) / cols;
+    for (var i = 0; i < entries.length; i++) {
+      final e = entries[i];
+      final r = Rect.fromLTWH(body.left + (i ~/ perCol) * (colW + 12.0), y + (i % perCol) * 46.0, colW, 40);
       canvas.drawRect(r, _fill(_row));
       final dist = (e.key.toVector3() - game.player.position).length;
       Hud.text(canvas, '${e.value}   (${e.key.x}, ${e.key.y}, ${e.key.z})   ${dist.round()} m away',
           r.topLeft + const Offset(12, 26), size: 16);
       s._waypointRects.add((r, e.key));
-      y += 46;
     }
   }
 

@@ -47,7 +47,7 @@ class _PauseMenuState extends State<PauseMenu> {
               const Text('Menu', style: TextStyle(fontSize: 36, color: Colors.white)),
               const SizedBox(height: 6),
               Text(
-                'WASD move · Space jump${Settings.instance.climbWalls ? ' / climb walls' : ''} · Shift sprint · Ctrl sneak\nLMB mine / attack · RMB place / use · E inventory + craft\n1-9 hotbar · Q drop · H eat · V camera · G glide · R ability · M map · J journal · F1 debug',
+                'WASD move · Space jump${Settings.instance.climbWalls ? ' / climb walls' : ''} · Shift sprint · Ctrl sneak\nLMB mine / attack · RMB place / use · E inventory + craft\n1-9 hotbar · Q drop · H eat · V camera · G glide · R ability · M map · J journal · F1 debug${game.playground != null ? '\nPlayground: F5 fly · F7 weather · F8 time of day · F9 rebuild the exhibit you stand in' : ''}',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 13, color: Colors.white70),
               ),

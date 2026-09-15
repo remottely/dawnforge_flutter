@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --underwater --step-teleport --climb --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -44,6 +44,15 @@ session; the slot is removed at the end, the tutorial flag goes to `settings_pro
 Captures: `--title-probe --screenshot=<png>` (the title) · `--title-probe --open-worlds` (the
 world list with the form) · `--title-probe --open-credits [--credits-t=seconds]` (Flutter
 only) · `--new --seed=42 --stage30 --shot=tutorial` (the card on step 4).
+
+Stage 33 probes: `--new --playground --slot=probe33 --seed=42 --frames=300 --settle=10 --no-tutorial
+--screenshot=<png> [--shot=aerial|hub|blocks|building|redstone|rails|water|farm|arena|caves|underwater|arena_inside|hall|steps]
+[--shots=a,b,...] [--pg-checks]` waits for the nine exhibits and prints what they hold (zones, block
+edits, exhibit mobs, villagers, pets, carts, boats, chests, waypoints, the tour, the kit, the plaza
+floor), `--shots=` captures one `<png stem>_<shot>.png` per view in the same run, and `--pg-checks`
+drives the shapes' cells, a boss plate, the refill button, F7 / F8, F9 on a broken cottage wall and
+the save. A second boot with `--slot=probe33 --playground` (no `--new`) reads the exhibits back
+(`edits=0`); `--title-probe --open-playground` captures the title panel. Delete the slot after.
 
 Stage 31 probe: `--new --seed=42 --frames=300 --settle=10 --stage31 --screenshot=<png>` builds a
 torch-lit room, a pit with an overhang and an S maze east of spawn, then prints the sky / block
@@ -81,7 +90,7 @@ Apple silicon) with the arguments flutter_gpu_shaders' hook uses, `--gles-langua
 include path. A bundle is tied to the engine that compiled it: a stale one fails at boot with
 a message naming the script.
 
-Saves live in `~/Library/Application Support/cubeworld_poc/dawnforge_cubeworld_poc/worlds/<name>/`
+Saves live in `~/Library/Application Support/com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/worlds/<name>/`
 (`world.json` from the New World form, `blocks.bin` edit delta + `player.json`, the same bytes
 as the Godot POC). F2 writes a screenshot next to them.
 
@@ -97,6 +106,29 @@ the world as before; `--title-probe` forces the title even then.
   (asks first). **New world** opens the form: a name, a seed (a number, any text — hashed —, or
   empty for a random one), **Survival** or **Creative**, and the class; **Start** creates the
   slot and boots it.
+- **Playground** (stage 33) builds a new creative world on seed 42 made to show every feature at
+  once (pick a class, then *Build a new playground*). The generator flattens a 144 x 144 grass
+  plaza around the spawn (no caves, trees or structures on it) and nine exhibits are laid on it
+  in a 3 x 3 grid, each built the first time its chunks load and kept by the save: the **hub**
+  (a glider tower, chests holding every item, the crafting stations, the tour waypoint), the
+  **block gallery** (every block on a pedestal, the liquids in glass tanks), **shapes &
+  building** (a cottage with a stairs roof, stairs, half steps, one-block steps for the auto-jump,
+  a climbing wall, a ladder wall, fences, wooden and iron doors), **redstone** (levers, buttons,
+  a plate, lamps, an iron door, the 15-wire range, TNT, a piston, a lamp row), **rails** (a loop
+  with a hill and a powered stretch, a riding cart, a chest cart), **water, lava & portal** (a
+  6-deep pool with a waterfall, a boat, a dock and a sunken chest, a lava basin behind a
+  cobblestone gate holding back water, a lit portal to the Underworld), **farm & animals**
+  (wheat at every stage, four pens, a tamed horse, wolf and parrot, two villager stalls), the
+  **monster arena** (14 monsters and elites behind an iron door, a spawner block, six pressure
+  plates that summon the Boomer, Cave Troll, Yeti, Scorpion King, Mummy King or Underworld Lord,
+  a gold button that refills the arena) and **light & mining** (every light source in a dark
+  hall, an ore wall, falling sand and gravel, a ladder shaft to a diamond chamber at y 12).
+  Walking into an exhibit shows its card; the crosshair names the aimed block. The hub's
+  waypoint (J, Waypoints) is a **world tour**: the nearest dungeon, tower, camp, village, ruin,
+  well, mine and temple, and the nearest forest, desert, snow, mountains, swamp, jungle and
+  ocean. Keys: **F7** weather, **F8** time of day (noon, sunset, midnight, sunrise), **F9**
+  rebuilds the exhibit you stand in (its creatures, carts and boat too). The zoo and arena
+  creatures come back on every boot; the spawner neither despawns nor counts them.
 - **Creative** worlds take no damage, never get hungry, place blocks without spending them and
   fly with **F5** (Space up, Ctrl down). Survival keeps its feet on the ground.
 - **Tutorial**: a new world made from the title shows a card at the top of the screen with the
@@ -123,6 +155,7 @@ the world as before; `--title-probe` forces the title even then.
 | E / Tab | inventory + crafting |
 | Q / H / F / V / G / R | drop · eat · interact · first/third person · glider · class ability |
 | F1 / F2 / F5 | debug text · screenshot · fly mode |
+| F7 / F8 / F9 | Playground only: cycle the weather · cycle the time of day · rebuild the exhibit you stand in |
 | M | minimap, again: world map with markers (waypoints, structures, mounts, spawn), again: off |
 | J | journal: talents, bestiary, achievements, waypoints, quests |
 | Esc | menu: render distance, mouse, FOV, volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |

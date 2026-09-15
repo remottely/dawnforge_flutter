@@ -10,7 +10,7 @@ import 'package:voxel_core/voxel_core.dart';
 /// depth, lava in the deep, and decorations (trees, cacti, plants) that can
 /// cross chunk borders. Runs on worker isolates; nothing here touches the scene.
 class TerrainGenerator implements ChunkGenerator {
-  TerrainGenerator({required this.ids, required int seed}) {
+  TerrainGenerator({required this.ids, required int seed, this.playground = false}) {
     _stone = ids['stone']!;
     _dirt = ids['dirt']!;
     _grass = ids['grass']!;
@@ -101,6 +101,28 @@ class TerrainGenerator implements ChunkGenerator {
   static const int structNone = 0, structDungeon = 1, structTower = 2, structCamp = 3, structVillage = 4;
   static const int structRuin = 5, structWell = 6, structMine = 7, structTemple = 8;
 
+  /// Stage 33: a playground world flattens a plaza around the spawn: grass at
+  /// [plazaFloor] (the feet level) over x/z in [plazaMin, plazaMax), no caves,
+  /// trees or structures there, and the natural height eased back in over
+  /// [plazaBlend] blocks outside it. The underworld is untouched.
+  final bool playground;
+  static const int plazaMin = -64, plazaMax = 80, plazaFloor = 64, plazaBlend = 16;
+
+  /// Whether column ([x], [z]) is within [margin] blocks of the plaza.
+  static bool inPlaza(int x, int z, [int margin = 0]) =>
+      x >= plazaMin - margin && x < plazaMax + margin && z >= plazaMin - margin && z < plazaMax + margin;
+
+  /// Blocks from column ([x], [z]) to the plaza's edge (0 inside).
+  static int plazaDistance(int x, int z) {
+    final dx = x < plazaMin ? plazaMin - x : (x >= plazaMax ? x - plazaMax + 1 : 0);
+    final dz = z < plazaMin ? plazaMin - z : (z >= plazaMax ? z - plazaMax + 1 : 0);
+    return math.max(dx, dz);
+  }
+
+  /// A structure a playground keeps out of the plaza (48 blocks clear, the
+  /// size of the largest one).
+  bool _structureAllowed(({int x, int y, int z, int type}) s) => !playground || !inPlaza(s.x, s.z, 48);
+
   static const int _air = 0;
   final Map<String, int> ids;
   late int _stone, _dirt, _grass, _sand, _water, _oakLog, _oakLeaves, _gravel, _sandstone, _snow,
@@ -155,6 +177,14 @@ class TerrainGenerator implements ChunkGenerator {
   static double _lerp(double a, double b, double t) => a + (b - a) * t;
 
   int surfaceHeight(int x, int z) {
+    if (!playground) return _naturalHeight(x, z);
+    final d = plazaDistance(x, z);
+    if (d == 0) return plazaFloor;
+    if (d >= plazaBlend) return _naturalHeight(x, z);
+    return _lerp(plazaFloor.toDouble(), _naturalHeight(x, z).toDouble(), _smooth(0, plazaBlend.toDouble(), d.toDouble())).round();
+  }
+
+  int _naturalHeight(int x, int z) {
     final xd = x.toDouble(), zd = z.toDouble();
     final cont = _continental.getNoise2(xd, zd);
     final land = _smooth(-0.35, 0.15, cont);
@@ -194,6 +224,7 @@ class TerrainGenerator implements ChunkGenerator {
   int biomeAt(int x, int z) => _dimension == dimUnderworld ? biomeUnderworld : _biomeFor(x, z, surfaceHeight(x, z));
 
   int _biomeFor(int x, int z, int h) {
+    if (playground && inPlaza(x, z)) return biomePlains; // stage 33: the plaza is grass
     if (h < seaLevel - 2) return biomeOcean;
     final t = _temperature.getNoise2(x.toDouble(), z.toDouble()) - ((h - 72).clamp(0, 1 << 30)) / 50.0;
     final hum = _humidity.getNoise2(x.toDouble(), z.toDouble());
@@ -289,7 +320,7 @@ class TerrainGenerator implements ChunkGenerator {
 
           // Caves: cheese caves everywhere in rock, caverns deeper, sealed near
           // the surface unless an entrance noise opens it.
-          if (id != _air && id != _bedrock && id != _water && id != _ice && y > 1) {
+          if (id != _air && id != _bedrock && id != _water && id != _ice && y > 1 && !(playground && inPlaza(wx, wz, 2))) {
             final c = _cave.getNoise3(wx.toDouble(), y * 1.5, wz.toDouble());
             final depth = h - y;
             var open = false;
@@ -316,6 +347,7 @@ class TerrainGenerator implements ChunkGenerator {
     for (var z = -_reach; z < sizeZ + _reach; z++) {
       for (var x = -_reach; x < sizeX + _reach; x++) {
         final wx = ox + x, wz = oz + z;
+        if (playground && inPlaza(wx, wz, 4)) continue; // stage 33: no tree leans into the plaza
         final h = surfaceHeight(wx, wz);
         final biome = _biomeFor(wx, wz, h);
         final hsh = hash(wx, 7, wz);
@@ -587,14 +619,14 @@ class TerrainGenerator implements ChunkGenerator {
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
         final s = _regionStructure(rx + dx, rz + dz);
-        if (s != null) list.add(s);
+        if (s != null && _structureAllowed(s)) list.add(s);
       }
     }
     final mx = _floorDiv(chunkX, _minorRegionChunks), mz = _floorDiv(chunkZ, _minorRegionChunks);
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
         final s = _minorStructure(mx + dx, mz + dz);
-        if (s != null) list.add(s);
+        if (s != null && _structureAllowed(s)) list.add(s);
       }
     }
     return list;
@@ -606,7 +638,7 @@ class TerrainGenerator implements ChunkGenerator {
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
         final s = _regionStructure(rx + dx, rz + dz);
-        if (s == null) continue;
+        if (s == null || !_structureAllowed(s)) continue;
         switch (s.type) {
           case structDungeon:
             _dungeon(blocks, ox, oz, s.x, s.y, s.z);
@@ -623,7 +655,7 @@ class TerrainGenerator implements ChunkGenerator {
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
         final s = _minorStructure(mx + dx, mz + dz);
-        if (s == null) continue;
+        if (s == null || !_structureAllowed(s)) continue;
         switch (s.type) {
           case structRuin:
             _ruins(blocks, ox, oz, s.x, s.y, s.z);

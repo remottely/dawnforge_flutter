@@ -17,6 +17,7 @@ class WorldEntry {
     required this.playSeconds,
     required this.lastPlayed,
     required this.hasSave,
+    this.playground = false,
   });
   final String slot;
   String name;
@@ -27,6 +28,9 @@ class WorldEntry {
   double playSeconds;
   int lastPlayed; // unix seconds
   bool hasSave;
+
+  /// Stage 33: `world.json` says `"type": "playground"`.
+  bool playground;
 
   bool get creative => mode == 'creative';
 }
@@ -78,6 +82,7 @@ class Worlds {
       playSeconds: 0.0,
       lastPlayed: (m['created'] as num?)?.toInt() ?? 0,
       hasSave: hasSave,
+      playground: m['type'] == 'playground',
     );
     if (hasSave) {
       try {
@@ -89,6 +94,7 @@ class Worlds {
           e.playSeconds = (stats['play_time'] as num?)?.toDouble() ?? 0.0;
           e.playerClass = stats['class']?.toString() ?? e.playerClass;
           if (stats['creative'] == true) e.mode = 'creative';
+          if (stats['playground'] == true) e.playground = true;
         }
       } on FormatException {
         // An unreadable save still lists by its meta.
@@ -145,7 +151,7 @@ class Worlds {
 
   /// The New World form's Start: a fresh slot named after the world (a number
   /// appended when the name is taken), its `world.json` written. Returns the slot.
-  static String create(String name, String seedText, String mode, String cls, {String slotPrefix = '', int? now}) {
+  static String create(String name, String seedText, String mode, String cls, {String slotPrefix = '', int? now, String type = ''}) {
     var clean = name.trim();
     if (clean == '') clean = 'New World';
     final base = slotPrefix + slugOf(clean);
@@ -161,9 +167,16 @@ class Worlds {
       'mode': mode,
       'class': cls,
       'created': now ?? DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      if (type != '') 'type': type,
     });
     return slot;
   }
+
+  /// Stage 33: the title's Playground button. Always a new creative slot on
+  /// seed [playgroundSeed], so every playground starts from the same world.
+  static const int playgroundSeed = 42;
+  static String createPlayground(String cls, {int? now}) =>
+      create('Playground', '$playgroundSeed', 'creative', cls, now: now, type: 'playground');
 
   static bool rename(String slot, String name) {
     final clean = name.trim();
@@ -196,10 +209,11 @@ class Worlds {
     gs.seedValue = e.seed;
     gs.playerClass = e.playerClass;
     gs.creative = e.creative;
+    gs.playground = e.playground;
     gs.freshWorld = !e.hasSave;
   }
 
-  static String modeLabel(WorldEntry e) => e.creative ? 'Creative' : 'Survival';
+  static String modeLabel(WorldEntry e) => e.playground ? 'Playground' : (e.creative ? 'Creative' : 'Survival');
 
   static String playTimeLabel(double seconds) {
     final s = seconds.toInt();
