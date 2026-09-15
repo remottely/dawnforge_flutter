@@ -9,7 +9,7 @@ import 'package:voxel_core/voxel_core.dart';
 /// noise, a height field with hills and ridged mountains, 3D caves, ores by
 /// depth, lava in the deep, and decorations (trees, cacti, plants) that can
 /// cross chunk borders. Runs on worker isolates; nothing here touches the scene.
-class TerrainGenerator {
+class TerrainGenerator implements ChunkGenerator {
   TerrainGenerator({required this.ids, required int seed}) {
     _stone = ids['stone']!;
     _dirt = ids['dirt']!;
@@ -224,6 +224,7 @@ class TerrainGenerator {
   /// Stage 29: the chunk of an explicit dimension. The worker binds the
   /// dimension at dispatch, so a job started before a switch still writes what
   /// it was asked for.
+  @override
   Uint8List generateIn(int chunkX, int chunkZ, int dimension) {
     if (dimension == dimUnderworld) return _generateUnderworld(chunkX, chunkZ);
     final blocks = Uint8List(volume);

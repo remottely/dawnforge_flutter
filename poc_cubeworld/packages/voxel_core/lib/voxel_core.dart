@@ -7,3 +7,4 @@ export 'src/grid/chunk_size.dart';
 export 'src/grid/voxel_block_table.dart';
 export 'src/math/ivec3.dart';
 export 'src/mesh/chunk_mesher.dart';
+export 'src/streaming/chunk_worker_pool.dart';

@@ -2,28 +2,30 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:typed_data';
 
-import 'package:voxel_core/voxel_core.dart';
-import 'terrain_generator.dart';
+import '../grid/voxel_block_table.dart';
+import '../mesh/chunk_mesher.dart';
+
+/// Fills one chunk volume ([ChunkSize.volume] bytes of block ids) for chunk
+/// ([cx], [cz]) of [dimension]. Runs on a worker isolate: it must be pure in
+/// (seed, position) and touch nothing outside itself.
+abstract interface class ChunkGenerator {
+  Uint8List generateIn(int cx, int cz, int dimension);
+}
+
+/// Builds a [ChunkGenerator] inside a worker isolate. It is sent to the
+/// isolate, so it must capture only sendable values: make it in a static or
+/// top-level function, never in an instance method whose `this` holds scene
+/// objects.
+typedef ChunkGeneratorFactory = ChunkGenerator Function();
 
 /// Everything a worker isolate needs to build its own generator and mesher.
 class WorkerConfig {
-  WorkerConfig({
-    required this.seed,
-    required this.ids,
-    required this.palette,
-    required this.shapes,
-    required this.opaque,
-    required this.emission,
-    this.lighting = true,
-  });
-  final int seed;
-  final Map<String, int> ids;
-  final Float32List palette;
-  final Uint8List shapes;
-  final Uint8List opaque;
-  final Uint8List emission;
+  WorkerConfig({required this.generator, required this.table, this.lighting = true});
 
-  /// Stage 31: false under `--no-light` (the mesher skips both BFS).
+  final ChunkGeneratorFactory generator;
+  final VoxelBlockTable table;
+
+  /// False skips both light BFS (skylight everywhere): the probe's cost comparison.
   final bool lighting;
 }
 
@@ -34,8 +36,8 @@ class _Worker {
   int pending = 0;
 }
 
-/// A fixed pool of isolates running terrain generation and meshing (the
-/// Godot POC's C# on WorkerThreadPool). Requests are answered by futures.
+/// A fixed pool of isolates running chunk generation and meshing. Requests
+/// are answered by futures; each goes to the least busy worker.
 class ChunkWorkerPool {
   ChunkWorkerPool(this.config, {this.workers = 3});
 
@@ -87,14 +89,15 @@ class ChunkWorkerPool {
     return c.future.then((v) => v as T);
   }
 
-  /// Stage 29: the job carries the dimension it was dispatched for, so a result
-  /// that lands after a travel still holds what it was asked for (the world
-  /// drops it by epoch).
+  /// The job carries the dimension it was dispatched for, so a result that
+  /// lands after a dimension switch still holds what it was asked for.
   Future<Uint8List> generate(int cx, int cz, [int dimension = 0]) async {
     final t = await _request<TransferableTypedData>(['gen', cx, cz, dimension]);
     return t.materialize().asUint8List();
   }
 
+  /// [ring] is the chunk and its eight neighbours, in the order
+  /// c, nx, px, nz, pz, nxnz, pxnz, nxpz, pxpz; a missing neighbour is null.
   Future<ChunkMeshResult> mesh(int cx, int cz, List<Uint8List?> ring) async {
     final reply = await _request<List<Object?>>(['mesh', cx, cz, ring]);
     ByteBuffer bytes(int at) => (reply[at] as TransferableTypedData).materialize();
@@ -125,14 +128,8 @@ void _workerMain(List<Object?> args) {
   final ready = args[0] as SendPort;
   final out = args[1] as SendPort;
   final config = args[2] as WorkerConfig;
-  final generator = TerrainGenerator(ids: config.ids, seed: config.seed);
-  final mesher = ChunkMesher(
-    palette: config.palette,
-    shape: config.shapes,
-    opaque: config.opaque,
-    emission: config.emission,
-    lighting: config.lighting,
-  );
+  final generator = config.generator();
+  final mesher = config.table.mesher(lighting: config.lighting);
   final port = ReceivePort();
   ready.send(port.sendPort);
   port.listen((message) {

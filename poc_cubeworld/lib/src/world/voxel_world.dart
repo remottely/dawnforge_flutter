@@ -8,7 +8,6 @@ import 'package:vector_math/vector_math.dart';
 import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/circuits.dart';
-import 'chunk_worker.dart';
 import 'terrain_generator.dart';
 import 'terrain_material.dart';
 
@@ -137,15 +136,16 @@ class VoxelWorld {
     (x: -1, z: -1), (x: 1, z: -1), (x: -1, z: 1), (x: 1, z: 1),
   ];
 
+  /// VP1.5: made in a static so the closure sent to the worker isolates
+  /// captures only [ids] and [seed], never this world and its scene nodes.
+  static ChunkGeneratorFactory _generatorFactory(Map<String, int> ids, int seed) =>
+      () => TerrainGenerator(ids: ids, seed: seed);
+
   Future<void> start() async {
     _pool?.dispose();
     final pool = ChunkWorkerPool(WorkerConfig(
-      seed: seedValue,
-      ids: Blocks.generatorIds(),
-      palette: Blocks.palette(),
-      shapes: Blocks.shapes(),
-      opaque: Blocks.opaqueTable(),
-      emission: Blocks.emission(),
+      generator: _generatorFactory(Blocks.generatorIds(), seedValue),
+      table: Blocks.table,
       lighting: lightingEnabled,
     ));
     await pool.start();

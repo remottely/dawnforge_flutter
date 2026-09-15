@@ -201,6 +201,21 @@ nothing. **API polish waits for VP4**, so a diff here is a move plus the minimum
 **Gate:** the four checks; `grep -rn "dart:ui\|package:flutter/" packages/voxel_core` is empty;
 the perf loop at VP1.5 lands within 10% of the baseline.
 
+**VP1 log:**
+
+| Step | Commit | Notes |
+|:---|:---|:---|
+| VP1.1 `IVec3` | `572234fe` | 32 importers rewritten. `--check` showed stage 32's crit count moving (17 → 12): crits roll the game's unseeded `Random`, so `--check` masks that number |
+| VP1.2 `ChunkSize`, `BlockShape`, `CollisionBox` | `971e982f` | the three class-level size names stay as aliases of `ChunkSize` |
+| VP1.3 `ChunkMesher` | `08c2c599` | **Deviation:** the mesher's `shapeX` ints stay `const`, because `BlockShape.index` is not a constant expression and would sit in the hottest loop. A package test pins all 25 to `BlockShape.index` instead |
+| VP1.4 `VoxelBlockTable` | `79554dfb` | `Blocks.table` is built from the 125 rows; liquid kinds indexed by `Blocks.liquidKinds` (water 0, lava 1); the four array getters return the table's arrays, byte-identical |
+| VP1.5 `ChunkWorkerPool` | pending | `TerrainGenerator implements ChunkGenerator`. The factory is made in a static on `VoxelWorld`: a closure made in an instance method may capture `this` and its unsendable scene nodes |
+
+**Found while moving, owed to VP4.1:** an exception inside a worker isolate kills that worker
+silently. Its futures never complete, and the world waits on them forever. This is how a package
+test with an out-of-range block id showed up as a 30 s timeout. It is the POC's behaviour today,
+moved unchanged; the fix is an `onError` port that fails the pending futures.
+
 ## VP2 — `voxel_scene`, by moves
 
 - **VP2.1** `TerrainMaterial`, `terrain.frag`, `terrain_cube.frag`, `tool/build_shaders.dart`
