@@ -77,6 +77,10 @@ enum BlockShape {
 
   /// A rail rising toward the west.
   railSlopeW,
+
+  /// Rungs between two rails, flat against the first opaque horizontal
+  /// neighbour (a ladder on a wall, not two crossed sheets).
+  ladder,
 }
 
 /// An axis-aligned box as min / max corners: a test reads a face without

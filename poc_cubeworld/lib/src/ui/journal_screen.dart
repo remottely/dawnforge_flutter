@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../core/species.dart';
@@ -27,11 +28,15 @@ class _JournalScreenState extends State<JournalScreen> {
   final List<Rect> _tabRects = [];
   final List<(Rect, String)> _talentRects = [];
   final List<(Rect, IVec3)> _waypointRects = [];
+
+  /// One scroll per tab: each list keeps where it was left.
+  final List<PanelScroll> _scrolls = [for (var i = 0; i < tabs.length; i++) PanelScroll()];
   double _k = 1.0;
   Offset _origin = Offset.zero;
 
   Game get game => widget.game;
   int get tab => game.journalTab;
+  PanelScroll get scroll => _scrolls[tab];
 
   Offset _toPanel(Offset p) => Offset((p.dx - _origin.dx) / _k, (p.dy - _origin.dy) / _k);
 
@@ -43,9 +48,11 @@ class _JournalScreenState extends State<JournalScreen> {
         return;
       }
     }
+    // A row was recorded where it was painted — inside the scrolled body.
+    final cp = scroll.toContent(mp);
     if (tab == 0) {
       for (final pair in _talentRects) {
-        if (pair.$1.contains(mp)) {
+        if (pair.$1.contains(cp)) {
           if (game.player.learnTalent(pair.$2)) Sfx.play('levelup', -6.0);
           return;
         }
@@ -53,7 +60,7 @@ class _JournalScreenState extends State<JournalScreen> {
     }
     if (tab == 3) {
       for (final pair in _waypointRects) {
-        if (pair.$1.contains(mp)) {
+        if (pair.$1.contains(cp)) {
           if (game.travelToWaypoint(pair.$2)) game.closeScreen();
           return;
         }
@@ -66,6 +73,9 @@ class _JournalScreenState extends State<JournalScreen> {
     return Listener(
       behavior: HitTestBehavior.opaque,
       onPointerDown: (e) => setState(() => _click(_toPanel(e.localPosition))),
+      onPointerSignal: (e) {
+        if (e is PointerScrollEvent) setState(() => scroll.wheel(e.scrollDelta.dy));
+      },
       child: CustomPaint(painter: _JournalPainter(this), size: Size.infinite),
     );
   }
@@ -128,10 +138,13 @@ class _JournalPainter extends CustomPainter {
     s._talentRects.clear();
     Hud.text(canvas, 'Talent points: ${player.talentPoints}   (one per level from level 2)',
         body.topLeft + const Offset(0, 18), size: 16, color: _gold);
-    var y = body.top + 40;
-    for (final t in Talents.listFor(player.playerClass)) {
+    final list = Rect.fromLTRB(body.left, body.top + 28, body.right, body.bottom);
+    final talents = Talents.listFor(player.playerClass);
+    s.scroll.begin(canvas, list, talents.length * 62.0);
+    var y = list.top;
+    for (final t in talents) {
       final rank = player.talentRank(t.id);
-      final r = Rect.fromLTWH(body.left, y, body.width, 56);
+      final r = Rect.fromLTWH(body.left, y, body.width - 10, 56);
       final color = Color.fromRGBO((t.r * 255).round(), (t.g * 255).round(), (t.b * 255).round(), 1);
       canvas.drawRect(r, _fill(_row));
       canvas.drawRect(Rect.fromLTWH(r.left + 8, r.top + 8, 40, 40), _fill(color));
@@ -149,16 +162,18 @@ class _JournalPainter extends CustomPainter {
       s._talentRects.add((b, t.id));
       y += 62;
     }
+    s.scroll.end(canvas, list);
   }
 
   void _bestiary(Canvas canvas, Rect body) {
     final st = GameState.instance;
+    final defs = [for (final d in Species.defs.values) if (!d.trader) d];
+    s.scroll.begin(canvas, body, 18 + ((defs.length + 1) ~/ 2) * 50.0);
     var i = 0;
-    for (final d in Species.defs.values) {
-      if (d.trader) continue;
+    for (final d in defs) {
       final kills = st.kills[d.id] ?? 0;
       final seen = kills > 0 || st.seen.contains(d.id);
-      final r = Rect.fromLTWH(body.left + (i % 2) * (body.width * 0.5), body.top + 18 + (i ~/ 2) * 50, body.width * 0.5 - 10, 44);
+      final r = Rect.fromLTWH(body.left + (i % 2) * (body.width * 0.5), body.top + 18 + (i ~/ 2) * 50, body.width * 0.5 - 12, 44);
       canvas.drawRect(r, _fill(_row));
       final c = d.colors[0];
       canvas.drawRect(
@@ -174,21 +189,24 @@ class _JournalPainter extends CustomPainter {
       Hud.text(canvas, info, r.topLeft + const Offset(46, 36), size: 12, color: _dim);
       i += 1;
     }
+    s.scroll.end(canvas, body);
   }
 
   void _achievements(Canvas canvas, Rect body) {
     final ach = Achievements.instance;
     Hud.text(canvas, '${ach.count} / ${Achievements.defs.length} unlocked',
         body.topLeft + const Offset(0, 18), size: 16, color: _gold);
+    s.scroll.begin(canvas, body, 30 + ((Achievements.defs.length + 1) ~/ 2) * 50.0);
     for (var i = 0; i < Achievements.defs.length; i++) {
       final d = Achievements.defs[i];
       final done = ach.unlocked.contains(d.id);
-      final r = Rect.fromLTWH(body.left + (i % 2) * (body.width * 0.5), body.top + 30 + (i ~/ 2) * 50, body.width * 0.5 - 10, 44);
+      final r = Rect.fromLTWH(body.left + (i % 2) * (body.width * 0.5), body.top + 30 + (i ~/ 2) * 50, body.width * 0.5 - 12, 44);
       canvas.drawRect(r, _fill(done ? const Color.fromRGBO(51, 71, 51, 1) : _row));
       Hud.text(canvas, '${done ? '*' : 'o'} ${d.name}', r.topLeft + const Offset(12, 18),
           size: 16, color: done ? _gold : Colors.white);
       Hud.text(canvas, d.description, r.topLeft + const Offset(12, 36), size: 12, color: _dim);
     }
+    s.scroll.end(canvas, body);
   }
 
   void _waypoints(Canvas canvas, Rect body) {
@@ -205,7 +223,8 @@ class _JournalPainter extends CustomPainter {
     // Stage 33: more than ten (the playground's world tour) run in two columns.
     final cols = entries.length > 10 ? 2 : 1;
     final perCol = (entries.length / cols).ceil();
-    final colW = (body.width - 12.0 * (cols - 1)) / cols;
+    final colW = (body.width - 10.0 - 12.0 * (cols - 1)) / cols;
+    s.scroll.begin(canvas, body, 36 + perCol * 46.0);
     for (var i = 0; i < entries.length; i++) {
       final e = entries[i];
       final r = Rect.fromLTWH(body.left + (i ~/ perCol) * (colW + 12.0), y + (i % perCol) * 46.0, colW, 40);
@@ -215,6 +234,7 @@ class _JournalPainter extends CustomPainter {
           r.topLeft + const Offset(12, 26), size: 16);
       s._waypointRects.add((r, e.key));
     }
+    s.scroll.end(canvas, body);
   }
 
   /// Stage 24: the quest chain in order.
@@ -226,8 +246,9 @@ class _JournalPainter extends CustomPainter {
         body.topLeft + const Offset(0, 18), size: 16, color: _gold);
     var y = body.top + 30;
     const rowH = 40.0;
+    s.scroll.begin(canvas, body, 30 + entries.length * rowH + 40);
     for (final e in entries) {
-      final r = Rect.fromLTWH(body.left, y, body.width, rowH - 4);
+      final r = Rect.fromLTWH(body.left, y, body.width - 10, rowH - 4);
       final active = e.state == 'active';
       final finished = e.state == 'done';
       canvas.drawRect(r, _fill(active ? const Color.fromRGBO(71, 82, 51, 1) : const Color.fromRGBO(38, 38, 46, 1)));
@@ -259,6 +280,7 @@ class _JournalPainter extends CustomPainter {
       Hud.text(canvas, 'Every quest is done. You are the Hero of Dawnforge!', Offset(body.left, y + 20),
           size: 15, color: _gold);
     }
+    s.scroll.end(canvas, body);
   }
 
   @override

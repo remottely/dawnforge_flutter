@@ -125,7 +125,6 @@ class Player extends SceneBody implements Target {
   double fov = 72.0;
   late final Node highlight;
   late final Node crack;
-  late final Node hoverGlow;
   late final UnlitMaterial _crackMat;
   late final PointLight torchLight;
   final Node _torchNode = Node();
@@ -200,42 +199,34 @@ class Player extends SceneBody implements Target {
     model.build(skinTone, c.shirt, pantsTone, hairTone);
     node.add(model.root);
 
-    // Block highlight: the 12 edges of a slightly inflated unit cube.
-    const e = 0.003;
-    final corners = <Vector3>[
-      for (var i = 0; i < 8; i++)
-        Vector3(-e + (1 + 2 * e) * (i & 1), -e + (1 + 2 * e) * ((i >> 1) & 1), -e + (1 + 2 * e) * ((i >> 2) & 1)),
-    ];
-    final segs = <double>[];
-    for (var a = 0; a < 8; a++) {
-      for (var bit = 0; bit < 3; bit++) {
-        final b = a | (1 << bit);
-        if (b != a && (a & (1 << bit)) == 0) {
-          segs.addAll([corners[a].x, corners[a].y, corners[a].z, corners[b].x, corners[b].y, corners[b].z]);
-        }
-      }
-    }
-    highlight = Node(
-      mesh: Mesh(
-        LineSegmentsGeometry(LineSegmentData(positions: Float32List.fromList(segs)), width: 0.02),
-        UnlitMaterial()..baseColorFactor = Vector4(0.05, 0.05, 0.05, 1),
-      ),
-    )
+    // The aimed block wears a skeleton of sticks: the 12 edges of a cube 0.01
+    // wider than the cell, in a 75% white. Being outside every face, the sticks
+    // never fight the block's own texture — which a film hugging the faces did.
+    // They are twelve cuboids, not a line ribbon: a `LineSegmentsGeometry` node
+    // never reached the screen here, whatever material carried it, which is why
+    // the outline drawn before this — black, and thinner — was never seen.
+    const e = 0.005; // how far the skeleton stands off the cell
+    const t = 0.03; // a stick's thickness
+    const span = 1 + 2 * e;
+    final stick = UnlitMaterial()
+      ..baseColorFactor = Vector4(0.75, 0.75, 0.75, 1)
+      ..vertexColorWeight = 0.0;
+    highlight = Node()
       ..visible = false
       ..castsShadows = false;
-
-    // Minecraft's hover: the aimed block turns a little lighter, a white film
-    // just outside its faces.
-    hoverGlow = GodotCamera.primitiveNode(
-      Mesh(
-        CuboidGeometry(Vector3(1.004, 1.004, 1.004)),
-        UnlitMaterial()
-          ..baseColorFactor = Vector4(1, 1, 1, 0.16)
-          ..vertexColorWeight = 0.0
-          ..alphaMode = AlphaMode.blend,
-      ),
-      castsShadows: false,
-    )..visible = false;
+    for (var axis = 0; axis < 3; axis++) {
+      for (var corner = 0; corner < 4; corner++) {
+        final size = Vector3.all(t);
+        size[axis] = span + t; // the stick runs the cell's length, corner to corner
+        // The two axes the edge does not run along pick one of the four corners.
+        final centre = Vector3.all(0.5);
+        centre[(axis + 1) % 3] = corner & 1 == 0 ? -e : 1 + e;
+        centre[(axis + 2) % 3] = corner & 2 == 0 ? -e : 1 + e;
+        highlight.add(
+          GodotCamera.primitiveNode(Mesh(CuboidGeometry(size), stick), castsShadows: false)..position = centre,
+        );
+      }
+    }
 
     _crackMat = UnlitMaterial()
       ..baseColorFactor = Vector4(0, 0, 0, 0)
@@ -395,12 +386,9 @@ class Player extends SceneBody implements Target {
       aimedNormal = hit.normal;
       highlight.visible = true;
       highlight.position = aimedBlock.toVector3();
-      hoverGlow.visible = true;
-      hoverGlow.position = aimedBlock.toVector3() + Vector3.all(0.5);
     } else {
       isAiming = false;
       highlight.visible = false;
-      hoverGlow.visible = false;
     }
   }
 

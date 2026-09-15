@@ -176,6 +176,49 @@ class Hud {
   }
 }
 
+/// A scrolling body for a hand-painted panel. The painter wraps the rows in
+/// [begin] / [end]: the content is clipped to the box and shifted up by
+/// [offset], and a bar appears on the right as soon as the rows are taller than
+/// the box. A click comes back through [toContent], so the rects the painter
+/// recorded are read in the space they were drawn in. Every panel whose list can
+/// outgrow its box holds one (the journal keeps one per tab).
+class PanelScroll {
+  /// How far the content is shifted up, in the panel's own units.
+  double offset = 0.0;
+  double _max = 0.0;
+
+  /// One wheel notch.
+  static const double step = 40.0;
+
+  /// Rolls the wheel: [dy] > 0 walks down the list.
+  void wheel(double dy) => offset = (offset + (dy > 0 ? step : -step)).clamp(0.0, _max);
+
+  /// A point in panel space read in the content's own space.
+  Offset toContent(Offset p) => Offset(p.dx, p.dy + offset);
+
+  /// Clips to [body] and shifts the content up. [contentHeight] is how tall the
+  /// rows are all together; anything past [body] becomes scroll.
+  void begin(Canvas canvas, Rect body, double contentHeight) {
+    _max = math.max(0.0, contentHeight - body.height);
+    offset = offset.clamp(0.0, _max);
+    canvas.save();
+    canvas.clipRect(body);
+    canvas.translate(0, -offset);
+  }
+
+  /// Ends the clip and draws the bar when there is anything to scroll.
+  void end(Canvas canvas, Rect body) {
+    canvas.restore();
+    if (_max <= 0.0) return;
+    final track = body.height;
+    final thumb = math.max(30.0, track * track / (track + _max));
+    final x = body.right - 5;
+    canvas.drawRect(Rect.fromLTWH(x, body.top, 4, track), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.35));
+    canvas.drawRect(Rect.fromLTWH(x, body.top + (offset / _max) * (track - thumb), 4, thumb),
+        Paint()..color = const Color.fromRGBO(170, 170, 185, 1));
+  }
+}
+
 /// Rebuilds the 96x96 top-down map once a second while visible.
 class Minimap {
   static const int radius = 48;

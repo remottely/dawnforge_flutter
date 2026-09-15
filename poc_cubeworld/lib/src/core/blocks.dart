@@ -113,7 +113,7 @@ class Blocks {
     BlockDef('farmland', 'Farmland', 0.40, 0.27, 0.16, hardness: 0.8, tool: ToolType.shovel, drop: 'dirt'),
     BlockDef('spawner', 'Monster Spawner', 0.20, 0.12, 0.28, hardness: 5.0, tool: ToolType.pickaxe, tier: 1, drop: 'magic_dust', light: 4),
     BlockDef('tnt', 'TNT', 0.85, 0.20, 0.15, hardness: 0.0),
-    BlockDef('ladder', 'Ladder', 0.60, 0.45, 0.25, shape: BlockShape.cross, solid: false, opaque: false, hardness: 0.4, tool: ToolType.axe),
+    BlockDef('ladder', 'Ladder', 0.60, 0.45, 0.25, shape: BlockShape.ladder, solid: false, opaque: false, hardness: 0.4, tool: ToolType.axe),
     BlockDef('door_z', 'Door', 0.62, 0.45, 0.25, shape: BlockShape.panelZ, opaque: false, hardness: 1.0, tool: ToolType.axe, drop: 'door'),
     BlockDef('door_x', 'Door', 0.62, 0.45, 0.25, shape: BlockShape.panelX, opaque: false, hardness: 1.0, tool: ToolType.axe, drop: 'door'),
     BlockDef('door_z_open', 'Open Door', 0.62, 0.45, 0.25, shape: BlockShape.panelX, solid: false, opaque: false, hardness: 1.0, tool: ToolType.axe, drop: 'door'),

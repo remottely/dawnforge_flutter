@@ -12,12 +12,13 @@ void main() {
   });
 
   test('the shape order is the byte contract the mesher reads', () {
-    expect(BlockShape.values, hasLength(25));
+    expect(BlockShape.values, hasLength(26));
     expect(BlockShape.cube.index, 0);
     expect(BlockShape.liquid.index, 2);
     expect(BlockShape.slab.index, 8);
     expect(BlockShape.wire.index, 14);
     expect(BlockShape.railSlopeW.index, 24);
+    expect(BlockShape.ladder.index, 25);
   });
 
   test('a block that stops no body has no boxes, whatever its shape', () {

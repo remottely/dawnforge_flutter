@@ -358,7 +358,6 @@ class Game extends ChangeNotifier {
     player.setupPlayer(world, this, _arg('--class=', GameState.instance.playerClass));
     entities.add(player.node);
     entities.add(player.highlight);
-    entities.add(player.hoverGlow);
     entities.add(player.crack);
     for (final l in player.crackLines) {
       entities.add(l); // stage 32
@@ -3071,15 +3070,17 @@ class Game extends ChangeNotifier {
     pose(x0 + 0.5, math.pi / 2, 'stone_sword', 0.09);
     pose(x0 + 2.0, 0.0, 'stone_axe', 0.0);
     final eye = Vector3(x0 + 0.5, floor + 1.4, z0 - 9.5);
-    // The crosshair rests on a dirt block in the floor, within reach and clear
-    // of the models, so the hover glow shows against a darker face.
-    final aimed = IVec3(x0 - 3, y0, z0 - 8);
+    // The crosshair rests on a dirt block STANDING on the pad, not sunk into
+    // it: a block flush with the floor buries eleven of the outline's twelve
+    // edges in the stone and lays the rest in the floor's own plane, which
+    // shows nothing.
+    final aimed = IVec3(x0 - 3, y0 + 1, z0 - 8);
     world.setBlock(aimed, Blocks.indexOf('dirt'));
     // `_playgroundFrame` places the feet at the eye; the first-person camera
     // sits higher, so the target drops by that lift to keep the ray on the dirt.
     player.setFirstPerson(true);
     final lift = player.pivotPosition.y - player.position.y;
-    await _playgroundFrame((eye: eye, target: aimed.toVector3() + Vector3(0.5, 1.0 - lift, 0.5)));
+    await _playgroundFrame((eye: eye, target: aimed.toVector3() + Vector3(0.5, 0.5 - lift, 0.5)));
     final zombie = Mob();
     zombie.setupMob(world, this, player, Species.def('zombie'));
     zombie.position = Vector3(x0 - 2.5, floor, z0 - 6.5);
@@ -3090,7 +3091,7 @@ class Game extends ChangeNotifier {
       await nextFrame();
     }
     debugPrint('[probe] model: three poses and a zombie at z=${z0 - 5.5}, camera $eye; '
-        'aimed ${player.aimedBlock} (dirt at $aimed) hover glow visible=${player.hoverGlow.visible} at ${player.hoverGlow.position}');
+        'aimed ${player.aimedBlock} (dirt at $aimed) outline visible=${player.highlight.visible} at ${player.highlight.position}');
     _pinCameraTo = () => eye.clone();
   }
 

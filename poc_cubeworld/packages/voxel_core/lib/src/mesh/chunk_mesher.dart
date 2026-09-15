@@ -219,7 +219,8 @@ class ChunkMesher {
       _shapeRailSlopeN = 21,
       _shapeRailSlopeE = 22,
       _shapeRailSlopeS = 23,
-      _shapeRailSlopeW = 24;
+      _shapeRailSlopeW = 24,
+      _shapeLadder = 25;
 
   /// The shape ints above in [BlockShape] order. They stay `const` ints, not
   /// `BlockShape.index` reads, because they sit in the hottest loop; a test pins
@@ -230,6 +231,7 @@ class ChunkMesher {
     _shapeSlab, _shapeFence, _shapeStairsN, _shapeStairsE, _shapeStairsS, _shapeStairsW, _shapeWire,
     _shapeRailNs, _shapeRailEw, _shapeRailNe, _shapeRailNw, _shapeRailSe, _shapeRailSw,
     _shapeRailSlopeN, _shapeRailSlopeE, _shapeRailSlopeS, _shapeRailSlopeW,
+    _shapeLadder,
   ];
 
   /// A cube whose emission is at or above this goes on [ChunkMeshResult.glow].
@@ -653,6 +655,52 @@ class ChunkMesher {
             _lightUv(x, y, z);
             _box(solid, ox + 0.4, oy, oz + 0.4, ox + 0.6, oy + 0.62, oz + 0.6, br, bg, bb, 0.45, 0.32, 0.18,
                 0.0, 1.0, _ls, _lb, tint: false);
+            continue;
+          }
+
+          if (sh == _shapeLadder) {
+            // Two rails and four rungs lying on the wall the ladder hangs from
+            // — the first opaque horizontal neighbour, -z when it hangs on
+            // nothing. `u` runs along that wall, `v` is the depth out of it, so
+            // one set of boxes serves all four facings.
+            _lightUv(x, y, z);
+            final ls = _ls, lb = _lb;
+            final int wall;
+            if (_opaqueAt(x - 1, y, z)) {
+              wall = 0;
+            } else if (_opaqueAt(x + 1, y, z)) {
+              wall = 1;
+            } else if (_opaqueAt(x, y, z + 1)) {
+              wall = 3;
+            } else {
+              wall = 2;
+            }
+            void bar(double u0, double v0, double y0, double u1, double v1, double y1,
+                double r, double g, double b) {
+              final double ax0, az0, ax1, az1;
+              if (wall == 0) {
+                ax0 = v0; ax1 = v1; az0 = u0; az1 = u1;
+              } else if (wall == 1) {
+                ax0 = 1.0 - v1; ax1 = 1.0 - v0; az0 = u0; az1 = u1;
+              } else if (wall == 2) {
+                ax0 = u0; ax1 = u1; az0 = v0; az1 = v1;
+              } else {
+                ax0 = u0; ax1 = u1; az0 = 1.0 - v1; az1 = 1.0 - v0;
+              }
+              _box(solid, ox + ax0, oy + y0, oz + az0, ox + ax1, oy + y1, oz + az1,
+                  r, g, b, r, g, b, ls, lb, ls, lb);
+            }
+
+            const s0 = 0.1875, s1 = 0.3125, s2 = 0.6875, s3 = 0.8125;
+            bar(s0, 0.0, 0.0, s1, 0.09, 1.0, br, bg, bb);
+            bar(s2, 0.0, 0.0, s3, 0.09, 1.0, br, bg, bb);
+            // The rungs stand a little proud of the rails, so a ladder reads as
+            // a ladder from the side too.
+            final rr = br * 0.78, rg = bg * 0.78, rb = bb * 0.78;
+            for (var i = 0; i < 4; i++) {
+              final ry = 0.125 + i * 0.25;
+              bar(s0, 0.02, ry, s3, 0.12, ry + 0.09, rr, rg, rb);
+            }
             continue;
           }
 
