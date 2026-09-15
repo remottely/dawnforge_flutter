@@ -1,0 +1,16 @@
+flutter: [probe] window filled: 361 chunks, 649942 faces in 2050 ms
+flutter: [probe] camera at [9.050000190734863,51.8476448059082,9.012188911437988] distance 0.60 yaw 0.00 pitch -0.35
+flutter: [probe] player at [8.5,50.000999450683594,8.5] structures near: [(type: 1, x: -72, y: 32, z: 41), (type: 3, x: 70, y: 56, z: 80), (type: 1, x: -19, y: 32, z: 131), (type: 1, x: 29, y: 37, z: 121), (type: 2, x: 116, y: 49, z: 133), (type: 5, x: 19, y: 56, z: 36)]
+flutter: [probe] stage32 site x=16 y=59 z=0 (chunk (1, 0), border at x=16)
+flutter: [probe] stage32 seam light: torch at 5 cells from border -> neighbour chunk face block light=8 (>=8); 2 cells further=6 (>=6); same 5 steps inside the chunk=8; chunk (0, 0) remeshed with the ring
+flutter: [probe] stage32 mesh time avg=10.20 ms over 327 chunks (stage 31 was ~7-14); the torch's ring of 9 took 6.93 ms each
+flutter: [probe] stage32 knockback: zombie moved 1.62 m away (>1.5) and rose (vy>0)=true flash+hitstop=true; player hit -> shake=true vignette alpha=0.90 (>0) model flash=true
+flutter: [probe] stage32 crit: over 200 swings crits=17 (10-40) damage numbers spawned=200
+flutter: [probe] stage32 cracks: progress 0.5 -> overlay alpha=0.48 (>0), stage 2 lines shown 9 before the break; break -> particles emitted=true (12 cubes), sfx family=stone
+flutter: [probe] stage32 footsteps: walked 5.3 m -> steps=12 (9-13)
+flutter: [probe] stage32 daylight: zombie in sun burning=true, zombie under roof burning=false, zombie in water burning=false (head sky 15 / 13 / 15, in_water=true, day factor 1.00)
+flutter: [probe] stage32 death anim: zombie killed -> freed after 0.72 s (0.6-0.9), drops spawned at t=0=true
+flutter: [probe] stage32 hud: pickup toast merged '+3 Apple' -> '+6 Apple'=true; low hp vignette pulsing=true
+flutter: [probe] fps 114 mobs 3 drops 1 projectiles 0
+flutter: [probe] view 1600.0x900.0 logical @1.0x
+flutter: [probe] screenshot saved to /var/folders/bk/p7t1xqds12n905smmfgzr03m0000gn/T/tmp.0ZbeDnvE7Z/stage32.png

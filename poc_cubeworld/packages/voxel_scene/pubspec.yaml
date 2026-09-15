@@ -1,0 +1,24 @@
+name: voxel_scene
+description: >-
+  flutter_scene renderer for voxel_core: one scene node per chunk, the terrain
+  material and its shaders.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Exact pin: the terrain material imports flutter_scene's private gpu shim.
+  flutter_scene: 0.23.0
+  vector_math: ^2.1.4
+  voxel_core: ^0.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

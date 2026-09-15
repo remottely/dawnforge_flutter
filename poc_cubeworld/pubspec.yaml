@@ -6,6 +6,11 @@ version: 0.1.0+1
 environment:
   sdk: ^3.13.0
 
+# The voxel packages grow here, out of the POC (docs/VOXEL_PACKAGES_PLAN_2026-09-14.md).
+workspace:
+  - packages/voxel_core
+  - packages/voxel_scene
+
 dependencies:
   flutter:
     sdk: flutter
