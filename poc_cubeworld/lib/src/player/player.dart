@@ -515,9 +515,9 @@ class Player extends SceneBody implements Target {
 
   // --- the tick --------------------------------------------------------------------
 
-  void _handleOneShots(GameInput input, bool gameplay) {
+  void _handleOneShots(double dt, GameInput input, bool gameplay) {
     if (!gameplay) return;
-    final look = input.takeLookDelta();
+    final look = input.takeLookDelta(dt);
     if (look != Offset.zero) {
       Tutorial.instance.event('look');
       yaw = yawAfterMouse(yaw, look.dx, mouseSensitivity * sensitivityScale);
@@ -554,7 +554,7 @@ class Player extends SceneBody implements Target {
       velocity = Vector3.zero();
       return;
     }
-    _handleOneShots(input, gameplay);
+    _handleOneShots(dt, input, gameplay);
     _sprintHeld = gameplay && input.down(GameAction.sprint);
     _tickStats(dt);
     _attackCooldown = math.max(_attackCooldown - dt, 0.0);
@@ -585,10 +585,8 @@ class Player extends SceneBody implements Target {
 
     var inputX = 0.0, inputY = 0.0;
     if (gameplay) {
-      if (input.down(GameAction.moveLeft)) inputX -= 1;
-      if (input.down(GameAction.moveRight)) inputX += 1;
-      if (input.down(GameAction.moveForward)) inputY -= 1;
-      if (input.down(GameAction.moveBack)) inputY += 1;
+      inputX = input.moveAxisX();
+      inputY = input.moveAxisY();
     }
     final fwd = flatForward;
     final right = rightVec;
@@ -1117,10 +1115,8 @@ class Player extends SceneBody implements Target {
     final boat = riding!;
     var inputX = 0.0, inputY = 0.0;
     if (gameplay) {
-      if (input.down(GameAction.moveLeft)) inputX -= 1;
-      if (input.down(GameAction.moveRight)) inputX += 1;
-      if (input.down(GameAction.moveForward)) inputY -= 1;
-      if (input.down(GameAction.moveBack)) inputY += 1;
+      inputX = input.moveAxisX();
+      inputY = input.moveAxisY();
     }
     // A probe rows forward through probeWalk, as Godot's headless probe does.
     if (_probeWalk.length2 > 0.0) {
@@ -1202,10 +1198,7 @@ class Player extends SceneBody implements Target {
       return;
     }
     var inputY = 0.0;
-    if (gameplay) {
-      if (input.down(GameAction.moveForward)) inputY -= 1;
-      if (input.down(GameAction.moveBack)) inputY += 1;
-    }
+    if (gameplay) inputY = input.moveAxisY();
     var push = -inputY;
     if (_probeWalk.length2 > 0.0) {
       // A headless probe pushes along or against the cart's own heading.
@@ -2119,10 +2112,8 @@ class Player extends SceneBody implements Target {
     }
     var inputX = 0.0, inputY = 0.0;
     if (gameplay) {
-      if (input.down(GameAction.moveLeft)) inputX -= 1;
-      if (input.down(GameAction.moveRight)) inputX += 1;
-      if (input.down(GameAction.moveForward)) inputY -= 1;
-      if (input.down(GameAction.moveBack)) inputY += 1;
+      inputX = input.moveAxisX();
+      inputY = input.moveAxisY();
     }
     var wish = flatForward * -inputY + rightVec * inputX;
     // A headless probe steers the mount the way it rows a boat.

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:pointer_lock/pointer_lock.dart';
 
 /// Every action the game reads. Keys are physical (WASD stays WASD on any
@@ -51,7 +52,44 @@ class GameInput {
         wantCapture = false;
       }
     });
+    _gamepadSub = Gamepads.normalizedEvents.listen(_onGamepadEvent);
   }
+
+  // A PS5/Xbox-style pad next to WASD (parity, not a second control scheme):
+  // left stick moves, right stick looks, triggers are the mouse buttons.
+  // Face/shoulder/dpad buttons cover the rest; F-key dev/probe tools
+  // (debugHud, screenshot, fly, skipTutorial, the playground F7-F9) stay
+  // keyboard-only on purpose, same as `_keys` leaves attack/use to the mouse.
+  static const Map<GameAction, GamepadButton> _gamepadButtons = {
+    GameAction.jump: GamepadButton.a,
+    GameAction.sneak: GamepadButton.b,
+    GameAction.interact: GamepadButton.x,
+    GameAction.inventory: GamepadButton.y,
+    GameAction.ability: GamepadButton.leftBumper,
+    GameAction.ability2: GamepadButton.rightBumper,
+    GameAction.sprint: GamepadButton.leftStick,
+    GameAction.toggleView: GamepadButton.rightStick,
+    GameAction.glide: GamepadButton.dpadUp,
+    GameAction.dropItem: GamepadButton.dpadDown,
+    GameAction.eat: GamepadButton.dpadLeft,
+    GameAction.dodge: GamepadButton.dpadRight,
+    GameAction.pause: GamepadButton.start,
+    GameAction.map: GamepadButton.back,
+    GameAction.journal: GamepadButton.touchpad,
+  };
+
+  static const double _stickDeadzone = 0.2;
+  // Triggers arrive as a digital GamepadButton on some platforms and as an
+  // analog GamepadAxis (0..1) on others (macOS/GCController reports L2/R2 as
+  // axes, never as buttons) — a crossing of this threshold on either counts
+  // as a press.
+  static const double _triggerThreshold = 0.5;
+  // Radians/second of yaw or pitch at full stick deflection; divided by the
+  // mouse's own sensitivity constant so one settings slider covers both.
+  static const double _gamepadLookRadiansPerSecond = 3.0;
+  // Mirrors Player.mouseSensitivity (rad/pixel) — kept local to avoid an
+  // input.dart <-> player.dart import cycle; update both if either changes.
+  static const double _mouseSensitivityMirror = 0.0022;
 
   static const Map<GameAction, List<PhysicalKeyboardKey>> _keys = {
     GameAction.moveForward: [PhysicalKeyboardKey.keyW],
@@ -102,10 +140,15 @@ class GameInput {
   bool _rightDown = false;
   bool _leftPressed = false;
   bool _rightPressed = false;
+  bool _gamepadAttackDown = false;
+  bool _gamepadUseDown = false;
   int _wheel = 0;
   double _dragDx = 0.0;
   double _dragDy = 0.0;
   StreamSubscription<CaptureState>? _stateSub;
+  final NormalizedGamepadState _gamepadState = NormalizedGamepadState();
+  final Set<GamepadButton> _gamepadPressed = {};
+  StreamSubscription<NormalizedGamepadEvent>? _gamepadSub;
 
   /// Whether the game wants the mouse captured (Godot's MOUSE_MODE_CAPTURED).
   bool wantCapture = false;
@@ -140,6 +183,34 @@ class GameInput {
   }
 
   void releaseKeys() => _held.clear();
+
+  /// One normalized gamepad event, applied to the running state. A button
+  /// edge (was up, now down) also lands in [_gamepadPressed], the gamepad's
+  /// own one-shot set, drained in [endTick] beside the keyboard's.
+  void _onGamepadEvent(NormalizedGamepadEvent event) {
+    final button = event.button;
+    if (button != null) {
+      final wasDown = _gamepadState.isPressed(button);
+      _gamepadState.update(event);
+      if (!wasDown && _gamepadState.isPressed(button)) _gamepadPressed.add(button);
+    } else {
+      _gamepadState.update(event);
+    }
+    // Attack/use are the mouse buttons everywhere else in this file; the
+    // gamepad's own down-state is tracked separately (see [down] /
+    // [justPressed]) so an idle stick event never stomps the mouse's state.
+    // Read the trigger fresh from state (button OR axis, whichever this
+    // platform reports) so a press is caught no matter which one arrived.
+    final attackDown = _gamepadState.isPressed(GamepadButton.rightTrigger) ||
+        _gamepadState.axisValue(GamepadAxis.rightTrigger) > _triggerThreshold;
+    if (attackDown && !_gamepadAttackDown) _gamepadPressed.add(GamepadButton.rightTrigger);
+    _gamepadAttackDown = attackDown;
+
+    final useDown = _gamepadState.isPressed(GamepadButton.leftTrigger) ||
+        _gamepadState.axisValue(GamepadAxis.leftTrigger) > _triggerThreshold;
+    if (useDown && !_gamepadUseDown) _gamepadPressed.add(GamepadButton.leftTrigger);
+    _gamepadUseDown = useDown;
+  }
 
   /// Probe hook: hold or release an action's first key as if it were typed, so
   /// a screenshot run can drive the simulation without a keyboard.
@@ -198,29 +269,53 @@ class GameInput {
   bool down(GameAction a) {
     switch (a) {
       case GameAction.attack:
-        return _leftDown;
+        return _leftDown || _gamepadAttackDown;
       case GameAction.use:
-        return _rightDown;
+        return _rightDown || _gamepadUseDown;
       default:
         for (final k in _keys[a]!) {
           if (_held.contains(k)) return true;
         }
-        return false;
+        final button = _gamepadButtons[a];
+        return button != null && _gamepadState.isPressed(button);
     }
   }
 
   bool justPressed(GameAction a) {
     switch (a) {
       case GameAction.attack:
-        return _leftPressed;
+        return _leftPressed || _gamepadPressed.contains(GamepadButton.rightTrigger);
       case GameAction.use:
-        return _rightPressed;
+        return _rightPressed || _gamepadPressed.contains(GamepadButton.leftTrigger);
       default:
         for (final k in _keys[a]!) {
           if (_pressed.contains(k)) return true;
         }
-        return false;
+        final button = _gamepadButtons[a];
+        return button != null && _gamepadPressed.contains(button);
     }
+  }
+
+  /// The left stick's X axis (-1 left, 1 right), combined with A/D so either
+  /// device drives the same wish vector (rule of parity, §the class doc).
+  double moveAxisX() {
+    var x = 0.0;
+    if (down(GameAction.moveLeft)) x -= 1;
+    if (down(GameAction.moveRight)) x += 1;
+    final gx = _gamepadState.axisValue(GamepadAxis.leftStickX);
+    if (gx.abs() > _stickDeadzone) x += gx;
+    return x.clamp(-1.0, 1.0);
+  }
+
+  /// The left stick's Y axis, combined with W/S. Stick up (+1) means
+  /// forward, same sense as [GameAction.moveForward] setting inputY to -1.
+  double moveAxisY() {
+    var y = 0.0;
+    if (down(GameAction.moveForward)) y -= 1;
+    if (down(GameAction.moveBack)) y += 1;
+    final gy = _gamepadState.axisValue(GamepadAxis.leftStickY);
+    if (gy.abs() > _stickDeadzone) y -= gy;
+    return y.clamp(-1.0, 1.0);
   }
 
   /// The hotbar digit pressed this tick (0..8), or -1.
@@ -238,15 +333,26 @@ class GameInput {
     return w;
   }
 
-  /// The mouse motion since the previous tick, in logical pixels.
-  Offset takeLookDelta() {
+  /// The mouse motion since the previous tick (in logical pixels), plus the
+  /// right stick's own turn for this tick converted to the same unit so
+  /// [Player]'s one `mouseSensitivity` multiply covers both devices. The
+  /// stick is a held deflection rather than a discrete delta, so it needs
+  /// [dt] to integrate into a per-tick amount; the mouse path does not.
+  Offset takeLookDelta(double dt) {
+    var d = Offset.zero;
     if (pointerLockSupported) {
-      if (!wantCapture) return Offset.zero;
-      return PointerLock.instance.takeDelta();
+      if (wantCapture) d = PointerLock.instance.takeDelta();
+    } else {
+      d = Offset(_dragDx, _dragDy);
+      _dragDx = 0;
+      _dragDy = 0;
     }
-    final d = Offset(_dragDx, _dragDy);
-    _dragDx = 0;
-    _dragDy = 0;
+    final gx = _gamepadState.axisValue(GamepadAxis.rightStickX);
+    final gy = _gamepadState.axisValue(GamepadAxis.rightStickY);
+    if (gx.abs() > _stickDeadzone || gy.abs() > _stickDeadzone) {
+      const pixelsPerRadian = 1.0 / _mouseSensitivityMirror;
+      d += Offset(gx, -gy) * (_gamepadLookRadiansPerSecond * pixelsPerRadian * dt);
+    }
     return d;
   }
 
@@ -255,9 +361,11 @@ class GameInput {
     _pressed.clear();
     _leftPressed = false;
     _rightPressed = false;
+    _gamepadPressed.clear();
   }
 
   void dispose() {
     _stateSub?.cancel();
+    _gamepadSub?.cancel();
   }
 }
