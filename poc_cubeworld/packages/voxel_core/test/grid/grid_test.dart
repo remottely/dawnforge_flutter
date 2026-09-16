@@ -27,10 +27,10 @@ void main() {
     }
   });
 
-  test('solid shapes: full cell, half slab, tall fence post, two-box stairs', () {
+  test('solid shapes: full cell, half slab, one-block fence post, two-box stairs', () {
     expect(collisionBoxesOf(BlockShape.cube, solid: true), [same(CollisionBox.full)]);
     expect(collisionBoxesOf(BlockShape.slab, solid: true).single.y1, 0.5);
-    expect(collisionBoxesOf(BlockShape.fence, solid: true).single.y1, 1.5);
+    expect(collisionBoxesOf(BlockShape.fence, solid: true).single.y1, 1.0);
     final n = collisionBoxesOf(BlockShape.stairsN, solid: true);
     expect(n, hasLength(2));
     expect([n[1].z0, n[1].z1], [0.0, 0.5]);
@@ -41,6 +41,6 @@ void main() {
   test('a box shifts into world space and reads min / max per axis', () {
     final b = CollisionBox.fencePost.shifted(3, -1, 7);
     expect([b.min(0), b.min(1), b.min(2)], [3.375, -1.0, 7.375]);
-    expect([b.max(0), b.max(1), b.max(2)], [3.625, 0.5, 7.625]);
+    expect([b.max(0), b.max(1), b.max(2)], [3.625, 0.0, 7.625]);
   });
 }

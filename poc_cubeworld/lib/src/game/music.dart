@@ -19,6 +19,20 @@ class Music {
   static const double crossfade = 3.0;
   static const double gain = 0.45;
 
+  /// The settings' music volume, linear 0..1: scales [gain] only, so the
+  /// music is turned down without the world's sounds. The master volume
+  /// ([Sfx.setVolume]) still sits over both.
+  double volume = 1.0;
+
+  /// Sets [volume] and applies it to the track that is playing now.
+  void setVolume(double v) {
+    volume = v;
+    final h = _active;
+    if (h == null || !Sfx.ready) return;
+    final soloud = SoLoud.instance;
+    if (soloud.getIsValidVoiceHandle(h)) soloud.setVolume(h, gain * volume);
+  }
+
   /// Mood -> track file. Meadow is the 2D forest, Dunes the desert, Frost the
   /// snow, Marsh the swamp, Underworld the lava land, Deep the caves.
   static const Map<String, String> tracks = {
@@ -100,7 +114,7 @@ class Music {
         soloud.scheduleStop(old, fade + const Duration(milliseconds: 50));
       }
       final h = soloud.play(source, volume: 0.0, looping: true);
-      soloud.fadeVolume(h, gain, fade);
+      soloud.fadeVolume(h, gain * volume, fade);
       _active = h;
       handlesPlayed++;
     } catch (e) {

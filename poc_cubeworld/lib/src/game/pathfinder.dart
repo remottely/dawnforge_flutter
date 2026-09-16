@@ -5,12 +5,13 @@ import 'package:voxel_core/voxel_core.dart';
 import '../world/voxel_world.dart';
 
 /// Stage 31: A* on the block grid for walking mobs (Godot's `pathfinder.gd`). A
-/// node is a feet cell (air, air above, something to stand on below); the moves
-/// are the 4 horizontal steps, a step up of one (with head room) and a drop of
-/// up to [maxDrop] onto a landing. Lava is never entered, water costs 3x, soul
-/// sand 2x; the heuristic is the Manhattan distance. At most `maxNodes`
-/// expansions per call; when the goal is not reached the best partial path
-/// toward it is returned (closest node by heuristic, ties on the lower cost).
+/// node is a feet cell (air, air above, something to stand on below — never a
+/// fence top); the moves are the 4 horizontal steps, a step up of one (with
+/// head room) and a drop of up to [maxDrop] onto a landing. Lava is never
+/// entered, water costs 3x, soul sand 2x; the heuristic is the Manhattan
+/// distance. At most `maxNodes` expansions per call; when the goal is not
+/// reached the best partial path toward it is returned (closest node by
+/// heuristic, ties on the lower cost).
 class Pathfinder {
   static const int maxDrop = 3;
   static const int defaultMaxNodes = 600;
@@ -80,7 +81,9 @@ class Pathfinder {
   static bool walkable(VoxelWorld world, IVec3 c) {
     if (world.isSolid(c) || world.isSolid(c + IVec3.up)) return false;
     if (_lava(world, c) || _lava(world, c + IVec3.up)) return false;
-    return world.isSolid(c + IVec3.down) || world.isLiquid(c);
+    // A fence is no floor: a mob meets it as a barrier it cannot get onto.
+    final below = world.getBlock(c + IVec3.down);
+    return (world.isSolid(c + IVec3.down) && Blocks.shapeOf(below) != BlockShape.fence) || world.isLiquid(c);
   }
 
   static bool _lava(VoxelWorld world, IVec3 c) => Blocks.liquidKind(world.getBlock(c)) == 'lava';

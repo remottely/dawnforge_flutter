@@ -348,6 +348,7 @@ class Mob extends SceneBody {
   void setupMob(VoxelWorld w, Game m, Player p, SpeciesDef sp) {
     species = sp;
     setup(w, sp.halfWidth, sp.height);
+    fenceBarrier = true;
     main = m;
     player = p;
     maxHp = sp.hp;
@@ -883,6 +884,9 @@ class Mob extends SceneBody {
           ..sz = 1.0;
       }
     }
+    // A fence pens an animal in: its jump never clears the barrier. A rider
+    // jumps a fence the way the player does.
+    fenceBarrier = !ridden;
     if (ridden) {
       _rideTick(dt);
       return;

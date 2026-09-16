@@ -691,15 +691,16 @@ class ChunkMesher {
                   r, g, b, r, g, b, ls, lb, ls, lb);
             }
 
-            const s0 = 0.1875, s1 = 0.3125, s2 = 0.6875, s3 = 0.8125;
+            const s0 = 0.1875, s1 = 0.3125, s2 = 0.6875, s3 = 0.8125, rungInset = 0.005;
             bar(s0, 0.0, 0.0, s1, 0.09, 1.0, br, bg, bb);
             bar(s2, 0.0, 0.0, s3, 0.09, 1.0, br, bg, bb);
             // The rungs stand a little proud of the rails, so a ladder reads as
-            // a ladder from the side too.
+            // a ladder from the side too. They stop 0.005 short of the rails'
+            // outer faces: flush ends would share a plane and flicker.
             final rr = br * 0.78, rg = bg * 0.78, rb = bb * 0.78;
             for (var i = 0; i < 4; i++) {
               final ry = 0.125 + i * 0.25;
-              bar(s0, 0.02, ry, s3, 0.12, ry + 0.09, rr, rg, rb);
+              bar(s0 + rungInset, 0.02, ry, s3 - rungInset, 0.12, ry + 0.09, rr, rg, rb);
             }
             continue;
           }

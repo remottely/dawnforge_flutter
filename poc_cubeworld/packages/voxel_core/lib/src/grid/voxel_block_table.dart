@@ -121,7 +121,8 @@ class VoxelBlockTable {
   int emissionOf(int id) => _defs[id].emission;
 
   /// The boxes a body collides with, in the block's own 0..1 space, from the
-  /// shape alone (a fence's lone post; a body asks [collisionBoxesAt]).
+  /// shape alone (a fence's lone post, no ladder; a body asks
+  /// [collisionBoxesAt], which reads their neighbours).
   /// Shared: never mutate.
   List<CollisionBox> collisionBoxes(int id) => _boxes[id];
 

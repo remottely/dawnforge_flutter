@@ -59,6 +59,9 @@ class Player extends SceneBody implements Target {
   static const double sneakSpeed = 2.0;
   static const double swimSpeed = 3.0;
   static const double jumpVelocity = 8.6;
+
+  /// Fly mode (F5) moves this many times faster than walking.
+  static const double flySpeedScale = 2.5;
   static const double climbSpeed = 3.2;
   static const double reach = 5.0;
   static const double meleeReach = 3.6;
@@ -608,7 +611,7 @@ class Player extends SceneBody implements Target {
     // Fly mode (F5): no gravity, vertical on jump / sneak.
     if (main.flyMode) {
       velocity.y = (jumpHeld ? 12.0 : 0.0) - (sneaking ? 12.0 : 0.0);
-      speed *= 2.5;
+      speed *= flySpeedScale;
       final wishF = wish * speed;
       if (_stagger <= 0.0) {
         // stage 32: a shoved body carries for 0.3 s
@@ -617,7 +620,11 @@ class Player extends SceneBody implements Target {
       }
       move(dt);
       _fallStartY = position.y;
-      model.animate(dt, 0.0, false, true, false);
+      // Flying is walking on the air: the body turns and strides as on foot,
+      // never the glide's open arms.
+      gliding = false;
+      climbing = false;
+      _faceAndAnimate(dt, input, gameplay, fwd, wish, true, stride: 1.0 / flySpeedScale);
       model.setHeld(heldItem());
       _finishTick(dt, input, gameplay, fwd, wish, sprinting);
       return;
@@ -742,22 +749,7 @@ class Player extends SceneBody implements Target {
       _drownTimer = 0.0;
     }
 
-    // Face the movement direction (or the camera when aiming/attacking). A
-    // step with a backward part (more than 90 degrees from the camera) walks
-    // backward like Minecraft: the body faces the opposite way, still looking
-    // ahead, instead of turning around.
-    if (wish.length > 0.1) {
-      var d = math.atan2(-wish.x, -wish.z) - yaw;
-      d = (d + math.pi) % (math.pi * 2) - math.pi;
-      final backward = d.abs() > math.pi / 2 + 0.01;
-      _lastMoveDir = backward ? -wish : wish.clone();
-    }
-    var face = _lastMoveDir;
-    if (firstPerson || (gameplay && (input.down(GameAction.attack) || input.down(GameAction.use))) || gliding) face = fwd;
-    final targetYaw = math.atan2(-face.x, -face.z);
-    model.yaw = lerpAngle(model.yaw, targetYaw, dt * 12.0);
-    final horizontalSpeed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-    model.animate(dt, horizontalSpeed, onFloor, gliding, climbing);
+    final horizontalSpeed = _faceAndAnimate(dt, input, gameplay, fwd, wish, onFloor);
     if (onFloor && horizontalSpeed > 1.0) {
       _stepTimer -= dt;
       if (_stepTimer <= 0.0) {
@@ -773,6 +765,30 @@ class Player extends SceneBody implements Target {
     _wasInWater = inLiquid;
     model.setHeld(heldItem());
     _finishTick(dt, input, gameplay, fwd, wish, sprinting);
+  }
+
+  /// Turns the model and plays its limbs for this tick, on foot or in the
+  /// air; [grounded] strides, off it the airborne pose blends in. [stride]
+  /// scales the pace the legs are played at. Returns the horizontal speed.
+  double _faceAndAnimate(double dt, GameInput input, bool gameplay, Vector3 fwd, Vector3 wish, bool grounded,
+      {double stride = 1.0}) {
+    // Face the movement direction (or the camera when aiming/attacking). A
+    // step with a backward part (more than 90 degrees from the camera) walks
+    // backward like Minecraft: the body faces the opposite way, still looking
+    // ahead, instead of turning around.
+    if (wish.length > 0.1) {
+      var d = math.atan2(-wish.x, -wish.z) - yaw;
+      d = (d + math.pi) % (math.pi * 2) - math.pi;
+      final backward = d.abs() > math.pi / 2 + 0.01;
+      _lastMoveDir = backward ? -wish : wish.clone();
+    }
+    var face = _lastMoveDir;
+    if (firstPerson || (gameplay && (input.down(GameAction.attack) || input.down(GameAction.use))) || gliding) face = fwd;
+    final targetYaw = math.atan2(-face.x, -face.z);
+    model.yaw = lerpAngle(model.yaw, targetYaw, dt * 12.0);
+    final horizontalSpeed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+    model.animate(dt, horizontalSpeed * stride, grounded, gliding, climbing);
+    return horizontalSpeed;
   }
 
   void _finishTick(double dt, GameInput input, bool gameplay, Vector3 fwd, Vector3 wish, bool sprinting) {

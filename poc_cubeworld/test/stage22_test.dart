@@ -24,10 +24,13 @@ void main() {
   }
 
   /// Walks a 0.3 / 1.75 body along +x at 4.3 m/s for [ticks], stepping up when
-  /// blocked, jumping once at a wall past [jumpAfterX] when [jump].
+  /// blocked, jumping once at a wall past [jumpAfterX] when [jump]. [barrier]
+  /// meets fences as a mob does.
   ({double x, double y, double maxX, double maxY}) walk(VoxelWorld w, double startX, double stopX, int ticks,
-      {bool jump = false, double jumpAfterX = 0.0}) {
-    final body = VoxelBody()..setup(w, 0.3, 1.75);
+      {bool jump = false, double jumpAfterX = 0.0, bool barrier = false}) {
+    final body = VoxelBody()
+      ..setup(w, 0.3, 1.75)
+      ..fenceBarrier = barrier;
     body.position = Vector3(startX, floorY + 0.1, 8.5);
     var maxX = body.position.x, maxY = body.position.y;
     var jumped = false;
@@ -51,7 +54,7 @@ void main() {
     expect(Blocks.collisionBoxes(Blocks.indexOf('water')), isEmpty);
     expect(Blocks.collisionBoxes(Blocks.indexOf('oak_slab')).single.y1, 0.5);
     final post = Blocks.collisionBoxes(Blocks.indexOf('oak_fence')).single;
-    expect([post.x0, post.y1, post.x1], [0.375, 1.5, 0.625]);
+    expect([post.x0, post.y1, post.x1], [0.375, 1.0, 0.625]);
     final north = Blocks.collisionBoxes(Blocks.indexOf('oak_stairs_n'));
     expect(north.length, 2);
     expect([north[1].y0, north[1].z0, north[1].z1], [0.5, 0.0, 0.5]);
@@ -68,7 +71,7 @@ void main() {
     expect(Items.has('water_flow'), isFalse);
   });
 
-  test('a body steps onto a slab, climbs stairs without a jump and stops at a fence post', () {
+  test('a body steps onto a slab, climbs stairs without a jump and crosses a fence a mob cannot', () {
     final w = flatWorld();
     w.setBlock(const IVec3(5, floorY, 8), Blocks.indexOf('oak_slab'));
     final slab = walk(w, 3.5, 5.2, 90);
@@ -82,11 +85,14 @@ void main() {
 
     final w3 = flatWorld();
     w3.setBlock(const IVec3(9, floorY, 8), Blocks.indexOf('oak_fence'));
-    final fence = walk(w3, 3.5, 20.0, 220, jump: true, jumpAfterX: 8.5);
-    // Flush with the post's face, not the cell's.
+    // The player meets the fence as drawn, one block, and steps over it.
+    final crossed = walk(w3, 3.5, 20.0, 220);
+    expect(crossed.maxX, greaterThan(10.0));
+    final fence = walk(w3, 3.5, 20.0, 220, jump: true, jumpAfterX: 8.5, barrier: true);
+    // A mob stops flush with the post's face, not the cell's.
     expect(fence.x, closeTo(9.375 - 0.3 - VoxelBody.skin, 0.001));
-    // A 8.6 m/s jump rises ~1.4 m and never clears the 1.5 m post.
-    expect(fence.maxY, lessThan(floorY + 1.5));
+    // A 8.6 m/s jump rises ~1.4 m and never clears the 1.5 m barrier.
+    expect(fence.maxY, lessThan(floorY + fenceBarrierHeight));
     expect(fence.maxX, lessThan(9.7));
 
     // A half step never beats a full-height wall: two planks stacked stop the body.

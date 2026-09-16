@@ -7,6 +7,7 @@ const int _water = 2;
 const int _slab = 3;
 const int _glass = 4;
 const int _fence = 5;
+const int _ladder = 6;
 
 final _table = VoxelBlockTable(const [
   VoxelBlockDef(shape: BlockShape.cube, solid: false, opaque: false, r: 0, g: 0, b: 0, a: 0),
@@ -16,6 +17,7 @@ final _table = VoxelBlockTable(const [
   VoxelBlockDef(shape: BlockShape.slab, solid: true, opaque: false, r: 0.7, g: 0.5, b: 0.3),
   VoxelBlockDef(shape: BlockShape.cube, solid: true, opaque: false, r: 0.9, g: 0.9, b: 1.0, a: 0.3),
   VoxelBlockDef(shape: BlockShape.fence, solid: true, opaque: false, r: 0.4, g: 0.3, b: 0.2),
+  VoxelBlockDef(shape: BlockShape.ladder, solid: false, opaque: false, r: 0.6, g: 0.45, b: 0.25),
 ]);
 
 /// A sparse world: stone floor filling y 0..9 everywhere, plus placed cells.
@@ -173,7 +175,8 @@ void main() {
     final boxes = collisionBoxesAt(world, 7, 10, 4);
     expect(boxes, hasLength(1));
     final b = boxes.single;
-    expect([b.x0, b.y0, b.z0, b.x1, b.y1, b.z1], [0.375, 0.0, 0.375, 0.625, 1.5, 1.0]);
+    expect([b.x0, b.y0, b.z0, b.x1, b.y1, b.z1], [0.375, 0.0, 0.375, 0.625, 1.0, 1.0]);
+    expect(collisionBoxesAt(world, 7, 10, 4, fenceBarrier: true).single.y1, fenceBarrierHeight);
   });
 
   test('a fence corner is two arms; a cross is two bars through the post', () {
@@ -186,8 +189,95 @@ void main() {
       expect(reaches(0.5, 0.0), joins & FenceJoin.north != 0, reason: 'north, joins $joins');
       expect(reaches(0.5, 1.0), joins & FenceJoin.south != 0, reason: 'south, joins $joins');
       expect(reaches(0.0, 0.0) || reaches(1.0, 1.0), isFalse, reason: 'no corner is filled, joins $joins');
-      expect(boxes.every((b) => b.y0 == 0.0 && b.y1 == 1.5), isTrue);
+      expect(boxes.every((b) => b.y0 == 0.0 && b.y1 == 1.0), isTrue);
+      final barrier = fenceBoxesOf(joins, barrier: true);
+      expect(barrier, hasLength(boxes.length));
+      for (var i = 0; i < boxes.length; i++) {
+        final (a, b) = (boxes[i], barrier[i]);
+        expect([b.x0, b.y0, b.z0, b.x1, b.y1, b.z1], [a.x0, a.y0, a.z0, a.x1, fenceBarrierHeight, a.z1]);
+      }
     }
+  });
+
+  /// Walks [b] along +x at 4 m/s with a Minecraft-style auto-step: a blocked
+  /// body on the floor jumps 8.6 m/s (the player's jump) when a full step
+  /// would fit, else the same jump anyway (a mob that tries its luck).
+  double walkAndJump(VoxelBody b, double seconds) {
+    var maxY = b.position.y;
+    for (var t = 0.0; t < seconds; t += 1 / 60) {
+      b.velocity.x = 4.0;
+      b.applyGravity(1 / 60);
+      b.move(1 / 60);
+      if (b.hitWall && b.onFloor) b.velocity.y = 8.6;
+      if (b.position.y > maxY) maxY = b.position.y;
+    }
+    return maxY;
+  }
+
+  test('a fence is one block to a player, who jumps onto it and over', () {
+    for (var z = 3; z <= 5; z++) {
+      world.cells[IVec3(7, 10, z)] = _fence;
+    }
+    body.position = Vector3(4.5, 10.001, 4.5);
+    expect(body.stepFits(1.02), isTrue);
+    walkAndJump(body, 3.0);
+    expect(body.position.x, greaterThan(8.0));
+  });
+
+  test('a fence is a 1.5 m barrier to a penned body with the same jump', () {
+    for (var z = 3; z <= 5; z++) {
+      world.cells[IVec3(7, 10, z)] = _fence;
+    }
+    body
+      ..fenceBarrier = true
+      ..position = Vector3(4.5, 10.001, 4.5);
+    final maxY = walkAndJump(body, 3.0);
+    expect(body.position.x, closeTo(7.375 - 0.3 - VoxelBody.skin, 1e-6));
+    expect(maxY, lessThan(10.0 + fenceBarrierHeight));
+    expect(body.tryStepUp(), isFalse, reason: 'a full step does not fit over the barrier');
+  });
+
+  test('a ladder stops a body at its rungs, on the wall it hangs from', () {
+    // A wall at x 8 (y 10..12), the ladder at x 7 hangs on it (+x).
+    for (var y = 10; y <= 12; y++) {
+      world.cells[IVec3(8, y, 4)] = _stone;
+      world.cells[IVec3(7, y, 4)] = _ladder;
+    }
+    final box = collisionBoxesAt(world, 7, 10, 4).single;
+    expect([box.x0, box.x1, box.z0, box.z1], [1 - ladderDepth, 1.0, ladderRail0, ladderRail1]);
+    expect(selectionBoxAt(world, 7, 10, 4).x0, 7 + box.x0, reason: 'the outline is the collider');
+    body.position = Vector3(5.5, 10.001, 4.5);
+    run(1.5, () => body.velocity.x = 4.0);
+    expect(body.hitWall, isTrue);
+    expect(body.position.x, closeTo(8 - ladderDepth - 0.3 - VoxelBody.skin, 1e-6));
+    // Still standing in the ladder's cell, so the climb reads it.
+    expect(body.position.x.floor(), 7);
+    // Climbing: velocity up along the rungs is never stopped by them.
+    run(0.5, () {
+      body.velocity.x = 4.0;
+      body.velocity.y = 3.0 + 26.0 / 60;
+    });
+    expect(body.position.y, greaterThan(11.0));
+  });
+
+  test('a body a ladder is placed on walks out of it, never through the wall', () {
+    world.cells[const IVec3(8, 10, 4)] = _stone;
+    world.cells[const IVec3(8, 11, 4)] = _stone;
+    body.position = Vector3(7.7 - VoxelBody.skin, 10.001, 4.5); // flush with the wall
+    world.cells[const IVec3(7, 10, 4)] = _ladder;
+    run(0.5, () => body.velocity.x = -2.0);
+    expect(body.position.x, lessThan(7.0));
+    body.position = Vector3(7.7 - VoxelBody.skin, 10.001, 4.5);
+    run(0.2, () => body.velocity.x = 2.0);
+    expect(body.position.x, lessThanOrEqualTo(7.7), reason: 'the wall still stops it');
+    expect(body.position.y, closeTo(10.0 + VoxelBody.skin, 1e-3), reason: 'the ladder never lifts it');
+  });
+
+  test('a body sunk into the floor is still lifted out, not let through', () {
+    body.position = Vector3(4.5, 9.8, 4.5);
+    run(0.1, () {});
+    expect(body.position.y, closeTo(10.0 + VoxelBody.skin, 1e-6));
+    expect(body.onFloor, isTrue);
   });
 
   test('air and a non-fence answer from their shape', () {

@@ -89,6 +89,10 @@ class _SettingsPanelState extends State<SettingsPanel> {
           settings.volume = v;
           settings.applyGlobals();
         }),
+        _slider('Music volume', 0.0, 1.0, settings.musicVolume, (v) {
+          settings.musicVolume = v;
+          settings.applyGlobals();
+        }),
         _check('Weather (off = always clear)', settings.weather, (on) {
           settings.weather = on;
           game?.weather.setEnabled(on);

@@ -92,9 +92,11 @@ class CollisionBox {
   /// The whole cell.
   static const CollisionBox full = CollisionBox(0, 0, 0, 1, 1, 1);
 
-  /// A fence post, 1.5 tall so it cannot be jumped. A joined fence adds
-  /// arms as tall ([fenceBoxesOf]), read from its neighbours.
-  static const CollisionBox fencePost = CollisionBox(0.375, 0, 0.375, 0.625, 1.5, 0.625);
+  /// A fence post, as tall as it is drawn: one block, so a player jumps onto
+  /// it. A joined fence adds arms as tall ([fenceBoxesOf]), read from its
+  /// neighbours; a body with `VoxelBody.fenceBarrier` meets them
+  /// `fenceBarrierHeight` tall instead.
+  static const CollisionBox fencePost = CollisionBox(0.375, 0, 0.375, 0.625, 1, 0.625);
 
   /// The min corner.
   final double x0, y0, z0;
@@ -119,8 +121,9 @@ class CollisionBox {
 /// The boxes a body collides with, in the block's own 0..1 space. Empty for a
 /// block that stops no body. Stairs: the bottom slab plus the high step at the
 /// back, the same halves the mesher draws (N = high step at z 0..0.5, E = at
-/// x 0.5..1). A fence is its lone post here: the arms depend on its
-/// neighbours, which [collisionBoxesAt] reads. The lists are constants: never
+/// x 0.5..1). A fence is its lone post here and a ladder nothing: the arms
+/// and the ladder's wall depend on the neighbours, which [collisionBoxesAt]
+/// reads. The lists are constants: never
 /// mutate one.
 List<CollisionBox> collisionBoxesOf(BlockShape shape, {required bool solid}) {
   if (!solid) return const [];

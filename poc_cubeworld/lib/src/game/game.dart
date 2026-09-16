@@ -3267,6 +3267,11 @@ class Game extends ChangeNotifier {
     put('door', 'door_z', 3);
     put('flower', 'flower_red', 6);
     put('wall torch', 'wall_torch', 9, dy: 2, wall: 'stone');
+    put('ladder', 'ladder', 12, wall: 'stone');
+    for (var dy = 2; dy <= 3; dy++) {
+      world.setBlock(IVec3(x0 + 12, y0 + dy, z0 - 4), stone);
+      world.setBlock(IVec3(x0 + 12, y0 + dy, z0 - 3), Blocks.indexOf('ladder'));
+    }
     final sheep = Mob()..setupMob(world, this, player, Species.def('sheep'));
     sheep.position = Vector3(x0 + 0.5, floor, z0 - 7.5);
     sheep.probeWalk(Vector3.zero());
@@ -3297,13 +3302,40 @@ class Game extends ChangeNotifier {
       final point = c + Vector3(0.5, top, name == 'wall torch' ? 0.9 : 0.5);
       await aimAt(name, Vector3(c.x + 0.5, floor + (name == 'sunk dirt' ? 0.9 : 0.4), c.z + 2.8), point);
       final shoot = screenshotter;
-      if (shoot != null && (name == 'sunk dirt' || name == 'torch')) {
+      if (shoot != null && (name == 'sunk dirt' || name == 'torch' || name == 'ladder')) {
         final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
-        final file = name == 'torch' ? '${base}_torch.png' : '${base}_block.png';
+        if (name == 'ladder') {
+          // Close and from the side, where the rungs meet the rails.
+          await _playgroundFrame((eye: c + Vector3(1.3, 0.9, 1.1), target: c + Vector3(0.5, 0.4, 0.05)));
+          await nextFrame();
+        }
+        final file = switch (name) { 'torch' => '${base}_torch.png', 'ladder' => '${base}_ladder.png', _ => '${base}_block.png' };
         await shoot(file);
         debugPrint('[probe] outline capture: $name -> $file');
       }
     }
+    // The ladder, walked into and climbed: its rungs stop the player 0.12
+    // short of the wall, inside the ladder's cell, so jump still climbs.
+    flyMode = false; // the close-up frame flies the eye
+    player.setFirstPerson(false);
+    _probePlace(Vector3(x0 + 12.5, floor, z0 - 0.5));
+    await _ticks(10);
+    player.probeWalk(Vector3(0, 0, -1));
+    input.probeHold(GameAction.jump, true);
+    var climbed = 0.0;
+    var stopZ = double.infinity;
+    for (var i = 0; i < 90; i++) {
+      await _ticks(1);
+      climbed = math.max(climbed, player.position.y - floor);
+      // Below the wall's top: still on the ladder, not walking over the wall.
+      if (player.position.y < floor + 2.5) stopZ = math.min(stopZ, player.position.z);
+    }
+    input.probeHold(GameAction.jump, false);
+    player.probeWalk(Vector3.zero());
+    debugPrint('[probe] outline ladder climb: nearest the wall at z ${(stopZ - (z0 - 3)).toStringAsFixed(3)} in the cell '
+        '(expect ${(ladderDepth + 0.3).toStringAsFixed(3)}, against the rungs), rose ${climbed.toStringAsFixed(2)} m '
+        '(expect > 3: up the ladder and onto the wall)');
+
     final sheepEye = Vector3(x0 + 2.3, floor + 0.9, z0 - 5.2);
     await aimAt('sheep', sheepEye, sheep.position + Vector3(0, 0.6, 0));
     final collider = Player.mobBox(sheep);
@@ -3607,6 +3639,31 @@ class Game extends ChangeNotifier {
         '(expect ${(1.7 * Player.bobAmplitude * run).toStringAsFixed(4)}, more than the trot); the gallop covered '
         '${rode.toStringAsFixed(1)} m, so it was moving');
 
+    // Fly mode (F5) walks on the air: the arms swing along the body instead
+    // of the glide's spread (rz 1.4), and a still flyer stands at rest.
+    flyMode = true;
+    _probePlace(start + Vector3(0, 3.0, 0));
+    player.probeWalk(Vector3(1, 0, 0));
+    var spread = 0.0, legLo = 0.0, legHi = 0.0;
+    for (var i = 0; i < 90; i++) {
+      await _ticks(1);
+      final pm = player.model;
+      spread = math.max(spread, math.max(pm.armL.rz.abs(), pm.armR.rz.abs()));
+      if (i > 20) {
+        legLo = math.min(legLo, pm.legL.rx);
+        legHi = math.max(legHi, pm.legL.rx);
+      }
+    }
+    player.probeWalk(Vector3.zero());
+    await _ticks(60);
+    final still = math.max(player.model.armL.rz.abs(), player.model.legL.rx.abs());
+    flyMode = false;
+    _probePlace(start);
+    await _ticks(30);
+    debugPrint('[probe] anim fly: arm spread ${spread.toStringAsFixed(2)} rad (expect < 0.1, never the glide\'s 1.4), '
+        'leg swing ${legLo.toStringAsFixed(2)}..${legHi.toStringAsFixed(2)} (expect a stride, about -0.65..0.65), '
+        'hovering still ${still.toStringAsFixed(2)} (expect ~0)');
+
     // And the picture of it: a hovering parrot with its wings out beside a
     // chicken standing with its own folded, both seen from the side, where a
     // wing that never opened or never shut shows at a glance.
@@ -3867,7 +3924,7 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] stage22 stairs top y=${stair.y.toStringAsFixed(3)} (expect ${y0 + 2}) '
         'at x=${stair.x.toStringAsFixed(2)} max_vy=${stair.maxVy.toStringAsFixed(2)}');
     final fence = await _stage22Walk(start, x0 + 20.0, 220, true, x0 + 8.5);
-    debugPrint('[probe] stage22 fence blocked x=${fence.x.toStringAsFixed(3)} (post face ${(x0 + 9.375).toStringAsFixed(3)}) '
+    debugPrint('[probe] stage22 fence (one block: the player jumps it) x=${fence.x.toStringAsFixed(3)} (post face ${(x0 + 9.375).toStringAsFixed(3)}) '
         'max y=${fence.maxY.toStringAsFixed(3)} fence cleared=${fence.maxX > x0 + 9.7}');
     player.probeWalk(Vector3.zero());
     player.position = Vector3(x0 - 2.5, y0 + 1.1, z0 - 3.5);

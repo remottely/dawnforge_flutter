@@ -40,14 +40,7 @@ CollisionBox selectionBoxAt(VoxelQuery q, int x, int y, int z) {
     BlockShape.railSlopeN || BlockShape.railSlopeE || BlockShape.railSlopeS || BlockShape.railSlopeW =>
       const CollisionBox(0, 0, 0, 1, 0.875, 1),
     BlockShape.fence => _fence(q, x, y, z),
-    // The ladder checks -x, +x, +z and falls back to -z: not the wall torch's order.
-    BlockShape.ladder => opaqueAt(-1, 0)
-        ? const CollisionBox(0, 0, _rail0, _ladderDepth, 1, _rail1)
-        : opaqueAt(1, 0)
-            ? const CollisionBox(1 - _ladderDepth, 0, _rail0, 1, 1, _rail1)
-            : opaqueAt(0, 1)
-                ? const CollisionBox(_rail0, 0, 1 - _ladderDepth, _rail1, 1, 1)
-                : const CollisionBox(_rail0, 0, 0, _rail1, 1, _ladderDepth),
+    BlockShape.ladder => ladderBoxAt(q, x, y, z),
     BlockShape.cube ||
     BlockShape.liquid ||
     BlockShape.stairsN ||
@@ -61,9 +54,6 @@ CollisionBox selectionBoxAt(VoxelQuery q, int x, int y, int z) {
 
 /// A door or hatch panel's thickness.
 const double _panel = 0.1875;
-
-/// How far a ladder's rungs stand off its wall, and where its rails run.
-const double _ladderDepth = 0.12, _rail0 = 0.1875, _rail1 = 0.8125;
 
 CollisionBox _plant(int lx, int y, int lz, double half, double top) {
   final cx = 0.5 + ((lx * 7 + lz * 13 + y) % 5) * 0.06 - 0.12;

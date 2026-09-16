@@ -71,6 +71,10 @@ class VoxelBody {
   /// A ghost passes through every block.
   bool noclip = false;
 
+  /// Fences stand [fenceBarrierHeight] tall to this body, above its jump: an
+  /// animal stays in its pen. Off, a fence is the one block it is drawn as.
+  bool fenceBarrier = false;
+
   /// The horizontal direction the last move was stopped in.
   Vector3 _blocked = Vector3.zero();
 
@@ -135,8 +139,12 @@ class VoxelBody {
       _senseFluids();
       return;
     }
+    // A box the body already stands in (a ladder placed on it, a fence arm
+    // that grew into it) lets it out instead of snapping it through. On y only
+    // a box beside the body does: one it is sunk into still lifts it out.
+    final from = position.clone();
     next.x += velocity.x * dt;
-    var hit = _solidBoxesAt(next);
+    var hit = _solidBoxesAt(next, escape: from);
     if (hit.isNotEmpty) {
       next.x = _resolveAxis(hit, 0, velocity.x > 0.0);
       _blocked.x = velocity.x > 0.0 ? 1.0 : -1.0;
@@ -144,7 +152,7 @@ class VoxelBody {
       hitWall = true;
     }
     next.z += velocity.z * dt;
-    hit = _solidBoxesAt(next);
+    hit = _solidBoxesAt(next, escape: from);
     if (hit.isNotEmpty) {
       next.z = _resolveAxis(hit, 2, velocity.z > 0.0);
       _blocked.z = velocity.z > 0.0 ? 1.0 : -1.0;
@@ -153,7 +161,7 @@ class VoxelBody {
     }
     onFloor = false;
     next.y += velocity.y * dt;
-    hit = _solidBoxesAt(next);
+    hit = _solidBoxesAt(next, escape: from, vertical: true);
     if (hit.isNotEmpty) {
       if (velocity.y > 0.0) {
         next.y = _resolveAxis(hit, 1, true);
@@ -236,13 +244,14 @@ class VoxelBody {
       b.z < position.z + halfWidth &&
       b.z + 1.0 > position.z - halfWidth;
 
-  bool _overlapsSolid(Vector3 at) => _solidBoxesAt(at, true).isNotEmpty;
+  bool _overlapsSolid(Vector3 at) => _solidBoxesAt(at, firstOnly: true).isNotEmpty;
 
   /// Every collision box (world space) that overlaps the body placed at [at],
-  /// shrunk by [skin]. The row below the feet is scanned too: a fence post is
-  /// 1.5 tall and reaches into the cell above its own. [firstOnly] stops at the
-  /// first hit (a yes/no query).
-  List<CollisionBox> _solidBoxesAt(Vector3 at, [bool firstOnly = false]) {
+  /// shrunk by [skin]. The row below the feet is scanned too: a fence barrier
+  /// is 1.5 tall and reaches into the cell above its own. [firstOnly] stops at
+  /// the first hit (a yes/no query). A box the body also overlaps at [escape]
+  /// is left out; for a [vertical] move, only when it is [_beside] the body.
+  List<CollisionBox> _solidBoxesAt(Vector3 at, {bool firstOnly = false, Vector3? escape, bool vertical = false}) {
     final out = <CollisionBox>[];
     final bx0 = at.x - halfWidth + skin;
     final bx1 = at.x + halfWidth - skin;
@@ -260,10 +269,12 @@ class VoxelBody {
       for (var z = minZ; z <= maxZ; z++) {
         for (var x = minX; x <= maxX; x++) {
           // y < 0 is solid rock.
-          final boxes = y < 0 ? const [CollisionBox.full] : collisionBoxesAt(query, x, y, z);
+          final boxes =
+              y < 0 ? const [CollisionBox.full] : collisionBoxesAt(query, x, y, z, fenceBarrier: fenceBarrier);
           for (final box in boxes) {
             final p = box.shifted(x, y, z);
             if (p.x0 < bx1 && p.x1 > bx0 && p.y0 < by1 && p.y1 > by0 && p.z0 < bz1 && p.z1 > bz0) {
+              if (escape != null && _overlaps(p, escape) && (!vertical || _beside(p, escape))) continue;
               out.add(p);
               if (firstOnly) return out;
             }
@@ -272,6 +283,26 @@ class VoxelBody {
       }
     }
     return out;
+  }
+
+  /// Whether the body placed at [at], shrunk by [skin], overlaps [p].
+  bool _overlaps(CollisionBox p, Vector3 at) =>
+      p.x0 < at.x + halfWidth - skin &&
+      p.x1 > at.x - halfWidth + skin &&
+      p.y0 < at.y + height - skin &&
+      p.y1 > at.y + skin &&
+      p.z0 < at.z + halfWidth - skin &&
+      p.z1 > at.z - halfWidth + skin;
+
+  /// Whether the body placed at [at] reaches into [p] less from a side than
+  /// from above or below: a ladder beside it, not a floor it is sunk into.
+  bool _beside(CollisionBox p, Vector3 at) {
+    final side = math.min(
+      math.min(p.x1 - (at.x - halfWidth), at.x + halfWidth - p.x0),
+      math.min(p.z1 - (at.z - halfWidth), at.z + halfWidth - p.z0),
+    );
+    final vertical = math.min(p.y1 - at.y, at.y + height - p.y0);
+    return side < vertical;
   }
 
   /// Is there a solid block directly in front (for climbing)? Cube-based on

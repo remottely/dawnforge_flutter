@@ -60,15 +60,18 @@ axes (it must not point to the right). It captures `<name>_drops.png`, `<name>_f
 `--outline-probe --screenshot=<png>` builds every species and prints any two parts whose faces
 share a plane (the flicker). It builds every species again at every affix size and lists any
 model that reaches over its collider's top. Then it aims at a block sunk in the floor, a torch, a
-slab, a fence, a door, a flower, a wall torch, a sheep and a giant zombie, and prints the box the
-aim outline was fitted to for each. It writes `<name>_block.png`, `<name>_torch.png`,
-`<name>_mob.png` and `<name>_giant.png`.
+slab, a fence, a door, a flower, a wall torch, a ladder, a sheep and a giant zombie, and prints the
+box the aim outline was fitted to for each. The player then walks into a three-high ladder with
+jump held; the probe prints how close to the wall the rungs stop it and how high it climbed. It
+writes `<name>_block.png`, `<name>_torch.png`, `<name>_ladder.png`, `<name>_mob.png` and
+`<name>_giant.png`.
 
 `--anim-probe --screenshot=<png>` clears a long stone pad and measures what the creatures'
 limbs actually do: a flying parrot's wings against a standing chicken's folded ones and the
 same chicken's while it falls, every walker's legs while it walks and once it has stopped, a
-slime's stretch in the air and its splat on landing, and the camera's sway on foot against
-its sway in the saddle in both views and at a gallop. It writes `<name>_wings.png` (wings out
+slime's stretch in the air and its splat on landing, the camera's sway on foot against its sway
+in the saddle in both views and at a gallop, and the player's arms and legs in fly mode (a
+stride, never the glide's spread arms). It writes `<name>_wings.png` (wings out
 beside wings folded) and `<name>_walk.png` (a horse from behind, mid-trot, its tail clear of
 the barrel), and prints every figure, so none of it has to be read off the pictures.
 
@@ -192,7 +195,7 @@ the world as before; `--title-probe` forces the title even then.
 | F7 / F8 / F9 | Playground only: cycle the weather · cycle the time of day · rebuild the exhibit you stand in |
 | M | minimap, again: world map with markers (waypoints, structures, mounts, spawn), again: off |
 | J | journal: talents, bestiary, achievements, waypoints, quests |
-| Esc | menu: render distance, mouse, FOV, volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
+| Esc | menu: render distance, mouse, FOV, master and music volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
 
 ## What the port taught (the case study for `dev`)
 
