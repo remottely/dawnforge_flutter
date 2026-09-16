@@ -13,6 +13,7 @@ import '../entities/boat.dart';
 import '../entities/minecart.dart';
 import '../entities/bobber.dart';
 import '../entities/mob.dart';
+import '../entities/hand_view.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
 import '../entities/scene_body.dart';
@@ -109,6 +110,10 @@ class Player extends SceneBody implements Target {
   double _dodgeCd = 0.0;
 
   final PlayerModel model = PlayerModel();
+
+  /// The forearm and item drawn in front of the eye in first person; the body
+  /// [model] is hidden then, so this is the only part of the player on screen.
+  final HandView handView = HandView();
   late Game main;
 
   IVec3 aimedBlock = IVec3.zero;
@@ -203,6 +208,8 @@ class Player extends SceneBody implements Target {
 
     model.build(skinTone, c.shirt, pantsTone, hairTone);
     node.add(model.root);
+    handView.build(skinTone, c.shirt);
+    handView.visible = firstPerson;
 
     // The aimed block wears a skeleton of sticks: the 12 edges of a cube 0.01
     // wider than the cell, in a 75% white. Being outside every face, the sticks
@@ -283,6 +290,7 @@ class Player extends SceneBody implements Target {
   void setFirstPerson(bool fp) {
     firstPerson = fp;
     model.visible = !fp;
+    handView.visible = fp;
     if (!fp) _camDistance = 4.8;
   }
 
@@ -343,9 +351,17 @@ class Player extends SceneBody implements Target {
   Vector3 aimOrigin() => firstPerson ? cameraPosition : pivotPosition + rightVec * 0.55;
   Vector3 aimDirection() => forward;
 
+  /// One swing, in the body and in the first-person hand at once. Every attack,
+  /// dig and place goes through here so the two can never fall out of step.
+  void swingArm() {
+    model.swing();
+    handView.swing();
+  }
+
   void _updateCamera(double dt) {
     _shake = _shakeOffset(dt);
     _updateBob(dt);
+    _updateHandView(dt);
     if (firstPerson) return;
     // Pull the camera in when a block sits between it and the head.
     final origin = pivotPosition;
@@ -370,12 +386,17 @@ class Player extends SceneBody implements Target {
   /// Stage 32: the camera is shaking (for the probe).
   bool shakeActive() => _shakeTime > 0.0;
 
-  /// Minecraft's view bobbing, shape for shape. Its `bobView` drops the eye by
-  /// `|cos|` of the walk phase, sways it sideways by `sin` at **half** that
-  /// width, and adds a roll of about a third of a degree and a nose-up of about
-  /// half a degree on each footfall. The drop is the whole of the effect and
-  /// the sway is a hint of one: a bob of equal width in both reads as a lurch
-  /// from side to side, which is not what Minecraft does.
+  /// Minecraft's view bobbing: the eye drops by `|cos|` of the walk phase,
+  /// sways sideways by `sin` at a fraction of that width, and picks up a
+  /// breath of roll and nose-up on each footfall. The drop is the whole of the
+  /// effect and the sway is a hint of one — a bob of equal width in both reads
+  /// as a lurch from side to side.
+  ///
+  /// It is a nudge and nothing more. A camera that swings enough to be
+  /// *noticed* is a camera that makes people ill, because the eye is the one
+  /// thing a player cannot look away from; what carries the sense of walking in
+  /// first person is the hand in the corner of the screen ([HandView]), which
+  /// sways several times as far and lags this by a fifth of a step.
   ///
   /// The cycle is advanced by distance covered rather than by time, so it keeps
   /// step with the feet at any speed instead of needing a rate per gait, and
@@ -395,6 +416,17 @@ class Player extends SceneBody implements Target {
   /// [trotRoll] how much harder the view leans into each beat, and
   /// [gallopBoost] what a sprinting mount adds on top — the speed alone cannot
   /// say it, because a horse is already past the clamp at a standing trot.
+  /// How far the eye drops at the bottom of a full-speed footfall, in blocks.
+  /// This is deliberately small. The eye is the one thing a player cannot look
+  /// away from, so a wide bob on it is read by the inner ear as the ground
+  /// moving and makes people ill; Minecraft keeps it to a nudge and puts the
+  /// visible motion in the hand instead ([HandView]).
+  static const double bobAmplitude = 0.05;
+
+  /// The sideways sway, as a fraction of the drop. A head rises and falls as it
+  /// walks and hardly moves across; anything near a half reads as a stagger.
+  static const double bobSwayRatio = 0.16;
+
   static const double trotAmplitude = 2.0;
   static const double trotCadence = 0.55;
   static const double trotRoll = 1.6;
@@ -426,15 +458,38 @@ class Player extends SceneBody implements Target {
       _bobPitch = 0.0;
       return;
     }
-    final amp = _bobWeight * 0.09 * gait; // Minecraft's bob, in blocks
+    final amp = _bobWeight * bobAmplitude * gait;
     final sin = math.sin(_bobPhase);
-    _bobOffset = rightVec * (sin * amp * 0.5) - upVec * (math.cos(_bobPhase).abs() * amp);
-    _bobRoll = sin * amp * 0.052 * (h == null ? 1.0 : trotRoll); // 3 degrees at full amplitude on foot
-    _bobPitch = math.cos(_bobPhase - 0.2).abs() * amp * 0.087; // 5 degrees
+    _bobOffset = rightVec * (sin * amp * bobSwayRatio) - upVec * (math.cos(_bobPhase).abs() * amp);
+    _bobRoll = sin * amp * 0.03 * (h == null ? 1.0 : trotRoll);
+    _bobPitch = math.cos(_bobPhase - 0.2).abs() * amp * 0.05;
   }
 
   /// The sway the camera carries this frame (for the probe).
   Vector3 viewBobOffset() => _bobOffset;
+
+  /// Puts the first-person hand back in front of the eye. The camera has no
+  /// view pass of its own here, so the hand is an ordinary world-space node
+  /// rebuilt against the camera basis every frame — the same basis [camera]
+  /// hands the renderer, roll and all, or the arm would slide across the screen
+  /// whenever the view leaned.
+  void _updateHandView(double dt) {
+    if (!firstPerson) return;
+    handView.setHeld(heldItem());
+    final f = (forward + upVec * _bobPitch).normalized();
+    var u = upVec + rightVec * _bobRoll;
+    final r = f.cross(u).normalized();
+    u = r.cross(f).normalized();
+    handView.update(
+      dt: dt,
+      eye: cameraPosition + _shake + _bobOffset,
+      right: r,
+      up: u,
+      forward: f,
+      phase: _bobPhase,
+      weight: _bobWeight,
+    );
+  }
 
   double _rayToSolid(Vector3 origin, Vector3 direction, double maxDist) {
     final hit = voxelRaycast(origin, direction, maxDist);
@@ -816,7 +871,7 @@ class Player extends SceneBody implements Target {
       return;
     }
     if (aimedMob == null && (_tryBreakBoat() || _tryBreakCart())) return;
-    model.swing();
+    swingArm();
     Sfx.play('swing', -10.0);
     _attackCooldown = style == 'melee_fast' ? 0.28 : 0.5;
     // The camera's aimedMob only decides whether to swing at a boat; the hit
@@ -923,7 +978,7 @@ class Player extends SceneBody implements Target {
     inventory.remove('arrow', 1);
     stamina -= bowShotStamina;
     Sfx.play('shoot', -6.0);
-    model.swing();
+    swingArm();
     _attackCooldown = Items.tierOf(bow) < 3 ? 0.5 : 0.4;
     final dir = _rotated(aimDirection(), Vector3(0, 1, 0), (main.random.nextDouble() - 0.5) * 0.02);
     main.spawnProjectile(_muzzle(), dir * 36.0, _rangedDamage(bow, 1.0), this, 'arrow', 0.05, 5.0);
@@ -945,7 +1000,7 @@ class Player extends SceneBody implements Target {
     inventory.remove('arrow', 3);
     stamina -= bowFanStamina;
     Sfx.play('shoot', -4.0);
-    model.swing();
+    swingArm();
     _attackCooldown = 0.7;
     _useCooldown = 1.4;
     for (var i = 0; i < 3; i++) {
@@ -963,7 +1018,7 @@ class Player extends SceneBody implements Target {
     }
     mana -= manaCost(staffBoltMana);
     Sfx.play('bolt', -9.0);
-    model.swing();
+    swingArm();
     _attackCooldown = Items.tierOf(staff) < 3 ? 0.22 : 0.17;
     final rng = main.random;
     var dir = _rotated(aimDirection(), Vector3(0, 1, 0), (rng.nextDouble() - 0.5) * 0.08);
@@ -980,7 +1035,7 @@ class Player extends SceneBody implements Target {
     }
     mana -= manaCost(staffArcMana);
     Sfx.play('bolt', -3.0);
-    model.swing();
+    swingArm();
     _attackCooldown = 0.6;
     _useCooldown = 1.1;
     main.spawnEffect(_muzzle(), Vector3(1, 0.55, 0.2), 1.0);
@@ -1173,7 +1228,7 @@ class Player extends SceneBody implements Target {
         } else {
           main.breakMinecart(c);
         }
-        model.swing();
+        swingArm();
         Sfx.play('break', -6.0);
         _attackCooldown = 0.4;
         return true;
@@ -1192,7 +1247,7 @@ class Player extends SceneBody implements Target {
           main.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
           b.removed = true;
         }
-        model.swing();
+        swingArm();
         Sfx.play('break', -6.0);
         _attackCooldown = 0.4;
         return true;
@@ -1236,7 +1291,7 @@ class Player extends SceneBody implements Target {
           return;
         }
         stamina -= 25.0;
-        model.swing();
+        swingArm();
         final dmg = _meleeDamage(heldItem()) * 1.5;
         for (final b in List.of(main.mobs)) {
           if ((b.position - position).length < 4.0) {
@@ -1257,7 +1312,7 @@ class Player extends SceneBody implements Target {
         }
         inventory.remove('arrow', 8);
         stamina -= 25.0;
-        model.swing();
+        swingArm();
         Sfx.play('shoot', -2.0);
         final bow = weaponStyle() == 'bow' ? heldItem() : 'bow';
         for (var i = 0; i < 8; i++) {
@@ -1332,7 +1387,7 @@ class Player extends SceneBody implements Target {
         velocity += fwd * 12.0;
         velocity.y = math.max(velocity.y, 2.0);
         _lastMoveDir = fwd.clone();
-        model.swing();
+        swingArm();
         final dmg = _meleeDamage(heldItem()) * 0.8;
         for (final b in List.of(main.mobs)) {
           final to = b.position - position;
@@ -1352,7 +1407,7 @@ class Player extends SceneBody implements Target {
           return;
         }
         inventory.remove('arrow', 5);
-        model.swing();
+        swingArm();
         Sfx.play('shoot', -2.0);
         final bow = weaponStyle() == 'bow' ? heldItem() : 'bow';
         for (var i = 0; i < 5; i++) {
@@ -1430,7 +1485,7 @@ class Player extends SceneBody implements Target {
     _mineFxTimer -= dt;
     if (_mineFxTimer <= 0.0) {
       _mineFxTimer = mineFxPeriod;
-      model.swing();
+      swingArm();
       final c = Blocks.def(id);
       main.spawnDebris(aimedBlock.centre, Vector3(c.r, c.g, c.b), 2, 0.7);
       Sfx.play('place_${Blocks.materialFamily(id)}', -10.0, 0.8);
@@ -1636,7 +1691,7 @@ class Player extends SceneBody implements Target {
       _useCooldown = 0.5;
       final lit = main.tryLightPortal(aimedBlock + aimedNormal);
       if (lit > 0) {
-        model.swing();
+        swingArm();
         Sfx.play('bolt', -6.0, 1.4);
       } else {
         notify('Aim inside an obsidian frame (4 wide, 5 tall)');
@@ -1752,7 +1807,7 @@ class Player extends SceneBody implements Target {
       if (item == 'door' || item == 'iron_door') {
         if (_placeDoor(target, item)) {
           _consumeHeld();
-          model.swing();
+          swingArm();
           Sfx.play('place', -10.0);
           _useCooldown = 0.3;
         }
@@ -1776,14 +1831,14 @@ class Player extends SceneBody implements Target {
         // Stage 28: the rail takes its orientation from its neighbours and turns them to meet it.
         bid = Rails.place(world, target, bid);
         _consumeHeld();
-        model.swing();
+        swingArm();
         main.onBlockPlaced(target, bid);
         _useCooldown = 0.22;
         return;
       }
       if (world.setBlock(target, bid)) {
         _consumeHeld();
-        model.swing();
+        swingArm();
         main.onBlockPlaced(target, bid);
         _useCooldown = 0.22;
       }
@@ -2106,7 +2161,7 @@ class Player extends SceneBody implements Target {
     bobber = b;
     main.entities.add(b.node);
     main.entities.add(b.lineNode);
-    model.swing();
+    swingArm();
     Sfx.play('swing', -12.0, 1.3);
   }
 
@@ -2163,7 +2218,7 @@ class Player extends SceneBody implements Target {
     }
     main.spawnEffect(b.position, Vector3(0.5, 0.75, 1.0), 1.0);
     Sfx.play('splash', -6.0, 1.2);
-    model.swing();
+    swingArm();
     gainXp(2);
     Achievements.instance.unlock('fisher');
     reelIn(false);
@@ -2175,7 +2230,7 @@ class Player extends SceneBody implements Target {
     final n = m.shear();
     main.spawnDrop(m.centre(), 'wool', n, Vector3.zero(), 0.0);
     Sfx.play('dig', -6.0);
-    model.swing();
+    swingArm();
     return n;
   }
 
@@ -2188,7 +2243,7 @@ class Player extends SceneBody implements Target {
     if (!world.setBlock(cell, Blocks.air)) return false;
     inventory.setSlot(selectedSlot, ItemStack('${Blocks.liquidKind(id)}_bucket', 1));
     Sfx.play('splash', -10.0);
-    model.swing();
+    swingArm();
     return true;
   }
 
@@ -2203,13 +2258,13 @@ class Player extends SceneBody implements Target {
       main.spawnEffect(target.toVector3() + Vector3(0.5, 0.5, 0.5), Vector3(0.8, 0.8, 0.85), 1.2);
       Sfx.play('splash', -10.0, 1.6);
       notify('The water hisses away');
-      model.swing();
+      swingArm();
       return true;
     }
     if (!world.setBlock(target, Blocks.indexOf(liquid))) return false;
     inventory.setSlot(selectedSlot, ItemStack('bucket', 1));
     Sfx.play('splash', -10.0, 0.8);
-    model.swing();
+    swingArm();
     return true;
   }
 

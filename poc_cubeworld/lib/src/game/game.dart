@@ -363,6 +363,10 @@ class Game extends ChangeNotifier {
     player = Player();
     player.setupPlayer(world, this, _arg('--class=', GameState.instance.playerClass));
     entities.add(player.node);
+    // The first-person hand is placed in world space against the camera basis,
+    // not carried by the body node, so it hangs off the scene root like the
+    // highlight does rather than off the player.
+    entities.add(player.handView.root);
     entities.add(player.highlight);
     entities.add(player.crack);
     for (final l in player.crackLines) {
@@ -398,6 +402,11 @@ class Game extends ChangeNotifier {
     if (_hasArg('--step-teleport')) Settings.instance.stepTeleport = true;
     if (_hasArg('--climb')) Settings.instance.climbWalls = true;
     if (_hasArg('--fp')) player.setFirstPerson(true);
+    // `--hold=<item>` puts one of something in the selected slot, so a capture
+    // can show the first-person hand carrying a named tool or block.
+    if (_arg('--hold=', '') != '') {
+      player.inventory.setSlot(player.selectedSlot, ItemStack(_arg('--hold=', ''), 1));
+    }
     final fogd = double.tryParse(_arg('--fogd=', ''));
     if (fogd != null) {
       // A probe asking for a density asks for the old exponential haze, so the
@@ -2331,6 +2340,15 @@ class Game extends ChangeNotifier {
       player.syncNode();
       await nextFrame();
     }
+    // `--swing=<frames>` starts a swing and lets it run that many frames before
+    // the capture, so a shot can catch the first-person hand mid-chop.
+    final swingAt = int.tryParse(_arg('--swing=', ''));
+    if (swingAt != null) {
+      player.swingArm();
+      for (var i = 0; i < swingAt; i++) {
+        await nextFrame();
+      }
+    }
     final shot = screenshotter;
     if (shot != null) {
       await shot(path);
@@ -3167,7 +3185,7 @@ class Game extends ChangeNotifier {
     player.probeWalk(Vector3.zero());
     player.setFirstPerson(true);
     debugPrint('[probe] move bob: standing=${bobStill.toStringAsFixed(4)} (expect 0.0000) walking drop=${dropMax.toStringAsFixed(4)} '
-        'sway=${sideMax.toStringAsFixed(4)} (expect about half the drop, ratio '
+        'sway=${sideMax.toStringAsFixed(4)} (expect a sixth of the drop, ratio '
         '${(dropMax > 0 ? sideMax / dropMax : 0).toStringAsFixed(2)}) side-to-side crossings=$sways (expect one per leg walked) '
         'after stopping=${settled.toStringAsFixed(4)} (expect 0.0000) third person peak=${thirdMax.toStringAsFixed(4)} at speed ${thirdSpeed.toStringAsFixed(2)} (expect > 0)');
   }
@@ -3350,8 +3368,8 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] anim camera: on foot peak first person ${footFp.toStringAsFixed(4)} third ${footTp.toStringAsFixed(4)}; '
         'in the saddle first ${rideFp.toStringAsFixed(4)} third ${rideTp.toStringAsFixed(4)} '
         '(expect the two views equal, and ${trot.toStringAsFixed(1)}x a clamped walk = '
-        '${(1.7 * 0.09 * trot).toStringAsFixed(4)}), galloping ${gallop.toStringAsFixed(4)} '
-        '(expect ${(1.7 * 0.09 * run).toStringAsFixed(4)}, more than the trot); the gallop covered '
+        '${(1.7 * Player.bobAmplitude * trot).toStringAsFixed(4)}), galloping ${gallop.toStringAsFixed(4)} '
+        '(expect ${(1.7 * Player.bobAmplitude * run).toStringAsFixed(4)}, more than the trot); the gallop covered '
         '${rode.toStringAsFixed(1)} m, so it was moving');
 
     // And the picture of it: a hovering parrot with its wings out beside a
