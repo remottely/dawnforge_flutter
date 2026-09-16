@@ -63,7 +63,6 @@ class _GameSessionState extends State<_GameSession> {
   late final Game game;
   final FocusNode _focus = FocusNode(debugLabel: 'game');
   final GlobalKey _boundary = GlobalKey();
-  final Minimap _minimap = Minimap();
   final WorldMap _worldMap = WorldMap();
   String? _error;
 
@@ -72,7 +71,7 @@ class _GameSessionState extends State<_GameSession> {
     super.initState();
     game = Game(args: widget.args, saveDir: widget.saveDir);
     game.screenshotter = _screenshot;
-    game.mapOrigin = () => (_minimap.originX, _minimap.originZ);
+    game.mapStats = () => _worldMap.stats;
     game.reloader = widget.onReload;
     game.exitToTitle = widget.onExitToTitle;
     game.addListener(_onGameChanged);
@@ -170,11 +169,10 @@ class _GameSessionState extends State<_GameSession> {
                       cameraBuilder: (elapsed) => game.player.camera(),
                       onTick: (elapsed, dt) {
                         game.onFrame(dt);
-                        _minimap.update(dt, game);
                         _worldMap.update(dt, game);
                       },
                     ),
-                    CustomPaint(painter: HudPainter(game, _minimap, _worldMap, repaint: game.frame)),
+                    CustomPaint(painter: HudPainter(game, _worldMap, repaint: game.frame)),
                     const TutorialCard(), // stage 30
                     if (game.playground != null) ZoneCard(playground: game.playground!), // stage 33
                     ?overlay,

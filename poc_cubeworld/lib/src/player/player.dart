@@ -148,6 +148,7 @@ class Player extends SceneBody implements Target {
   double _lavaTimer = 0.0;
   double _drownTimer = 0.0;
   Vector3 _lastMoveDir = Vector3(0, 0, -1);
+  Vector3 _moveWish = Vector3.zero(); // where the input pushed last tick, backward included
   double _stepTimer = 0.0;
   bool _wasInWater = false;
   bool _sprintHeld = false;
@@ -566,6 +567,7 @@ class Player extends SceneBody implements Target {
     }
     model.tiltX = lerpd(model.tiltX, 0.0, dt * 8.0);
     model.posY = lerpd(model.posY, 0.0, dt * 8.0);
+    model.dashing = false;
     _tendBobber();
     bobber?.update(dt);
     if (riding != null) {
@@ -663,12 +665,13 @@ class Player extends SceneBody implements Target {
       speed = 11.0;
     }
 
-    // Dodge roll: a short burst with invulnerability, the model tumbles forward.
+    // Dodge dash: a short burst with invulnerability, the body leaning into
+    // it with the arms thrown back.
     if (_dodge > 0.0) {
       _dodge -= dt;
       wish = _dodgeDir;
       speed = 13.0;
-      model.tiltX = -math.pi * 2.0 * (1.0 - _dodge / dodgeTime).clamp(0.0, 1.0);
+      model.dashing = true;
     }
     final accel = _dodge > 0.0 ? 40.0 : (onFloor || _hopping ? 14.0 : (gliding ? 3.0 : 6.0));
     if (_stagger <= 0.0) {
@@ -782,10 +785,14 @@ class Player extends SceneBody implements Target {
       final backward = d.abs() > math.pi / 2 + 0.01;
       _lastMoveDir = backward ? -wish : wish.clone();
     }
+    _moveWish = wish.clone();
     var face = _lastMoveDir;
     if (firstPerson || (gameplay && (input.down(GameAction.attack) || input.down(GameAction.use))) || gliding) face = fwd;
+    // A dash faces where it goes, backward too, and turns there at once.
+    final dashing = _dodge > 0.0 && !firstPerson;
+    if (dashing) face = _dodgeDir;
     final targetYaw = math.atan2(-face.x, -face.z);
-    model.yaw = lerpAngle(model.yaw, targetYaw, dt * 12.0);
+    model.yaw = lerpAngle(model.yaw, targetYaw, dt * (dashing ? 30.0 : 12.0));
     final horizontalSpeed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     model.animate(dt, horizontalSpeed * stride, grounded, gliding, climbing);
     return horizontalSpeed;
@@ -2272,6 +2279,9 @@ class Player extends SceneBody implements Target {
 
   static const double dodgeTime = 0.4;
 
+  /// The dash leaves the ground a little: at 4 m/s up it clears about 0.3 m.
+  static const double dashHop = 4.0;
+
   int talentRank(String id) => talents[id] ?? 0;
 
   bool learnTalent(String id) {
@@ -2319,7 +2329,10 @@ class Player extends SceneBody implements Target {
     _dodge = dodgeTime;
     _dodgeCd = 0.9;
     _invulnerable = dodgeTime;
-    _dodgeDir = _lastMoveDir.length > 0.1 ? _lastMoveDir.normalized() : flatForward;
+    // Where the player is walking, backward included; standing, where the body faces.
+    final dir = _moveWish.length > 0.1 ? _moveWish : _lastMoveDir;
+    _dodgeDir = dir.length > 0.1 ? dir.normalized() : flatForward;
+    if (onFloor) velocity.y = dashHop;
     Sfx.play('swing', -8.0, 0.7);
   }
 

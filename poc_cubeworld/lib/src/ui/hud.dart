@@ -13,9 +13,10 @@ import '../game/effects.dart';
 import '../game/game.dart';
 import '../game/settings.dart';
 import '../world/voxel_world.dart';
+import 'hud_state.dart';
 import 'item_icon.dart';
 
-/// Bars, hotbar, crosshair, notifications, minimap, boss bar and everything
+/// Bars, hotbar, crosshair, notifications, the map, boss bar and everything
 /// projected from the world (mob bars, damage numbers, puppet labels).
 class Hud {
   Hud._();
@@ -193,73 +194,30 @@ class PanelScrollInput {
   }
 }
 
-/// The top-down map around the player: [radius] blocks are shown each way and
-/// [margin] more are sampled, so between rebuilds the painter can slide the
-/// image by how far the player has walked instead of leaving it frozen. The
-/// bitmap is rebuilt once a second, or sooner if the player has eaten into the
-/// margin.
-class Minimap {
-  static const int radius = 48; // blocks shown each way from the player
-  static const int margin = 16; // sampled beyond that: the slack it scrolls on
-  static const int sampled = radius + margin;
-  ui.Image? image;
+/// Where the map lands on the canvas: [view] is the window it is clipped to,
+/// the world point ([cx], [cz]) sits at the window's centre and one block is
+/// [s] pixels. The corner and the full panel are two frames of the same map.
+class MapFrame {
+  const MapFrame(this.view, this.cx, this.cz, this.s);
+  final Rect view;
+  final double cx, cz, s;
 
-  /// The world block at the image's top-left, published with the image.
-  double originX = 0.0, originZ = 0.0;
-  double _builtX = 0.0, _builtZ = 0.0; // what it was built around
-  double _timer = 0.0;
-  bool _busy = false;
+  Offset toScreen(double x, double z) => Offset(view.center.dx + (x - cx) * s, view.center.dy + (z - cz) * s);
 
-  void update(double dt, Game game) {
-    if (!game.mapVisible) return;
-    _timer -= dt;
-    final p = game.player.position;
-    final walked = math.max((p.x - _builtX).abs(), (p.z - _builtZ).abs());
-    if (_busy || (_timer > 0.0 && walked < margin - 2)) return;
-    _timer = 1.0;
-    _rebuild(game);
-  }
+  bool inside(double x, double z) => view.contains(toScreen(x, z));
 
-  void _rebuild(Game game) {
-    const n = sampled * 2;
-    final pixels = Uint8List(n * n * 4);
-    // floor, not toInt: toInt truncates toward zero, so the sampling grid used
-    // to shift by a block as the player crossed x = 0 or z = 0.
-    final px = game.player.position.x.floor();
-    final pz = game.player.position.z.floor();
-    _builtX = game.player.position.x;
-    _builtZ = game.player.position.z;
-    final world = game.world;
-    final biomes = <int, int>{};
-    for (var iz = 0; iz < n; iz++) {
-      for (var ix = 0; ix < n; ix++) {
-        final wx = px - sampled + ix;
-        final wz = pz - sampled + iz;
-        var r = 0.05, g = 0.05, b = 0.08;
-        if (world.chunks.containsKey(VoxelWorld.chunkOfXZ(wx, wz))) {
-          (r, g, b) = Hud.mapPixel(world, wx, wz, biomes);
-        }
-        final o = (iz * n + ix) * 4;
-        pixels[o] = (r * 255).round().clamp(0, 255);
-        pixels[o + 1] = (g * 255).round().clamp(0, 255);
-        pixels[o + 2] = (b * 255).round().clamp(0, 255);
-        pixels[o + 3] = 255;
-      }
-    }
-    _busy = true;
-    ui.decodeImageFromPixels(pixels, n, n, ui.PixelFormat.rgba8888, (img) {
-      image?.dispose();
-      image = img;
-      originX = (px - sampled).toDouble();
-      originZ = (pz - sampled).toDouble();
-      _busy = false;
-    });
+  /// The bitmap's rectangle, from the world block at its top-left.
+  Rect imageRect(int originX, int originZ, int width, int height) {
+    final at = toScreen(originX.toDouble(), originZ.toDouble());
+    return Rect.fromLTWH(at.dx, at.dy, width * s, height * s);
   }
 }
 
-/// Stage 24: the full-screen world map (M cycles minimap -> world map -> off).
-/// One pixel per block over every loaded chunk plus every visited one (flat
-/// grey when out of the window), rebuilt every 2 s while visible.
+/// The one map. One pixel per block over every loaded chunk plus every
+/// visited one (flat grey when out of the window), kept fresh a few chunks a
+/// frame while either frame shows it and composed once a second. The bitmap
+/// is fixed to the world, so the ground and everything on it move together
+/// under the player's arrow.
 class WorldMap {
   static const int maxChunks = 64; // the image never grows past 64x64 chunks (1024 px)
   static const Map<int, String> structureNames = {
@@ -274,68 +232,134 @@ class WorldMap {
   static final Color mountColor = Hud._c(0.6, 0.38, 0.18);
   static const Color spawnColor = Colors.white;
 
+  static const int tile = VoxelWorld.sizeX; // a chunk's side, in pixels
+  static const double sliceMs = 2.0; // what refreshing tiles may take a frame
+  static const double composeSeconds = 1.0;
+  static const double lapRestSeconds = 1.0; // idle between two laps over the tiles
+
   ui.Image? image;
 
   /// The world block at the image's top-left.
   int originX = 0, originZ = 0;
+
+  /// One RGBA tile per chunk, refreshed a few a frame in turn, so a map that
+  /// is always on never stalls a frame rebuilding itself whole.
+  final Map<ChunkPos, Uint8List> _tiles = {};
+  final Map<int, int> _biomes = {};
+  List<ChunkPos> _queue = const [];
+  int _next = 0;
   double _timer = 0.0;
   bool _busy = false;
   bool _shown = false;
+  double _sliceMs = 0.0, _sliceSum = 0.0, _composeMs = 0.0;
+  int _slices = 0;
+  double _rest = 0.0;
+
+  /// The bitmap's size and what keeping it fresh costs.
+  String get stats => '${image?.width ?? 0}x${image?.height ?? 0} px, ${_tiles.length} tiles, '
+      'tiles ${(_sliceSum / math.max(_slices, 1)).toStringAsFixed(2)} ms a frame on average (worst ${_sliceMs.toStringAsFixed(1)}), '
+      'composed in ${_composeMs.toStringAsFixed(1)} ms';
 
   void update(double dt, Game game) {
-    if (!game.worldMapVisible) {
+    if (game.mapView == MapView.off) {
       _shown = false;
       return;
     }
     if (!_shown) {
+      // Opened: a fresh lap, whatever is missing painted at once, then drawn.
       _shown = true;
+      _next = _queue.length;
+      _refresh(game, sliceMs, fillMissing: true);
       _timer = 0.0;
+    } else {
+      _rest -= dt;
+      if (_rest <= 0.0 || _next < _queue.length) {
+        _refresh(game, sliceMs);
+      } else {
+        _slices += 1; // an idle frame counts toward the average too
+      }
     }
     _timer -= dt;
     if (_timer > 0.0 || _busy) return;
-    _timer = 2.0;
-    _rebuild(game);
+    _timer = composeSeconds;
+    _compose(game);
   }
 
-  void _rebuild(Game game) {
-    final world = game.world;
+  /// The chunks the map covers: every loaded and every visited one within
+  /// [maxChunks] / 2 of the player.
+  Set<ChunkPos> _inReach(Game game) {
     final here = VoxelWorld.chunkOf(IVec3.floor(game.player.position));
-    final all = <ChunkPos>{...game.visitedChunks, ...world.chunks.keys};
+    bool near(ChunkPos c) => (c.x - here.x).abs() <= maxChunks ~/ 2 && (c.z - here.z).abs() <= maxChunks ~/ 2;
+    return {...game.visitedChunks.where(near), ...game.world.chunks.keys.where(near)};
+  }
+
+  /// Refreshes tiles for up to [budgetMs]: the missing ones first, then the
+  /// rest in turn, so a block edited or a chunk loaded shows within a lap.
+  /// [fillMissing] paints every missing tile whatever the budget.
+  void _refresh(Game game, double budgetMs, {bool fillMissing = false}) {
+    final clock = Stopwatch()..start();
+    if (_next >= _queue.length) {
+      final reach = _inReach(game);
+      _tiles.removeWhere((c, _) => !reach.contains(c));
+      _queue = [...reach.where((c) => !_tiles.containsKey(c)), ...reach.where(_tiles.containsKey)];
+      _next = 0;
+      // A biome is sampled per 4x4 cell and never changes: kept across laps,
+      // dropped only when the player has wandered far enough to fill it.
+      if (_biomes.length > 4 * reach.length * 16) _biomes.clear();
+    }
+    while (_next < _queue.length &&
+        (clock.elapsedMicroseconds < budgetMs * 1000.0 || (fillMissing && !_tiles.containsKey(_queue[_next])))) {
+      final c = _queue[_next++];
+      _tiles[c] = _paintTile(game.world, c, _tiles[c] ?? Uint8List(tile * tile * 4));
+    }
+    if (_next >= _queue.length) _rest = lapRestSeconds;
+    if (fillMissing) return;
+    final ms = clock.elapsedMicroseconds / 1000.0;
+    _sliceMs = math.max(_sliceMs, ms);
+    _sliceSum += ms;
+    _slices += 1;
+  }
+
+  Uint8List _paintTile(VoxelWorld world, ChunkPos c, Uint8List px) {
+    final loaded = world.chunks.containsKey(c);
+    for (var iz = 0; iz < tile; iz++) {
+      for (var ix = 0; ix < tile; ix++) {
+        var r = 0.22, g = 0.22, b = 0.26; // visited, out of the window
+        if (loaded) (r, g, b) = Hud.mapPixel(world, c.x * tile + ix, c.z * tile + iz, _biomes);
+        final o = (iz * tile + ix) * 4;
+        px[o] = (r * 255).round().clamp(0, 255);
+        px[o + 1] = (g * 255).round().clamp(0, 255);
+        px[o + 2] = (b * 255).round().clamp(0, 255);
+        px[o + 3] = 255;
+      }
+    }
+    return px;
+  }
+
+  /// Copies the tiles into one bitmap (transparent where nothing was seen).
+  void _compose(Game game) {
+    if (_tiles.isEmpty) return;
+    final clock = Stopwatch()..start();
     var loX = 1 << 30, loZ = 1 << 30, hiX = -(1 << 30), hiZ = -(1 << 30);
-    for (final c in all) {
-      if ((c.x - here.x).abs() > maxChunks ~/ 2 || (c.z - here.z).abs() > maxChunks ~/ 2) continue;
+    for (final c in _tiles.keys) {
       loX = math.min(loX, c.x);
       loZ = math.min(loZ, c.z);
       hiX = math.max(hiX, c.x);
       hiZ = math.max(hiZ, c.z);
     }
-    if (loX > hiX) {
-      loX = hiX = here.x;
-      loZ = hiZ = here.z;
-    }
-    final w = (hiX - loX + 1) * VoxelWorld.sizeX;
-    final h = (hiZ - loZ + 1) * VoxelWorld.sizeZ;
-    final ox = loX * VoxelWorld.sizeX;
-    final oz = loZ * VoxelWorld.sizeZ;
-    final pixels = Uint8List(w * h * 4); // transparent where nothing was seen
-    final biomes = <int, int>{};
-    for (final c in all) {
-      if (c.x < loX || c.x > hiX || c.z < loZ || c.z > hiZ) continue;
-      final loaded = world.chunks.containsKey(c);
-      for (var iz = 0; iz < VoxelWorld.sizeZ; iz++) {
-        for (var ix = 0; ix < VoxelWorld.sizeX; ix++) {
-          final wx = c.x * VoxelWorld.sizeX + ix;
-          final wz = c.z * VoxelWorld.sizeZ + iz;
-          var r = 0.22, g = 0.22, b = 0.26; // visited, out of the window
-          if (loaded) (r, g, b) = Hud.mapPixel(world, wx, wz, biomes);
-          final o = ((wz - oz) * w + (wx - ox)) * 4;
-          pixels[o] = (r * 255).round().clamp(0, 255);
-          pixels[o + 1] = (g * 255).round().clamp(0, 255);
-          pixels[o + 2] = (b * 255).round().clamp(0, 255);
-          pixels[o + 3] = 255;
-        }
+    final w = (hiX - loX + 1) * tile;
+    final h = (hiZ - loZ + 1) * tile;
+    final pixels = Uint8List(w * h * 4);
+    for (final e in _tiles.entries) {
+      final x0 = (e.key.x - loX) * tile;
+      final z0 = (e.key.z - loZ) * tile;
+      for (var iz = 0; iz < tile; iz++) {
+        final at = ((z0 + iz) * w + x0) * 4;
+        pixels.setRange(at, at + tile * 4, e.value, iz * tile * 4);
       }
     }
+    _composeMs = clock.elapsedMicroseconds / 1000.0;
+    final ox = loX * tile, oz = loZ * tile;
     _busy = true;
     ui.decodeImageFromPixels(pixels, w, h, ui.PixelFormat.rgba8888, (img) {
       image?.dispose();
@@ -348,10 +372,9 @@ class WorldMap {
 }
 
 class HudPainter extends CustomPainter {
-  HudPainter(this.game, this.minimap, this.worldMap, {required Listenable repaint}) : super(repaint: repaint);
+  HudPainter(this.game, this.worldMap, {required Listenable repaint}) : super(repaint: repaint);
 
   final Game game;
-  final Minimap minimap;
   final WorldMap worldMap;
 
   static Paint _p(Color c) => Paint()..color = c;
@@ -428,7 +451,56 @@ class HudPainter extends CustomPainter {
     }
   }
 
-  void _drawWorldMap(Canvas canvas, Size size) {
+  /// The map, the same for both frames: the bitmap, the markers, the
+  /// creatures and the player's arrow, all through [f] and clipped to its
+  /// window. [icon] sizes what is drawn on top; [labels] names it.
+  void _drawMap(Canvas canvas, MapFrame f, double icon, bool labels) {
+    canvas.save();
+    canvas.clipRect(f.view);
+    canvas.drawRect(f.view, _p(const Color.fromRGBO(13, 13, 20, 1)));
+    final img = worldMap.image;
+    if (img != null) {
+      canvas.drawImageRect(img, Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+          f.imageRect(worldMap.originX, worldMap.originZ, img.width, img.height), Paint()..filterQuality = FilterQuality.none);
+    }
+    _drawMarkers(canvas, f.toScreen, f.inside, icon, labels);
+    _drawEntities(canvas, f.toScreen, f.inside, 2.5 * icon);
+    final player = game.player;
+    final pc = f.toScreen(player.position.x, player.position.z);
+    final fwd = player.forward;
+    final len = 9.0 * icon, half = 4.0 * icon;
+    canvas.drawPath(
+        Path()
+          ..moveTo(pc.dx + fwd.x * len, pc.dy + fwd.z * len)
+          ..lineTo(pc.dx - fwd.z * half, pc.dy + fwd.x * half)
+          ..lineTo(pc.dx + fwd.z * half, pc.dy - fwd.x * half)
+          ..close(),
+        _p(Colors.white));
+    if (labels) Hud.text(canvas, 'You', pc + const Offset(-10, -12), size: 12);
+    canvas.restore();
+  }
+
+  /// The corner frame: a 96-block window of the map, centred on the player.
+  void _drawCornerMap(Canvas canvas, Size size) {
+    const ms = 240.0;
+    final view = Rect.fromLTWH(size.width - ms - 20, 80, ms, ms);
+    canvas.drawRect(view.inflate(3), _p(const Color.fromRGBO(0, 0, 0, 0.7)));
+    final p = game.player.position;
+    _drawMap(canvas, MapFrame(view, p.x, p.z, cornerScale), 1.0, false);
+    Hud.text(
+        canvas,
+        'N up · red hostile · green passive · blue pet · cyan waypoint · brown mount · white spawn · squares structures · M again: full map',
+        Offset(view.left, view.bottom + 16),
+        size: 11,
+        color: const Color.fromRGBO(204, 204, 204, 1),
+        width: ms);
+  }
+
+  /// Pixels per block in the corner: 96 blocks across its 240 px.
+  static const double cornerScale = 2.5;
+
+  /// The full frame: the whole bitmap fitted into the panel.
+  void _drawFullMap(Canvas canvas, Size size) {
     canvas.drawRect(Offset.zero & size, _p(const Color.fromRGBO(0, 0, 0, 0.7)));
     // The Godot panel is 1040x760; a smaller window scales it down.
     final k = math.min(1.0, math.min((size.width - 20) / 1040, (size.height - 20) / 760));
@@ -449,28 +521,9 @@ class HudPainter extends CustomPainter {
       final area = Rect.fromLTWH(20, 64, panel.width - 40, panel.height - 110);
       final iw = img.width.toDouble(), ih = img.height.toDouble();
       final s = math.min(area.width / iw, area.height / ih);
-      final shown = Rect.fromLTWH(area.left + (area.width - iw * s) * 0.5, area.top + (area.height - ih * s) * 0.5, iw * s, ih * s);
+      final shown = Rect.fromCenter(center: area.center, width: iw * s, height: ih * s);
       canvas.drawRect(shown.inflate(2), _p(const Color.fromRGBO(0, 0, 0, 0.8)));
-      canvas.drawImageRect(img, Rect.fromLTWH(0, 0, iw, ih), shown, Paint()..filterQuality = FilterQuality.none);
-      Offset toScreen(double x, double z) => Offset(shown.left + (x - worldMap.originX) * s, shown.top + (z - worldMap.originZ) * s);
-      bool inside(double x, double z) {
-        final px = x - worldMap.originX, pz = z - worldMap.originZ;
-        return px >= 0.0 && pz >= 0.0 && px < iw && pz < ih;
-      }
-
-      _drawMarkers(canvas, toScreen, inside, 1.6, true);
-      _drawEntities(canvas, toScreen, inside, 3.0);
-      final player = game.player;
-      final pc = toScreen(player.position.x, player.position.z);
-      final fwd = player.forward;
-      canvas.drawPath(
-          Path()
-            ..moveTo(pc.dx + fwd.x * 12.0, pc.dy + fwd.z * 12.0)
-            ..lineTo(pc.dx - fwd.z * 6.0, pc.dy + fwd.x * 6.0)
-            ..lineTo(pc.dx + fwd.z * 6.0, pc.dy - fwd.x * 6.0)
-            ..close(),
-          _p(Colors.white));
-      Hud.text(canvas, 'You', pc + const Offset(-10, -12), size: 12);
+      _drawMap(canvas, MapFrame(shown, worldMap.originX + iw * 0.5, worldMap.originZ + ih * 0.5, s), 1.6, true);
     }
     // Legend
     final ly = panel.bottom - 30;
@@ -723,48 +776,15 @@ class HudPainter extends CustomPainter {
       Hud.text(canvas, 'Quest: ${q.title}', Offset(qx + 10, 34), size: 15, color: const Color.fromRGBO(255, 230, 153, 1));
       Hud.text(canvas, '${q.text}  (${game.quests.progress}/${q.n})', Offset(qx + 10, 56), size: 13);
     }
-    // Minimap (M)
-    final map = minimap.image;
-    if (game.mapVisible && map != null) {
-      const ms = 240.0;
-      final mr = Rect.fromLTWH(size.width - ms - 20, 80, ms, ms);
-      canvas.drawRect(mr.inflate(3), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.7));
-      canvas.drawImageRect(map, Rect.fromLTWH(0, 0, map.width.toDouble(), map.height.toDouble()), mr, Paint()..filterQuality = FilterQuality.none);
-      final pc = mr.center;
-      final fwd = player.forward;
-      final tri = Path()
-        ..moveTo(pc.dx + fwd.x * 9.0, pc.dy + fwd.z * 9.0)
-        ..lineTo(pc.dx - fwd.z * 4.0, pc.dy + fwd.x * 4.0)
-        ..lineTo(pc.dx + fwd.z * 4.0, pc.dy - fwd.x * 4.0)
-        ..close();
-      canvas.drawPath(tri, Paint()..color = Colors.white);
-      const k = ms / (Minimap.radius * 2);
-      for (final m in game.mobs) {
-        final d = m.position - player.position;
-        if (d.x.abs() < Minimap.radius && d.z.abs() < Minimap.radius) {
-          canvas.drawCircle(Offset(pc.dx + d.x * k, pc.dy + d.z * k), 2.5,
-              Paint()..color = m.species.hostile ? const Color.fromRGBO(255, 77, 77, 1) : const Color.fromRGBO(102, 255, 102, 1));
-        }
-      }
-      for (final m in game.pets) {
-        final d = m.position - player.position;
-        canvas.drawCircle(Offset(pc.dx + d.x * k, pc.dy + d.z * k), 2.5, Paint()..color = const Color.fromRGBO(102, 153, 255, 1));
-      }
-      // Stage 24: markers on the minimap.
-      final px = player.position.x, pz = player.position.z;
-      _drawMarkers(canvas, (x, z) => Offset(pc.dx + (x - px) * k, pc.dy + (z - pz) * k),
-          (x, z) => (x - px).abs() < Minimap.radius && (z - pz).abs() < Minimap.radius, 1.0, false);
-      // One wrapped paragraph: two lines 14 px apart, the lower one wrapping,
-      // used to be drawn over each other.
-      Hud.text(
-          canvas,
-          'N up · red hostile · green passive · blue pet · cyan waypoint · brown mount · white spawn · squares structures · M again: world map',
-          Offset(mr.left, mr.bottom + 16),
-          size: 11,
-          color: const Color.fromRGBO(204, 204, 204, 1),
-          width: ms + 20);
+    // The map (M): one frame or none, never both.
+    switch (game.mapView) {
+      case MapView.off:
+        break;
+      case MapView.corner:
+        _drawCornerMap(canvas, size);
+      case MapView.full:
+        _drawFullMap(canvas, size);
     }
-    if (game.worldMapVisible) _drawWorldMap(canvas, size);
     if (game.debugVisible) {
       Hud.text(canvas, game.debugText(), const Offset(12, 22), size: 13, color: const Color.fromRGBO(255, 255, 255, 0.85));
     } else if (Settings.instance.showFps) {

@@ -4,6 +4,16 @@ import '../core/items.dart';
 import '../game/game.dart';
 import '../game/sfx.dart';
 
+/// Which map is on screen: none, the corner window or the full panel. M
+/// steps through them in that order; there is never more than one.
+enum MapView {
+  off,
+  corner,
+  full;
+
+  MapView get next => MapView.values[(index + 1) % MapView.values.length];
+}
+
 /// One pickup toast: [n] of [id], [t] seconds left, [since] the last merge.
 class Toast {
   Toast(this.id, this.n);

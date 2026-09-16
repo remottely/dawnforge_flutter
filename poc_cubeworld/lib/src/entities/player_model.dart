@@ -45,6 +45,18 @@ class PlayerModel {
   double tiltX = 0.0;
   double posY = 0.0;
 
+  /// The dodge dash's pose: the body leans forward, the arms are thrown back
+  /// and the legs open, blended in and out over a few frames.
+  bool dashing = false;
+  double _dashWeight = 0.0;
+  static const double dashLean = -0.45; // rad about X: forward
+  static const double dashArms = -1.35; // rad: behind the back
+  static const double dashArmsOut = 0.3; // rad: away from the torso
+  static const double dashLegFore = 0.75, dashLegHind = -0.6;
+
+  /// How far the dash pose is in (0 none, 1 all), for a probe.
+  double get dashWeight => _dashWeight;
+
   /// Where the held item sits in world space (the fishing line starts there).
   Vector3 handWorldPosition() => hand.globalTransform.getTranslation();
 
@@ -284,6 +296,16 @@ class PlayerModel {
       armL.rz = lerpd(armL.rz, 0.0, dt * 10.0); // straight down, parallel to the torso
       armR.rz = lerpd(armR.rz, 0.0, dt * 10.0);
     }
+    _dashWeight = lerpd(_dashWeight, dashing ? 1.0 : 0.0, dt * 20.0);
+    final dw = _dashWeight;
+    if (dw > 0.001) {
+      legL.rx += (dashLegFore - legL.rx) * dw;
+      legR.rx += (dashLegHind - legR.rx) * dw;
+      armL.rx += (dashArms - armL.rx) * dw;
+      armR.rx += (dashArms + swingAngle - armR.rx) * dw;
+      armL.rz += (-dashArmsOut - armL.rz) * dw;
+      armR.rz += (dashArmsOut - armR.rz) * dw;
+    }
     _bob = math.sin(_walkPhase).abs() * 0.03 * _moveWeight * (1.0 - _airWeight);
     torso.offY = _bob;
     head.offY = _bob;
@@ -292,7 +314,7 @@ class PlayerModel {
     for (final p in [head, torso, armL, armR, legL, legR]) {
       p.apply();
     }
-    root.rotation = eulerYXZ(tiltX, yaw, 0);
+    root.rotation = eulerYXZ(tiltX + dashLean * dw, yaw, 0);
     root.position = Vector3(0, posY, 0);
   }
 }

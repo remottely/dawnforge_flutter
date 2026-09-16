@@ -70,10 +70,17 @@ writes `<name>_block.png`, `<name>_torch.png`, `<name>_ladder.png`, `<name>_mob.
 limbs actually do: a flying parrot's wings against a standing chicken's folded ones and the
 same chicken's while it falls, every walker's legs while it walks and once it has stopped, a
 slime's stretch in the air and its splat on landing, the camera's sway on foot against its sway
-in the saddle in both views and at a gallop, and the player's arms and legs in fly mode (a
-stride, never the glide's spread arms). It writes `<name>_wings.png` (wings out
-beside wings folded) and `<name>_walk.png` (a horse from behind, mid-trot, its tail clear of
-the barrel), and prints every figure, so none of it has to be read off the pictures.
+in the saddle in both views and at a gallop, the player's arms and legs in fly mode (a
+stride, never the glide's spread arms), and a backward dodge dash (how far it went, which way
+the body faced, the lean, the arms, the hop). It writes `<name>_wings.png` (wings out
+beside wings folded), `<name>_walk.png` (a horse from behind, mid-trot, its tail clear of
+the barrel) and `<name>_dash.png` (a dash to the right, from the side), and prints every
+figure, so none of it has to be read off the pictures.
+
+`--map-probe --screenshot=<png>` walks with the corner map on and captures it five times
+(`<name>_1.png` … `_5.png`), then switches to the full map (`<name>_full.png`, where the corner
+must be gone). It prints how far the ground slid under the arrow between captures and what
+keeping the map fresh costs a frame.
 
 `--model-probe --screenshot=<png>` clears a stone pad and captures three poses and a zombie,
 and writes two more beside the file: `<name>_hold.png`, a model holding a block side on (the
@@ -193,7 +200,8 @@ the world as before; `--title-probe` forces the title even then.
 | Q / H / F / V / G / R | drop · eat · interact · first/third person · glider · class ability |
 | F1 / F2 / F5 | debug text · screenshot · fly mode |
 | F7 / F8 / F9 | Playground only: cycle the weather · cycle the time of day · rebuild the exhibit you stand in |
-| M | minimap, again: world map with markers (waypoints, structures, mounts, spawn), again: off |
+| M | the map in the top-right corner, centred on you; again: the same map full screen, with markers (waypoints, structures, mounts, spawn) and the corner hidden; again: off |
+| Alt | dodge dash: a quick leap where you are walking (backward too), arms thrown back, invulnerable for 0.4 s |
 | J | journal: talents, bestiary, achievements, waypoints, quests |
 | Esc | menu: render distance, mouse, FOV, master and music volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
 

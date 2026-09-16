@@ -174,7 +174,6 @@ class Game extends ChangeNotifier {
   /// Stage 30: set by the launcher; the pause menu's "Save & back to title"
   /// (Godot's `change_scene_to_file("res://menu.tscn")`).
   void Function()? exitToTitle;
-  bool worldMapVisible = false;
   final Scene scene = Scene();
   late VoxelWorld world;
   late Player player;
@@ -259,7 +258,7 @@ class Game extends ChangeNotifier {
   Inventory? chest;
   IVec3 chestPos = IVec3.zero;
   bool debugVisible = true;
-  bool mapVisible = false;
+  MapView mapView = MapView.off;
   final ValueNotifier<int> frame = ValueNotifier<int>(0);
   double fps = 0.0;
   double _fpsAcc = 0.0;
@@ -272,11 +271,9 @@ class Game extends ChangeNotifier {
   bool ready = false;
   Future<void> Function(String path)? screenshotter;
 
-  /// The world block the HUD minimap's bitmap starts at, handed over by the
-  /// view. A probe reads it to measure how far the bitmap has fallen behind
-  /// the live player between its once-a-second rebuilds — the gap the painter
-  /// now slides the image by, and used to ignore.
-  (double, double) Function()? mapOrigin;
+  /// The map bitmap's size and its last build time, handed over by the view
+  /// for the map probe.
+  String Function()? mapStats;
 
   /// Where the probe wants the camera on the captured frame, when it must not
   /// drift (a body is swept out of terrain every tick).
@@ -728,7 +725,7 @@ class Game extends ChangeNotifier {
 
   void _handleGlobalKeys() {
     if (input.justPressed(GameAction.debugHud)) debugVisible = !debugVisible;
-    if (input.justPressed(GameAction.map)) cycleMap(); // stage 24: minimap, then the world map, then off
+    if (input.justPressed(GameAction.map)) cycleMap(); // stage 24: the corner map, then the full map, then off
     if (input.justPressed(GameAction.screenshot)) {
       final dir = Directory('$saveDir/../../screenshots');
       dir.createSync(recursive: true);
@@ -2048,11 +2045,8 @@ class Game extends ChangeNotifier {
       debugPrint('[probe] stage21a: structures by kind $counts');
     }
     if (shot26 != '') await _stage26ShotFinish(shot26);
-    if (_hasArg('--map')) mapVisible = true;
-    if (_hasArg('--open-map')) {
-      mapVisible = true;
-      worldMapVisible = true;
-    }
+    if (_hasArg('--map')) mapView = MapView.corner;
+    if (_hasArg('--open-map')) mapView = MapView.full;
     if (_hasArg('--open-settings')) openScreen(ScreenKind.pause);
     if (_arg('--journal=', '') != '') openJournal(int.tryParse(_arg('--journal=', '')) ?? 0);
     if (_hasArg('--open-inventory')) openStation('crafting_table', IVec3.zero);
@@ -3664,6 +3658,52 @@ class Game extends ChangeNotifier {
         'leg swing ${legLo.toStringAsFixed(2)}..${legHi.toStringAsFixed(2)} (expect a stride, about -0.65..0.65), '
         'hovering still ${still.toStringAsFixed(2)} (expect ~0)');
 
+    // The dodge dash (Left Alt): walking backward it goes backward and the
+    // body turns to face it; it leans in with the arms thrown back, the legs
+    // open, and it leaves the floor a little. Then a sideways one, captured
+    // from the side mid-dash.
+    player.setFirstPerson(false);
+    player.setLook(math.pi / 2, 0.0); // the camera looks down -X, so backward is +X
+    player.probeWalk(Vector3(1, 0, 0));
+    await _ticks(10);
+    player.stamina = player.maxStamina;
+    final dashFrom = player.position.clone();
+    player.probeDodge();
+    var dashIn = 0.0, arms = 0.0, legOpen = 0.0, rise = 0.0, faceErr = 0.0;
+    for (var i = 0; i < 40; i++) {
+      await _ticks(1);
+      final pm = player.model;
+      dashIn = math.max(dashIn, pm.dashWeight);
+      arms = math.min(arms, pm.armL.rx);
+      legOpen = math.max(legOpen, pm.legL.rx - pm.legR.rx);
+      rise = math.max(rise, player.position.y - dashFrom.y);
+      // Facing +X is a yaw of -pi/2.
+      if (i == 12) faceErr = (((pm.yaw + math.pi / 2) + math.pi) % (math.pi * 2) - math.pi).abs();
+    }
+    player.probeWalk(Vector3.zero());
+    final dashed = player.position - dashFrom;
+    await _ticks(30);
+    debugPrint('[probe] anim dash: backward moved ${dashed.x.toStringAsFixed(2)} m along +X (expect > 3), '
+        'facing off by ${faceErr.toStringAsFixed(2)} rad (expect ~0), pose in ${dashIn.toStringAsFixed(2)}, '
+        'arms ${arms.toStringAsFixed(2)} rad (expect ~${PlayerModel.dashArms}), legs open ${legOpen.toStringAsFixed(2)} rad, '
+        'rose ${rise.toStringAsFixed(2)} m (expect ~0.3), pose after ${player.model.dashWeight.toStringAsFixed(2)} (expect 0)');
+    final dashShot = screenshotter;
+    if (dashShot != null) {
+      _probePlace(start);
+      player.setLook(0.0, -0.15); // the camera looks down -Z, so right is +X
+      player.probeWalk(Vector3(1, 0, 0));
+      await _ticks(10);
+      player.stamina = player.maxStamina;
+      player.probeDodge();
+      await _ticks(7);
+      await dashShot('${_arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '')}_dash.png');
+      player.probeWalk(Vector3.zero());
+      await _ticks(40);
+      debugPrint('[probe] anim dash capture: a dash to the right, seen from behind the camera line -> _dash.png');
+    }
+    _probePlace(start);
+    await _ticks(10);
+
     // And the picture of it: a hovering parrot with its wings out beside a
     // chicken standing with its own folded, both seen from the side, where a
     // wing that never opened or never shut shows at a glance.
@@ -3716,12 +3756,11 @@ class Game extends ChangeNotifier {
         '(a trot: each fore leg matches the hind leg across the body from it)');
   }
 
-  /// `--map-probe --screenshot=<png>`: the minimap, captured before and after a
-  /// walk (`<name>_a.png`, `<name>_b.png`), then the world map
-  /// (`<name>_world.png`). The ground under the arrow has to slide by exactly
-  /// what the player walked: the bitmap is rebuilt once a second, and it used
-  /// to sit still until it did while the creature dots moved every frame, so
-  /// every dot appeared to drift backwards under a player who was not moving.
+  /// `--map-probe --screenshot=<png>`: the corner map, captured five times
+  /// through one walk (`<name>_1.png` … `_5.png`), then the full map in its
+  /// place (`<name>_full.png`). Both are frames of the one world-fixed
+  /// bitmap, so the ground slides under the arrow with every step, rebuild or
+  /// not, and the corner is gone from the full map's capture.
   Future<void> _probeMap() async {
     final shoot = screenshotter;
     if (shoot == null) {
@@ -3729,64 +3768,28 @@ class Game extends ChangeNotifier {
       return;
     }
     final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
-    mapVisible = true;
-    worldMapVisible = false;
+    mapView = MapView.corner;
     player.setFirstPerson(false);
     player.setLook(0.0, 0.0);
     await _ticks(150); // the first bitmap, and time for the mobs to be about
-    // Five captures through one unbroken walk, closer together than the one
-    // second between rebuilds: the ground has to slide by what was walked in
-    // every gap, rebuild or no rebuild. Two captures a second apart prove
-    // nothing, because at a rebuild the map is centred on the player either
-    // way — the old map only ever moved at those instants.
-    final home = player.position.clone();
     player.probeWalk(Vector3(1, 0, 0));
     var last = player.position.clone();
     for (var i = 1; i <= 5; i++) {
       final at = player.position.clone();
       final step = math.sqrt(math.pow(at.x - last.x, 2) + math.pow(at.z - last.z, 2));
-      debugPrint('[probe] map $i: player ${at.x.toStringAsFixed(2)},${at.z.toStringAsFixed(2)} moved ${step.toStringAsFixed(2)} m '
-          'flat since the last capture, so the ground must have slid ${(step * 2.5).toStringAsFixed(1)} px '
-          '(96 blocks across 240 px) under an arrow that never moves');
+      debugPrint('[probe] map corner $i: player ${at.x.toStringAsFixed(2)},${at.z.toStringAsFixed(2)} '
+          'moved ${step.toStringAsFixed(2)} m, so the ground slid ${(step * 2.5).toStringAsFixed(1)} px under the arrow · '
+          '${mapStats?.call() ?? 'no map'}');
       await shoot('${base}_$i.png');
       last = at;
       if (i < 5) await _ticks(36);
     }
     player.probeWalk(Vector3.zero());
-
-    // The number the old painter threw away, measured straight off the map.
-    // The bitmap's middle is the player as they stood at the last rebuild (its
-    // corner plus 48 blocks shown and 16 of margin); walking, the live player
-    // drifts away from that middle, and the drift is exactly how far the
-    // ground has to slide to stay under them. The old painter pinned the
-    // bitmap to the panel whatever the drift was — so the ground stood still
-    // for up to a second while every creature dot moved every frame, and the
-    // dots appeared to slide the other way. It has to saw up and drop back at
-    // each rebuild, and never reach the 16 blocks of margin.
-    final origin = mapOrigin;
-    if (origin != null) {
-      _probePlace(home);
-      await _ticks(30);
-      player.probeWalk(Vector3(1, 0, 0));
-      var peak = 0.0;
-      final trace = <String>[];
-      for (var i = 0; i < 240; i++) {
-        await _ticks(1);
-        final o = origin();
-        final dx = player.position.x - (o.$1 + 64.0);
-        final dz = player.position.z - (o.$2 + 64.0);
-        final drift = math.sqrt(dx * dx + dz * dz);
-        peak = math.max(peak, drift);
-        if (i % 20 == 0) trace.add('${drift.toStringAsFixed(1)}m=${(drift * 2.5).toStringAsFixed(0)}px');
-      }
-      player.probeWalk(Vector3.zero());
-      debugPrint('[probe] map drift while walking: ${trace.join(' ')} · peak ${peak.toStringAsFixed(2)} m, '
-          '${(peak * 2.5).toStringAsFixed(1)} px of ground slide (must stay under the 16 blocks of margin)');
-    }
-    worldMapVisible = true;
-    await _ticks(180);
-    await shoot('${base}_world.png');
-    debugPrint('[probe] map world: mobs ${mobs.length} pets ${pets.length} over ${visitedChunks.length} visited chunks');
+    mapView = mapView.next;
+    await _ticks(150);
+    await shoot('${base}_full.png');
+    debugPrint('[probe] map full ($mapView): mobs ${mobs.length} pets ${pets.length} over ${visitedChunks.length} visited chunks · '
+        '${mapStats?.call() ?? 'no map'}; M again: ${mapView.next}');
   }
 
   /// `--model-probe --screenshot=<png>`: on a cleared stone pad, facing the
@@ -4838,17 +4841,8 @@ class Game extends ChangeNotifier {
 
   // --- stage 24: persistence of entities, map markers, quests tab, settings, bed respawn ---
 
-  /// M: the minimap, then the world map on top of it, then both off.
-  void cycleMap() {
-    if (worldMapVisible) {
-      worldMapVisible = false;
-      mapVisible = false;
-    } else if (mapVisible) {
-      worldMapVisible = true;
-    } else {
-      mapVisible = true;
-    }
-  }
+  /// M: the corner map, then the full map in its place, then off.
+  void cycleMap() => mapView = mapView.next;
 
   /// The settings screen's live hook: the streaming window follows the slider
   /// at once.
@@ -4956,8 +4950,7 @@ class Game extends ChangeNotifier {
     debugPrint('[probe] stage24 horse pos delta=${delta.toStringAsFixed(2)}');
     // Markers: what the maps draw (the discovery pass runs once a second in play).
     _checkStructures();
-    mapVisible = true;
-    worldMapVisible = true;
+    mapView = MapView.full;
     final mc = markerCounts();
     debugPrint('[probe] stage24 markers: waypoints=${mc.waypoints} structures=${mc.structures} mounts=${mc.mounts}');
     // The quests tab.
