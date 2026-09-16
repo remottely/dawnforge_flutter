@@ -6,6 +6,7 @@ const int _stone = 1;
 const int _water = 2;
 const int _slab = 3;
 const int _glass = 4;
+const int _fence = 5;
 
 final _table = VoxelBlockTable(const [
   VoxelBlockDef(shape: BlockShape.cube, solid: false, opaque: false, r: 0, g: 0, b: 0, a: 0),
@@ -14,6 +15,7 @@ final _table = VoxelBlockTable(const [
       shape: BlockShape.liquid, solid: false, opaque: false, r: 0.2, g: 0.4, b: 0.8, a: 0.6, liquidKind: 0, liquidSource: true),
   VoxelBlockDef(shape: BlockShape.slab, solid: true, opaque: false, r: 0.7, g: 0.5, b: 0.3),
   VoxelBlockDef(shape: BlockShape.cube, solid: true, opaque: false, r: 0.9, g: 0.9, b: 1.0, a: 0.3),
+  VoxelBlockDef(shape: BlockShape.fence, solid: true, opaque: false, r: 0.4, g: 0.3, b: 0.2),
 ]);
 
 /// A sparse world: stone floor filling y 0..9 everywhere, plus placed cells.
@@ -141,6 +143,57 @@ void main() {
       wall.move(1 / 60);
     }
     expect(wall.stepFits(1.02), isFalse, reason: 'a two-block wall is not jumped');
+  });
+
+  test('a fence line stops a body between its posts, not only at them', () {
+    // Posts at z 3 and z 5 joined through z 4; the body walks +x at z 4.5,
+    // where the lone posts would leave it a clear 0.75 m gap either side.
+    for (var z = 3; z <= 5; z++) {
+      world.cells[IVec3(7, 10, z)] = _fence;
+    }
+    body.position = Vector3(4.5, 10.001, 4.5);
+    run(1.0, () => body.velocity.x = 4.0);
+    expect(body.hitWall, isTrue);
+    expect(body.position.x, closeTo(7.375 - 0.3 - VoxelBody.skin, 1e-6));
+  });
+
+  test('a lone fence is only its post: a body walks past beside it', () {
+    world.cells[const IVec3(7, 10, 4)] = _fence;
+    // The body spans z 3.7..4.3; the post starts at 4.375.
+    body.position = Vector3(4.5, 10.001, 4.0);
+    run(1.0, () => body.velocity.x = 4.0);
+    expect(body.hitWall, isFalse);
+    expect(body.position.x, greaterThan(8.0));
+  });
+
+  test('a fence arm reaches a wall it joins, as tall as the post', () {
+    world.cells[const IVec3(7, 10, 4)] = _fence;
+    world.cells[const IVec3(7, 10, 5)] = _stone;
+    expect(fenceJoinsAt(world, 7, 10, 4), FenceJoin.south);
+    final boxes = collisionBoxesAt(world, 7, 10, 4);
+    expect(boxes, hasLength(1));
+    final b = boxes.single;
+    expect([b.x0, b.y0, b.z0, b.x1, b.y1, b.z1], [0.375, 0.0, 0.375, 0.625, 1.5, 1.0]);
+  });
+
+  test('a fence corner is two arms; a cross is two bars through the post', () {
+    for (var joins = 0; joins < 16; joins++) {
+      final boxes = fenceBoxesOf(joins);
+      bool reaches(double x, double z) => boxes.any((b) => b.x0 <= x && x <= b.x1 && b.z0 <= z && z <= b.z1);
+      expect(reaches(0.5, 0.5), isTrue, reason: 'the post, joins $joins');
+      expect(reaches(0.0, 0.5), joins & FenceJoin.west != 0, reason: 'west, joins $joins');
+      expect(reaches(1.0, 0.5), joins & FenceJoin.east != 0, reason: 'east, joins $joins');
+      expect(reaches(0.5, 0.0), joins & FenceJoin.north != 0, reason: 'north, joins $joins');
+      expect(reaches(0.5, 1.0), joins & FenceJoin.south != 0, reason: 'south, joins $joins');
+      expect(reaches(0.0, 0.0) || reaches(1.0, 1.0), isFalse, reason: 'no corner is filled, joins $joins');
+      expect(boxes.every((b) => b.y0 == 0.0 && b.y1 == 1.5), isTrue);
+    }
+  });
+
+  test('air and a non-fence answer from their shape', () {
+    expect(collisionBoxesAt(world, 3, 20, 3), isEmpty);
+    world.cells[const IVec3(3, 10, 3)] = _slab;
+    expect(collisionBoxesAt(world, 3, 10, 3).single.y1, 0.5);
   });
 
   test('fluid sensing reports the liquid kind at feet and head', () {

@@ -36,10 +36,25 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final c = _cursor;
     return (c?.id ?? '') != (had?.id ?? '') || (c?.count ?? 0) > (had?.count ?? 0);
   }
-  int _scroll = 0;
+  final PanelScroll _recipeScroll = PanelScroll();
+  late final PanelScrollInput _scrollInput = PanelScrollInput(() => _recipeScroll, () => _k);
+
+  /// Where the recipe list is drawn, in panel space; its rows are recorded in
+  /// the scrolled content's space ([PanelScroll.toContent]).
+  Rect _recipeBody = Rect.zero;
   final List<Rect> _slotRects = [];
   final List<Rect> _chestRects = [];
   final List<(Rect, Recipe)> _recipeRects = [];
+
+  /// The recipe under [mp] (panel space), if the list shows it there.
+  Recipe? _recipeAt(Offset mp) {
+    if (!_recipeBody.contains(mp)) return null;
+    final cp = _recipeScroll.toContent(mp);
+    for (final pair in _recipeRects) {
+      if (pair.$1.contains(cp)) return pair.$2;
+    }
+    return null;
+  }
   double _k = 1.0;
   Offset _origin = Offset.zero;
 
@@ -80,12 +95,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
       }
     }
     if (_cursor == null) {
-      for (final pair in _recipeRects) {
-        if (pair.$1.contains(mp)) {
-          Sfx.play('click', -6.0);
-          game.player.craft(pair.$2);
-          return;
-        }
+      final recipe = _recipeAt(mp);
+      if (recipe != null) {
+        Sfx.play('click', -6.0);
+        game.player.craft(recipe);
+        return;
       }
     }
     // Click outside with a cursor stack: drop it into the world.
@@ -137,14 +151,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
     return Listener(
       behavior: HitTestBehavior.opaque,
       onPointerHover: (e) => setState(() => _mouse = _toPanel(e.localPosition)),
-      onPointerMove: (e) => setState(() => _mouse = _toPanel(e.localPosition)),
       onPointerDown: (e) => setState(() {
         _mouse = _toPanel(e.localPosition);
-        _click(_mouse, e.buttons & kSecondaryMouseButton != 0);
+        _scrollInput.down(e);
+        // A finger may be starting a scroll: it acts when it lifts.
+        if (e.kind != PointerDeviceKind.touch) _click(_mouse, e.buttons & kSecondaryMouseButton != 0);
       }),
-      onPointerSignal: (e) {
-        if (e is PointerScrollEvent) setState(() => _scroll += e.scrollDelta.dy > 0 ? 1 : -1);
-      },
+      onPointerMove: (e) => setState(() {
+        _mouse = _toPanel(e.localPosition);
+        _scrollInput.move(e);
+      }),
+      onPointerUp: (e) => setState(() {
+        if (e.kind == PointerDeviceKind.touch && !_scrollInput.dragged) _click(_toPanel(e.localPosition), false);
+      }),
+      onPointerSignal: (e) => setState(() => _scrollInput.signal(e)),
+      onPointerPanZoomUpdate: (e) => setState(() => _scrollInput.panZoom(e)),
       child: CustomPaint(
         painter: _InventoryPainter(this),
         size: Size.infinite,
@@ -269,10 +290,16 @@ class _InventoryPainter extends CustomPainter {
     final recipes = recipesHidden ? <Recipe>[] : Recipes.available(game.station);
     const rowH = 30.0;
     const visible = 16;
-    s._scroll = s._scroll.clamp(0, (recipes.length - visible).clamp(0, 1 << 20));
-    for (var i = s._scroll; i < recipes.length && i < s._scroll + visible; i++) {
+    // The rows plus a strip for the scroll bar, clear of them.
+    final body = Rect.fromLTWH(rx, ry, 292, visible * rowH);
+    s._recipeBody = body;
+    final scroll = s._recipeScroll;
+    scroll.begin(canvas, body, recipes.length * rowH);
+    for (var i = 0; i < recipes.length; i++) {
       final r = recipes[i];
-      final rect = Rect.fromLTWH(rx, ry + (i - s._scroll) * rowH, 280, rowH - 3);
+      final rect = Rect.fromLTWH(rx, ry + i * rowH, 280, rowH - 3);
+      // Only the rows the box shows are drawn.
+      if (rect.bottom < body.top + scroll.offset || rect.top > body.bottom + scroll.offset) continue;
       final ok = Recipes.canCraft(r, player.inventory);
       canvas.drawRect(rect, Paint()..color = ok ? const Color.fromRGBO(46, 71, 46, 1) : const Color.fromRGBO(46, 46, 51, 1));
       Hud.drawItemIcon(canvas, Rect.fromLTWH(rect.left + 2, rect.top + 1, 26, 26), r.result);
@@ -280,8 +307,11 @@ class _InventoryPainter extends CustomPainter {
           color: ok ? Colors.white : const Color.fromRGBO(153, 153, 153, 1));
       s._recipeRects.add((rect, r));
     }
+    scroll.end(canvas, body);
     if (recipes.length > visible) {
-      Hud.text(canvas, 'scroll for more (${s._scroll + visible}/${recipes.length})', Offset(rx, ry + visible * rowH + 14), size: 12, color: const Color.fromRGBO(153, 153, 153, 1));
+      final shown = ((scroll.offset + body.height) / rowH).floor().clamp(0, recipes.length);
+      Hud.text(canvas, '${scroll.hasMore ? 'Scroll for more' : 'End of the list'} ($shown/${recipes.length})',
+          Offset(rx, ry + visible * rowH + 14), size: 12, color: const Color.fromRGBO(153, 153, 153, 1));
     }
 
     // Hover tooltip
@@ -294,12 +324,10 @@ class _InventoryPainter extends CustomPainter {
         if (b > 0) hover = '${Hud.itemLabel(player.inventory.idAt(i), b)} — +$b damage';
       }
     }
-    for (final pair in s._recipeRects) {
-      if (pair.$1.contains(mp)) {
-        final r = pair.$2;
-        final parts = [for (final e in r.ingredients.entries) '${Items.displayName(e.key)} x${e.value} (${player.inventory.countOf(e.key)})'];
-        hover = '${_describe(r.result)}\nNeeds: ${parts.join(', ')}';
-      }
+    final r = s._recipeAt(mp);
+    if (r != null) {
+      final parts = [for (final e in r.ingredients.entries) '${Items.displayName(e.key)} x${e.value} (${player.inventory.countOf(e.key)})'];
+      hover = '${_describe(r.result)}\nNeeds: ${parts.join(', ')}';
     }
     if (hover != '') {
       const w = 380.0;

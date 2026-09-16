@@ -1,7 +1,7 @@
 import '../physics/voxel_body.dart';
+import 'block_collision.dart';
 import 'block_shape.dart';
 import 'chunk_size.dart';
-import 'voxel_block_table.dart';
 
 /// The box an aimed block's outline is drawn around, in world space: the
 /// bounds of what the chunk mesher actually draws in the cell, not the cell.
@@ -73,18 +73,13 @@ CollisionBox _plant(int lx, int y, int lz, double half, double top) {
 
 CollisionBox _fence(VoxelQuery q, int x, int y, int z) {
   const p0 = 0.375, p1 = 0.625;
-  final table = q.table;
-  bool joins(int dx, int dz) {
-    final n = q.getBlockXYZ(x + dx, y, z + dz);
-    return n != VoxelBlockTable.air && (table.isOpaque(n) || table.shapeOf(n) == BlockShape.fence);
-  }
-
+  final joins = fenceJoinsAt(q, x, y, z);
   return CollisionBox(
-    joins(-1, 0) ? 0 : p0,
+    joins & FenceJoin.west != 0 ? 0 : p0,
     0,
-    joins(0, -1) ? 0 : p0,
-    joins(1, 0) ? 1 : p1,
+    joins & FenceJoin.north != 0 ? 0 : p0,
+    joins & FenceJoin.east != 0 ? 1 : p1,
     1,
-    joins(0, 1) ? 1 : p1,
+    joins & FenceJoin.south != 0 ? 1 : p1,
   );
 }

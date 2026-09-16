@@ -120,8 +120,9 @@ class VoxelBlockTable {
   /// [VoxelBlockDef.emission] of [id].
   int emissionOf(int id) => _defs[id].emission;
 
-  /// The boxes a body collides with, in the block's own 0..1 space. Shared:
-  /// never mutate.
+  /// The boxes a body collides with, in the block's own 0..1 space, from the
+  /// shape alone (a fence's lone post; a body asks [collisionBoxesAt]).
+  /// Shared: never mutate.
   List<CollisionBox> collisionBoxes(int id) => _boxes[id];
 
   /// Whether [id] is a liquid, source or flowing.

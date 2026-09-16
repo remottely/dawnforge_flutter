@@ -58,9 +58,11 @@ axes (it must not point to the right). It captures `<name>_drops.png`, `<name>_f
 `VoxelMeshBuilder.itemShape`.
 
 `--outline-probe --screenshot=<png>` builds every species and prints any two parts whose faces
-share a plane (the flicker), then aims at a block sunk in the floor, a torch, a slab, a fence, a
-door, a flower, a wall torch and a sheep, and prints the box the aim outline was fitted to for
-each. It writes `<name>_block.png`, `<name>_torch.png` and `<name>_mob.png`.
+share a plane (the flicker). It builds every species again at every affix size and lists any
+model that reaches over its collider's top. Then it aims at a block sunk in the floor, a torch, a
+slab, a fence, a door, a flower, a wall torch, a sheep and a giant zombie, and prints the box the
+aim outline was fitted to for each. It writes `<name>_block.png`, `<name>_torch.png`,
+`<name>_mob.png` and `<name>_giant.png`.
 
 `--anim-probe --screenshot=<png>` clears a long stone pad and measures what the creatures'
 limbs actually do: a flying parrot's wings against a standing chicken's folded ones and the

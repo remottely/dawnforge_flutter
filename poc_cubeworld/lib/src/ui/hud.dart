@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math.dart' as vm;
 
@@ -108,7 +109,9 @@ class Hud {
 /// [offset], and a bar appears on the right as soon as the rows are taller than
 /// the box. A click comes back through [toContent], so the rects the painter
 /// recorded are read in the space they were drawn in. Every panel whose list can
-/// outgrow its box holds one (the journal keeps one per tab).
+/// outgrow its box holds one (the journal keeps one per tab) and feeds it
+/// through [PanelScrollInput], so a mouse wheel, a trackpad and a finger all
+/// roll it.
 class PanelScroll {
   /// How far the content is shifted up, in the panel's own units.
   double offset = 0.0;
@@ -119,6 +122,13 @@ class PanelScroll {
 
   /// Rolls the wheel: [dy] > 0 walks down the list.
   void wheel(double dy) => offset = (offset + (dy > 0 ? step : -step)).clamp(0.0, _max);
+
+  /// Drags the content by [dy] panel units, the way a finger or a trackpad
+  /// swipe moves it: [dy] > 0 pulls the content down, back up the list.
+  void drag(double dy) => offset = (offset - dy).clamp(0.0, _max);
+
+  /// Whether there is more below than the box shows.
+  bool get hasMore => offset < _max;
 
   /// A point in panel space read in the content's own space.
   Offset toContent(Offset p) => Offset(p.dx, p.dy + offset);
@@ -143,6 +153,43 @@ class PanelScroll {
     canvas.drawRect(Rect.fromLTWH(x, body.top, 4, track), Paint()..color = const Color.fromRGBO(0, 0, 0, 0.35));
     canvas.drawRect(Rect.fromLTWH(x, body.top + (offset / _max) * (track - thumb), 4, thumb),
         Paint()..color = const Color.fromRGBO(170, 170, 185, 1));
+  }
+}
+
+/// The pointer events that roll a [PanelScroll], for a panel's [Listener].
+/// A mouse wheel arrives as a scroll signal; a trackpad's two-finger swipe
+/// (macOS, and Windows precision pads) as a pan-zoom gesture, never a signal;
+/// a finger as a plain drag. A finger that moved further than [slop] was
+/// scrolling, so its lift is not a tap.
+class PanelScrollInput {
+  /// [scroll] answers which list a gesture rolls; [scale] how many screen
+  /// pixels one panel unit is (a painter that scales its layout sets it).
+  PanelScrollInput(this.scroll, this.scale);
+
+  final PanelScroll Function() scroll;
+  final double Function() scale;
+
+  /// How far a finger travels before it counts as scrolling, in screen pixels.
+  static const double slop = 8.0;
+
+  double _travel = 0.0;
+
+  /// Whether the finger now down has scrolled rather than tapped.
+  bool get dragged => _travel > slop;
+
+  void signal(PointerSignalEvent e) {
+    if (e is PointerScrollEvent) scroll().wheel(e.scrollDelta.dy);
+  }
+
+  void panZoom(PointerPanZoomUpdateEvent e) => scroll().drag(e.panDelta.dy / scale());
+
+  void down(PointerDownEvent e) => _travel = 0.0;
+
+  /// A finger drag rolls the list; a mouse drag does not (it carries a stack).
+  void move(PointerMoveEvent e) {
+    if (e.kind != PointerDeviceKind.touch) return;
+    _travel += e.delta.distance;
+    if (dragged) scroll().drag(e.delta.dy / scale());
   }
 }
 

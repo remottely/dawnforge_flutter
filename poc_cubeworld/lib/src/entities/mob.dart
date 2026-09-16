@@ -60,7 +60,6 @@ class Mob extends SceneBody {
   int mobLevel = 1;
   double _fuse = 0.0;
   String affix = '';
-  double affixScale = 1.0;
   /// Stage 20: a mount carries its rider's input instead of thinking; a sheep
   /// regrows its wool.
   bool ridden = false;
@@ -79,6 +78,10 @@ class Mob extends SceneBody {
   double damageMult = 1.0;
   double _modelYaw = 0.0;
   double _modelScale = 1.0;
+
+  /// How much the built model is shrunk to fit under its collider (1 when it
+  /// already fits): set once by [_buildModel].
+  double _modelFit = 1.0;
   double _squash = 1.0;
   double _shakeX = 0.0;
   double _deathTimer = -1.0;
@@ -422,13 +425,22 @@ class Mob extends SceneBody {
     damageMult = a.damage;
     maxHp *= a.hp;
     hp = maxHp;
-    affixScale = a.scale;
+    // The aura hangs in the model's space, which the node's scale grows.
     final aura = PointLight(color: a.color, intensity: 6.0, range: 4.0);
     final auraNode = Node(name: 'Aura')..position = Vector3(0, height * 0.5, 0);
     auraNode.addComponent(PointLightComponent(aura));
     node.add(auraNode);
+    // A bigger mob is a bigger body first: the collider grows, and the model
+    // follows it through [sizeScale].
+    halfWidth *= a.scale;
+    height *= a.scale;
     barVisible = true;
   }
+
+  /// How much bigger than its species this mob is drawn: always the
+  /// collider's growth, so the model can never outgrow the box the crosshair,
+  /// the outline and the walls see.
+  double get sizeScale => height / species.height;
 
   /// The bar colour: blue for a pet, the affix colour for an elite, red else.
   Vector3 barColor() {
@@ -510,6 +522,14 @@ class Mob extends SceneBody {
     );
     return part;
   }
+
+  /// How far a model may reach over its collider's top (a breath, a tuft)
+  /// before the outline visibly cuts it (`--outline-probe` checks it).
+  static const double modelHeadroom = 0.03;
+
+  /// How high the model reaches above the feet at rest, in metres, with its
+  /// size ([sizeScale]) applied: what must fit under the collider's top.
+  double modelTop() => _restTop() * _modelFit * sizeScale;
 
   /// Each part's box around its pivot, as built (before any pose).
   final Map<Part, Aabb3> _restBoxes = {};
@@ -694,7 +714,15 @@ class Mob extends SceneBody {
     for (final p in _parts.values) {
       p.apply();
     }
+    // A body authored at a fixed size (a bird, a spider) is shrunk into its
+    // species' collider rather than poking out of it: the collider is the
+    // body the crosshair, the outline and the walls see, so the drawing must
+    // not be bigger. A model shorter than its collider is left as built.
+    final top = _restTop();
+    _modelFit = top > height ? height / top : 1.0;
   }
+
+  double _restTop() => restBoxes().values.map((b) => b.max.y).reduce(math.max);
 
   void takeDamage(double amount, Vector3 from, double knockback, Object? attacker) {
     if (state == MobState.dead) return;
@@ -1343,7 +1371,7 @@ class Mob extends SceneBody {
     }
     final sq = species.body == 'blob' ? _squash : 1.0;
     node.rotation = _toppleX == 0.0 ? Quaternion.axisAngle(Vector3(0, 1, 0), _modelYaw) : eulerYXZ(_toppleX, _modelYaw, 0);
-    final ms = _modelScale * affixScale;
+    final ms = _modelScale * sizeScale * _modelFit;
     node.scale = Vector3(ms / math.sqrt(sq), ms * sq * _breath, ms / math.sqrt(sq));
     node.position = position + Vector3(_shakeX, _toppleY, 0);
   }

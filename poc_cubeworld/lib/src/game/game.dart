@@ -3199,9 +3199,11 @@ class Game extends ChangeNotifier {
   /// rest-pose part boxes are checked pairwise for a shared plane (the
   /// flicker a leg flush with a barrel's side made). Then, on a cleared pad,
   /// the crosshair is put on a block sunk flush in the floor, a torch, a slab,
-  /// a fence, a door, a flower, a wall torch and a sheep, and the box the
-  /// outline was fitted to is printed for each. With `--screenshot=<png>`,
-  /// `_block.png`, `_torch.png` and `_mob.png` capture three of them.
+  /// a fence, a door, a flower, a wall torch, a sheep and a giant zombie, and
+  /// the box the outline was fitted to is printed for each. Every species is
+  /// also built at every affix size and its model checked against its
+  /// collider's top. With `--screenshot=<png>`, `_block.png`, `_torch.png`,
+  /// `_mob.png` and `_giant.png` capture four of them.
   Future<void> _probeOutline() async {
     final bad = <String>[];
     for (final sp in Species.defs.values) {
@@ -3211,6 +3213,23 @@ class Game extends ChangeNotifier {
     }
     debugPrint('[probe] outline parts: ${Species.defs.length} species built, '
         '${bad.length} with parts sharing a face plane${bad.isEmpty ? '' : ':\n  ${bad.join('\n  ')}'}');
+    // The outline is the collider, so every body, at every size an affix
+    // gives it, must be drawn under the collider's top.
+    final poking = <String>[];
+    var tallest = 0.0;
+    for (final sp in Species.defs.values) {
+      for (final affix in ['', ...Mob.affixes.keys]) {
+        final m = Mob()..setupMob(world, this, player, sp);
+        if (affix != '') m.setAffix(affix);
+        final over = m.modelTop() - m.height;
+        tallest = math.max(tallest, over);
+        if (over > Mob.modelHeadroom) {
+          poking.add('${affix == '' ? '' : '$affix '}${sp.id}: model ${m.modelTop().toStringAsFixed(2)} m, collider ${m.height.toStringAsFixed(2)} m');
+        }
+      }
+    }
+    debugPrint('[probe] outline sizes: ${Species.defs.length * (Mob.affixes.length + 1)} bodies, worst model-over-collider '
+        '${tallest.toStringAsFixed(3)} m, ${poking.length} poking out${poking.isEmpty ? '' : ':\n  ${poking.join('\n  ')}'}');
 
     final x0 = player.position.x.floor();
     final z0 = player.position.z.floor();
@@ -3290,10 +3309,26 @@ class Game extends ChangeNotifier {
     final collider = Player.mobBox(sheep);
     debugPrint('[probe] outline sheep collider: ${collider.x1 - collider.x0} x ${collider.y1 - collider.y0} x ${collider.z1 - collider.z0}');
     final shoot = screenshotter;
+    final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
     if (shoot != null) {
-      final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
       await shoot('${base}_mob.png');
       debugPrint('[probe] outline capture: sheep -> ${base}_mob.png');
+    }
+    // A giant: the outline reaches the top of its head.
+    sheep.removed = true;
+    final giant = Mob()..setupMob(world, this, player, Species.def('zombie'));
+    giant.setAffix('Giant');
+    giant.position = Vector3(x0 + 0.5, floor, z0 - 7.5);
+    giant.stun(999.0, false);
+    giant.syncNode();
+    addMob(giant);
+    await aimAt('giant zombie', Vector3(x0 + 1.2, floor + 0.2, z0 - 5.2), giant.position + Vector3(0, 1.6, 0));
+    final gb = player.outline.box;
+    debugPrint('[probe] outline giant zombie: box top ${gb == null ? '-' : (gb.y1 - floor).toStringAsFixed(2)} m, '
+        'collider ${giant.height.toStringAsFixed(2)} m, model ${giant.modelTop().toStringAsFixed(2)} m');
+    if (shoot != null) {
+      await shoot('${base}_giant.png');
+      debugPrint('[probe] outline capture: giant zombie -> ${base}_giant.png');
     }
   }
 

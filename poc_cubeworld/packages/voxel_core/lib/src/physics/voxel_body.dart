@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:vector_math/vector_math.dart';
 
+import '../grid/block_collision.dart';
 import '../grid/block_shape.dart';
 import '../grid/voxel_block_table.dart';
 import '../math/ivec3.dart';
@@ -255,12 +256,11 @@ class VoxelBody {
     final maxY = by1.floor();
     final minZ = bz0.floor();
     final maxZ = bz1.floor();
-    final table = query.table;
     for (var y = minY; y <= maxY; y++) {
       for (var z = minZ; z <= maxZ; z++) {
         for (var x = minX; x <= maxX; x++) {
           // y < 0 is solid rock.
-          final boxes = y < 0 ? const [CollisionBox.full] : table.collisionBoxes(query.getBlockXYZ(x, y, z));
+          final boxes = y < 0 ? const [CollisionBox.full] : collisionBoxesAt(query, x, y, z);
           for (final box in boxes) {
             final p = box.shifted(x, y, z);
             if (p.x0 < bx1 && p.x1 > bx0 && p.y0 < by1 && p.y1 > by0 && p.z0 < bz1 && p.z1 > bz0) {

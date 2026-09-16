@@ -222,7 +222,7 @@ class Blocks {
 
   static const CollisionBox fullBox = CollisionBox.full;
 
-  /// The post; rails stop no body.
+  /// A lone post; a joined fence adds arms (voxel_core's `collisionBoxesAt`).
   static const CollisionBox fenceBox = CollisionBox.fencePost;
 
   /// Per block, the boxes a body collides with (voxel_core's `collisionBoxesOf`).

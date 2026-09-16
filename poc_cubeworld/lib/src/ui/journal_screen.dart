@@ -37,6 +37,7 @@ class _JournalScreenState extends State<JournalScreen> {
   Game get game => widget.game;
   int get tab => game.journalTab;
   PanelScroll get scroll => _scrolls[tab];
+  late final PanelScrollInput _scrollInput = PanelScrollInput(() => scroll, () => _k);
 
   Offset _toPanel(Offset p) => Offset((p.dx - _origin.dx) / _k, (p.dy - _origin.dy) / _k);
 
@@ -72,10 +73,17 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget build(BuildContext context) {
     return Listener(
       behavior: HitTestBehavior.opaque,
-      onPointerDown: (e) => setState(() => _click(_toPanel(e.localPosition))),
-      onPointerSignal: (e) {
-        if (e is PointerScrollEvent) setState(() => scroll.wheel(e.scrollDelta.dy));
-      },
+      onPointerDown: (e) => setState(() {
+        _scrollInput.down(e);
+        // A finger may be starting a scroll: it acts when it lifts.
+        if (e.kind != PointerDeviceKind.touch) _click(_toPanel(e.localPosition));
+      }),
+      onPointerMove: (e) => setState(() => _scrollInput.move(e)),
+      onPointerUp: (e) => setState(() {
+        if (e.kind == PointerDeviceKind.touch && !_scrollInput.dragged) _click(_toPanel(e.localPosition));
+      }),
+      onPointerSignal: (e) => setState(() => _scrollInput.signal(e)),
+      onPointerPanZoomUpdate: (e) => setState(() => _scrollInput.panZoom(e)),
       child: CustomPaint(painter: _JournalPainter(this), size: Size.infinite),
     );
   }
