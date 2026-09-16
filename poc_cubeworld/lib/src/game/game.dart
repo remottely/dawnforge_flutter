@@ -400,7 +400,11 @@ class Game extends ChangeNotifier {
     if (_hasArg('--fp')) player.setFirstPerson(true);
     final fogd = double.tryParse(_arg('--fogd=', ''));
     if (fogd != null) {
+      // A probe asking for a density asks for the old exponential haze, so the
+      // distance fog stops driving the fog for the rest of the run.
+      fogFixed = true;
       scene.fog.enabled = fogd > 0;
+      scene.fog.mode = FogMode.exponential;
       scene.fog.density = fogd;
     }
     if (_arg('--tp=', '') != '') {
@@ -483,10 +487,16 @@ class Game extends ChangeNotifier {
     scene.exposure = 1.0;
     scene.fog
       ..enabled = true
-      ..mode = FogMode.exponential
-      ..density = 0.003
-      ..skyColorInfluence = 1.0
-      ..maxOpacity = 0.9;
+      ..mode = FogMode.linear
+      // The flat colour, not the sky sample: `skyColorInfluence` reads the
+      // prefiltered radiance cube, and this scene's environment is a
+      // constant-diffuse one that has no such cube, so the sample comes back
+      // black. It never showed while the fog was a faint haze; at full cover it
+      // painted the far chunks in silhouette. `_updateSky` puts the live
+      // horizon colour in `fog.color` every frame, which is the colour the
+      // sample was meant to find anyway.
+      ..skyColorInfluence = 0.0
+      ..maxOpacity = 1.0;
     _updateSky();
   }
 
@@ -508,8 +518,10 @@ class Game extends ChangeNotifier {
         _ambientTimer = 0.0;
         scene.environment = EnvironmentMap.constantDiffuse(radiance);
       }
-      scene.fog.density = 0.014;
-      scene.fog.color = Vector3(0.30, 0.06, 0.04);
+      scene.fog
+        ..mode = FogMode.exponential // a haze that closes in, not a view distance
+        ..density = 0.014
+        ..color = Vector3(0.30, 0.06, 0.04);
       skyIntensity = 0.0; // stage 31: no sky down there, only block light
       world.setSkyIntensity(skyIntensity);
       return;
@@ -567,7 +579,29 @@ class Game extends ChangeNotifier {
       scene.environment = EnvironmentMap.constantDiffuse(radiance);
     }
     scene.fog.color = hor;
-    if (ready) scene.fog.density = 0.003 + 0.012 * dark;
+    if (ready) _setDistanceFog(dark);
+  }
+
+  /// A `--fogd=` probe has taken the fog over; [_setDistanceFog] keeps off it.
+  bool fogFixed = false;
+
+  /// Minecraft's distance fog: the horizon is hidden a little short of the last
+  /// loaded chunk, so the world dissolves into the sky instead of stopping on a
+  /// row of chunk edges over empty air. The band is tied to the render distance
+  /// because that is what it exists to hide — raising the slider pushes the fog
+  /// out with it — and rain or a storm pulls it in, as Minecraft's does.
+  ///
+  /// Linear, not the exponential haze this used to be: an exponential curve
+  /// thick enough to bury the edge fogs everything nearby as well, while a ramp
+  /// leaves the near world clear and still reaches full cover before the edge.
+  void _setDistanceFog(double dark) {
+    if (fogFixed) return;
+    // The nearest chunk edge is loadRadius chunks away, 16 blocks each.
+    final edge = world.loadRadius * 16.0 * (1.0 - dark * 0.35);
+    scene.fog
+      ..mode = FogMode.linear
+      ..start = edge * 0.45
+      ..end = edge * 0.92;
   }
 
   /// The liquid the camera's eye is in: 'water', 'lava' or ''. The HUD washes
@@ -589,20 +623,24 @@ class Game extends ChangeNotifier {
     switch (kind) {
       case 'water':
         fog
+          ..mode = FogMode.exponential
           ..color = Vector3(0.03, 0.12, 0.28) * (0.25 + 0.75 * skyIntensity)
           ..density = 0.05
           ..skyColorInfluence = 0.0
           ..maxOpacity = 1.0;
       case 'lava':
         fog
+          ..mode = FogMode.exponential
           ..color = Vector3(0.75, 0.22, 0.02)
           ..density = 1.2
           ..skyColorInfluence = 0.0
           ..maxOpacity = 1.0;
       default:
+        // Full opacity, so the far band lands exactly on the horizon colour
+        // and the chunk edge goes rather than showing through.
         fog
-          ..skyColorInfluence = 1.0
-          ..maxOpacity = 0.9;
+          ..skyColorInfluence = 0.0
+          ..maxOpacity = 1.0;
     }
   }
 
@@ -2254,6 +2292,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--move-probe')) await _probeMovement();
     if (_hasArg('--map-probe')) await _probeMap();
     if (_hasArg('--model-probe')) await _probeModel();
+    if (_hasArg('--anim-probe')) await _probeAnimation();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
@@ -3089,23 +3128,203 @@ class Game extends ChangeNotifier {
     _probePlace(Vector3(x0 + 4.5, floorY + 1.01, z0 + 0.5));
     await _ticks(40);
     final bobStill = player.viewBobOffset().length;
-    var bobMax = 0.0, sways = 0;
+    // The drop and the sway are measured apart: Minecraft's bob is a drop with
+    // a hint of sway, so the sway must come out about half the drop. With the
+    // look level the drop is the offset's -y and the sway is what is left in
+    // the horizontal plane.
+    var dropMax = 0.0, sideMax = 0.0, sways = 0;
     var lastSide = 0.0;
     for (final dir in [Vector3(0, 0, -1), Vector3(0, 0, 1)]) {
       player.probeWalk(dir);
       for (var i = 0; i < 45; i++) {
         await _ticks(1);
         final b = player.viewBobOffset();
-        bobMax = math.max(bobMax, b.length);
+        dropMax = math.max(dropMax, -b.y);
+        final side = math.sqrt(b.x * b.x + b.z * b.z);
+        sideMax = math.max(sideMax, side);
         if (b.x != 0.0 && lastSide != 0.0 && b.x.sign != lastSide.sign) sways++;
         lastSide = b.x;
       }
     }
     player.probeWalk(Vector3.zero());
     await _ticks(90);
-    debugPrint('[probe] move bob: standing=${bobStill.toStringAsFixed(4)} (expect 0.0000) walking peak=${bobMax.toStringAsFixed(4)} '
-        '(expect ~0.05) side-to-side crossings=$sways (expect several) after stopping='
-        '${player.viewBobOffset().length.toStringAsFixed(4)} (expect 0.0000)');
+    final settled = player.viewBobOffset().length;
+    // Third person bobs too, as Minecraft's whole view does: the same walk,
+    // over the same ground, with the camera behind the shoulder.
+    player.setFirstPerson(false);
+    _probePlace(Vector3(x0 + 4.5, floorY + 1.01, z0 + 0.5)); // the same ground, so the two peaks compare
+    await _ticks(30);
+    var thirdMax = 0.0, thirdSpeed = 0.0;
+    for (final dir in [Vector3(0, 0, -1), Vector3(0, 0, 1)]) {
+      player.probeWalk(dir);
+      for (var i = 0; i < 45; i++) {
+        await _ticks(1);
+        thirdMax = math.max(thirdMax, player.viewBobOffset().length);
+        final v = player.velocity;
+        thirdSpeed = math.max(thirdSpeed, math.sqrt(v.x * v.x + v.z * v.z));
+      }
+    }
+    player.probeWalk(Vector3.zero());
+    player.setFirstPerson(true);
+    debugPrint('[probe] move bob: standing=${bobStill.toStringAsFixed(4)} (expect 0.0000) walking drop=${dropMax.toStringAsFixed(4)} '
+        'sway=${sideMax.toStringAsFixed(4)} (expect about half the drop, ratio '
+        '${(dropMax > 0 ? sideMax / dropMax : 0).toStringAsFixed(2)}) side-to-side crossings=$sways (expect one per leg walked) '
+        'after stopping=${settled.toStringAsFixed(4)} (expect 0.0000) third person peak=${thirdMax.toStringAsFixed(4)} at speed ${thirdSpeed.toStringAsFixed(2)} (expect > 0)');
+  }
+
+  /// `--anim-probe`: the creatures move like creatures, and the saddle moves
+  /// the camera. On a cleared pad one creature of each body is spawned and
+  /// steered by hand, and what its limbs actually do is measured: a flier's
+  /// wings must sweep the whole beat while a chicken with its feet on the
+  /// floor keeps them folded, and must beat the moment that chicken is off the
+  /// ground; every walker's legs must swing while it walks and settle back to
+  /// rest when it stops; a blob must splat the tick it lands. Then the camera
+  /// is measured on foot and in the saddle, first person and third, because a
+  /// trot is the walk's own sway turned up and nothing else.
+  Future<void> _probeAnimation() async {
+    final x0 = player.position.x.floor() + 4;
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 4; x <= x0 + 30; x++) {
+      for (var z = z0 - 4; z <= z0 + 4; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 4; x <= x0 + 30; x++) {
+      for (var z = z0 - 4; z <= z0 + 4; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 10; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    final floor = y0 + 1.0;
+    await _ticks(10);
+
+    Mob spawn(String id, Vector3 at) {
+      final m = Mob();
+      m.setupMob(world, this, player, Species.def(id));
+      m.position = at;
+      m.syncNode();
+      addMob(m);
+      return m;
+    }
+
+    /// The widest either way a named angle of [m] gets over [ticks], while it
+    /// walks toward +X (or stands, for a zero direction).
+    Future<({double lo, double hi})> swing(Mob m, String part, int axis, Vector3 dir, int ticks) async {
+      m.probeWalk(dir);
+      var lo = 1e9, hi = -1e9;
+      for (var i = 0; i < ticks; i++) {
+        await _ticks(1);
+        final a = m.partAngles(part);
+        if (a == null) continue;
+        final v = axis == 0 ? a.x : (axis == 1 ? a.y : a.z);
+        lo = math.min(lo, v);
+        hi = math.max(hi, v);
+      }
+      return (lo: lo, hi: hi);
+    }
+
+    // The wings. A parrot flies, so it beats the whole time; a chicken on the
+    // floor keeps its folded; the same chicken dropped from four blocks up has
+    // to beat before it lands.
+    final parrot = spawn('parrot', Vector3(x0 + 0.5, floor + 3.0, z0 + 0.5));
+    final chicken = spawn('chicken', Vector3(x0 + 3.5, floor, z0 + 0.5));
+    await _ticks(30);
+    final flier = await swing(parrot, 'wing1', 2, Vector3.zero(), 60);
+    final perched = await swing(chicken, 'wing1', 2, Vector3.zero(), 60);
+    debugPrint('[probe] anim wings: a flying parrot sweeps ${flier.lo.toStringAsFixed(2)}..${flier.hi.toStringAsFixed(2)} rad '
+        '(expect about ${(-Mob.wingSweep).toStringAsFixed(2)}..${Mob.wingSweep.toStringAsFixed(2)}); a chicken standing on the floor '
+        'holds ${perched.lo.toStringAsFixed(2)}..${perched.hi.toStringAsFixed(2)} (expect the fold, ${Mob.wingFold.toStringAsFixed(2)})');
+    chicken.position = Vector3(x0 + 3.5, floor + 4.0, z0 + 0.5);
+    chicken.velocity = Vector3.zero();
+    chicken.syncNode();
+    final falling = await swing(chicken, 'wing1', 2, Vector3.zero(), 22);
+    debugPrint('[probe] anim wings: the same chicken dropped four blocks beats '
+        '${falling.lo.toStringAsFixed(2)}..${falling.hi.toStringAsFixed(2)} on the way down (expect a spread, not the fold)');
+
+    // The legs. Every walker swings them while it walks and lets them settle
+    // when it stops — the walk is eased in and out, so nothing snaps.
+    for (final (id, part, axis) in const [
+      ('sheep', 'leg0', 0),
+      ('zombie', 'leg0', 0),
+      ('spider', 'leg0', 2),
+      ('chicken', 'leg0', 0),
+    ]) {
+      final m = spawn(id, Vector3(x0 + 8.5, floor, z0 + 0.5));
+      await _ticks(20);
+      final walked = await swing(m, part, axis, Vector3(1, 0, 0), 90);
+      final stopped = await swing(m, part, axis, Vector3.zero(), 90);
+      debugPrint('[probe] anim legs $id: walking ${walked.lo.toStringAsFixed(2)}..${walked.hi.toStringAsFixed(2)} rad '
+          '(expect a spread), settled ${stopped.lo.toStringAsFixed(2)}..${stopped.hi.toStringAsFixed(2)} '
+          '(expect it back near rest)');
+      m.removed = true;
+    }
+
+    // The blob. It stretches off the top of a hop and splats the tick it lands.
+    final slime = spawn('slime', Vector3(x0 + 12.5, floor + 2.0, z0 + 0.5));
+    await _ticks(5);
+    var stretch = -1e9, splat = 1e9;
+    var wasFloor = slime.onFloor;
+    var landed = false;
+    slime.probeWalk(Vector3(1, 0, 0));
+    for (var i = 0; i < 150; i++) {
+      await _ticks(1);
+      if (!slime.onFloor) stretch = math.max(stretch, slime.squash());
+      if (slime.onFloor && !wasFloor) landed = true;
+      if (landed) splat = math.min(splat, slime.squash());
+      wasFloor = slime.onFloor;
+    }
+    slime.probeWalk(Vector3.zero());
+    debugPrint('[probe] anim blob: tallest in the air ${stretch.toStringAsFixed(3)} (expect > 1.0), '
+        'flattest after landing ${splat.toStringAsFixed(3)} (expect < 1.0), landed=$landed');
+    slime.removed = true;
+
+    // The camera. The same walk on foot and in the saddle, in both views: the
+    // saddle is the walk's sway multiplied, so the ride figure has to come out
+    // near the walk's times `Player.gaitAmplitude`.
+    Future<double> ride(bool firstPerson, Vector3 dir, int ticks) async {
+      player.setFirstPerson(firstPerson);
+      var peak = 0.0;
+      for (var i = 0; i < ticks; i++) {
+        await _ticks(1);
+        peak = math.max(peak, player.viewBobOffset().length);
+      }
+      return peak;
+    }
+
+    _probePlace(Vector3(x0 + 16.5, floor, z0 + 0.5));
+    player.setLook(0.0, 0.0);
+    await _ticks(20);
+    player.probeWalk(Vector3(1, 0, 0));
+    final footFp = await ride(true, Vector3(1, 0, 0), 90);
+    final footTp = await ride(false, Vector3(1, 0, 0), 90);
+    player.probeWalk(Vector3.zero());
+    await _ticks(60);
+
+    final horse = spawn('horse', Vector3(x0 + 17.5, floor, z0 + 0.5));
+    horse.tamed = true;
+    mobs.remove(horse);
+    pets.add(horse);
+    await _ticks(20);
+    _probePlace(horse.position + Vector3(0, 1.0, 0));
+    player.mountHorse(horse);
+    player.probeWalk(Vector3(1, 0, 0));
+    final rideFp = await ride(true, Vector3(1, 0, 0), 120);
+    final rideTp = await ride(false, Vector3(1, 0, 0), 120);
+    input.probeHold(GameAction.sprint, true);
+    final gallop = await ride(false, Vector3(1, 0, 0), 120);
+    input.probeHold(GameAction.sprint, false);
+    player.probeWalk(Vector3.zero());
+    player.dismount();
+    final trot = Player.gaitAmplitude(mounted: true, sprinting: false);
+    final run = Player.gaitAmplitude(mounted: true, sprinting: true);
+    debugPrint('[probe] anim camera: on foot peak first person ${footFp.toStringAsFixed(4)} third ${footTp.toStringAsFixed(4)}; '
+        'in the saddle first ${rideFp.toStringAsFixed(4)} third ${rideTp.toStringAsFixed(4)} '
+        '(expect about ${trot.toStringAsFixed(1)}x the walk, both views), galloping ${gallop.toStringAsFixed(4)} '
+        '(expect about ${run.toStringAsFixed(1)}x the walk, more than the trot)');
   }
 
   /// `--map-probe --screenshot=<png>`: the minimap, captured before and after a
@@ -3183,7 +3402,10 @@ class Game extends ChangeNotifier {
 
   /// `--model-probe --screenshot=<png>`: on a cleared stone pad, facing the
   /// camera, a player model mid-chop with a pickaxe, one seen from the side
-  /// mid-chop with a sword, one at rest with an axe, and a zombie.
+  /// mid-chop with a sword, one at rest with an axe, and a zombie. Two more
+  /// captures land beside it: `_hold.png`, a model holding a block at arm's
+  /// length (the block must hang off the fist, not run through the forearm),
+  /// and `_ride.png`, a model on a horse (its legs must be inside the barrel).
   Future<void> _probeModel() async {
     final x0 = player.position.x.floor();
     final z0 = player.position.z.floor();
@@ -3205,20 +3427,34 @@ class Game extends ChangeNotifier {
     final floor = y0 + 1.0;
     timeOfDay = 0.3;
     weather.force('clear');
-    void pose(double x, double yaw, String item, double swingDt) {
+    void pose(double x, double yaw, String item, double swingDt, [Vector3? at]) {
       final m = PlayerModel()..build(Player.skinTone, player.classDef.shirt, Player.pantsTone, Player.hairTone);
       m.setHeld(item);
       m.yaw = yaw;
       if (swingDt > 0.0) m.swing();
       m.animate(swingDt > 0.0 ? swingDt : 0.016, 0.0, true, false, false);
       final holder = Node()..add(m.root);
-      holder.position = Vector3(x, floor, z0 - 5.5);
+      holder.position = at ?? Vector3(x, floor, z0 - 5.5);
       entities.add(holder);
     }
 
     pose(x0 - 1.0, 0.0, 'iron_pickaxe', 0.09);
     pose(x0 + 0.5, math.pi / 2, 'stone_sword', 0.09);
     pose(x0 + 2.0, 0.0, 'stone_axe', 0.0);
+    // The held block, side on, where the arm is between the eye and the block:
+    // anything of the block inside the forearm shows here.
+    final holdAt = Vector3(x0 - 4.0, floor, z0 - 3.0);
+    pose(0, math.pi / 2, 'dirt', 0.0, holdAt);
+    // The rider: a standing horse with a model seated the way the game seats
+    // one, so the capture measures `saddlePosition` and nothing else.
+    final horse = Mob();
+    horse.setupMob(world, this, player, Species.def('horse'));
+    horse.position = Vector3(x0 + 4.0, floor, z0 - 2.0);
+    horse.tamed = true;
+    horse.ridden = true; // stands still, as a mount with no rider input does
+    addMob(horse);
+    await nextFrame(); // the mob builds its model, so `backHeight` is filled
+    pose(0, 0.0, '', 0.0, Player.saddlePosition(horse));
     final eye = Vector3(x0 + 0.5, floor + 1.4, z0 - 9.5);
     // The crosshair rests on a dirt block STANDING on the pad, not sunk into
     // it: a block flush with the floor buries eleven of the outline's twelve
@@ -3242,6 +3478,22 @@ class Game extends ChangeNotifier {
     }
     debugPrint('[probe] model: three poses and a zombie at z=${z0 - 5.5}, camera $eye; '
         'aimed ${player.aimedBlock} (dirt at $aimed) outline visible=${player.highlight.visible} at ${player.highlight.position}');
+    final shoot = screenshotter;
+    if (shoot != null) {
+      final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+      // Far enough back that the probe's own third-person body is not in the
+      // way, and off to the side so the arm crosses in front of the block.
+      await _playgroundFrame((eye: holdAt + Vector3(-2.8, 1.3, -2.8), target: holdAt + Vector3(0.0, 1.0, 0.0)));
+      await shoot('${base}_hold.png');
+      debugPrint('[probe] model hold: a block in the hand at $holdAt -> ${base}_hold.png');
+      final seat = Player.saddlePosition(horse);
+      await _playgroundFrame((eye: horse.position + Vector3(-3.4, 1.9, -1.6), target: horse.position + Vector3(0.0, 1.0, 0.0)));
+      await shoot('${base}_ride.png');
+      debugPrint('[probe] model ride: horse feet ${horse.position.y.toStringAsFixed(2)} back ${horse.backHeight.toStringAsFixed(2)} '
+          'rider feet ${seat.y.toStringAsFixed(2)} hips ${(seat.y + 0.66).toStringAsFixed(2)} '
+          '(the hips must land on the back line, so the legs are inside the barrel) -> ${base}_ride.png');
+    }
+    flyMode = false;
     _pinCameraTo = () => eye.clone();
   }
 

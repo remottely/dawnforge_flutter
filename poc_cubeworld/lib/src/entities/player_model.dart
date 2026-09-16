@@ -146,12 +146,25 @@ class PlayerModel {
     }
     if (itemId == '') return;
     final held = VoxelMeshBuilder.heldItem(itemId);
-    if (!Items.isBlock(itemId)) {
-      // The shape is drawn flat in XY (shaft up Y, head across X). A quarter
-      // turn about the shaft puts the head in the swing plane, then the shaft
-      // tips forward: a pickaxe's points, an axe's blade and a sword's edge
-      // lead the chop instead of facing left and right.
-      held.rotation = Quaternion.axisAngle(Vector3(1, 0, 0), -math.pi / 2) * Quaternion.axisAngle(Vector3(0, 1, 0), math.pi / 2);
+    // Every held shape is built standing up its own +Y with its base at the
+    // origin, and the hand's +Y runs back up the forearm. A quarter turn about
+    // X lays that base against the palm and sends the shape forward out of the
+    // fist, which is the only orientation that does not put the thing inside
+    // the arm.
+    final forward = Quaternion.axisAngle(Vector3(1, 0, 0), -math.pi / 2);
+    if (Items.isBlock(itemId)) {
+      // A block is as deep as the fist is long, so it also drops by half its
+      // depth and leans out a little: it hangs from the fist with a face
+      // against the palm, the way Minecraft carries one, instead of being
+      // skewered through its middle by the forearm.
+      held.rotation = forward;
+      held.position = Vector3(0, -0.14, -0.04);
+    } else {
+      // The tool is drawn flat in XY (shaft up Y, head across X). A quarter
+      // turn about the shaft first puts the head in the swing plane: a
+      // pickaxe's points, an axe's blade and a sword's edge lead the chop
+      // instead of facing left and right.
+      held.rotation = forward * Quaternion.axisAngle(Vector3(0, 1, 0), math.pi / 2);
     }
     hand.add(held);
     _held = held;

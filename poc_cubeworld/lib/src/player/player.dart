@@ -149,6 +149,7 @@ class Player extends SceneBody implements Target {
   double _bobWeight = 0.0; // how much of the sway is in, eased in and out
   Vector3 _bobOffset = Vector3.zero(); // this frame's sway, camera only
   double _bobRoll = 0.0; // and its tilt, as a slice of the right vector
+  double _bobPitch = 0.0; // and its nose-up, as a slice of the up vector
   double _stagger = 0.0; // knockback window, the input does not brake it
   double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
   final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
@@ -332,7 +333,7 @@ class Player extends SceneBody implements Target {
 
   PerspectiveCamera camera() => GodotCamera(
         position: cameraPosition + _shake + _bobOffset,
-        target: cameraPosition + _shake + _bobOffset + forward,
+        target: cameraPosition + _shake + _bobOffset + forward + upVec * _bobPitch,
         up: upVec + rightVec * _bobRoll,
         fovRadiansY: fov * math.pi / 180.0,
         fovNear: 0.05,
@@ -369,29 +370,67 @@ class Player extends SceneBody implements Target {
   /// Stage 32: the camera is shaking (for the probe).
   bool shakeActive() => _shakeTime > 0.0;
 
-  /// Minecraft's view bobbing: walking sways the head, sprinting sways it
-  /// harder and faster. The cycle is advanced by distance covered rather than
-  /// by time, so the sway keeps step with the feet at any speed instead of
-  /// needing a rate per gait. Two dips per cycle (one per foot) against one
-  /// side-to-side sway and one roll, which is what makes it read as walking
-  /// and not as floating. The offset moves the eye only: [aimOrigin] and
-  /// [aimDirection] are untouched, so a bobbing head never misses a block.
+  /// Minecraft's view bobbing, shape for shape. Its `bobView` drops the eye by
+  /// `|cos|` of the walk phase, sways it sideways by `sin` at **half** that
+  /// width, and adds a roll of about a third of a degree and a nose-up of about
+  /// half a degree on each footfall. The drop is the whole of the effect and
+  /// the sway is a hint of one: a bob of equal width in both reads as a lurch
+  /// from side to side, which is not what Minecraft does.
+  ///
+  /// The cycle is advanced by distance covered rather than by time, so it keeps
+  /// step with the feet at any speed instead of needing a rate per gait, and
+  /// sprinting bobs both wider and faster from the one weight. It moves the eye
+  /// only: [aimOrigin] and [aimDirection] are untouched, so a bobbing head
+  /// never misses a block. Third person bobs too, as Minecraft's does — the
+  /// whole view is bobbed before the camera swings out behind the shoulder.
+  ///
+  /// In the saddle it is the same sway and nothing else: a horse's gait is the
+  /// walk's shape turned up, so riding never grew a second camera to keep in
+  /// step with this one. The four numbers below are the whole difference, in
+  /// both first and third person, and tuning the trot means tuning them.
+  ///
+  /// [trotAmplitude] is how much wider the saddle throws the rider than a
+  /// footfall does, [trotCadence] how much of the walk's cycle-per-metre a
+  /// horse spends (it covers more ground per beat, so fewer cycles per metre),
+  /// [trotRoll] how much harder the view leans into each beat, and
+  /// [gallopBoost] what a sprinting mount adds on top — the speed alone cannot
+  /// say it, because a horse is already past the clamp at a standing trot.
+  static const double trotAmplitude = 2.0;
+  static const double trotCadence = 0.55;
+  static const double trotRoll = 1.6;
+  static const double gallopBoost = 1.3;
+
+  /// The width this frame's sway is multiplied by: 1 on foot, the trot in the
+  /// saddle, the gallop when the mount is sprinting.
+  static double gaitAmplitude({required bool mounted, required bool sprinting}) =>
+      !mounted ? 1.0 : trotAmplitude * (sprinting ? gallopBoost : 1.0);
+
   void _updateBob(double dt) {
-    final speed = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-    // Only on foot: airborne, swimming, riding, gliding and climbing have no
-    // footfalls to answer to.
-    final walking = onFloor && !gliding && !climbing && riding == null && cart == null && speed > 0.6;
+    // A mounted rider is carried, so the gait is the horse's: its velocity and
+    // its feet, not the rider's own, which sit frozen on the saddle.
+    final h = mount;
+    final vel = h?.velocity ?? velocity;
+    final speed = math.sqrt(vel.x * vel.x + vel.z * vel.z);
+    final grounded = h?.onFloor ?? onFloor;
+    // Only on foot or in the saddle: airborne, swimming, a boat, a minecart,
+    // gliding and climbing have no footfalls to answer to.
+    final walking = grounded && !gliding && !climbing && riding == null && cart == null && speed > 0.6;
+    final gait = gaitAmplitude(mounted: h != null, sprinting: h?.rideSprint ?? false);
     final want = walking && Settings.instance.viewBob ? (speed / walkSpeed).clamp(0.0, 1.7) : 0.0;
     _bobWeight = lerpd(_bobWeight, want.toDouble(), dt * 9.0);
-    if (walking) _bobPhase = (_bobPhase + speed * dt * 2.7) % (math.pi * 2);
-    if (_bobWeight < 0.001 || !firstPerson) {
+    // One cycle — two footfalls — every 3.3 m walked, Minecraft's cadence.
+    if (walking) _bobPhase = (_bobPhase + speed * dt * 1.9 * (h == null ? 1.0 : trotCadence)) % (math.pi * 2);
+    if (_bobWeight < 0.001) {
       _bobOffset = Vector3.zero();
       _bobRoll = 0.0;
+      _bobPitch = 0.0;
       return;
     }
-    final amp = _bobWeight * 0.055;
-    _bobOffset = rightVec * (math.sin(_bobPhase) * amp) - upVec * (math.cos(_bobPhase).abs() * amp);
-    _bobRoll = math.sin(_bobPhase) * _bobWeight * 0.02;
+    final amp = _bobWeight * 0.09 * gait; // Minecraft's bob, in blocks
+    final sin = math.sin(_bobPhase);
+    _bobOffset = rightVec * (sin * amp * 0.5) - upVec * (math.cos(_bobPhase).abs() * amp);
+    _bobRoll = sin * amp * 0.052 * (h == null ? 1.0 : trotRoll); // 3 degrees at full amplitude on foot
+    _bobPitch = math.cos(_bobPhase - 0.2).abs() * amp * 0.087; // 5 degrees
   }
 
   /// The sway the camera carries this frame (for the probe).
@@ -1921,7 +1960,14 @@ class Player extends SceneBody implements Target {
 
   static const double fishingReach = 8.0;
   static const double mountReach = 3.5;
-  static final Vector3 saddleOffset = Vector3(0, 0.6, 0);
+  /// How far the rider's feet sit below the mount's back. The model's hips are
+  /// 0.66 up from its feet, so a shade more than that buries the legs in the
+  /// barrel and leaves the torso above the saddle — a Minecraft rider straddles
+  /// a horse, it does not stand on one.
+  static const double saddleSink = 0.72;
+
+  /// Where a rider's feet go on [h].
+  static Vector3 saddlePosition(Mob h) => h.position + Vector3(0, h.backHeight - saddleSink, 0);
 
   /// F: leave what is ridden, else mount the tamed horse in front, else board
   /// or leave a boat.
@@ -2017,11 +2063,14 @@ class Player extends SceneBody implements Target {
       if (input.down(GameAction.moveBack)) inputY += 1;
     }
     var wish = flatForward * -inputY + rightVec * inputX;
+    // A headless probe steers the mount the way it rows a boat.
+    if (_probeWalk.length2 > 0.0) wish = _probeWalk.clone();
     if (wish.length > 1.0) wish = wish.normalized();
     h.rideInput = wish;
-    h.rideSprint = gameplay && input.down(GameAction.sprint) && inputY < 0.0;
+    final forward = inputY < 0.0 || _probeWalk.length2 > 0.0;
+    h.rideSprint = gameplay && input.down(GameAction.sprint) && forward;
     if (gameplay && input.down(GameAction.jump)) h.rideJump = true;
-    position = h.centre() + saddleOffset;
+    position = saddlePosition(h);
     velocity = h.velocity.clone();
     _fallStartY = position.y;
     model.animate(dt, 0.0, true, false, false);

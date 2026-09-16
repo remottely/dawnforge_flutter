@@ -45,6 +45,13 @@ Captures: `--title-probe --screenshot=<png>` (the title) · `--title-probe --ope
 world list with the form) · `--title-probe --open-credits [--credits-t=seconds]` (Flutter
 only) · `--new --seed=42 --stage30 --shot=tutorial` (the card on step 4).
 
+`--model-probe --screenshot=<png>` clears a stone pad and captures three poses and a zombie,
+and writes two more beside the file: `<name>_hold.png`, a model holding a block side on (the
+block must hang off the fist, never run through the forearm), and `<name>_ride.png`, a model
+seated on a horse through `Player.saddlePosition` (the legs must be inside the barrel). It
+prints the horse's back height and the rider's feet and hips, so the seat can be checked
+without reading the picture.
+
 Stage 33 probes: `--new --playground --slot=probe33 --seed=42 --frames=300 --settle=10 --no-tutorial
 --screenshot=<png> [--shot=aerial|hub|blocks|building|redstone|rails|water|farm|arena|caves|underwater|arena_inside|hall|steps]
 [--shots=a,b,...] [--pg-checks]` waits for the nine exhibits and prints what they hold (zones, block
@@ -167,7 +174,7 @@ the world as before; `--title-probe` forces the title even then.
   (Godot holds 120 fps at 2.3 M faces, `flutter_scene` falls to 70 at 2.2 M).
 - **`flutter_scene` carries the whole rendering stack** the Godot POC leaned on: vertex
   colours through `MeshGeometry.fromArrays`, a `GradientSkySource` that doubles as the
-  `SunLight` with cascaded shadows, exponential fog blended toward the sky, ACES tone
+  `SunLight` with cascaded shadows, linear distance fog in the horizon colour, ACES tone
   mapping, `PointLightComponent` for the held torch. 225 chunks / ~300k faces render at 60
   fps on an M-series Mac in a debug build.
 - **Isolates replace `WorkerThreadPool`.** Generation and meshing are pure Dart on three

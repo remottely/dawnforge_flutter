@@ -66,7 +66,7 @@ class RemotePlayer implements Target {
     final before = position.clone();
     final h = mountedOn;
     if (h != null && !h.removed) {
-      _target = h.centre() + Player.saddleOffset;
+      _target = Player.saddlePosition(h);
       _yaw = h.modelYaw();
     }
     position = position + (_target - position) * (dt * 12.0).clamp(0.0, 1.0);

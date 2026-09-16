@@ -36,6 +36,12 @@ class Mob extends SceneBody {
   Vector3 _dir = Vector3.zero();
   double _attackCd = 0.0;
   final Map<String, Part> _parts = {};
+
+  /// How high this mob's back is above its feet — where a rider's hips go.
+  /// Filled by [_buildModel] from the voxels it actually laid down, so the
+  /// saddle follows the model rather than the collision box, which for a horse
+  /// is a good 0.4 m taller than anything you can sit on.
+  double backHeight = 1.0;
   double _phase = 0.0;
   double hurt = 0.0;
   bool barVisible = false;
@@ -459,6 +465,7 @@ class Mob extends SceneBody {
         var v = <IVec3, Vector3>{};
         VoxelMeshBuilder.box(v, IVec3(-bodyW ~/ 2, 0, -bodyLen ~/ 2), IVec3(bodyW ~/ 2, bodyH, bodyLen ~/ 2), colors[0]);
         _parts['body'] = _part(v, Vector3(0, legH * s, 0), s);
+        backHeight = (legH + bodyH) * s; // the top of the barrel: the saddle line
         v = {};
         final hs = (bodyW * 0.7).toInt();
         VoxelMeshBuilder.box(v, IVec3(-hs ~/ 2, -hs ~/ 2, -hs), IVec3(hs ~/ 2, hs ~/ 2, 0), colors.length > 1 ? colors[1] : colors[0]);

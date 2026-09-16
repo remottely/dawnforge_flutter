@@ -54,15 +54,17 @@ class _SettingsPanelState extends State<SettingsPanel> {
     );
   }
 
-  Widget _check(String text, bool value, void Function(bool) cb) => SizedBox(
-        height: 36,
-        child: SwitchListTile(
-          dense: true,
-          contentPadding: EdgeInsets.zero,
-          title: Text(text, style: const TextStyle(fontSize: 14, color: Colors.white)),
-          value: value,
-          onChanged: (v) => setState(() => cb(v)),
-        ),
+  /// A switch row. It has no fixed height on purpose: these labels say what the
+  /// setting does, and at the width of the pause panel the longer ones wrap to
+  /// two lines. Pinned to one line's worth of height they overflowed their box
+  /// and drew over the row beneath.
+  Widget _check(String text, bool value, void Function(bool) cb) => SwitchListTile(
+        dense: true,
+        visualDensity: VisualDensity.compact,
+        contentPadding: EdgeInsets.zero,
+        title: Text(text, style: const TextStyle(fontSize: 14, color: Colors.white)),
+        value: value,
+        onChanged: (v) => setState(() => cb(v)),
       );
 
   @override
@@ -92,7 +94,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
           game?.weather.setEnabled(on);
         }),
         _check('Show FPS', settings.showFps, (on) => settings.showFps = on),
-        _check('View bobbing (the camera sways as you walk)', settings.viewBob, (on) => settings.viewBob = on),
+        _check('View bobbing (the camera dips with each step)', settings.viewBob, (on) => settings.viewBob = on),
         _check('Step teleport (off = hop up stairs, jump up blocks)', settings.stepTeleport, (on) => settings.stepTeleport = on),
         _check('Climb walls (hold Space against a wall)', settings.climbWalls, (on) => settings.climbWalls = on),
         _check('Tutorial done (off = show it on the next new world)', settings.tutorialDone, (on) => settings.tutorialDone = on),

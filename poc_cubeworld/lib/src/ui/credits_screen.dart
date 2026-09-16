@@ -59,24 +59,32 @@ class CreditsScreen extends StatefulWidget {
 }
 
 class _CreditsScreenState extends State<CreditsScreen> with SingleTickerProviderStateMixin {
+  static const TextStyle _style = TextStyle(fontSize: 20, height: 1.45, color: Colors.white);
+
   late final Ticker _ticker;
-  final GlobalKey _text = GlobalKey();
   final FocusNode _focus = FocusNode(debugLabel: 'credits');
+
+  /// The scroll clock. It is a notifier and not a field behind `setState`
+  /// because only the moving text should be rebuilt sixty times a second: when
+  /// the whole screen was rebuilt instead, the Back button's own subtree was
+  /// replaced under every press and the button never fired (Esc, which does not
+  /// go through a gesture, always worked — which is what made it look like a
+  /// button that simply did nothing).
+  final ValueNotifier<double> _seconds = ValueNotifier<double>(0.0);
   List<String> _lines = CreditsScreen.creditsLines(const []);
-  double _seconds = 0.0;
   Duration _last = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _seconds = widget.startSeconds;
+    _seconds.value = widget.startSeconds;
     CreditsScreen.loadStages().then((stages) {
       if (mounted) setState(() => _lines = CreditsScreen.creditsLines(stages));
     });
     _ticker = createTicker((elapsed) {
       final dt = (elapsed - _last).inMicroseconds / 1e6;
       _last = elapsed;
-      setState(() => _seconds += dt);
+      _seconds.value += dt;
     })
       ..start();
   }
@@ -84,12 +92,14 @@ class _CreditsScreenState extends State<CreditsScreen> with SingleTickerProvider
   @override
   void dispose() {
     _ticker.dispose();
+    _seconds.dispose();
     _focus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final text = _lines.join('\n');
     return Focus(
       focusNode: _focus,
       autofocus: true,
@@ -103,22 +113,28 @@ class _CreditsScreenState extends State<CreditsScreen> with SingleTickerProvider
       child: Material(
         color: const Color.fromRGBO(8, 10, 20, 0.92),
         child: LayoutBuilder(builder: (context, box) {
-          final textHeight = _text.currentContext?.size?.height ?? 2000.0;
+          // How tall the roll is, measured rather than read back off the laid
+          // out Text: a widget has no business asking another widget's render
+          // object for its size while layout is still running.
+          final painter = TextPainter(
+            text: TextSpan(text: text, style: _style),
+            textAlign: TextAlign.center,
+            textDirection: Directionality.of(context),
+          )..layout(maxWidth: box.maxWidth);
           // Up from the bottom edge; once the last line has left the top, again.
-          final travel = box.maxHeight + textHeight;
-          final y = box.maxHeight - (_seconds * CreditsScreen.speed) % travel;
+          final travel = box.maxHeight + painter.height;
+          painter.dispose();
           return Stack(
             children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                top: y,
-                child: Text(
-                  _lines.join('\n'),
-                  key: _text,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 20, height: 1.45, color: Colors.white),
+              ValueListenableBuilder<double>(
+                valueListenable: _seconds,
+                builder: (context, seconds, child) => Positioned(
+                  left: 0,
+                  right: 0,
+                  top: box.maxHeight - (seconds * CreditsScreen.speed) % travel,
+                  child: child!,
                 ),
+                child: Text(text, textAlign: TextAlign.center, style: _style),
               ),
               Positioned(
                 left: 16,
