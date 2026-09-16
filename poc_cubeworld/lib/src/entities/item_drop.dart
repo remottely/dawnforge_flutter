@@ -57,15 +57,36 @@ class ItemDrop extends SceneBody {
     count = n;
     _player = player;
     _pickupDelay = delay;
-    if (Items.isBlock(id)) {
-      _visual.add(VoxelMeshBuilder.blockCube(VoxelMeshBuilder.blockColor(Items.blockOf(id)), 0.3));
-    } else {
-      final v = <IVec3, Vector3>{};
-      VoxelMeshBuilder.box(v, const IVec3(0, 0, 0), const IVec3(2, 2, 2), VoxelMeshBuilder.itemColor(id), 0.08);
-      _visual.add(VoxelMeshBuilder.meshNode(v, 0.09, Vector3(1.5, 1.5, 1.5)));
-    }
-    _visual.position = Vector3(0, 0.2, 0);
+    _visual.add(dropModel(id));
+    _visual.position = Vector3(0, hover, 0);
     node.add(_visual);
+  }
+
+  /// How high a drop's model floats, at its middle.
+  static const double hover = 0.25;
+
+  /// How big a drop is, along its longest side: a lump (a block, an apple)
+  /// lies small; a long thing (a tool, a torch, a flower) keeps enough length
+  /// to be read.
+  static const double blockSize = 0.28, itemSize = 0.40;
+
+  /// The item's own model (the one the hand holds and the icon shows),
+  /// shrunk to a drop's size and centred on the node it spins about.
+  static Node dropModel(String id) {
+    final shape = VoxelMeshBuilder.itemShape(id);
+    final k = dropScale(shape);
+    return VoxelMeshBuilder.heldItem(id)
+      ..scale = Vector3.all(k)
+      ..position = -shape.bounds().center * k;
+  }
+
+  /// How much [shape] is scaled to lie on the ground.
+  static double dropScale(ItemShape shape) {
+    final b = shape.bounds();
+    final extent = b.max - b.min;
+    final longest = math.max(extent.x, math.max(extent.y, extent.z));
+    final long = shape.flat || extent.y > 1.5 * math.max(extent.x, extent.z);
+    return (long ? itemSize : blockSize) / longest;
   }
 
   /// The local player or, on the host, a peer's puppet, whichever is nearest
@@ -93,7 +114,7 @@ class ItemDrop extends SceneBody {
       if (t != null) position = position + (t - position) * (dt * 12.0).clamp(0.0, 1.0);
       syncNode();
       _visual.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _age * 2.0);
-      _visual.position = Vector3(0, 0.2 + math.sin(_age * 3.0) * 0.06, 0);
+      _visual.position = Vector3(0, hover + math.sin(_age * 3.0) * 0.06, 0);
       return;
     }
     // Stage 24: a restored drop waits for its chunk (unloaded reads as air).
@@ -124,7 +145,7 @@ class ItemDrop extends SceneBody {
     move(dt);
     syncNode();
     _visual.rotation = Quaternion.axisAngle(Vector3(0, 1, 0), _age * 2.0);
-    _visual.position = Vector3(0, 0.2 + math.sin(_age * 3.0) * 0.06, 0);
+    _visual.position = Vector3(0, hover + math.sin(_age * 3.0) * 0.06, 0);
   }
 
   /// Stage 24: what the save keeps of a drop.

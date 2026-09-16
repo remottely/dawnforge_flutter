@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
-import '../core/items.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'voxel_mesh_builder.dart';
 
@@ -152,7 +151,7 @@ class PlayerModel {
     // fist, which is the only orientation that does not put the thing inside
     // the arm.
     final forward = Quaternion.axisAngle(Vector3(1, 0, 0), -math.pi / 2);
-    if (Items.isBlock(itemId)) {
+    if (VoxelMeshBuilder.itemShape(itemId).block) {
       // A block is as deep as the fist is long, so it also drops by half its
       // depth and leans out a little: it hangs from the fist with a face
       // against the palm, the way Minecraft carries one, instead of being
@@ -164,7 +163,7 @@ class PlayerModel {
       // turn about the shaft first puts the head in the swing plane: a
       // pickaxe's points, an axe's blade and a sword's edge lead the chop
       // instead of facing left and right.
-      held.rotation = forward * Quaternion.axisAngle(Vector3(0, 1, 0), math.pi / 2);
+      held.rotation = forward * VoxelMeshBuilder.headInSwingPlane;
     }
     hand.add(held);
     _held = held;

@@ -4,7 +4,6 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 
-import '../core/items.dart';
 import 'voxel_mesh_builder.dart';
 
 /// The first-person hand: the player's right forearm and whatever it is
@@ -39,6 +38,16 @@ class HandView {
   double _swing = 0.0; // 1 at the start of a swing, down to 0
   double _phase = 0.0; // the walk cycle this hand answers, lagging the eye's
   double _weight = 0.0; // how much of the sway is in
+
+  /// How a tool sits in the fist: standing up out of it and leaning into the
+  /// screen, its head in the upper part of the corner where it can be seen.
+  /// It takes the third-person model's quarter turn about its shaft first, so
+  /// a pickaxe's points run into the screen and back, along the chop, instead
+  /// of across it.
+  static final Quaternion toolPose = eulerYXZ(-0.62, 0.0, 0.26) * VoxelMeshBuilder.headInSwingPlane;
+
+  /// What the fist holds right now, for the probes.
+  Node? get heldNode => _held;
 
   bool get visible => root.visible;
   set visible(bool v) => root.visible = v;
@@ -79,16 +88,14 @@ class HandView {
     }
     if (itemId == '') return;
     final held = VoxelMeshBuilder.heldItem(itemId);
-    if (Items.isBlock(itemId)) {
+    if (VoxelMeshBuilder.itemShape(itemId).block) {
       // A block is shown turned off-square, so two of its faces catch the
       // light and it reads as a cube rather than as a painted square.
       held.rotation = eulerYXZ(-0.25, 0.7, 0.0);
       held.position = Vector3(0.0, 0.02, 0.0);
       held.scale = Vector3(0.58, 0.58, 0.58);
     } else {
-      // A tool stands up out of the fist and leans into the screen, its head
-      // in the upper part of the corner where it can be seen.
-      held.rotation = eulerYXZ(-0.62, 0.0, 0.26);
+      held.rotation = toolPose;
       held.scale = Vector3(0.6, 0.6, 0.6);
     }
     _wrist.add(held);

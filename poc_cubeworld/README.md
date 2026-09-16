@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --hold=<item> --swing=N --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --anim-probe --outline-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --anim-probe --outline-probe --item-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -49,6 +49,13 @@ The first-person hand has no probe of its own: it is a world-space node placed a
 camera basis every frame, so any capture shows it. `--fp --hold=<item>` puts a named tool or
 block in the fist, and `--swing=N` starts a swing and waits N frames before the shutter, which
 is how the arc across the corner of the screen was checked frame by frame.
+
+`--item-probe --screenshot=<png>` fills the hotbar and the bag with a spread of item kinds and
+drops one of each on a cleared pad. For every item it prints the model size, the drop scale and
+the icon face count, then measures which way the first-person pickaxe head points in the camera's
+axes (it must not point to the right). It captures `<name>_drops.png`, `<name>_fp.png` and
+`<name>_bag.png`. The hand, the drop and the icon all draw the one model returned by
+`VoxelMeshBuilder.itemShape`.
 
 `--outline-probe --screenshot=<png>` builds every species and prints any two parts whose faces
 share a plane (the flicker), then aims at a block sunk in the floor, a torch, a slab, a fence, a

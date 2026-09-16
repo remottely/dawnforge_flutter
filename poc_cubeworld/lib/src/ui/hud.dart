@@ -12,6 +12,7 @@ import '../game/effects.dart';
 import '../game/game.dart';
 import '../game/settings.dart';
 import '../world/voxel_world.dart';
+import 'item_icon.dart';
 
 /// Bars, hotbar, crosshair, notifications, minimap, boss bar and everything
 /// projected from the world (mob bars, damage numbers, puppet labels).
@@ -44,81 +45,9 @@ class Hud {
     return _c(d.r, d.g, d.b);
   }
 
-  /// Shared with the inventory screen: an isometric cube for blocks, a glyph for the rest.
-  static void drawItemIcon(Canvas ci, Rect r, String id) {
-    final cx = r.left + r.width * 0.5;
-    final cy = r.top + r.height * 0.5;
-    final s = r.width * 0.32;
-    if (Items.isBlock(id)) {
-      final b = Items.blockOf(id);
-      final col = blockColor(b);
-      final shape = Blocks.shapeOf(b);
-      if (shape == BlockShape.cross || shape == BlockShape.torch) {
-        ci.drawLine(Offset(cx - s, cy + s), Offset(cx + s, cy - s), Paint()..color = col..strokeWidth = 4);
-        ci.drawLine(Offset(cx + s, cy + s), Offset(cx - s, cy - s), Paint()..color = _scale(col, 0.8)..strokeWidth = 4);
-        return;
-      }
-      final top = Path()
-        ..moveTo(cx, cy - s)
-        ..lineTo(cx + s, cy - s * 0.5)
-        ..lineTo(cx, cy)
-        ..lineTo(cx - s, cy - s * 0.5)
-        ..close();
-      final left = Path()
-        ..moveTo(cx - s, cy - s * 0.5)
-        ..lineTo(cx, cy)
-        ..lineTo(cx, cy + s)
-        ..lineTo(cx - s, cy + s * 0.5)
-        ..close();
-      final right = Path()
-        ..moveTo(cx, cy)
-        ..lineTo(cx + s, cy - s * 0.5)
-        ..lineTo(cx + s, cy + s * 0.5)
-        ..lineTo(cx, cy + s)
-        ..close();
-      ci.drawPath(top, Paint()..color = col);
-      ci.drawPath(left, Paint()..color = _scale(col, 0.7));
-      ci.drawPath(right, Paint()..color = _scale(col, 0.85));
-      return;
-    }
-    final col = itemColor(id);
-    final kind = Items.kind(id);
-    if (kind == ItemKind.tool || kind == ItemKind.weapon) {
-      ci.drawLine(Offset(cx - s * 0.8, cy + s), Offset(cx + s * 0.2, cy - s * 0.2),
-          Paint()..color = const Color.fromRGBO(115, 82, 46, 1)..strokeWidth = 4);
-      final tool = Items.toolOf(id);
-      final style = kind == ItemKind.weapon ? Items.styleOf(id) : '';
-      if (tool == ToolType.pickaxe) {
-        ci.drawLine(Offset(cx - s * 0.5, cy - s * 0.9), Offset(cx + s, cy + s * 0.2), Paint()..color = col..strokeWidth = 5);
-      } else if (tool == ToolType.axe) {
-        ci.drawRect(Rect.fromLTWH(cx, cy - s, s * 0.8, s * 0.8), Paint()..color = col);
-      } else if (tool == ToolType.shovel || tool == ToolType.hoe) {
-        ci.drawRect(Rect.fromLTWH(cx, cy - s, s * 0.6, s * 0.7), Paint()..color = col);
-      } else if (style == 'bow') {
-        ci.drawArc(Rect.fromCircle(center: Offset(cx, cy), radius: s), -math.pi * 0.75, math.pi, false,
-            Paint()..color = col..strokeWidth = 4..style = PaintingStyle.stroke);
-        ci.drawLine(Offset(cx - s * 0.7, cy - s * 0.7), Offset(cx + s * 0.7, cy + s * 0.7), Paint()..color = Colors.white..strokeWidth = 1.5);
-      } else if (style == 'staff') {
-        ci.drawCircle(Offset(cx + s * 0.3, cy - s * 0.5), s * 0.4, Paint()..color = col);
-      } else {
-        ci.drawLine(Offset(cx + s * 0.2, cy - s * 0.2), Offset(cx + s, cy - s), Paint()..color = col..strokeWidth = 6);
-      }
-    } else if (kind == ItemKind.food) {
-      ci.drawCircle(Offset(cx, cy), s * 0.8, Paint()..color = col);
-    } else if (kind == ItemKind.equipment) {
-      final rr = Rect.fromLTWH(cx - s * 0.8, cy - s * 0.8, s * 1.6, s * 1.6);
-      ci.drawRect(rr, Paint()..color = col);
-      ci.drawRect(rr, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 2);
-    } else {
-      final diamond = Path()
-        ..moveTo(cx, cy - s)
-        ..lineTo(cx + s * 0.8, cy)
-        ..lineTo(cx, cy + s)
-        ..lineTo(cx - s * 0.8, cy)
-        ..close();
-      ci.drawPath(diamond, Paint()..color = col);
-    }
-  }
+  /// Shared with the inventory, trade and station screens: the item's own
+  /// voxel model, the one the hand holds (see [ItemIcon]).
+  static void drawItemIcon(Canvas ci, Rect r, String id) => ItemIcon.draw(ci, r, id);
 
   /// Stage 26: the maps tint a biome's ground so a swamp reads murky and a
   /// jungle deep green (biome id -> tint); every other biome keeps its block
@@ -159,8 +88,6 @@ class Hud {
     }
     return (r, g, b);
   }
-
-  static Color _scale(Color c, double f) => Color.fromRGBO((c.r * 255 * f).round(), (c.g * 255 * f).round(), (c.b * 255 * f).round(), c.a);
 
   static void text(Canvas canvas, String s, Offset at, {double size = 14, Color color = Colors.white, TextAlign align = TextAlign.left, double? width, FontWeight weight = FontWeight.normal, bool shadow = true}) {
     final tp = TextPainter(

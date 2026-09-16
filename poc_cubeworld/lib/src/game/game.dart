@@ -21,6 +21,7 @@ import '../entities/projectile.dart';
 import '../entities/remote_player.dart';
 import '../entities/spawner.dart';
 import '../entities/target.dart';
+import '../entities/voxel_mesh_builder.dart';
 import '../player/player.dart';
 import '../world/godot_camera.dart';
 import '../world/terrain_generator.dart';
@@ -46,6 +47,7 @@ import 'worlds.dart';
 import '../core/recipes.dart';
 import '../ui/settings_panel.dart';
 import '../ui/hud_state.dart';
+import '../ui/item_icon.dart';
 
 enum ScreenKind { none, inventory, pause, death, journal, trade }
 
@@ -2303,6 +2305,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--anim-probe')) await _probeAnimation();
     if (_hasArg('--outline-probe')) await _probeOutline();
+    if (_hasArg('--item-probe')) await _probeItems();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
@@ -3291,6 +3294,99 @@ class Game extends ChangeNotifier {
       final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
       await shoot('${base}_mob.png');
       debugPrint('[probe] outline capture: sheep -> ${base}_mob.png');
+    }
+  }
+
+  /// `--item-probe`: one model per item, drawn in the hand, on the ground and
+  /// in the bag. The hotbar is filled with a spread of kinds and one of each
+  /// is dropped on a cleared pad; for each the model's size, the drop's size
+  /// and the icon's face count are printed, and the first-person pickaxe's
+  /// head direction is measured in view space (it must run into the screen,
+  /// not across it). With `--screenshot=<png>`, `_drops.png` (the drops under
+  /// the hotbar), `_fp.png` (the pickaxe in the fist) and `_bag.png` (the
+  /// inventory) are captured.
+  Future<void> _probeItems() async {
+    const ids = ['iron_pickaxe', 'wooden_axe', 'iron_sword', 'bow', 'torch', 'flower_red', 'stone_slab', 'apple', 'iron_armor'];
+    const more = ['stone', 'oak_planks', 'tall_grass', 'diamond_pickaxe', 'stone_shovel', 'crystal_staff', 'arrow', 'cooked_beef', 'glider'];
+    for (var i = 0; i < ids.length; i++) {
+      player.inventory.setSlot(i, ItemStack(ids[i], 1));
+    }
+    for (var i = 0; i < more.length; i++) {
+      player.inventory.setSlot(ids.length + i, ItemStack(more[i], 1));
+    }
+    final x0 = player.position.x.floor();
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 8; x <= x0 + 8; x++) {
+      for (var z = z0 - 8; z <= z0 + 4; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 8; x <= x0 + 8; x++) {
+      for (var z = z0 - 8; z <= z0 + 4; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 8; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    timeOfDay = 0.3;
+    weather.force('clear');
+    final floor = y0 + 1.0;
+    String f(double v) => v.toStringAsFixed(2);
+    for (var i = 0; i < ids.length; i++) {
+      final id = ids[i];
+      final shape = VoxelMeshBuilder.itemShape(id);
+      final b = shape.bounds();
+      final model = ItemDrop.dropModel(id);
+      final k = model.scale.x;
+      // Never picked up: the probe only looks at them.
+      spawnDrop(Vector3(x0 - 3.2 + i * 0.8, floor, z0 - 3.5), id, 1, Vector3.zero(), 1e9);
+      debugPrint('[probe] item $id: ${shape.flat ? 'flat' : 'solid'}${shape.block ? ' block' : ''}, '
+          'model ${f(b.max.x - b.min.x)} x ${f(b.max.y - b.min.y)} x ${f(b.max.z - b.min.z)} m, '
+          'drop x${f(k)}, icon ${ItemIcon.faces(shape).length} faces');
+    }
+    await _playgroundFrame((eye: Vector3(x0 + 0.1, floor + 1.3, z0 - 0.6), target: Vector3(x0 + 0.1, floor + 0.2, z0 - 3.5)));
+    for (var i = 0; i < 30; i++) {
+      _probePlace(Vector3(x0 + 0.1, floor + 1.3, z0 - 0.6));
+      await nextFrame();
+    }
+    final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+    final shoot = screenshotter;
+    if (shoot != null) {
+      await shoot('${base}_drops.png');
+      debugPrint('[probe] item capture: drops -> ${base}_drops.png');
+    }
+
+    // The fist: where the pickaxe's head runs, in the camera's own axes.
+    player.selectedSlot = 0;
+    final eye = Vector3(x0 + 0.5, floor + 1.6, z0 + 2.5);
+    await _playgroundFrame((eye: eye, target: eye + Vector3(0, -0.15, -4)));
+    for (var i = 0; i < 20; i++) {
+      _probePlace(eye);
+      await nextFrame();
+    }
+    final head = player.handView.heldNode;
+    if (head != null) {
+      final m = head.globalTransform;
+      // The head is built across the model's own X.
+      final across = m.transform3(Vector3(1, 0, 0)) - m.transform3(Vector3.zero());
+      final view = player.handView.root.globalTransform;
+      final right = view.getColumn(0).xyz, up = view.getColumn(1).xyz, back = view.getColumn(2).xyz;
+      across.normalize();
+      debugPrint('[probe] item fp pickaxe head in view space: right ${f(across.dot(right))}, '
+          'up ${f(across.dot(up))}, depth ${f(across.dot(back))}');
+    }
+    if (shoot != null) {
+      await shoot('${base}_fp.png');
+      debugPrint('[probe] item capture: first person -> ${base}_fp.png');
+      openStation('crafting_table', IVec3.zero);
+      for (var i = 0; i < 10; i++) {
+        await nextFrame();
+      }
+      await shoot('${base}_bag.png');
+      debugPrint('[probe] item capture: bag -> ${base}_bag.png');
     }
   }
 
