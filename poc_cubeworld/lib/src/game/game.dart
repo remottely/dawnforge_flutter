@@ -3185,13 +3185,13 @@ class Game extends ChangeNotifier {
     final x0 = player.position.x.floor() + 4;
     final z0 = player.position.z.floor();
     var y0 = 0;
-    for (var x = x0 - 4; x <= x0 + 30; x++) {
+    for (var x = x0 - 4; x <= x0 + 90; x++) {
       for (var z = z0 - 4; z <= z0 + 4; z++) {
         y0 = math.max(y0, world.groundHeight(x, z));
       }
     }
     final stone = Blocks.indexOf('stone');
-    for (var x = x0 - 4; x <= x0 + 30; x++) {
+    for (var x = x0 - 4; x <= x0 + 90; x++) {
       for (var z = z0 - 4; z <= z0 + 4; z++) {
         world.setBlock(IVec3(x, y0, z), stone);
         for (var y = y0 + 1; y < y0 + 10; y++) {
@@ -3200,7 +3200,12 @@ class Game extends ChangeNotifier {
       }
     }
     final floor = y0 + 1.0;
-    await _ticks(10);
+    // Parked at the far end of the pad while the creatures are measured: a
+    // zombie 12 m away chases instead of standing, and a chased zombie never
+    // lets its legs settle.
+    final park = Vector3(x0 + 80.5, floor, z0 + 0.5);
+    _probePlace(park);
+    await _ticks(20);
 
     Mob spawn(String id, Vector3 at) {
       final m = Mob();
@@ -3211,15 +3216,17 @@ class Game extends ChangeNotifier {
       return m;
     }
 
-    /// The widest either way a named angle of [m] gets over [ticks], while it
-    /// walks toward +X (or stands, for a zero direction).
-    Future<({double lo, double hi})> swing(Mob m, String part, int axis, Vector3 dir, int ticks) async {
+    // The widest either way a named angle of [m] gets while it walks toward
+    // [dir] (or stands, for a zero direction), ignoring the first [settle]
+    // ticks — the walk eases in and out, so a window that starts at the
+    // handover measures the easing rather than the pose it eases into.
+    Future<({double lo, double hi})> swing(Mob m, String part, int axis, Vector3 dir, int ticks, {int settle = 0}) async {
       m.probeWalk(dir);
       var lo = 1e9, hi = -1e9;
       for (var i = 0; i < ticks; i++) {
         await _ticks(1);
         final a = m.partAngles(part);
-        if (a == null) continue;
+        if (a == null || i < settle) continue;
         final v = axis == 0 ? a.x : (axis == 1 ? a.y : a.z);
         lo = math.min(lo, v);
         hi = math.max(hi, v);
@@ -3234,7 +3241,7 @@ class Game extends ChangeNotifier {
     final chicken = spawn('chicken', Vector3(x0 + 3.5, floor, z0 + 0.5));
     await _ticks(30);
     final flier = await swing(parrot, 'wing1', 2, Vector3.zero(), 60);
-    final perched = await swing(chicken, 'wing1', 2, Vector3.zero(), 60);
+    final perched = await swing(chicken, 'wing1', 2, Vector3.zero(), 60, settle: 40);
     debugPrint('[probe] anim wings: a flying parrot sweeps ${flier.lo.toStringAsFixed(2)}..${flier.hi.toStringAsFixed(2)} rad '
         '(expect about ${(-Mob.wingSweep).toStringAsFixed(2)}..${Mob.wingSweep.toStringAsFixed(2)}); a chicken standing on the floor '
         'holds ${perched.lo.toStringAsFixed(2)}..${perched.hi.toStringAsFixed(2)} (expect the fold, ${Mob.wingFold.toStringAsFixed(2)})');
@@ -3255,8 +3262,8 @@ class Game extends ChangeNotifier {
     ]) {
       final m = spawn(id, Vector3(x0 + 8.5, floor, z0 + 0.5));
       await _ticks(20);
-      final walked = await swing(m, part, axis, Vector3(1, 0, 0), 90);
-      final stopped = await swing(m, part, axis, Vector3.zero(), 90);
+      final walked = await swing(m, part, axis, Vector3(1, 0, 0), 90, settle: 30);
+      final stopped = await swing(m, part, axis, Vector3.zero(), 90, settle: 60);
       debugPrint('[probe] anim legs $id: walking ${walked.lo.toStringAsFixed(2)}..${walked.hi.toStringAsFixed(2)} rad '
           '(expect a spread), settled ${stopped.lo.toStringAsFixed(2)}..${stopped.hi.toStringAsFixed(2)} '
           '(expect it back near rest)');
@@ -3277,15 +3284,18 @@ class Game extends ChangeNotifier {
       if (landed) splat = math.min(splat, slime.squash());
       wasFloor = slime.onFloor;
     }
-    slime.probeWalk(Vector3.zero());
+    slime.probeRelease();
     debugPrint('[probe] anim blob: tallest in the air ${stretch.toStringAsFixed(3)} (expect > 1.0), '
         'flattest after landing ${splat.toStringAsFixed(3)} (expect < 1.0), landed=$landed');
     slime.removed = true;
 
     // The camera. The same walk on foot and in the saddle, in both views: the
-    // saddle is the walk's sway multiplied, so the ride figure has to come out
-    // near the walk's times `Player.gaitAmplitude`.
-    Future<double> ride(bool firstPerson, Vector3 dir, int ticks) async {
+    // saddle is the walk's own sway multiplied, so the ride figure has to come
+    // out near the walk's times `Player.gaitAmplitude` — and a horse at 8.5 m/s
+    // is already past the speed clamp, so the walk figure it multiplies is the
+    // clamped one, not the one a body on foot reaches.
+    final start = Vector3(x0 + 4.5, floor, z0 + 0.5);
+    Future<double> peakBob(bool firstPerson, int ticks) async {
       player.setFirstPerson(firstPerson);
       var peak = 0.0;
       for (var i = 0; i < ticks; i++) {
@@ -3295,36 +3305,105 @@ class Game extends ChangeNotifier {
       return peak;
     }
 
-    _probePlace(Vector3(x0 + 16.5, floor, z0 + 0.5));
     player.setLook(0.0, 0.0);
-    await _ticks(20);
+    _probePlace(start);
+    await _ticks(30);
     player.probeWalk(Vector3(1, 0, 0));
-    final footFp = await ride(true, Vector3(1, 0, 0), 90);
-    final footTp = await ride(false, Vector3(1, 0, 0), 90);
+    final footFp = await peakBob(true, 90);
+    _probePlace(start);
+    final footTp = await peakBob(false, 90);
     player.probeWalk(Vector3.zero());
+    _probePlace(start);
     await _ticks(60);
 
-    final horse = spawn('horse', Vector3(x0 + 17.5, floor, z0 + 0.5));
+    // A tamed horse, ridden. Each run starts back at the near end of the pad:
+    // a horse covers 17 m in two seconds and would otherwise spend the second
+    // run standing in the terrain past the end of it.
+    final horse = spawn('horse', Vector3(x0 + 5.5, floor, z0 + 0.5));
     horse.tamed = true;
     mobs.remove(horse);
     pets.add(horse);
     await _ticks(20);
     _probePlace(horse.position + Vector3(0, 1.0, 0));
     player.mountHorse(horse);
+    void rewind() {
+      horse.position = Vector3(x0 + 5.5, floor, z0 + 0.5);
+      horse.velocity = Vector3.zero();
+      horse.syncNode();
+      player.position = Player.saddlePosition(horse);
+      player.syncNode();
+    }
+
     player.probeWalk(Vector3(1, 0, 0));
-    final rideFp = await ride(true, Vector3(1, 0, 0), 120);
-    final rideTp = await ride(false, Vector3(1, 0, 0), 120);
+    final rideFp = await peakBob(true, 90);
+    rewind();
+    final rideTp = await peakBob(false, 90);
+    rewind();
     input.probeHold(GameAction.sprint, true);
-    final gallop = await ride(false, Vector3(1, 0, 0), 120);
+    final gallop = await peakBob(false, 90);
     input.probeHold(GameAction.sprint, false);
     player.probeWalk(Vector3.zero());
+    final rode = player.position.x - (x0 + 5.5);
     player.dismount();
     final trot = Player.gaitAmplitude(mounted: true, sprinting: false);
     final run = Player.gaitAmplitude(mounted: true, sprinting: true);
     debugPrint('[probe] anim camera: on foot peak first person ${footFp.toStringAsFixed(4)} third ${footTp.toStringAsFixed(4)}; '
         'in the saddle first ${rideFp.toStringAsFixed(4)} third ${rideTp.toStringAsFixed(4)} '
-        '(expect about ${trot.toStringAsFixed(1)}x the walk, both views), galloping ${gallop.toStringAsFixed(4)} '
-        '(expect about ${run.toStringAsFixed(1)}x the walk, more than the trot)');
+        '(expect the two views equal, and ${trot.toStringAsFixed(1)}x a clamped walk = '
+        '${(1.7 * 0.09 * trot).toStringAsFixed(4)}), galloping ${gallop.toStringAsFixed(4)} '
+        '(expect ${(1.7 * 0.09 * run).toStringAsFixed(4)}, more than the trot); the gallop covered '
+        '${rode.toStringAsFixed(1)} m, so it was moving');
+
+    // And the picture of it: a hovering parrot with its wings out beside a
+    // chicken standing with its own folded, both seen from the side, where a
+    // wing that never opened or never shut shows at a glance.
+    final shoot = screenshotter;
+    if (shoot == null) return;
+    final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+    parrot.position = Vector3(x0 + 0.4, floor + 1.5, z0 + 0.5);
+    parrot.syncNode();
+    chicken.position = Vector3(x0 + 2.4, floor, z0 + 0.5);
+    chicken.velocity = Vector3.zero();
+    chicken.syncNode();
+    // A few ticks past the placement, so the two wings are caught mid-stroke
+    // rather than flat out at the peak, where a hinge and a stroke look alike.
+    await _ticks(3);
+    final at = Vector3(x0 + 1.4, floor + 1.1, z0 + 0.5);
+    await _playgroundFrame((eye: at + Vector3(-1.2, 0.9, -2.6), target: at));
+    await shoot('${base}_wings.png');
+    debugPrint('[probe] anim wings capture: a flying parrot at ${parrot.position} (gone=${parrot.removed}) beside a chicken '
+        'standing at ${chicken.position} (gone=${chicken.removed}) -> ${base}_wings.png '
+        '(the parrot\'s wings out, the chicken\'s folded)');
+
+    // And the four-legged half, side on and mid-stride: the diagonal pairs
+    // have to be apart, the barrel up on its beat, and the tail behind the
+    // rump rather than inside it.
+    final walkers = [
+      for (final (i, id) in const ['horse', 'sheep', 'wolf'].indexed)
+        spawn(id, Vector3(x0 + 20.0 + i * 4.0, floor, z0 + 0.5))..probeWalk(Vector3(0, 0, 1)),
+    ];
+    await _ticks(30);
+    // Framed on the horse alone, from behind and to one side: it walks toward
+    // +Z, so the rump — and the tail that has to hang clear of it — is on the
+    // -Z end, and the quarter angle keeps the two diagonals readable too.
+    final trotting = walkers.first.position;
+    await _playgroundFrame((eye: trotting + Vector3(-2.4, 1.7, -3.2), target: trotting + Vector3(0, 0.85, 0)));
+    await shoot('${base}_walk.png');
+    String pose(Mob m) {
+      // The head is built ahead of the body and the tail behind it, and the
+      // model is yawed to face where it walks, so the two have to come out on
+      // opposite sides of the animal along its heading — a tail that reads as
+      // inside the barrel would show up here as a distance near zero.
+      final here = m.position;
+      final head = m.partWorld('head')! - here;
+      final tail = m.partWorld('tail')! - here;
+      return '${m.species.id}: head ${head.z.toStringAsFixed(2)} m and tail ${tail.z.toStringAsFixed(2)} m '
+          'along +Z (it walks +Z, so the head is the positive one and the tail must be clear behind it), '
+          'fore leg ${m.partAngles('leg2')!.x.toStringAsFixed(2)} hind leg ${m.partAngles('leg1')!.x.toStringAsFixed(2)}';
+    }
+
+    debugPrint('[probe] anim walk capture: ${walkers.map(pose).join(' · ')} -> ${base}_walk.png '
+        '(a trot: each fore leg matches the hind leg across the body from it)');
   }
 
   /// `--map-probe --screenshot=<png>`: the minimap, captured before and after a

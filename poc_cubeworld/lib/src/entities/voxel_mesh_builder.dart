@@ -97,6 +97,15 @@ class VoxelMeshBuilder {
     }
   }
 
+  /// The same voxels mirrored across the x = 0 plane. A voxel at x covers
+  /// [x, x+1], so its mirror covers [-x-1, -x]. Rebuilding the map is how a
+  /// left wing is made from a right one: scaling a node by -1 would mirror it
+  /// too, but it also reverses the winding, and this renderer draws Godot's
+  /// winding front-facing (see `GodotCamera`).
+  static Map<IVec3, Vector3> mirrorX(Map<IVec3, Vector3> voxels) => {
+        for (final e in voxels.entries) IVec3(-e.key.x - 1, e.key.y, e.key.z): e.value,
+      };
+
   static Node meshNode(Map<IVec3, Vector3> voxels, double scale, [Vector3? origin]) {
     final g = build(voxels, scale, origin);
     final node = Node();

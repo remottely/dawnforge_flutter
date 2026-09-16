@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --anim-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -44,6 +44,14 @@ session; the slot is removed at the end, the tutorial flag goes to `settings_pro
 Captures: `--title-probe --screenshot=<png>` (the title) · `--title-probe --open-worlds` (the
 world list with the form) · `--title-probe --open-credits [--credits-t=seconds]` (Flutter
 only) · `--new --seed=42 --stage30 --shot=tutorial` (the card on step 4).
+
+`--anim-probe --screenshot=<png>` clears a long stone pad and measures what the creatures'
+limbs actually do: a flying parrot's wings against a standing chicken's folded ones and the
+same chicken's while it falls, every walker's legs while it walks and once it has stopped, a
+slime's stretch in the air and its splat on landing, and the camera's sway on foot against
+its sway in the saddle in both views and at a gallop. It writes `<name>_wings.png` (wings out
+beside wings folded) and `<name>_walk.png` (a horse from behind, mid-trot, its tail clear of
+the barrel), and prints every figure, so none of it has to be read off the pictures.
 
 `--model-probe --screenshot=<png>` clears a stone pad and captures three poses and a zombie,
 and writes two more beside the file: `<name>_hold.png`, a model holding a block side on (the
