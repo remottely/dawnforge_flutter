@@ -471,11 +471,89 @@ class Mob extends SceneBody {
     }
   }
 
-  Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s) {
+  /// How far a narrowed part's sides are drawn in, in metres. A leg whose
+  /// outer face lay in the plane of the barrel's side fought it for the same
+  /// pixels and flickered; a centimetre apart they never meet.
+  static const double partInset = 0.01;
+
+  /// A part whose voxels are [voxels] at [s] metres each, pivoting at [at].
+  /// With [narrow], the part is centred on its pivot in x / z and drawn
+  /// [partInset] in on each of those sides, about its own middle.
+  Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s, {bool narrow = false}) {
     final pivot = VoxelMeshBuilder.meshNode({}, 1.0);
-    pivot.add(VoxelMeshBuilder.meshNode(voxels, s));
+    final lo = Vector3.all(double.infinity), hi = Vector3.all(double.negativeInfinity);
+    for (final k in voxels.keys) {
+      final v = k.toVector3();
+      Vector3.min(lo, v, lo);
+      Vector3.max(hi, v + Vector3.all(1.0), hi);
+    }
+    final origin = Vector3.zero();
+    final base = at.clone();
+    final shrink = Vector3.all(1.0);
+    if (narrow) {
+      origin
+        ..x = (lo.x + hi.x) * 0.5
+        ..z = (lo.z + hi.z) * 0.5;
+      base
+        ..x += origin.x * s
+        ..z += origin.z * s;
+      shrink
+        ..x = 1.0 - 2.0 * partInset / ((hi.x - lo.x) * s)
+        ..z = 1.0 - 2.0 * partInset / ((hi.z - lo.z) * s);
+    }
+    pivot.add(VoxelMeshBuilder.meshNode(voxels, s, origin)..scale = shrink);
     node.add(pivot);
-    return Part(pivot, at);
+    final part = Part(pivot, base);
+    _restBoxes[part] = Aabb3.minMax(
+      (lo - origin)..multiply(shrink * s),
+      (hi - origin)..multiply(shrink * s),
+    );
+    return part;
+  }
+
+  /// Each part's box around its pivot, as built (before any pose).
+  final Map<Part, Aabb3> _restBoxes = {};
+
+  /// Probe: every part's box in the model's space, in the rest pose (the
+  /// part's own scale applied, no rotation). Two boxes sharing a face plane
+  /// over some area are two meshes fighting for the same pixels.
+  Map<String, Aabb3> restBoxes() => {
+        for (final e in _parts.entries)
+          e.key: () {
+            final p = e.value;
+            final b = _restBoxes[p]!;
+            final scale = Vector3(p.sx, p.sy, p.sz);
+            final a = b.min.clone()..multiply(scale);
+            final c = b.max.clone()..multiply(scale);
+            final mn = Vector3.zero(), mx = Vector3.zero();
+            Vector3.min(a, c, mn);
+            Vector3.max(a, c, mx);
+            return Aabb3.minMax(mn + p.base, mx + p.base);
+          }(),
+      };
+
+  /// Probe: the pairs of parts in [boxes] with a face in the same plane,
+  /// facing the same way, over some area: two visible surfaces at one depth.
+  /// Faces that meet head on (a leg's top against the belly) hide each other
+  /// and are not listed.
+  static List<String> coplanarFaces(Map<String, Aabb3> boxes, {double eps = 1e-4}) {
+    final out = <String>[];
+    final names = boxes.keys.toList();
+    for (var i = 0; i < names.length; i++) {
+      for (var j = i + 1; j < names.length; j++) {
+        final a = boxes[names[i]]!, b = boxes[names[j]]!;
+        for (var axis = 0; axis < 3; axis++) {
+          final u = (axis + 1) % 3, w = (axis + 2) % 3;
+          final overlaps = math.min(a.max[u], b.max[u]) - math.max(a.min[u], b.min[u]) > eps &&
+              math.min(a.max[w], b.max[w]) - math.max(a.min[w], b.min[w]) > eps;
+          if (!overlaps) continue;
+          final where = 'xyz'[axis];
+          if ((a.min[axis] - b.min[axis]).abs() < eps) out.add('${names[i]}/${names[j]} -$where=${a.min[axis].toStringAsFixed(3)}');
+          if ((a.max[axis] - b.max[axis]).abs() < eps) out.add('${names[i]}/${names[j]} +$where=${a.max[axis].toStringAsFixed(3)}');
+        }
+      }
+    }
+    return out;
   }
 
   void _buildModel() {
@@ -505,7 +583,9 @@ class Mob extends SceneBody {
           VoxelMeshBuilder.box(v, IVec3(-1, -legH, -1), const IVec3(1, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
           final lx = (bodyW / 2 - 1.5) * s * (i % 2 == 0 ? 1 : -1);
           final lz = (bodyLen / 2 - 2) * s * (i < 2 ? 1 : -1);
-          _parts['leg$i'] = _part(v, Vector3(lx, legH * s, lz), s);
+          // Narrowed: with an odd barrel width the leg's outer face was the
+          // barrel's side, over the voxel the leg sinks into it.
+          _parts['leg$i'] = _part(v, Vector3(lx, legH * s, lz), s, narrow: true);
         }
         // A tail hanging off the rump. It idles on its own slow sway and swings
         // with the gait, which is most of what tells a standing animal from a
@@ -514,8 +594,9 @@ class Mob extends SceneBody {
         final tailLen = math.max(bodyLen ~/ 3, 3);
         VoxelMeshBuilder.box(v, IVec3(-1, -tailLen, 0), const IVec3(0, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
         // The pivot sits on the barrel's back face, not on its centre line: a
-        // tail hung from `bodyLen / 2` is inside the animal.
-        _parts['tail'] = _part(v, Vector3(0, (legH + bodyH * 0.85) * s, (bodyLen ~/ 2 + 1) * s), s);
+        // tail hung from `bodyLen / 2` is inside the animal. A centimetre off
+        // that face, or the tail's front and the rump share a plane and fight.
+        _parts['tail'] = _part(v, Vector3(0, (legH + bodyH * 0.85) * s, (bodyLen ~/ 2 + 1) * s + partInset), s);
       case 'humanoid':
         final skin = colors[0];
         final shirt = colors[1];
@@ -530,8 +611,10 @@ class Mob extends SceneBody {
         _parts['body'] = _part(v, Vector3(0, 0.66 * k, 0), s);
         v = {};
         VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), skin);
-        _parts['arm0'] = _part(v, Vector3(-0.33 * k, 1.30 * k, 0), s);
-        _parts['arm1'] = _part(v, Vector3(0.33 * k, 1.30 * k, 0), s);
+        // 0.345, not 0.33: at 0.33 the arm's inner face is the torso's side,
+        // the flicker `PlayerModel` fixed the same way.
+        _parts['arm0'] = _part(v, Vector3(-0.345 * k, 1.30 * k, 0), s);
+        _parts['arm1'] = _part(v, Vector3(0.345 * k, 1.30 * k, 0), s);
         v = {};
         VoxelMeshBuilder.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.04);
         final eye = species.hostile ? Vector3(0.9, 0.1, 0.1) : dark;

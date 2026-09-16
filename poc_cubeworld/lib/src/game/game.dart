@@ -2302,6 +2302,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--map-probe')) await _probeMap();
     if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--anim-probe')) await _probeAnimation();
+    if (_hasArg('--outline-probe')) await _probeOutline();
     if (_hasArg('--stage23')) await _probeStage23(stage21a);
     if (_hasArg('--stage26') && shot26 == '') await _probeStage26();
     if (_hasArg('--stage24')) {
@@ -3188,6 +3189,109 @@ class Game extends ChangeNotifier {
         'sway=${sideMax.toStringAsFixed(4)} (expect a sixth of the drop, ratio '
         '${(dropMax > 0 ? sideMax / dropMax : 0).toStringAsFixed(2)}) side-to-side crossings=$sways (expect one per leg walked) '
         'after stopping=${settled.toStringAsFixed(4)} (expect 0.0000) third person peak=${thirdMax.toStringAsFixed(4)} at speed ${thirdSpeed.toStringAsFixed(2)} (expect > 0)');
+  }
+
+  /// `--outline-probe`: no two parts of any creature share a face plane, and
+  /// the aim outline hugs what it outlines. Every species is built and its
+  /// rest-pose part boxes are checked pairwise for a shared plane (the
+  /// flicker a leg flush with a barrel's side made). Then, on a cleared pad,
+  /// the crosshair is put on a block sunk flush in the floor, a torch, a slab,
+  /// a fence, a door, a flower, a wall torch and a sheep, and the box the
+  /// outline was fitted to is printed for each. With `--screenshot=<png>`,
+  /// `_block.png`, `_torch.png` and `_mob.png` capture three of them.
+  Future<void> _probeOutline() async {
+    final bad = <String>[];
+    for (final sp in Species.defs.values) {
+      final m = Mob()..setupMob(world, this, player, sp);
+      final hits = Mob.coplanarFaces(m.restBoxes());
+      if (hits.isNotEmpty) bad.add('${sp.id} (${sp.body}): ${hits.join(', ')}');
+    }
+    debugPrint('[probe] outline parts: ${Species.defs.length} species built, '
+        '${bad.length} with parts sharing a face plane${bad.isEmpty ? '' : ':\n  ${bad.join('\n  ')}'}');
+
+    final x0 = player.position.x.floor();
+    final z0 = player.position.z.floor();
+    var y0 = 0;
+    for (var x = x0 - 12; x <= x0 + 12; x++) {
+      for (var z = z0 - 12; z <= z0 + 4; z++) {
+        y0 = math.max(y0, world.groundHeight(x, z));
+      }
+    }
+    final stone = Blocks.indexOf('stone');
+    for (var x = x0 - 12; x <= x0 + 12; x++) {
+      for (var z = z0 - 12; z <= z0 + 4; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 8; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    timeOfDay = 0.3;
+    weather.force('clear');
+    final floor = y0 + 1.0;
+    // Each target sits 3 m north of where the eye stands, its own column.
+    final targets = <(String, IVec3)>[];
+    void put(String name, String block, int dx, {int dy = 1, String? wall}) {
+      final cell = IVec3(x0 + dx, y0 + dy, z0 - 3);
+      if (wall != null) world.setBlock(cell + const IVec3(0, 0, -1), Blocks.indexOf(wall));
+      world.setBlock(cell, Blocks.indexOf(block));
+      targets.add((name, cell));
+    }
+
+    put('sunk dirt', 'dirt', -9, dy: 0); // flush with the floor: the case that lost its edges
+    put('torch', 'torch', -6);
+    put('slab', 'stone_slab', -3);
+    put('fence', 'oak_fence', 0);
+    put('door', 'door_z', 3);
+    put('flower', 'flower_red', 6);
+    put('wall torch', 'wall_torch', 9, dy: 2, wall: 'stone');
+    final sheep = Mob()..setupMob(world, this, player, Species.def('sheep'));
+    sheep.position = Vector3(x0 + 0.5, floor, z0 - 7.5);
+    sheep.probeWalk(Vector3.zero());
+    sheep.syncNode();
+    addMob(sheep);
+
+    final shots = <String, Vector3>{};
+    Future<void> aimAt(String name, Vector3 eye, Vector3 point) async {
+      player.setFirstPerson(true);
+      final lift = player.pivotPosition.y - player.position.y;
+      await _playgroundFrame((eye: eye, target: point - Vector3(0, lift, 0)));
+      flyMode = false; // the fly tick returns before `_updateAim`
+      for (var i = 0; i < 6; i++) {
+        _probePlace(eye);
+        await nextFrame();
+      }
+      final b = player.outline.box;
+      String f(double v) => v.toStringAsFixed(3);
+      debugPrint('[probe] outline $name: ${b == null ? 'hidden' : '${f(b.x0 - point.x.floorToDouble())},${f(b.y0 - point.y.floorToDouble())},${f(b.z0 - point.z.floorToDouble())}'
+          ' .. ${f(b.x1 - point.x.floorToDouble())},${f(b.y1 - point.y.floorToDouble())},${f(b.z1 - point.z.floorToDouble())} (cell-relative), '
+          'size ${f(b.x1 - b.x0)} x ${f(b.y1 - b.y0)} x ${f(b.z1 - b.z0)}'} · aimed mob ${player.aimedMob?.species.id ?? '-'}');
+      shots[name] = eye;
+    }
+
+    for (final (name, cell) in targets) {
+      final c = cell.toVector3();
+      final top = name == 'wall torch' ? 0.55 : (name == 'sunk dirt' ? 0.98 : 0.3);
+      final point = c + Vector3(0.5, top, name == 'wall torch' ? 0.9 : 0.5);
+      await aimAt(name, Vector3(c.x + 0.5, floor + (name == 'sunk dirt' ? 0.9 : 0.4), c.z + 2.8), point);
+      final shoot = screenshotter;
+      if (shoot != null && (name == 'sunk dirt' || name == 'torch')) {
+        final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+        final file = name == 'torch' ? '${base}_torch.png' : '${base}_block.png';
+        await shoot(file);
+        debugPrint('[probe] outline capture: $name -> $file');
+      }
+    }
+    final sheepEye = Vector3(x0 + 2.3, floor + 0.9, z0 - 5.2);
+    await aimAt('sheep', sheepEye, sheep.position + Vector3(0, 0.6, 0));
+    final collider = Player.mobBox(sheep);
+    debugPrint('[probe] outline sheep collider: ${collider.x1 - collider.x0} x ${collider.y1 - collider.y0} x ${collider.z1 - collider.z0}');
+    final shoot = screenshotter;
+    if (shoot != null) {
+      final base = _arg('--screenshot=', '').replaceAll(RegExp(r'\.png$'), '');
+      await shoot('${base}_mob.png');
+      debugPrint('[probe] outline capture: sheep -> ${base}_mob.png');
+    }
   }
 
   /// `--anim-probe`: the creatures move like creatures, and the saddle moves

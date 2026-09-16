@@ -17,6 +17,7 @@ import '../entities/hand_view.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
 import '../entities/scene_body.dart';
+import '../entities/selection_outline.dart';
 import '../entities/voxel_mesh_builder.dart';
 import '../game/achievements.dart';
 import '../game/effects.dart';
@@ -128,7 +129,9 @@ class Player extends SceneBody implements Target {
   double _camDistance = 4.8;
   double get camDistance => _camDistance;
   double fov = 72.0;
-  late final Node highlight;
+  /// The skeleton around the aimed block or mob.
+  final SelectionOutline outline = SelectionOutline();
+  Node get highlight => outline.node;
   late final Node crack;
   late final UnlitMaterial _crackMat;
   late final PointLight torchLight;
@@ -210,35 +213,6 @@ class Player extends SceneBody implements Target {
     node.add(model.root);
     handView.build(skinTone, c.shirt);
     handView.visible = firstPerson;
-
-    // The aimed block wears a skeleton of sticks: the 12 edges of a cube 0.01
-    // wider than the cell, in a 75% white. Being outside every face, the sticks
-    // never fight the block's own texture — which a film hugging the faces did.
-    // They are twelve cuboids, not a line ribbon: a `LineSegmentsGeometry` node
-    // never reached the screen here, whatever material carried it, which is why
-    // the outline drawn before this — black, and thinner — was never seen.
-    const e = 0.005; // how far the skeleton stands off the cell
-    const t = 0.03; // a stick's thickness
-    const span = 1 + 2 * e;
-    final stick = UnlitMaterial()
-      ..baseColorFactor = Vector4(0.75, 0.75, 0.75, 1)
-      ..vertexColorWeight = 0.0;
-    highlight = Node()
-      ..visible = false
-      ..castsShadows = false;
-    for (var axis = 0; axis < 3; axis++) {
-      for (var corner = 0; corner < 4; corner++) {
-        final size = Vector3.all(t);
-        size[axis] = span + t; // the stick runs the cell's length, corner to corner
-        // The two axes the edge does not run along pick one of the four corners.
-        final centre = Vector3.all(0.5);
-        centre[(axis + 1) % 3] = corner & 1 == 0 ? -e : 1 + e;
-        centre[(axis + 2) % 3] = corner & 2 == 0 ? -e : 1 + e;
-        highlight.add(
-          GodotCamera.primitiveNode(Mesh(CuboidGeometry(size), stick), castsShadows: false)..position = centre,
-        );
-      }
-    }
 
     _crackMat = UnlitMaterial()
       ..baseColorFactor = Vector4(0, 0, 0, 0)
@@ -514,15 +488,25 @@ class Player extends SceneBody implements Target {
         aimedMob = mob;
       }
     }
-    if (hit != null && (aimedMob == null || hit.distance < mobDist)) {
+    final mob = aimedMob;
+    if (hit != null && (mob == null || hit.distance < mobDist)) {
       aimedBlock = hit.block;
       aimedNormal = hit.normal;
-      highlight.visible = true;
-      highlight.position = aimedBlock.toVector3();
+      outline.show(selectionBoxAt(world, hit.block.x, hit.block.y, hit.block.z));
     } else {
       isAiming = false;
-      highlight.visible = false;
+      if (mob != null) {
+        outline.show(mobBox(mob));
+      } else {
+        outline.hide();
+      }
     }
+  }
+
+  /// A mob's outline box: its collider, the box the crosshair ray hits.
+  static CollisionBox mobBox(Mob m) {
+    final p = m.position, w = m.halfWidth;
+    return CollisionBox(p.x - w, p.y, p.z - w, p.x + w, p.y + m.height, p.z + w);
   }
 
   // --- the tick --------------------------------------------------------------------
