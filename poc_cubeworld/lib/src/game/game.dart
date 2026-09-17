@@ -36,6 +36,7 @@ import 'music.dart';
 import 'net.dart';
 import 'pathfinder.dart';
 import 'playground.dart';
+import 'reach.dart';
 import 'portals.dart';
 import 'quests.dart';
 import 'rails.dart';
@@ -398,7 +399,6 @@ class Game extends ChangeNotifier {
     GameState.instance.freshWorld = false;
     _prevTimeOfDay = timeOfDay;
     flyMode = _hasArg('--fly');
-    if (_hasArg('--step-teleport')) Settings.instance.stepTeleport = true;
     if (_hasArg('--climb')) Settings.instance.climbWalls = true;
     if (_hasArg('--fp')) player.setFirstPerson(true);
     // `--hold=<item>` puts one of something in the selected slot, so a capture
@@ -1465,8 +1465,8 @@ class Game extends ChangeNotifier {
 
   void meleeStrike(Vector3 dir, double dmg, double followUp, Target attacker) {
     // A swing is a segment of meleeReach from the attacker's own centre along
-    // its facing; the nearest mob body on it takes the hit. Runs on whoever
-    // owns the simulation, never on a camera cache.
+    // its facing; the nearest body on it takes the hit, block or creature.
+    // Runs on whoever owns the simulation, never on a camera cache.
     final net = Net.instance;
     if (net.isClient && identical(attacker, player)) {
       net.requestMelee(dir, dmg, followUp);
@@ -1476,15 +1476,13 @@ class Game extends ChangeNotifier {
     if (net.isHost && !identical(attacker, player) && attacker is RemotePlayer) {
       debugPrint('[net] melee strike resolved for peer ${attacker.peerId}');
     }
-    Mob? best;
-    var bestD = double.infinity;
-    for (final m in mobs) {
-      final d = m.rayDistance(origin, dir, 0.15);
-      if (d >= 0.0 && d < Player.meleeReach && d < bestD) {
-        bestD = d;
-        best = m;
-      }
-    }
+    // Reach: the swing stops at the first thing that stops a body, so a
+    // creature behind a wall is not hit through it. Grass and the gap between
+    // two fence posts are not in the way — a body walks through them.
+    final best = Reach.nearestBody(mobs, origin, dir,
+        maxDist: Player.meleeReach,
+        blockedAt: Reach.toBarrier(world, origin, dir, Player.meleeReach),
+        inflate: 0.15);
     if (best == null) return;
     Sfx.play('hit', -4.0);
     // Stage 32: one melee hit in ten is a critical for x1.5, shown as "-N!" in yellow.
@@ -2295,6 +2293,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage25') && net.isClient) await _probeStage25Client();
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--move-probe')) await _probeMovement();
+    if (_hasArg('--reach-probe')) await _probeReach();
     if (_hasArg('--map-probe')) await _probeMap();
     if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--anim-probe')) await _probeAnimation();
@@ -2996,9 +2995,8 @@ class Game extends ChangeNotifier {
       }
     }
     await _ticks(10);
-    settings.stepTeleport = false;
     final hopped = await walk(x0 + 4.6, 120, false);
-    debugPrint('[probe] move half step teleport=off: top y=${hopped.y.toStringAsFixed(3)} (expect ${(floorY + 0.5).toStringAsFixed(1)}) '
+    debugPrint('[probe] move half step: top y=${hopped.y.toStringAsFixed(3)} (expect ${(floorY + 0.5).toStringAsFixed(1)}) '
         'highest feet=${hopped.maxY.toStringAsFixed(3)} (a hop: < ${(floorY + 0.8).toStringAsFixed(1)}) '
         'largest one-tick rise=${hopped.maxRise.toStringAsFixed(3)} (< 0.3) x=${hopped.x.toStringAsFixed(2)}');
     // Step and wall are three blocks deep, so the walker stops on top of them
@@ -3009,15 +3007,10 @@ class Game extends ChangeNotifier {
       }
     }
     await _ticks(10);
-    settings.stepTeleport = false;
     final jumped = await walk(x0 + 4.6, 120, false);
-    debugPrint('[probe] move step teleport=off: top y=${jumped.y.toStringAsFixed(3)} (expect ${(floorY + 1).toStringAsFixed(1)}) '
-        'largest one-tick rise=${jumped.maxRise.toStringAsFixed(3)} (a jump: < 0.3) x=${jumped.x.toStringAsFixed(2)}');
-    settings.stepTeleport = true;
-    final lifted = await walk(x0 + 4.6, 120, false);
-    debugPrint('[probe] move step teleport=on: top y=${lifted.y.toStringAsFixed(3)} (expect ${(floorY + 1).toStringAsFixed(1)}) '
-        'largest one-tick rise=${lifted.maxRise.toStringAsFixed(3)} (a lift: >= 1.0) x=${lifted.x.toStringAsFixed(2)}');
-    settings.stepTeleport = false;
+    debugPrint('[probe] move full step: top y=${jumped.y.toStringAsFixed(3)} (expect ${(floorY + 1).toStringAsFixed(1)}) '
+        'largest one-tick rise=${jumped.maxRise.toStringAsFixed(3)} (a jump: < 0.3, a lift would be >= 1.0) '
+        'x=${jumped.x.toStringAsFixed(2)}');
     for (var x = x0 + 3; x < x0 + 6; x++) {
       for (var z = z0 - 2; z < z0 + 3; z++) {
         for (var y = y0 + 1; y <= y0 + 3; y++) {
@@ -3186,6 +3179,275 @@ class Game extends ChangeNotifier {
         'sway=${sideMax.toStringAsFixed(4)} (expect a sixth of the drop, ratio '
         '${(dropMax > 0 ? sideMax / dropMax : 0).toStringAsFixed(2)}) side-to-side crossings=$sways (expect one per leg walked) '
         'after stopping=${settled.toStringAsFixed(4)} (expect 0.0000) third person peak=${thirdMax.toStringAsFixed(4)} at speed ${thirdSpeed.toStringAsFixed(2)} (expect > 0)');
+
+    // Stage 40: every creature climbs a step by jumping it. A staircase of
+    // three whole blocks is walked by a cow on its own legs and by a horse
+    // with the player in the saddle; the largest rise in one tick tells a jump
+    // (a few centimetres) from the lift it used to be (a whole block).
+    player.setFirstPerson(false);
+    final sz = z0 - 10;
+    for (var x = x0 - 2; x < x0 + 12; x++) {
+      for (var z = sz - 2; z < sz + 3; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 8; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    for (var x = x0 + 3; x < x0 + 12; x++) {
+      final steps = math.min(x - x0 - 2, 3); // three steps, then the landing
+      for (var z = sz - 2; z < sz + 3; z++) {
+        for (var y = y0 + 1; y <= y0 + steps; y++) {
+          world.setBlock(IVec3(x, y, z), stone);
+        }
+      }
+    }
+    await _ticks(10);
+    // Walks a body east for [ticks]: the feet it ends on, the top it reached
+    // and the largest rise it made in one tick.
+    Future<({double y, double rise})> climb(VoxelBody body, void Function(Vector3) steer, int ticks) async {
+      var last = body.position.y;
+      var rise = 0.0;
+      steer(Vector3(1, 0, 0));
+      for (var i = 0; i < ticks && body.position.x < x0 + 7.4; i++) {
+        await _ticks(1);
+        rise = math.max(rise, body.position.y - last);
+        last = body.position.y;
+      }
+      steer(Vector3.zero());
+      await _ticks(20);
+      return (y: body.position.y, rise: rise);
+    }
+
+    final cow = Mob()..setupMob(world, this, player, Species.def('cow'));
+    cow.position = Vector3(x0 + 0.5, floorY + 0.1, sz + 0.5);
+    addMob(cow);
+    await _ticks(5);
+    final cowClimb = await climb(cow, cow.probeWalk, 300);
+    cow.removed = true;
+    debugPrint('[probe] move mob steps: a cow walked the staircase to feet y=${cowClimb.y.toStringAsFixed(3)} '
+        '(expect ${(floorY + 3).toStringAsFixed(1)}) largest one-tick rise=${cowClimb.rise.toStringAsFixed(3)} '
+        '(a jump: < 0.3, a lift would be >= 1.0)');
+
+    final horse = Mob()..setupMob(world, this, player, Species.def('horse'));
+    horse.position = Vector3(x0 + 0.5, floorY + 0.1, sz + 0.5);
+    addMob(horse);
+    horse.tame(player);
+    player.position = horse.position + Vector3(0, 1.0, 0);
+    player.velocity = Vector3.zero();
+    player.mountHorse(horse);
+    await _ticks(10);
+    final rideClimb = await climb(horse, player.probeWalk, 300);
+    debugPrint('[probe] move mount steps: the horse carried the rider to feet y=${rideClimb.y.toStringAsFixed(3)} '
+        '(expect ${(floorY + 3).toStringAsFixed(1)}) largest one-tick rise=${rideClimb.rise.toStringAsFixed(3)} '
+        '(a jump: < 0.3, a lift would be >= 1.0) rider on the saddle=${player.isMounted()}');
+
+    // Stage 40: nothing walks on water. The same horse crosses a pool four
+    // blocks deep: its feet must ride well under the surface (it swims) and it
+    // must climb out on the far bank.
+    final wz = sz - 8;
+    for (var x = x0 - 2; x < x0 + 12; x++) {
+      for (var z = wz - 2; z < wz + 3; z++) {
+        world.setBlock(IVec3(x, y0, z), stone);
+        for (var y = y0 + 1; y < y0 + 8; y++) {
+          world.setBlock(IVec3(x, y, z), Blocks.air);
+        }
+      }
+    }
+    for (var x = x0 + 3; x <= x0 + 8; x++) {
+      for (var z = wz - 2; z < wz + 3; z++) {
+        for (var y = y0 - 3; y <= y0; y++) {
+          world.setBlock(IVec3(x, y, z), water);
+        }
+      }
+    }
+    await _ticks(20);
+    horse.position = Vector3(x0 + 0.5, floorY + 0.1, wz + 0.5);
+    horse.velocity = Vector3.zero();
+    player.position = horse.position + Vector3(0, 1.0, 0);
+    await _ticks(10);
+    player.probeWalk(Vector3(1, 0, 0));
+    var overWater = 0, onTop = 0, stood = 0, swam = 0, deepest = 1e9;
+    for (var i = 0; i < 400; i++) {
+      await _ticks(1);
+      final x = horse.position.x;
+      if (x > x0 + 3.5 && x < x0 + 8.5) {
+        overWater++;
+        if (horse.swimming) swam++;
+        if (horse.onFloor) stood++;
+        deepest = math.min(deepest, horse.position.y);
+        // The first half second is the body sinking in from the bank, and the
+        // last metre is it climbing out on the far side; in between, a body
+        // that walked on water would still be at the surface.
+        if (overWater > 30 && x < x0 + 7.0 && horse.position.y > floorY - 0.5) onTop++;
+      }
+      if (x > x0 + 9.5) break;
+    }
+    player.probeWalk(Vector3.zero());
+    await _ticks(30);
+    debugPrint('[probe] move mount water: over the pool for $overWater ticks, swimming $swam of them, '
+        'standing on something $stood (expect 0), at the surface $onTop once sunk in (expect 0), '
+        'deepest feet ${deepest.toStringAsFixed(2)} (the surface is ${floorY.toStringAsFixed(1)}), '
+        'reached x=${horse.position.x.toStringAsFixed(2)} (the far bank is ${x0 + 9}) '
+        'back on the floor=${horse.onFloor} feet y=${horse.position.y.toStringAsFixed(2)}');
+    player.dismount();
+    horse.removed = true;
+
+    // Stage 40: a playground is a showroom — stamina and mana never run out
+    // there, so every ability can be tried one after the other. The flag is the
+    // world's own (`GameState.playground`); what is spent below is spent
+    // through the real dodge and the real class abilities, on dry ground at the
+    // top of the staircase (a dodge is refused in water).
+    final gs = GameState.instance;
+    final wasPlayground = gs.playground;
+    player.probeSetClass('mage');
+    _probePlace(Vector3(x0 + 9.5, floorY + 3.01, sz + 0.5));
+    await _ticks(10);
+    Future<({double stamina, double mana})> spendEverything() async {
+      player.stamina = player.maxStamina;
+      player.mana = player.maxMana;
+      player.probeDodge();
+      player.probeAbility();
+      player.probeAbility2();
+      await _ticks(2);
+      return (stamina: player.stamina, mana: player.mana);
+    }
+
+    gs.playground = false;
+    final paid = await spendEverything();
+    await _ticks(60); // the dodge's own cooldown, so the second round can dodge too
+    gs.playground = true;
+    final free = await spendEverything();
+    gs.playground = wasPlayground;
+    debugPrint('[probe] move endless: a dodge and both class abilities cost '
+        '${(player.maxStamina - paid.stamina).toStringAsFixed(1)} stamina and '
+        '${(player.maxMana - paid.mana).toStringAsFixed(1)} mana in an ordinary world (expect > 0), '
+        '${(player.maxStamina - free.stamina).toStringAsFixed(1)} and '
+        '${(player.maxMana - free.mana).toStringAsFixed(1)} in a playground (expect 0.0 and 0.0)');
+  }
+
+  /// `--reach-probe`: the reach rule — what is nearest is what is acted on,
+  /// and nothing acts through it. A creature stands two metres off with a
+  /// stone block between it and the crosshair: the block must be what is
+  /// aimed at, mining it must run, and a swing must leave the creature
+  /// untouched. The block comes down and the same swing lands. The creature's
+  /// own bite obeys the rule too — a wall between the two stops it. Last the
+  /// player mounts a horse and mines a block from the saddle, which the
+  /// saddle used to forbid.
+  Future<void> _probeReach() async {
+    final stone = Blocks.indexOf('stone');
+    final base = IVec3.floor(player.position);
+    final floor = base.y - 1;
+    for (var dx = -6; dx < 12; dx++) {
+      for (var dz = -6; dz < 7; dz++) {
+        world.setBlock(IVec3(base.x + dx, floor, base.z + dz), stone);
+        for (var dy = 1; dy < 7; dy++) {
+          world.setBlock(IVec3(base.x + dx, floor + dy, base.z + dz), Blocks.air);
+        }
+      }
+    }
+    final floorY = floor + 1.0;
+    player.setFirstPerson(true);
+    player.setLook(0.0, 0.0);
+    _probePlace(Vector3(base.x + 0.5, floorY + 0.01, base.z + 0.5));
+    await _ticks(10);
+    final aim = player.aimDirection().clone()..y = 0.0;
+    aim.normalize();
+    Vector3 ahead(double m) => player.aimOrigin() + aim * m;
+
+    final zombie = Mob()..setupMob(world, this, player, Species.def('zombie'));
+    zombie.position = ahead(2.4)..y = floorY + 0.05;
+    addMob(zombie);
+    zombie.stun(30.0, false); // it holds its two metres, so the two aims compare
+    // A wall between them, from the floor to over the heads: what the eye
+    // sees and what the swing meets are the same thing.
+    final wall = IVec3(IVec3.floor(ahead(1.4)).x, floor + 1, IVec3.floor(ahead(1.4)).z);
+    for (var dy = 0; dy < 3; dy++) {
+      world.setBlock(wall + IVec3(0, dy, 0), stone);
+    }
+    await _ticks(6);
+    final hpBefore = zombie.hp;
+    player.probeStrike();
+    await _ticks(4);
+    final hpThrough = zombie.hp;
+    debugPrint('[probe] reach block first: crosshair on ${player.isAiming ? 'the block $wall' : 'nothing'} '
+        '(the wall is $wall), creature aimed=${player.aimedMob?.species.id ?? '-'} (expect -), '
+        'mining runs=${player.isAiming}, the zombie took ${(hpBefore - hpThrough).toStringAsFixed(1)} damage through it (expect 0.0)');
+    for (var dy = 0; dy < 3; dy++) {
+      world.setBlock(wall + IVec3(0, dy, 0), Blocks.air);
+    }
+    await _ticks(6);
+    final aimedOpen = player.aimedMob?.species.id ?? '-';
+    player.probeStrike();
+    await _ticks(4);
+    debugPrint('[probe] reach block gone: creature aimed=$aimedOpen (expect zombie), '
+        'the same swing took ${(hpThrough - zombie.hp).toStringAsFixed(1)} damage (expect > 0)');
+
+    // The bite: a wall between the two stops the creature, which keeps
+    // chasing instead of hitting through it.
+    final wasCreative = GameState.instance.creative;
+    GameState.instance.creative = false;
+    zombie.removed = true;
+    final biter = Mob()..setupMob(world, this, player, Species.def('zombie'));
+    biter.position = ahead(1.9)..y = floorY + 0.05;
+    addMob(biter);
+    // A wall, not a post: eleven cells across, so walking around it takes
+    // longer than the watch below.
+    final side = Vector3(-aim.z, 0.0, aim.x);
+    final pen = <IVec3>[];
+    for (var dw = -5; dw <= 5; dw++) {
+      final at = IVec3.floor(ahead(1.0) + side * dw.toDouble());
+      for (var dy = 0; dy < 2; dy++) {
+        pen.add(IVec3(at.x, floor + 1 + dy, at.z));
+      }
+    }
+    for (final cell in pen) {
+      world.setBlock(cell, stone);
+    }
+    await _ticks(6);
+    final hpWalled = player.hp;
+    await _ticks(180);
+    final tookWalled = hpWalled - player.hp;
+    final stateWalled = biter.state.name;
+    for (final cell in pen) {
+      world.setBlock(cell, Blocks.air);
+    }
+    await _ticks(6);
+    final hpOpen = player.hp;
+    await _ticks(180);
+    debugPrint('[probe] reach bite: through the wall the player took ${tookWalled.toStringAsFixed(1)} '
+        '(expect 0.0, the zombie $stateWalled), with it gone ${(hpOpen - player.hp).toStringAsFixed(1)} '
+        '(expect > 0, the zombie ${biter.state.name})');
+    biter.removed = true;
+    player.hp = player.maxHp;
+    GameState.instance.creative = wasCreative;
+
+    // From the saddle: the rider mines the block in front of the horse.
+    final horse = Mob()..setupMob(world, this, player, Species.def('horse'));
+    horse.position = Vector3(base.x + 0.5, floorY + 0.05, base.z + 0.5);
+    addMob(horse);
+    horse.tame(player);
+    player.mountHorse(horse);
+    await _ticks(10);
+    player.setLook(0.0, -0.9); // down at the floor in front of the hooves
+    await _ticks(6);
+    final target = player.aimedBlock;
+    world.setBlock(target, Blocks.indexOf('dirt'));
+    await _ticks(6);
+    final aimedFromSaddle = player.aimedBlock;
+    input.probeHold(GameAction.attack, true);
+    var mined = 0;
+    for (var i = 0; i < 240; i++) {
+      await _ticks(1);
+      mined = i;
+      if (world.getBlock(target) == Blocks.air) break;
+    }
+    input.probeHold(GameAction.attack, false);
+    debugPrint('[probe] reach mounted: riding=${player.isMounted()}, the crosshair holds $aimedFromSaddle '
+        '(the dirt at $target), it broke=${world.getBlock(target) == Blocks.air} after $mined ticks');
+    player.dismount();
+    horse.removed = true;
+    player.setLook(0.0, 0.0);
   }
 
   /// `--outline-probe`: no two parts of any creature share a face plane, and

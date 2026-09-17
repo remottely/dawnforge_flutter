@@ -19,6 +19,7 @@ import 'remote_player.dart';
 import 'target.dart';
 import 'scene_body.dart';
 import '../game/pathfinder.dart';
+import '../game/reach.dart';
 import 'voxel_mesh_builder.dart';
 
 enum MobState { idle, wander, chase, attack, flee, dead }
@@ -133,6 +134,21 @@ class Mob extends SceneBody {
   double _toppleX = 0.0; // the death: the body tips over on its local X
   double _toppleY = 0.0;
   PhysicallyBasedMaterial? _fade; // the death fade
+  /// The launch that clears a whole block, the auto-jump every creature makes
+  /// at a step (8 m/s rises 1.23 m under gravity 26).
+  static const double stepJumpSpeed = 8.0;
+
+  /// How hard a swimmer paddles up, and how fast it may rise doing it: enough
+  /// to keep its head at the surface, never enough to climb out onto the water.
+  static const double swimStroke = 20.0;
+  static const double swimRise = 2.0;
+
+  /// What swimming costs a creature's speed.
+  static const double swimSpeedMult = 0.6;
+
+  /// A half step is hopped: double gravity until the feet land again.
+  bool _stepHop = false;
+
   static const double knockbackSpeed = 4.0;
   static const double knockbackUp = 3.0;
   static const double staggerSeconds = 0.3;
@@ -950,15 +966,15 @@ class Mob extends SceneBody {
   /// Ridden: the rider's wish drives the body at the species speed, sprint
   /// x1.4, jump on the floor.
   void _rideTick(double dt) {
-    final speed = species.speed * (rideSprint ? 1.4 : 1.0);
-    if (inLiquid && rideInput.length > 0.1) velocity.y = 3.0;
-    applyGravity(dt);
+    var speed = species.speed * (rideSprint ? 1.4 : 1.0);
+    if (swimming) speed *= swimSpeedMult;
+    _fallOrSwim(dt);
     if (rideJump && onFloor) velocity.y = 9.0;
     rideJump = false;
     velocity.x = lerpd(velocity.x, rideInput.x * speed, dt * 8.0);
     velocity.z = lerpd(velocity.z, rideInput.z * speed, dt * 8.0);
     move(dt);
-    if (hitWall && onFloor && rideInput.length > 0.1) tryStepUp();
+    _stepJump(rideInput);
     _dir = rideInput;
     _face(rideInput);
     _animate(dt);
@@ -992,6 +1008,15 @@ class Mob extends SceneBody {
   }
 
   bool huntsPuppet() => _target is! Player && state == MobState.chase;
+
+  /// Reach: is [t] the nearest thing on the line, or is there a wall first?
+  /// A creature swings at what is in front of it, so a door or a block has to
+  /// come down before the body behind it is the target.
+  bool canReach(Target t) {
+    final to = t.centre() - centre();
+    final d = to.length;
+    return d < 0.01 || Reach.toBarrier(world, centre(), to / d, d) >= d;
+  }
 
   void _stateThink(double dist, Vector3 toPlayer, double aggro, bool ranged, double reach) {
     final target = _target!;
@@ -1038,7 +1063,7 @@ class Mob extends SceneBody {
             main.spawnProjectile(centre() + Vector3(0, 0.3, 0), (target.centre() - centre()).normalized() * 24.0,
                 species.damage, this, species.body == 'humanoid' ? 'arrow' : 'frost');
           }
-        } else if (dist < reach) {
+        } else if (dist < reach && canReach(target)) {
           state = MobState.attack;
         }
       case MobState.attack:
@@ -1053,7 +1078,7 @@ class Mob extends SceneBody {
           }
           return;
         }
-        if (dist > reach + 0.4) {
+        if (dist > reach + 0.4 || !canReach(target)) {
           state = MobState.chase;
         } else if (_attackCd <= 0.0) {
           _attackCd = 1.3;
@@ -1125,13 +1150,9 @@ class Mob extends SceneBody {
       _fly(dt, speed);
       return;
     }
+    if (swimming) speed *= swimSpeedMult;
     final hops = species.hops;
-    if (inLiquid) {
-      if (_dir.length > 0.1) velocity.y = 3.0;
-      applyGravity(dt);
-    } else {
-      applyGravity(dt);
-    }
+    _fallOrSwim(dt);
     if (hops) {
       if (onFloor && _dir.length > 0.1 && _hopCd <= 0.0) {
         velocity.y = 7.0;
@@ -1145,13 +1166,48 @@ class Mob extends SceneBody {
       velocity.z = lerpd(velocity.z, _dir.z * speed, dt * 8.0);
     }
     move(dt);
-    if (hitWall && onFloor && _dir.length > 0.1) {
-      if (!tryStepUp()) velocity.y = 8.0;
-    }
+    _stepJump(_dir);
     if (_dir.length > 0.1) _face(_dir);
     _animate(dt);
     if (position.y < -5.0) removed = true;
     syncNode();
+  }
+
+  /// Deep enough in a liquid to swim in it rather than wade through it.
+  bool get swimming => inLiquid && !wading;
+
+  /// Gravity for one tick, and what a body does in water: nothing walks on it.
+  /// A swimmer paddles up while its head is under and sinks back when it is
+  /// out, so it rides the surface — the same bob the player makes holding
+  /// jump. A half step being hopped falls at double gravity, so the hop is
+  /// half the height of a jump.
+  void _fallOrSwim(double dt) {
+    applyGravity(dt);
+    if (_stepHop) applyGravity(dt);
+    if (swimming && headInLiquid) velocity.y = math.min(velocity.y + swimStroke * dt, swimRise);
+  }
+
+  /// Every creature climbs a step by jumping it, mount and rider included;
+  /// nothing in this world is ever lifted a floor up. Called after [move], the
+  /// step it reads is the one just walked into.
+  void _stepJump(Vector3 wish) {
+    if (onFloor || inLiquid) _stepHop = false;
+    if (wish.length < 0.1 || !hitWall) return;
+    if (swimming) {
+      // A swimmer pushing at a bank: the stroke alone only reaches the
+      // surface, so the body launches over the lowest lip that fits, the way
+      // the player climbs out of the water.
+      for (var lift = 0.1; lift <= 1.9; lift += 0.1) {
+        if (!stepFits(lift)) continue;
+        velocity.y = math.sqrt(2.0 * gravity * (lift + 0.25));
+        return;
+      }
+      return;
+    }
+    final step = stepAhead();
+    if (step <= 0.0) return;
+    velocity.y = stepJumpSpeed;
+    _stepHop = step == VoxelBody.halfStep;
   }
 
   /// Stage 23: a flier ignores gravity. Wandering it flutters on a random 3D

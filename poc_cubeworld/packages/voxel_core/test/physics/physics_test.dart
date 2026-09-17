@@ -64,15 +64,24 @@ void main() {
     expect(body.position.x, closeTo(7.0 - 0.3 - VoxelBody.skin, 1e-6));
   });
 
-  test('a slab is stepped onto; a full-height wall is not', () {
+  test('a slab reads as a half step and is jumped, never lifted; a full-height wall is no step', () {
     world.cells[const IVec3(6, 10, 4)] = _slab;
     body.position = Vector3(4.5, 10.001, 4.5);
-    var stepped = false;
+    var step = 0.0;
+    var maxRise = 0.0;
     run(1.0, () {
+      final before = body.position.y;
       body.velocity.x = 3.0;
-      if (body.tryStepUp()) stepped = true;
+      final ahead = body.stepAhead();
+      if (ahead > 0.0) {
+        step = ahead;
+        body.velocity.y = 8.6;
+      }
+      final rise = body.position.y - before;
+      if (rise > maxRise) maxRise = rise;
     });
-    expect(stepped, isTrue);
+    expect(step, VoxelBody.halfStep);
+    expect(maxRise, lessThan(0.3), reason: 'a jump rises over several ticks; a lift arrives in one');
     expect(body.position.y, greaterThan(10.4));
 
     world.cells[const IVec3(9, 11, 4)] = _stone;
@@ -88,7 +97,7 @@ void main() {
     expect(wall.hitWall, isTrue);
     // Without gravity the sweep never lands, so stand the body on the floor.
     wall.onFloor = true;
-    expect(wall.tryStepUp(), isFalse, reason: 'both lifts overlap the wall');
+    expect(wall.stepAhead(), 0.0, reason: 'both steps overlap the wall');
     expect(wall.position.y, closeTo(10.001, 1e-6), reason: 'vector_math stores float32');
   });
 
@@ -116,7 +125,7 @@ void main() {
     expect(body.position.y, closeTo(13.0 + VoxelBody.skin, 1e-3));
   });
 
-  test('with the full lift off, a one-block step is jumped, never lifted in one tick', () {
+  test('with the full step off, a one-block step is still jumped, never lifted in one tick', () {
     world.cells[const IVec3(7, 10, 4)] = _stone;
     world.cells[const IVec3(8, 10, 4)] = _stone;
     body.position = Vector3(5.5, 10.001, 4.5);
@@ -126,7 +135,7 @@ void main() {
       body.applyGravity(1 / 60);
       body.velocity.x = 3.0;
       body.move(1 / 60);
-      if (body.hitWall && !body.tryStepUp(fullBlock: false) && body.onFloor && body.stepFits(1.02)) body.velocity.y = 8.6;
+      if (body.stepAhead(fullBlock: false) > 0.0 || (body.hitWall && body.onFloor && body.stepFits(1.02))) body.velocity.y = 8.6;
       maxRise = body.position.y - before > maxRise ? body.position.y - before : maxRise;
     }
     expect(body.position.x, greaterThan(7.3));
@@ -234,7 +243,7 @@ void main() {
     final maxY = walkAndJump(body, 3.0);
     expect(body.position.x, closeTo(7.375 - 0.3 - VoxelBody.skin, 1e-6));
     expect(maxY, lessThan(10.0 + fenceBarrierHeight));
-    expect(body.tryStepUp(), isFalse, reason: 'a full step does not fit over the barrier');
+    expect(body.stepAhead(), 0.0, reason: 'no step fits over the barrier');
   });
 
   test('a ladder stops a body at its rungs, on the wall it hangs from', () {

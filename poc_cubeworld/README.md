@@ -30,7 +30,7 @@ flutter test                                           # tables, generator, mesh
 Probe flags (same as the Godot POC, plus a few for tuning): `--screenshot=<png> --frames=N
 --seed=N --radius=N --class=warrior|ranger|mage|rogue --time=0..1 --fly --fp --tp=x,y,z
 --look=yaw,pitch --hold=<item> --swing=N --settle=N --map --open-inventory --fire=primary|secondary --stage16
---strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --anim-probe --outline-probe --item-probe --underwater --step-teleport --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
+--strike --stage18 --stage19 --stage20 --ride --stage21a --kind=5..9 --biome=N --stage21b --stage22 --stage23 --stage24 --slot=<name> --open-map --open-settings --stage25 --reject-one --stage26 --shot=biome|village|trade|portal|fortress|cavern|tutorial --stage27 --stage28 --stage29 --kind=4 --stage30 --title-probe --stage31 --no-light --shot=room|cave --stage32 --shot=combat|mining --open-worlds --open-credits --credits-t=N --no-tutorial --move-probe --model-probe --map-probe --anim-probe --outline-probe --item-probe --reach-probe --underwater --climb --playground --shots=a,b,... --pg-checks --open-playground --weather=clear|rain|storm|snow --journal=0..4 --host --join=<ip> --wait-peer --trace`, and for the look: `--sun=k --amb=k
 --tm=aces|agx|neutral|linear --fogd=density --noshadow --shadowcache=0|1
 --casterfaces=front|back`. The debug app forwards the process arguments to Dart
 (`MainFlutterWindow.swift`), so no `--` separator is needed.
@@ -76,6 +76,22 @@ the body faced, the lean, the arms, the hop). It writes `<name>_wings.png` (wing
 beside wings folded), `<name>_walk.png` (a horse from behind, mid-trot, its tail clear of
 the barrel) and `<name>_dash.png` (a dash to the right, from the side), and prints every
 figure, so none of it has to be read off the pictures.
+
+`--move-probe` walks a cleared pad and prints what the body does at every obstacle: a half step
+(a slab) is hopped, a whole block is jumped, a three-block wall is not climbed until the climb
+setting is on, a bank is left on the first try, a puddle is waded through without the liquid
+state chattering, and the view bobs walking and holds still standing. It then walks a staircase
+of three whole blocks twice — once with a cow on its own legs, once with a horse carrying the
+player — and prints the largest rise either made in one tick, which is what tells a jump (a few
+centimetres) from the lift this used to be (a whole block). Last the horse crosses a pool four
+blocks deep and the probe counts the ticks it spent swimming, the ticks it stood on anything
+(none) and how deep it rode, which is how walking on water would show.
+
+`--reach-probe` puts a zombie two metres from the crosshair with a stone wall between the two.
+It prints what the crosshair holds (the block, never the creature), whether mining runs, and the
+damage a swing does through the wall (none); then breaks the wall and swings again. It walls the
+zombie off and watches it for three seconds — it may not bite through the wall — and takes the
+wall away, when it does. Last it mounts a horse and mines a block from the saddle.
 
 `--map-probe --screenshot=<png>` walks with the corner map on and captures it five times
 (`<name>_1.png` … `_5.png`), then switches to the full map (`<name>_full.png`, where the corner
@@ -172,7 +188,9 @@ the world as before; `--title-probe` forces the title even then.
   well, mine and temple, and the nearest forest, desert, snow, mountains, swamp, jungle and
   ocean. Keys: **F7** weather, **F8** time of day (noon, sunset, midnight, sunrise), **F9**
   rebuilds the exhibit you stand in (its creatures, carts and boat too). The zoo and arena
-  creatures come back on every boot; the spawner neither despawns nor counts them.
+  creatures come back on every boot; the spawner neither despawns nor counts them. Nothing runs
+  out in there: stamina and mana are endless, so sprints, dodges and both class abilities can be
+  tried one after the other.
 - **Creative** worlds take no damage, never get hungry, place blocks without spending them and
   fly with **F5** (Space up, Ctrl down). Survival keeps its feet on the ground.
 - **Tutorial**: a new world made from the title shows a card at the top of the screen with the
@@ -202,6 +220,8 @@ the world as before; `--title-probe` forces the title even then.
 | F7 / F8 / F9 | Playground only: cycle the weather · cycle the time of day · rebuild the exhibit you stand in |
 | M | the map in the top-right corner, centred on you; again: the same map full screen, with markers (waypoints, structures, mounts, spawn) and the corner hidden; again: off |
 | Alt | dodge dash: a quick leap where you are walking (backward too), arms thrown back, invulnerable for 0.4 s |
+| Riding | On a horse you work the world exactly as on foot: the same crosshair, the same swing, the same mining and placing. Steps are jumped, never teleported up — that goes for every creature, ridden or not — and deep water is swum, not walked on |
+| Reach | Whatever is nearest along your line is what you act on. A creature behind a block is out of reach until the block is gone, and the creature's own bite obeys the same rule. Grass, a flower and the gap between two fence posts are not in the way |
 | J | journal: talents, bestiary, achievements, waypoints, quests |
 | Esc | menu: render distance, mouse, FOV, master and music volume, weather, FPS overlay (saved in `settings.cfg` beside `worlds/`), save & quit — the world keeps running behind it |
 

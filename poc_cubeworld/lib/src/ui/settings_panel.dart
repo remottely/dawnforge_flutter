@@ -99,7 +99,6 @@ class _SettingsPanelState extends State<SettingsPanel> {
         }),
         _check('Show FPS', settings.showFps, (on) => settings.showFps = on),
         _check('View bobbing (the camera dips with each step)', settings.viewBob, (on) => settings.viewBob = on),
-        _check('Step teleport (off = hop up stairs, jump up blocks)', settings.stepTeleport, (on) => settings.stepTeleport = on),
         _check('Climb walls (hold Space against a wall)', settings.climbWalls, (on) => settings.climbWalls = on),
         _check('Tutorial done (off = show it on the next new world)', settings.tutorialDone, (on) => settings.tutorialDone = on),
       ],

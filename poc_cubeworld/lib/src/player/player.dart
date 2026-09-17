@@ -30,6 +30,7 @@ import '../game/input.dart';
 import '../game/inventory.dart';
 import '../game/net.dart';
 import '../game/rails.dart';
+import '../game/reach.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
 import '../world/godot_camera.dart';
@@ -115,6 +116,30 @@ class Player extends SceneBody implements Target {
 
   final PlayerModel model = PlayerModel();
 
+  /// Stage 40: the playground is a showroom — nothing runs out there, so every
+  /// ability can be tried one after the other. It reads the world's own flag,
+  /// so it holds in a saved playground as in a fresh one.
+  static bool get endlessStats => GameState.instance.playground;
+
+  /// Does [have] cover [cost]? In the playground, always.
+  static bool canSpend(double have, double cost) => endlessStats || have >= cost;
+
+  /// What is left of [have] once [cost] is paid, never under zero. In the
+  /// playground nothing is paid.
+  static double afterSpending(double have, double cost) => endlessStats ? have : math.max(have - cost, 0.0);
+
+  /// Is there [cost] stamina to spend?
+  bool hasStamina(double cost) => canSpend(stamina, cost);
+
+  /// Is there [cost] mana to spend?
+  bool hasMana(double cost) => canSpend(mana, cost);
+
+  /// Pays [cost] stamina.
+  void spendStamina(double cost) => stamina = afterSpending(stamina, cost);
+
+  /// Pays [cost] mana.
+  void spendMana(double cost) => mana = afterSpending(mana, cost);
+
   /// The forearm and item drawn in front of the eye in first person; the body
   /// [model] is hidden then, so this is the only part of the player on screen.
   final HandView handView = HandView();
@@ -124,6 +149,12 @@ class Player extends SceneBody implements Target {
   IVec3 aimedNormal = IVec3.zero;
   bool isAiming = false;
   Mob? aimedMob;
+
+  /// How far the crosshair's line stays clear of anything that stops a body,
+  /// or [double.infinity] when it stays clear the whole way. Everything the
+  /// crosshair acts on — a creature, a boat, a cart, a mount — must stand
+  /// nearer than this: nothing is reached through a wall.
+  double aimClearDistance = double.infinity;
   double mineProgress = 0.0;
   IVec3 _mineTarget = const IVec3(999999, 0, 0);
 
@@ -482,28 +513,25 @@ class Player extends SceneBody implements Target {
     final origin = aimOrigin();
     final dir = aimDirection();
     final hit = voxelRaycast(origin, dir, reach);
-    isAiming = hit != null;
-    aimedMob = null;
-    var mobDist = double.infinity;
-    for (final mob in main.mobs) {
-      final d = mob.rayDistance(origin, dir);
-      if (d >= 0.0 && d < meleeReach && d < mobDist) {
-        mobDist = d;
-        aimedMob = mob;
-      }
-    }
-    final mob = aimedMob;
-    if (hit != null && (mob == null || hit.distance < mobDist)) {
-      aimedBlock = hit.block;
+    // Reach: nothing is acted on through what stands in front of it. A
+    // creature is out of reach behind anything that stops a body — a wall, a
+    // closed door — but not behind what a body walks through: grass, a flower,
+    // the gap between two fence posts.
+    aimClearDistance = Reach.toBarrier(world, origin, dir, reach);
+    final mob = Reach.nearestBody(main.mobs, origin, dir, maxDist: meleeReach, blockedAt: aimClearDistance);
+    aimedMob = mob;
+    // Of the block and the creature, the crosshair mines and places at
+    // whichever is nearer; a creature behind the block is not in the way of it.
+    final mobDist = mob?.rayDistance(origin, dir) ?? double.infinity;
+    isAiming = hit != null && hit.distance <= mobDist;
+    if (isAiming) {
+      aimedBlock = hit!.block;
       aimedNormal = hit.normal;
       outline.show(selectionBoxAt(world, hit.block.x, hit.block.y, hit.block.z));
+    } else if (mob != null) {
+      outline.show(mobBox(mob));
     } else {
-      isAiming = false;
-      if (mob != null) {
-        outline.show(mobBox(mob));
-      } else {
-        outline.hide();
-      }
+      outline.hide();
     }
   }
 
@@ -605,7 +633,7 @@ class Player extends SceneBody implements Target {
     speed *= effects.speedMultiplier() * (1.0 + 0.05 * talentRank('swiftness'));
     // Stage 29: soul sand under the feet.
     if (onFloor) speed *= Blocks.speedMult(world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor()));
-    if (sprinting) stamina = math.max(stamina - 6.0 * dt, 0.0);
+    if (sprinting) spendStamina(6.0 * dt);
 
     final jumpHeld = gameplay && input.down(GameAction.jump);
     // Fly mode (F5): no gravity, vertical on jump / sneak.
@@ -635,7 +663,7 @@ class Player extends SceneBody implements Target {
     if (Settings.instance.climbWalls && jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5) {
       climbing = true;
       velocity.y = climbSpeed;
-      stamina = math.max(stamina - 10.0 * dt, 0.0);
+      spendStamina(10.0 * dt);
     } else if (_onLadder()) {
       velocity.y = jumpHeld ? climbSpeed : (sneaking ? -climbSpeed : 0.0);
       climbing = jumpHeld;
@@ -688,19 +716,15 @@ class Player extends SceneBody implements Target {
       final d = position - posBefore;
       GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
     }
-    if (hitWall && wish.length > 0.1 && !climbing && !inLiquid) {
-      // `stepTeleport` lifts the body onto a half step or a full block at once.
-      // Otherwise nothing teleports: a half step (a slab, a stair) is hopped —
-      // the jump's launch speed under double gravity, so half the height in
-      // half the time — and a full block is jumped (Minecraft's auto-jump).
-      if (Settings.instance.stepTeleport) {
-        tryStepUp();
-      } else if (onFloor && stepFits(0.52)) {
+    if (wish.length > 0.1 && !climbing && !inLiquid) {
+      // Nothing is ever lifted into place. A half step (a slab, a stair) is
+      // hopped — the jump's launch speed under double gravity, so half the
+      // height in half the time — and a full block is jumped (Minecraft's
+      // auto-jump). Every creature in the world climbs a step the same way.
+      final step = stepAhead(fullBlock: !sneaking);
+      if (step > 0.0) {
         velocity.y = jumpVelocity;
-        _hopping = true;
-        _fallStartY = position.y;
-      } else if (onFloor && !sneaking && stepFits(1.02)) {
-        velocity.y = jumpVelocity;
+        _hopping = step == VoxelBody.halfStep;
         _fallStartY = position.y;
       }
     }
@@ -975,13 +999,13 @@ class Player extends SceneBody implements Target {
       _attackCooldown = 0.3;
       return;
     }
-    if (stamina < bowShotStamina) {
+    if (!hasStamina(bowShotStamina)) {
       notify('Too tired to draw');
       _attackCooldown = 0.3;
       return;
     }
     inventory.remove('arrow', 1);
-    stamina -= bowShotStamina;
+    spendStamina(bowShotStamina);
     Sfx.play('shoot', -6.0);
     swingArm();
     _attackCooldown = Items.tierOf(bow) < 3 ? 0.5 : 0.4;
@@ -997,13 +1021,13 @@ class Player extends SceneBody implements Target {
       _useCooldown = 0.3;
       return;
     }
-    if (stamina < bowFanStamina) {
+    if (!hasStamina(bowFanStamina)) {
       notify('Too tired to draw');
       _useCooldown = 0.3;
       return;
     }
     inventory.remove('arrow', 3);
-    stamina -= bowFanStamina;
+    spendStamina(bowFanStamina);
     Sfx.play('shoot', -4.0);
     swingArm();
     _attackCooldown = 0.7;
@@ -1016,12 +1040,12 @@ class Player extends SceneBody implements Target {
 
   /// Staff spray (hold the attack button): a fast stream of thick bolts, cheap on mana.
   void _castBolt(String staff) {
-    if (mana < manaCost(staffBoltMana)) {
+    if (!hasMana(manaCost(staffBoltMana))) {
       notify('Not enough mana');
       _attackCooldown = 0.3;
       return;
     }
-    mana -= manaCost(staffBoltMana);
+    spendMana(manaCost(staffBoltMana));
     Sfx.play('bolt', -9.0);
     swingArm();
     _attackCooldown = Items.tierOf(staff) < 3 ? 0.22 : 0.17;
@@ -1033,12 +1057,12 @@ class Player extends SceneBody implements Target {
 
   /// Arc (right button with a staff): Cube World's cone, as five bolts across 50°.
   void _castArc(String staff) {
-    if (mana < manaCost(staffArcMana)) {
+    if (!hasMana(manaCost(staffArcMana))) {
       notify('Not enough mana');
       _useCooldown = 0.3;
       return;
     }
-    mana -= manaCost(staffArcMana);
+    spendMana(manaCost(staffArcMana));
     Sfx.play('bolt', -3.0);
     swingArm();
     _attackCooldown = 0.6;
@@ -1221,8 +1245,9 @@ class Player extends SceneBody implements Target {
 
   /// A melee swing at an empty cart puts it back in the bag as its item.
   bool _tryBreakCart() {
+    final within = math.min(4.0, aimClearDistance);
     for (final c in main.carts) {
-      if (!c.removed && c.rider == null && (c.position - position).length < 4.0 && c.rayHits(aimOrigin(), aimDirection(), 4.0)) {
+      if (!c.removed && c.rider == null && (c.position - position).length < 4.0 && c.rayHits(aimOrigin(), aimDirection(), within)) {
         if (c.replica) {
           Net.instance.requestBreakCart(c.netId);
         } else {
@@ -1238,22 +1263,20 @@ class Player extends SceneBody implements Target {
   }
 
   bool _tryBreakBoat() {
-    for (final b in main.boats) {
-      if (b.driver == null && b.rayDistance(aimOrigin(), aimDirection(), 0.2) >= 0.0 && (b.position - position).length < 4.0) {
-        if (b.replica) {
-          // The host drops the item and frees it (stage 25).
-          Net.instance.requestBreakBoat(b.netId);
-        } else {
-          main.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
-          b.removed = true;
-        }
-        swingArm();
-        Sfx.play('break', -6.0);
-        _attackCooldown = 0.4;
-        return true;
-      }
+    final b = Reach.nearestBody(main.boats, aimOrigin(), aimDirection(),
+        maxDist: 4.0, blockedAt: aimClearDistance, inflate: 0.2, accepts: (boat) => boat.driver == null);
+    if (b == null) return false;
+    if (b.replica) {
+      // The host drops the item and frees it (stage 25).
+      Net.instance.requestBreakBoat(b.netId);
+    } else {
+      main.spawnDrop(b.position + Vector3(0, 0.5, 0), 'boat', 1);
+      b.removed = true;
     }
-    return false;
+    swingArm();
+    Sfx.play('break', -6.0);
+    _attackCooldown = 0.4;
+    return true;
   }
 
   void toggleDoor(IVec3 at) {
@@ -1286,11 +1309,11 @@ class Player extends SceneBody implements Target {
     }
     switch (playerClass) {
       case 'warrior':
-        if (stamina < 25.0) {
+        if (!hasStamina(25.0)) {
           notify('Too tired');
           return;
         }
-        stamina -= 25.0;
+        spendStamina(25.0);
         swingArm();
         final dmg = _meleeDamage(heldItem()) * 1.5;
         for (final b in List.of(main.mobs)) {
@@ -1306,12 +1329,12 @@ class Player extends SceneBody implements Target {
           notify('Need 8 arrows');
           return;
         }
-        if (stamina < 25.0) {
+        if (!hasStamina(25.0)) {
           notify('Too tired');
           return;
         }
         inventory.remove('arrow', 8);
-        stamina -= 25.0;
+        spendStamina(25.0);
         swingArm();
         Sfx.play('shoot', -2.0);
         final bow = weaponStyle() == 'bow' ? heldItem() : 'bow';
@@ -1322,11 +1345,11 @@ class Player extends SceneBody implements Target {
         main.spawnEffect(centre(), Vector3(0.6, 0.9, 0.5), 2.0);
         abilityCooldown = 7.0;
       case 'mage':
-        if (mana < 30.0) {
+        if (!hasMana(30.0)) {
           notify('Not enough mana');
           return;
         }
-        mana -= 30.0;
+        spendMana(30.0);
         for (final b in List.of(main.mobs)) {
           if ((b.position - position).length < 6.0) {
             final dmg = 8.0 + level * 2;
@@ -1337,11 +1360,11 @@ class Player extends SceneBody implements Target {
         main.spawnEffect(centre(), Vector3(1, 0.35, 0.1), 6.0);
         abilityCooldown = 10.0;
       case 'rogue':
-        if (stamina < 20.0) {
+        if (!hasStamina(20.0)) {
           notify('Too tired');
           return;
         }
-        stamina -= 20.0;
+        spendStamina(20.0);
         final dir = _lastMoveDir.length > 0.1 ? _lastMoveDir.clone() : forward;
         dir.y = 0.0;
         velocity += dir.normalized() * 22.0;
@@ -1371,7 +1394,7 @@ class Player extends SceneBody implements Target {
       return;
     }
     final cost = manaCost(c.mana2);
-    if (mana < cost) {
+    if (!hasMana(cost)) {
       notify('Not enough mana');
       return;
     }
@@ -1438,7 +1461,13 @@ class Player extends SceneBody implements Target {
         Sfx.play('splash', -6.0, 0.6);
         ability2Cooldown = 12.0;
     }
-    mana -= cost;
+    spendMana(cost);
+  }
+
+  /// Probes: fire the R ability with its cooldown cleared.
+  void probeAbility() {
+    abilityCooldown = 0.0;
+    _useAbility();
   }
 
   /// Probes: fire the Q ability with its cooldown cleared.
@@ -1464,7 +1493,7 @@ class Player extends SceneBody implements Target {
   }
 
   void _mineTick(double dt) {
-    if (!isAiming || aimedMob != null) {
+    if (!isAiming) {
       _resetMining();
       return;
     }
@@ -2055,19 +2084,11 @@ class Player extends SceneBody implements Target {
 
   /// The nearest tamed, unridden mount the camera ray touches within
   /// [mountReach].
-  Mob? _findMount() {
-    Mob? best;
-    var bestD = mountReach;
-    for (final m in main.pets) {
-      if (!m.isMount || !m.tamed || m.ridden || m.isDead) continue;
-      final d = (m.position - position).length;
-      if (d < bestD && m.rayDistance(aimOrigin(), aimDirection(), 0.4) >= 0.0) {
-        best = m;
-        bestD = d;
-      }
-    }
-    return best;
-  }
+  Mob? _findMount() => Reach.nearestBody(main.pets, aimOrigin(), aimDirection(),
+      maxDist: mountReach,
+      blockedAt: aimClearDistance,
+      inflate: 0.4,
+      accepts: (m) => m.isMount && m.tamed && !m.ridden && !m.isDead);
 
   void mountHorse(Mob h) {
     if (!h.tamed || !h.isMount) throw StateError('only a tamed mount can be ridden');
@@ -2129,14 +2150,9 @@ class Player extends SceneBody implements Target {
     model.animate(dt, 0.0, true, false, false);
     model.yaw = lerpAngle(model.yaw, h.modelYaw(), dt * 8.0);
     model.setHeld(heldItem());
-    fov = lerpd(fov, baseFov + (h.rideSprint ? 8.0 : 0.0), dt * 6.0);
-    syncNode();
-    _updateCamera(dt);
-    _updateAim();
-    if (gameplay && input.down(GameAction.attack) && _attackCooldown <= 0.0) _attackPressed();
-    if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0 && _useRepeats()) _usePressed();
-    damageFlash = math.max(damageFlash - dt * 3.0, 0.0);
-    world.updateAround(position);
+    // A rider works the world from the saddle exactly as on foot: the same
+    // aim, the same swing, the same mining, the same placing.
+    _finishTick(dt, input, gameplay, flatForward, wish, h.rideSprint);
   }
 
   /// Holding the use button repeats a placement; the rod and the buckets act
@@ -2313,10 +2329,10 @@ class Player extends SceneBody implements Target {
 
   void _dodgePressed() {
     final cost = math.max(15.0 - 5.0 * talentRank('shadowstep'), 0.0);
-    if (_dodge > 0.0 || _dodgeCd > 0.0 || stamina < cost || riding != null || mount != null || cart != null || sleeping > 0.0 || inLiquid) {
+    if (_dodge > 0.0 || _dodgeCd > 0.0 || !hasStamina(cost) || riding != null || mount != null || cart != null || sleeping > 0.0 || inLiquid) {
       return;
     }
-    stamina -= cost;
+    spendStamina(cost);
     _dodge = dodgeTime;
     _dodgeCd = 0.9;
     _invulnerable = dodgeTime;

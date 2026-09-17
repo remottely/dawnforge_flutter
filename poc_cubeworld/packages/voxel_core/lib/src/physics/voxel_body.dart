@@ -212,23 +212,27 @@ class VoxelBody {
     inLiquid = inLiquid ? (wet || t.isLiquid(soleId)) : wet;
   }
 
-  /// Step up onto a low obstacle when walking into it: half a block first (a
-  /// slab, the low step of stairs), then a full block unless [fullBlock] is
-  /// false. The lifted body is also tested a hair further in the blocked
-  /// direction, so a half step never wins against a full-height wall.
-  bool tryStepUp({bool fullBlock = true}) {
-    if (!hitWall || !onFloor) return false;
-    for (final lift in fullBlock ? const [0.52, 1.02] : const [0.52]) {
-      if (!stepFits(lift)) continue;
-      position = position + Vector3(0, lift, 0);
-      return true;
-    }
-    return false;
+  /// A step high enough to stand on a slab or the low step of stairs.
+  static const double halfStep = 0.52;
+
+  /// A step high enough to stand on a whole block.
+  static const double fullStep = 1.02;
+
+  /// The step the body just walked into — [halfStep], [fullStep] or 0 when
+  /// there is none to climb. Nothing is ever lifted into place: a body that
+  /// meets a step jumps it, which is what this answers for. The body is also
+  /// tested a hair further in the blocked direction, so a half step never wins
+  /// against a full-height wall.
+  double stepAhead({bool fullBlock = true}) {
+    if (!hitWall || !onFloor) return 0.0;
+    if (stepFits(halfStep)) return halfStep;
+    if (fullBlock && stepFits(fullStep)) return fullStep;
+    return 0.0;
   }
 
   /// Would the body, lifted by [lift] and nudged a hair toward the wall it just
-  /// hit, stand clear of every block? A game that jumps a full step instead of
-  /// lifting onto it asks this with 1.02.
+  /// hit, stand clear of every block? [stepAhead] asks it of each step height;
+  /// a swimmer climbing a bank asks it of every lift that would clear the lip.
   bool stepFits(double lift) {
     final up = position + Vector3(0, lift, 0);
     return !_overlapsSolid(up) && !_overlapsSolid(up + _blocked * 0.05);

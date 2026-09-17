@@ -23,12 +23,6 @@ class Settings {
   bool viewBob = true; // the camera's walking sway; off for a still image
   bool tutorialDone = false; // stage 30: the guided first steps, shown once
 
-  /// Walking into a one-block step lifts the body onto it in one tick (the
-  /// port's first behaviour). Off: the player jumps it, Minecraft's auto-jump.
-  /// The half step (a slab, a stair) is always taken. `--step-teleport` turns
-  /// it on for one run.
-  bool stepTeleport = false;
-
   /// Cube World's wall climbing: hold jump against a wall. Off by default;
   /// ladders climb either way. `--climb` turns it on for one run.
   bool climbWalls = false;
@@ -60,7 +54,7 @@ class Settings {
         '[input]\n\nsensitivity=${f(sensitivity)}\n\n'
         '[audio]\n\nvolume=${f(volume)}\nmusic_volume=${f(musicVolume)}\n\n'
         '[world]\n\nweather=$weather\n\n'
-        '[gameplay]\n\nstep_teleport=$stepTeleport\nclimb_walls=$climbWalls\n\n'
+        '[gameplay]\n\nclimb_walls=$climbWalls\n\n'
         '[tutorial]\n\ndone=$tutorialDone\n';
   }
 
@@ -88,7 +82,6 @@ class Settings {
     showFps = flag('video/show_fps', showFps);
     viewBob = flag('video/view_bob', viewBob);
     tutorialDone = flag('tutorial/done', tutorialDone);
-    stepTeleport = flag('gameplay/step_teleport', stepTeleport);
     climbWalls = flag('gameplay/climb_walls', climbWalls);
   }
 

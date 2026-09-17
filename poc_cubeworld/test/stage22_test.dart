@@ -23,9 +23,9 @@ void main() {
     return w;
   }
 
-  /// Walks a 0.3 / 1.75 body along +x at 4.3 m/s for [ticks], stepping up when
-  /// blocked, jumping once at a wall past [jumpAfterX] when [jump]. [barrier]
-  /// meets fences as a mob does.
+  /// Walks a 0.3 / 1.75 body along +x at 4.3 m/s for [ticks], jumping every step
+  /// it meets (nothing is ever lifted into place), plus one jump at a wall past
+  /// [jumpAfterX] when [jump]. [barrier] meets fences as a penned mob does.
   ({double x, double y, double maxX, double maxY}) walk(VoxelWorld w, double startX, double stopX, int ticks,
       {bool jump = false, double jumpAfterX = 0.0, bool barrier = false}) {
     final body = VoxelBody()
@@ -38,7 +38,7 @@ void main() {
       body.applyGravity(dt);
       body.velocity.x = body.position.x < stopX ? 4.3 : 0.0;
       body.move(dt);
-      if (body.hitWall && body.position.x < stopX) body.tryStepUp();
+      if (body.position.x < stopX && body.stepAhead() > 0.0) body.velocity.y = 8.6;
       if (jump && !jumped && body.hitWall && body.onFloor && body.position.x > jumpAfterX) {
         jumped = true;
         body.velocity.y = 8.6;
@@ -71,7 +71,7 @@ void main() {
     expect(Items.has('water_flow'), isFalse);
   });
 
-  test('a body steps onto a slab, climbs stairs without a jump and crosses a fence a mob cannot', () {
+  test('a body jumps onto a slab, climbs stairs on its own and crosses a fence a mob cannot', () {
     final w = flatWorld();
     w.setBlock(const IVec3(5, floorY, 8), Blocks.indexOf('oak_slab'));
     final slab = walk(w, 3.5, 5.2, 90);
@@ -85,7 +85,7 @@ void main() {
 
     final w3 = flatWorld();
     w3.setBlock(const IVec3(9, floorY, 8), Blocks.indexOf('oak_fence'));
-    // The player meets the fence as drawn, one block, and steps over it.
+    // The player meets the fence as drawn, one block, and jumps over it.
     final crossed = walk(w3, 3.5, 20.0, 220);
     expect(crossed.maxX, greaterThan(10.0));
     final fence = walk(w3, 3.5, 20.0, 220, jump: true, jumpAfterX: 8.5, barrier: true);

@@ -1,5 +1,7 @@
 import 'package:vector_math/vector_math.dart';
 
+import '../grid/block_collision.dart';
+import '../grid/block_shape.dart';
 import '../grid/voxel_block_table.dart';
 import '../math/ivec3.dart';
 import 'voxel_body.dart';
@@ -90,6 +92,71 @@ abstract final class VoxelRaycast {
       }
     }
     return null;
+  }
+
+  /// How far along the ray the first collision box stands — the first thing
+  /// that would stop a body — or null when the line is clear for [reachDist].
+  ///
+  /// This is the reach every swing and every bite obeys: what is nearest wins,
+  /// so a creature behind a wall is out of reach until the wall is gone. It
+  /// reads the boxes, not the cells, so the line passes through the gap in a
+  /// fence, an open door and a flower, exactly where a body passes. A box the
+  /// ray starts inside is not in the way: a shoulder in a wall still swings.
+  static double? barrier(VoxelQuery q, Vector3 origin, Vector3 direction, double reachDist,
+      {bool fenceBarrier = false}) {
+    var bx = origin.x.floor(), by = origin.y.floor(), bz = origin.z.floor();
+    final sx = direction.x > 0.0 ? 1 : -1, sy = direction.y > 0.0 ? 1 : -1, sz = direction.z > 0.0 ? 1 : -1;
+    final tdx = direction.x.abs() < 1e-9 ? double.infinity : (1.0 / direction.x).abs();
+    final tdy = direction.y.abs() < 1e-9 ? double.infinity : (1.0 / direction.y).abs();
+    final tdz = direction.z.abs() < 1e-9 ? double.infinity : (1.0 / direction.z).abs();
+    var tmx = _distToBoundary(origin.x, direction.x, bx);
+    var tmy = _distToBoundary(origin.y, direction.y, by);
+    var tmz = _distToBoundary(origin.z, direction.z, bz);
+    var travelled = 0.0;
+    while (travelled <= reachDist) {
+      // y < 0 is solid rock.
+      final boxes = by < 0 ? const [CollisionBox.full] : collisionBoxesAt(q, bx, by, bz, fenceBarrier: fenceBarrier);
+      var near = double.infinity;
+      for (final box in boxes) {
+        final t = _boxEntry(box.shifted(bx, by, bz), origin, direction);
+        if (t > 0.0 && t < near) near = t;
+      }
+      // The cells are walked in order and no two overlap, so the first cell
+      // holding a box holds the nearest one.
+      if (near <= reachDist) return near;
+      if (tmx < tmy && tmx < tmz) {
+        bx += sx;
+        travelled = tmx;
+        tmx += tdx;
+      } else if (tmy < tmz) {
+        by += sy;
+        travelled = tmy;
+        tmy += tdy;
+      } else {
+        bz += sz;
+        travelled = tmz;
+        tmz += tdz;
+      }
+    }
+    return null;
+  }
+
+  /// Where the ray enters [box], or -1 when it misses it, starts inside it or
+  /// leaves it behind.
+  static double _boxEntry(CollisionBox box, Vector3 origin, Vector3 direction) {
+    var near = double.negativeInfinity;
+    var far = double.infinity;
+    for (var axis = 0; axis < 3; axis++) {
+      final d = direction[axis];
+      final inv = d != 0.0 ? 1.0 / d : double.infinity;
+      final a = (box.min(axis) - origin[axis]) * inv;
+      final b = (box.max(axis) - origin[axis]) * inv;
+      final lo = a < b ? a : b;
+      final hi = a > b ? a : b;
+      if (lo > near) near = lo;
+      if (hi < far) far = hi;
+    }
+    return far < near || near <= 0.0 ? -1.0 : near;
   }
 
   static double _distToBoundary(double o, double d, int cell) {
