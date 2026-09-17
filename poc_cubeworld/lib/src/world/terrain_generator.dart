@@ -339,145 +339,229 @@ class TerrainGenerator implements ChunkGenerator {
     return blocks;
   }
 
-  static const int _reach = 3;
+  /// How far outside a chunk a tree may stand and still drop a leaf inside it:
+  /// the widest crown (5) plus the far side of a 2x2 trunk (1).
+  static const int _reach = 6;
 
-  /// Trees, cacti and plants. Walks every column whose feature can REACH this
-  /// chunk and clips what lands here, so a canopy crosses a border whole.
+  /// Stage 41: the tree grid. The world is cut into [_treePatch] squares and at
+  /// most one tree grows in each, never closer than [_treeInset] to the patch
+  /// border — so two trunks always stand `2 * _treeInset + 1` blocks apart.
+  /// Trees used to be rolled per column, which let two of them touch and made a
+  /// forest a wall; the patch is what puts a path between the trunks.
+  static const int _treePatch = 7, _treeInset = 2;
+
+  /// How many patches of a biome carry a tree, in per cent. Roughly a quarter
+  /// of the old per-column rate, which is what doubles the gap between trunks.
+  static int treeChance(int biome) => switch (biome) {
+        biomeForest => 92,
+        biomeJungle => 47,
+        biomeSnow => 37,
+        biomeSwamp => 27,
+        biomePlains => 20,
+        biomeMountain => 20,
+        biomeBeach => 12,
+        biomeDesert => 8,
+        _ => 0,
+      };
+
+  /// The column of the patch holding ([wx], [wz]) where its tree may grow, and
+  /// the patch's hash. Pure position, so every chunk agrees on it; public so a
+  /// test can walk the grid without generating a world.
+  ({int x, int z, int hash}) treePatchOf(int wx, int wz) {
+    const span = _treePatch - 2 * _treeInset;
+    final px = _floorDiv(wx, _treePatch), pz = _floorDiv(wz, _treePatch);
+    final h = hash(px, 91, pz);
+    return (
+      x: px * _treePatch + _treeInset + (h >> 8) % span,
+      z: pz * _treePatch + _treeInset + (h >> 16) % span,
+      hash: h,
+    );
+  }
+
+  /// The eight directions a limb or a frond can take.
+  static const List<(int, int)> _compass = [
+    (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1), //
+  ];
+
+  /// Trees, cacti and plants. The small stuff belongs to this chunk's own
+  /// columns; a tree is looked for over every column that can REACH this chunk,
+  /// so a crown crossing a border arrives whole.
   void _decorate(Uint8List blocks, int ox, int oz) {
     for (var z = -_reach; z < sizeZ + _reach; z++) {
       for (var x = -_reach; x < sizeX + _reach; x++) {
+        final inside = x >= 0 && x < sizeX && z >= 0 && z < sizeZ;
         final wx = ox + x, wz = oz + z;
-        if (playground && inPlaza(wx, wz, 4)) continue; // stage 33: no tree leans into the plaza
+        // The patch is a hash and the height is noise, so the cheap question
+        // goes first: a column outside the chunk matters only for its tree.
+        final patch = treePatchOf(wx, wz);
+        final tree = patch.x == wx && patch.z == wz;
+        if (!inside && !tree) continue;
+        if (playground && inPlaza(wx, wz, 8)) continue; // stage 33: nothing leans into the plaza
         final h = surfaceHeight(wx, wz);
         final biome = _biomeFor(wx, wz, h);
-        final hsh = hash(wx, 7, wz);
-        final roll = hsh % 1000;
-        final top = h - 1;
-        final y = h;
-        final inside = x >= 0 && x < sizeX && z >= 0 && z < sizeZ;
-        if (inside && blocks[index(x, top, z)] == _air) continue;
+        if (inside && blocks[index(x, h - 1, z)] == _air) continue;
         if (biome == biomeSwamp && _swampPool(wx, wz, h, biome)) continue; // nothing grows in a pool
-        switch (biome) {
-          case biomeForest:
-            if (roll < 55) {
-              _placeOak(blocks, x, y, z, 4 + ((hsh >> 10) % 3));
-            } else if (roll < 75) {
-              _placeBigOak(blocks, x, y, z);
-            } else if (roll < 260) {
-              _setIfInside(blocks, x, y, z, _tallGrass);
-            } else if (roll < 285) {
-              _setIfInside(blocks, x, y, z, _mushroom);
-            } else if (roll < 305) {
-              _setIfInside(blocks, x, y, z, _flowerRed);
-            }
-          case biomePlains:
-            if (roll < 6) {
-              _placeOak(blocks, x, y, z, 4 + ((hsh >> 10) % 3));
-            } else if (roll < 150) {
-              _setIfInside(blocks, x, y, z, _tallGrass);
-            } else if (roll < 172) {
-              _setIfInside(blocks, x, y, z, _flowerYellow);
-            } else if (roll < 190) {
-              _setIfInside(blocks, x, y, z, _flowerRed);
-            }
-          case biomeSwamp:
-            // Godot tests PoolEdge first; the roll goes first here (same result,
-            // four fewer height samples on most columns).
-            if (roll < 550 && _poolEdge(wx, wz)) {
-              _setIfInside(blocks, x, y, z, _reeds);
-            } else if (roll < 22) {
-              _placeWillow(blocks, x, y, z, 4 + ((hsh >> 10) % 2));
-            } else if (roll < 300) {
-              _setIfInside(blocks, x, y, z, _tallGrass);
-            } else if (roll < 340) {
-              _setIfInside(blocks, x, y, z, _mushroom);
-            }
-          case biomeJungle:
-            if (roll < 38) {
-              _placeJungleTree(blocks, x, y, z, 8 + ((hsh >> 10) % 7), hsh);
-            } else if (roll < 330) {
-              _setIfInside(blocks, x, y, z, _fern);
-            } else if (roll < 420) {
-              _setIfInside(blocks, x, y, z, _tallGrass);
-            } else if (roll < 432) {
-              _placeMelons(blocks, x, y, z, hsh);
-            }
-          case biomeSnow:
-            if (roll < 30) _placeSpruce(blocks, x, y, z, 6 + ((hsh >> 10) % 4));
-          case biomeMountain:
-            if (h < 96 && roll < 12) _placeSpruce(blocks, x, y, z, 5 + ((hsh >> 10) % 3));
-          case biomeDesert:
-            if (roll < 12) {
-              final ch = 2 + ((hsh >> 10) % 2);
-              for (var i = 0; i < ch; i++) {
-                _setIfInside(blocks, x, y + i, z, _cactus);
-              }
-            } else if (roll < 40) {
-              _setIfInside(blocks, x, y, z, _deadBush);
-            }
+        if (tree && patch.hash % 100 < treeChance(biome)) _plantTree(blocks, x, h, z, biome, patch.hash);
+        if (inside) _plantSmall(blocks, x, h, z, wx, wz, biome, hash(wx, 7, wz));
+      }
+    }
+  }
+
+  /// The tree this biome grows, planted with its patch's [hsh].
+  void _plantTree(Uint8List b, int x, int y, int z, int biome, int hsh) {
+    final tall = (hsh >> 12) % 5;
+    switch (biome) {
+      case biomeForest:
+        if ((hsh >> 20) % 100 < 30) {
+          _placeBigOak(b, x, y, z, 14 + tall, hsh);
+        } else {
+          _placeOak(b, x, y, z, 9 + tall % 4, hsh);
+        }
+      case biomePlains:
+        _placeOak(b, x, y, z, 9 + tall % 4, hsh);
+      case biomeSwamp:
+        _placeWillow(b, x, y, z, 9 + tall % 3, hsh);
+      case biomeJungle:
+        _placeJungleTree(b, x, y, z, 16 + tall + (hsh >> 18) % 3, hsh);
+      case biomeSnow:
+        _placeSpruce(b, x, y, z, 12 + tall);
+      case biomeMountain:
+        if (y < 96) _placeSpruce(b, x, y, z, 11 + tall);
+      case biomeDesert || biomeBeach:
+        _placePalm(b, x, y, z, 8 + tall, hsh);
+    }
+  }
+
+  /// Grass, flowers, mushrooms, reeds, cacti and melons: one roll per column.
+  void _plantSmall(Uint8List b, int x, int y, int z, int wx, int wz, int biome, int hsh) {
+    final roll = hsh % 1000;
+    switch (biome) {
+      case biomeForest:
+        if (roll < 185) {
+          _setIfInside(b, x, y, z, _tallGrass);
+        } else if (roll < 210) {
+          _setIfInside(b, x, y, z, _mushroom);
+        } else if (roll < 230) {
+          _setIfInside(b, x, y, z, _flowerRed);
+        }
+      case biomePlains:
+        if (roll < 144) {
+          _setIfInside(b, x, y, z, _tallGrass);
+        } else if (roll < 166) {
+          _setIfInside(b, x, y, z, _flowerYellow);
+        } else if (roll < 184) {
+          _setIfInside(b, x, y, z, _flowerRed);
+        }
+      case biomeSwamp:
+        // Godot tests PoolEdge first; the roll goes first here (same result,
+        // four fewer height samples on most columns).
+        if (roll < 550 && _poolEdge(wx, wz)) {
+          _setIfInside(b, x, y, z, _reeds);
+        } else if (roll < 278) {
+          _setIfInside(b, x, y, z, _tallGrass);
+        } else if (roll < 318) {
+          _setIfInside(b, x, y, z, _mushroom);
+        }
+      case biomeJungle:
+        if (roll < 292) {
+          _setIfInside(b, x, y, z, _fern);
+        } else if (roll < 382) {
+          _setIfInside(b, x, y, z, _tallGrass);
+        } else if (roll < 394) {
+          _placeMelons(b, x, y, z, hsh);
+        }
+      case biomeDesert:
+        if (roll < 12) {
+          final ch = 2 + ((hsh >> 10) % 2);
+          for (var i = 0; i < ch; i++) {
+            _setIfInside(b, x, y + i, z, _cactus);
+          }
+        } else if (roll < 40) {
+          _setIfInside(b, x, y, z, _deadBush);
+        }
+    }
+  }
+
+  /// A rounded crown: a ball of leaves [r] wide, squashed in y and frayed at the
+  /// rim so no two look stamped from the same mould.
+  void _crown(Uint8List b, int x, int y, int z, int r, int leaves) {
+    final rim = r * r + r;
+    for (var dy = -r; dy <= r; dy++) {
+      for (var dz = -r; dz <= r; dz++) {
+        for (var dx = -r; dx <= r; dx++) {
+          final d2 = dx * dx + dz * dz + dy * dy * 2;
+          if (d2 > rim) continue;
+          if (d2 > rim - r && hash(x + dx, y + dy, z + dz) % 4 == 0) continue;
+          _setIfInside(b, x + dx, y + dy, z + dz, leaves);
         }
       }
     }
   }
 
-  void _placeOak(Uint8List b, int x, int y, int z, int trunk) {
+  /// A limb: [len] logs stepping out along ([dx], [dz]) and rising every other
+  /// block, with a small crown on its end.
+  void _limb(Uint8List b, int x, int y, int z, int dx, int dz, int len, int log, int leaves) {
+    var lx = x, ly = y, lz = z;
+    for (var i = 0; i < len; i++) {
+      lx += dx;
+      lz += dz;
+      if (i.isOdd) ly++;
+      _setIfInside(b, lx, ly, lz, log);
+    }
+    _crown(b, lx, ly + 1, lz, 2, leaves);
+  }
+
+  /// Stage 41, the oak: a bare trunk 9-12 blocks tall, two limbs near the top
+  /// and a rounded crown over them. Nothing of it hangs at head height, so a
+  /// forest is walked through instead of squeezed past.
+  void _placeOak(Uint8List b, int x, int y, int z, int trunk, int hsh) {
     final top = y + trunk;
-    for (var layer = 0; layer < 2; layer++) {
-      final ly = top - 1 - layer;
-      for (var dz = -2; dz <= 2; dz++) {
-        for (var dx = -2; dx <= 2; dx++) {
-          if (dx.abs() == 2 && dz.abs() == 2 && hash(x + dx, ly, z + dz) % 3 == 0) continue;
-          _setIfInside(b, x + dx, ly, z + dz, _oakLeaves);
-        }
-      }
+    for (var i = 0; i < 2; i++) {
+      final dir = _compass[((hsh >> (4 + i * 3)) + i * 3) % 8];
+      _limb(b, x, top - 3 + i, z, dir.$1, dir.$2, 2, _oakLog, _oakLeaves);
     }
-    for (var dz = -1; dz <= 1; dz++) {
-      for (var dx = -1; dx <= 1; dx++) {
-        _setIfInside(b, x + dx, top, z + dz, _oakLeaves);
-      }
-    }
-    _setIfInside(b, x, top + 1, z, _oakLeaves);
-    _setIfInside(b, x + 1, top + 1, z, _oakLeaves);
-    _setIfInside(b, x - 1, top + 1, z, _oakLeaves);
-    _setIfInside(b, x, top + 1, z + 1, _oakLeaves);
-    _setIfInside(b, x, top + 1, z - 1, _oakLeaves);
-    for (var i = 0; i < trunk; i++) {
+    _crown(b, x, top - 1, z, 3, _oakLeaves);
+    for (var i = 0; i <= trunk; i++) {
       _setIfInside(b, x, y + i, z, _oakLog);
     }
   }
 
-  void _placeBigOak(Uint8List b, int x, int y, int z) {
-    const trunk = 7;
+  /// Stage 41, the forest giant: a 2x2 trunk 14-18 blocks tall, four limbs and
+  /// a crown five blocks wide riding over the canopy of its neighbours.
+  void _placeBigOak(Uint8List b, int x, int y, int z, int trunk, int hsh) {
     final top = y + trunk;
-    for (var dy = -3; dy <= 1; dy++) {
-      final r = dy == 1 ? 1 : (dy == -3 ? 2 : 3);
+    _crown(b, x, top, z, 5, _oakLeaves);
+    _crown(b, x + 1, top - 2, z + 1, 4, _oakLeaves);
+    for (var i = 0; i < 4; i++) {
+      final dir = _compass[(i * 2 + (hsh >> 6) % 2) % 8];
+      final bx = x + (dir.$1 > 0 ? 1 : 0), bz = z + (dir.$2 > 0 ? 1 : 0);
+      _limb(b, bx, top - 5 + i % 2, bz, dir.$1, dir.$2, 3, _oakLog, _oakLeaves);
+    }
+    for (var i = 0; i <= trunk; i++) {
+      for (var dz = 0; dz <= 1; dz++) {
+        for (var dx = 0; dx <= 1; dx++) {
+          _setIfInside(b, x + dx, y + i, z + dz, _oakLog);
+        }
+      }
+    }
+  }
+
+  /// Stage 41, the spruce: a tall bare trunk under tiers that widen downward,
+  /// the lowest of them well over a walker's head.
+  void _placeSpruce(Uint8List b, int x, int y, int z, int trunk) {
+    final bare = math.max(5, trunk ~/ 3);
+    for (var dy = bare; dy <= trunk; dy++) {
+      final fromTop = trunk - dy;
+      var r = math.min(4, 1 + fromTop ~/ 4);
+      if (fromTop % 3 == 2) r -= 1; // the skirts pinch in between the tiers
       for (var dz = -r; dz <= r; dz++) {
         for (var dx = -r; dx <= r; dx++) {
           if (dx * dx + dz * dz > r * r + 1) continue;
-          _setIfInside(b, x + dx, top + dy, z + dz, _oakLeaves);
-        }
-      }
-    }
-    for (var i = 0; i < trunk; i++) {
-      _setIfInside(b, x, y + i, z, _oakLog);
-    }
-  }
-
-  void _placeSpruce(Uint8List b, int x, int y, int z, int trunk) {
-    final top = y + trunk;
-    for (var dy = 1; dy < trunk; dy++) {
-      final fromTop = trunk - dy;
-      var r = fromTop <= 1 ? 1 : ((fromTop % 2 == 0) ? 2 : 1);
-      if (fromTop > 6) r = 3;
-      for (var dz = -r; dz <= r; dz++) {
-        for (var dx = -r; dx <= r; dx++) {
-          if (dx.abs() == r && dz.abs() == r && r > 1) continue;
           _setIfInside(b, x + dx, y + dy, z + dz, _spruceLeaves);
         }
       }
     }
-    _setIfInside(b, x, top, z, _spruceLeaves);
-    _setIfInside(b, x, top + 1, z, _spruceLeaves);
+    _setIfInside(b, x, y + trunk + 1, z, _spruceLeaves);
     for (var i = 0; i < trunk; i++) {
       _setIfInside(b, x, y + i, z, _spruceLog);
     }
@@ -494,61 +578,92 @@ class TerrainGenerator implements ChunkGenerator {
     return false;
   }
 
-  /// Stage 26, the swamp willow: an oak trunk under a wide two-level canopy
-  /// (radius 3) whose rim droops two blocks down in hanging leaf columns.
-  void _placeWillow(Uint8List b, int x, int y, int z, int trunk) {
+  /// Stage 41, the swamp willow: a trunk 9-11 tall under a wide flat canopy
+  /// whose rim droops in hanging leaf columns.
+  void _placeWillow(Uint8List b, int x, int y, int z, int trunk, int hsh) {
     final top = y + trunk;
     for (var layer = 0; layer < 2; layer++) {
       final ly = top - layer;
-      for (var dz = -3; dz <= 3; dz++) {
-        for (var dx = -3; dx <= 3; dx++) {
-          if (dx * dx + dz * dz > 10) continue;
+      for (var dz = -4; dz <= 4; dz++) {
+        for (var dx = -4; dx <= 4; dx++) {
+          if (dx * dx + dz * dz > (layer == 0 ? 12 : 18)) continue;
           _setIfInside(b, x + dx, ly, z + dz, _oakLeaves);
         }
       }
     }
-    for (var dz = -3; dz <= 3; dz++) {
-      for (var dx = -3; dx <= 3; dx++) {
+    for (var dz = -4; dz <= 4; dz++) {
+      for (var dx = -4; dx <= 4; dx++) {
         final d2 = dx * dx + dz * dz;
-        if (d2 < 7 || d2 > 10 || hash(x + dx, 5, z + dz) % 3 == 0) continue;
-        for (var i = 1; i <= 2 + (hash(x + dx, 6, z + dz) % 2); i++) {
+        if (d2 < 10 || d2 > 18 || hash(x + dx, 5, z + dz) % 3 == 0) continue;
+        for (var i = 1; i <= 2 + (hash(x + dx, 6, z + dz) % 3); i++) {
           _setIfInside(b, x + dx, top - 1 - i, z + dz, _oakLeaves);
         }
       }
     }
-    _setIfInside(b, x, top + 1, z, _oakLeaves);
-    for (var i = 0; i < trunk; i++) {
+    final dir = _compass[(hsh >> 7) % 8];
+    _limb(b, x, top - 3, z, dir.$1, dir.$2, 2, _oakLog, _oakLeaves);
+    for (var i = 0; i <= trunk; i++) {
       _setIfInside(b, x, y + i, z, _oakLog);
     }
   }
 
-  /// Stage 26, the jungle tree: an 8-14 tall jungle-log trunk, a radius-3 canopy
-  /// three levels deep, and vines hanging 2-5 blocks under the canopy rim.
+  /// Stage 41, the jungle giant: a 2x2 trunk 16-24 blocks tall, a crown at the
+  /// top, a second one halfway up and vines falling from both rims.
   void _placeJungleTree(Uint8List b, int x, int y, int z, int trunk, int hsh) {
     final top = y + trunk;
-    for (var dy = -2; dy <= 1; dy++) {
-      final r = dy == 1 ? 1 : (dy == -2 ? 2 : 3);
-      for (var dz = -r; dz <= r; dz++) {
-        for (var dx = -r; dx <= r; dx++) {
-          if (dx * dx + dz * dz > r * r + 1) continue;
-          _setIfInside(b, x + dx, top + dy, z + dz, _oakLeaves);
+    _crown(b, x, top, z, 4, _oakLeaves);
+    _crown(b, x + 1, top - 6, z + 1, 3, _oakLeaves);
+    for (var i = 0; i < 2; i++) {
+      final dir = _compass[((hsh >> (5 + i * 4)) + i * 4) % 8];
+      final bx = x + (dir.$1 > 0 ? 1 : 0), bz = z + (dir.$2 > 0 ? 1 : 0);
+      _limb(b, bx, top - 7, bz, dir.$1, dir.$2, 2, _jungleLog, _oakLeaves);
+    }
+    _vineFall(b, x, top - 2, z, 4, hsh);
+    _vineFall(b, x + 1, top - 8, z + 1, 3, hsh ^ 0x5f5f);
+    for (var i = 0; i <= trunk; i++) {
+      for (var dz = 0; dz <= 1; dz++) {
+        for (var dx = 0; dx <= 1; dx++) {
+          _setIfInside(b, x + dx, y + i, z + dz, _jungleLog);
         }
       }
     }
-    for (var dz = -3; dz <= 3; dz++) {
-      for (var dx = -3; dx <= 3; dx++) {
+  }
+
+  /// Vines falling 2-6 blocks from the rim of a crown [r] wide.
+  void _vineFall(Uint8List b, int x, int y, int z, int r, int hsh) {
+    for (var dz = -r; dz <= r; dz++) {
+      for (var dx = -r; dx <= r; dx++) {
         final d2 = dx * dx + dz * dz;
-        if (d2 < 7 || d2 > 10) continue;
+        if (d2 < (r - 1) * (r - 1) || d2 > r * r + 1) continue;
         final vh = hash(x + dx, 8, z + dz) ^ hsh;
         if (vh % 5 < 2) continue;
-        final len = 2 + ((vh >> 4) % 4);
-        for (var i = 1; i <= len; i++) {
-          _setIfInside(b, x + dx, top - 1 - i, z + dz, _vines);
+        for (var i = 1; i <= 2 + ((vh >> 4) % 5); i++) {
+          _setIfInside(b, x + dx, y - i, z + dz, _vines);
         }
       }
     }
-    for (var i = 0; i < trunk; i++) {
-      _setIfInside(b, x, y + i, z, _jungleLog);
+  }
+
+  /// Stage 41, the palm of the beaches and the oases: a bare leaning trunk
+  /// under a star of fronds, the one tree the desert and the sand ever grow.
+  void _placePalm(Uint8List b, int x, int y, int z, int trunk, int hsh) {
+    final lean = _compass[(hsh >> 9) % 8];
+    var tx = x, tz = z;
+    for (var i = 0; i <= trunk; i++) {
+      if (i > 4 && i % 5 == 0) {
+        tx += lean.$1;
+        tz += lean.$2;
+      }
+      _setIfInside(b, tx, y + i, tz, _jungleLog);
+    }
+    final top = y + trunk;
+    _setIfInside(b, tx, top + 1, tz, _oakLeaves);
+    for (var d = 0; d < 8; d++) {
+      final dir = _compass[d];
+      final len = 2 + ((hsh >> (d * 2)) % 2);
+      for (var i = 1; i <= len; i++) {
+        _setIfInside(b, tx + dir.$1 * i, top + (i < len ? 1 : 0), tz + dir.$2 * i, _oakLeaves);
+      }
     }
   }
 
@@ -774,7 +889,7 @@ class TerrainGenerator implements ChunkGenerator {
   /// World (x, z) of every hut centre, for the probe.
   List<({int x, int z})> villageHuts(int cx, int cz) => [for (var i = 0; i < _hutCount(cx, cz); i++) _hutAt(cx, cz, i)];
 
-  static const int _villageClearRadius = 19;
+  static const int _villageClearRadius = 24;
 
   /// Fells every tree (logs, leaves, vines) standing within the village's
   /// footprint, so a forest village is a clearing and not huts under a canopy.
@@ -786,7 +901,7 @@ class TerrainGenerator implements ChunkGenerator {
         final wx = cx + x, wz = cz + z;
         if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
         final ground = surfaceHeight(wx, wz);
-        for (var y = ground; y < ground + 18 && y < sizeY; y++) {
+        for (var y = ground; y < ground + 34 && y < sizeY; y++) {
           final cur = _get(b, ox, oz, wx, y, wz);
           if (cur == null) continue;
           if (cur == _oakLog || cur == _spruceLog || cur == _jungleLog || _isLeaf(cur) || cur == _vines) {
