@@ -20,8 +20,11 @@
 | VK1 Finish the moves into `voxel_core` / `voxel_scene` | **done** 2026-09-18 (VK1.1–VK1.6); probe logs not rerun (see log) | every engine-generic file left in `lib/` that needs no new API has moved |
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
-| VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.7 in one commit); VK4.8+ open | `example/` is a playable Minecraft-like in under 150 lines of game code |
+| VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
 | VK5 The POC on the kit | pending | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+| VK6 `voxel_audio` | pending | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
+| VK7 `voxel_signals` | pending | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
+| VK8 `voxel_net` | pending | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
 
 ---
 
@@ -256,11 +259,43 @@ that play the game through `InputMap` on a flat world. Design decisions made on 
   probe (`RepaintBoundary`, the app's sandbox temp). 169 chunks in 1.3 s, and in third person the
   player among a sheep and a slime.
 
-**VK4 open (the kit is playable, not finished):**
-- **VK4.8** An inventory and crafting screen (recipes are declared but only craftable from code).
-- **VK4.9** Save and load: `EditDeltaCodec` for the edits, JSON for the player and the mobs.
-- **VK4.10** The first-person hand (the POC's `HandView`) and the mining crack.
-- **VK4.11** Hit feel: a mob's red flash, the player's damage tint, the camera shake.
+**VK4.8–VK4.11 log:**
+
+| Step | Commit | Notes |
+|:---|:---|:---|
+| VK4.8 inventory and crafting | `93e3c730` | E opens the bag; using a block that a recipe names as its station opens that station (sneak places against it instead). The screen rebuilds on bag changes only, never per frame (the POC's credits-screen lesson: a per-frame rebuild swallows taps). Seen in the app |
+| VK4.9 save and load | `93e3c730` | `WorldSaves`: `edits.bin` (`EditDeltaCodec`, magic `VXK1`) and `game.json`, written through a temporary file. A saved world keeps its own seed. Mobs are not saved: natural spawns come back by themselves, and nothing in the kit tames or names one yet |
+| VK4.10 hand and crack | `da817dc9` | **Found:** a blended (`AlphaMode.blend`) primitive never reaches the screen in this flutter_scene build, and neither does a material edited after its mesh sits on a node. The POC's darkening crack box is built that way, so it has likely never shown; the POC's crack *lines* were already known invisible (`LineSegmentsGeometry`). The kit draws its crack from opaque cuboid sticks, as the outline is |
+| VK4.11 hit feel | `da817dc9` | the player's red wash and eye jolt. A mob still only shakes when hit (a red flash needs a second material per rig, or a tint uniform) |
+
+## VK6 — `voxel_audio`
+
+The POC synthesizes every sound effect into WAV bytes at start-up (`lib/src/game/sfx.dart`, no audio
+files) and crossfades music by context (`music.dart`), on `flutter_soloud`.
+
+- **VK6.1** `SoundBank`: named recipes (`Sfx.tone`, noise bursts, envelopes) rendered to WAV and
+  loaded into SoLoud once; `play(name, volumeDb, pitchJitter)`; a muted mode for tests.
+- **VK6.2** A stock recipe set by material family (stone, wood, earth, plant, glass, metal, liquid):
+  dig, place, step. Blocks name their family with a tag (`'sound:wood'`), defaulting by shape.
+- **VK6.3** The kit plays them: steps by distance walked, dig ticks while mining, break, place,
+  hit, hurt, a pickup pop; `VoxelGameSpec.sounds` to override or add.
+- **VK6.4** `MusicDirector`: tracks chosen by a game-supplied context function, crossfaded.
+
+## VK7 — `voxel_signals`
+
+- **VK7.1** A signal network over a `VoxelEditor`: sources (lever, button, plate, a powered block),
+  conductors with decay (wire), consumers with reactions (lamp, door, piston, TNT, powered rail),
+  declared per block by role; flood-fill rebuild capped per tick, as the POC's `Circuits` does.
+- **VK7.2** Auto-connecting blocks (the POC's `Rails`): a connection table per orientation variant.
+- **VK7.3** The POC's circuits and rails on the package, stage 27 and 28 tests unchanged.
+
+## VK8 — `voxel_net`
+
+- **VK8.1** The transport (TCP, newline-delimited JSON), host-authoritative, the edit-delta hello.
+- **VK8.2** Block edits with client prediction (the POC's `BlockPrediction`).
+- **VK8.3** One replicated-entity channel (spawn, pose, free by net id), replacing the POC's six
+  copies of that pattern (boats, carts, drops, bobbers, mobs, players).
+- **VK8.4** The kit hosts and joins: `runVoxelGame(spec, host: true)` / `join: address`.
 
 ## VK5 — the POC on the kit
 
