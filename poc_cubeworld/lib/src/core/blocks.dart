@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:voxel_content/voxel_content.dart';
 import 'package:voxel_core/voxel_core.dart';
 
 /// The block table. INDEX IS THE SAVE CONTRACT: a chunk stores bytes and a save
@@ -216,9 +217,32 @@ class Blocks {
     BlockDef('fortress_core', 'Fortress Core', 0.45, 0.10, 0.70, hardness: 5.0, tool: ToolType.pickaxe, tier: 1, drop: 'underworld_heart', light: 8),
   ];
 
-  static final Map<String, int> _indexById = {
-    for (var i = 0; i < defs.length; i++) defs[i].id: i,
-  };
+  /// VK3.1: the rows as voxel_content's registry — the numbering, the engine
+  /// table, drops, liquids and lookups by id all come from it. The rows keep
+  /// what is only this game's (the [ToolType] enum, the `''` / `'-'` drop
+  /// spelling), translated here once.
+  static final BlockRegistry<BlockType> registry = BlockRegistry([
+    for (final d in defs)
+      BlockType.rgb(
+        d.id,
+        d.r,
+        d.g,
+        d.b,
+        name: d.name,
+        alpha: d.a,
+        shape: d.shape,
+        solid: d.solid,
+        opaque: d.opaque,
+        hardness: d.hardness,
+        tool: d.tool == ToolType.none ? null : d.tool.name,
+        tier: d.tier,
+        drop: switch (d.drop) { '' => null, '-' => '', final other => other },
+        light: d.light,
+        speed: d.speedMult,
+        liquid: d.shape == BlockShape.liquid ? (d.id.endsWith('_flow') ? d.id.substring(0, d.id.length - 5) : d.id) : null,
+        liquidSource: !d.id.endsWith('_flow'),
+      ),
+  ]);
 
   static const CollisionBox fullBox = CollisionBox.full;
 
@@ -234,27 +258,18 @@ class Blocks {
   static List<CollisionBox> collisionBoxes(int index) => _boxes[index];
 
   /// "water" / "lava" for a source OR its flowing form, "" for anything else.
-  static String liquidKind(int index) {
-    final d = defs[index];
-    if (d.shape != BlockShape.liquid) return '';
-    return d.id.endsWith('_flow') ? d.id.substring(0, d.id.length - 5) : d.id;
-  }
+  static String liquidKind(int index) => registry.liquidOf(index) ?? '';
 
-  static bool isLiquidSource(int index) =>
-      defs[index].shape == BlockShape.liquid && !defs[index].id.endsWith('_flow');
+  static bool isLiquidSource(int index) => table.isLiquidSource(index);
 
   /// The flowing form of a liquid kind ("water" -> water_flow).
-  static int flowOf(String kind) => indexOf('${kind}_flow');
+  static int flowOf(String kind) => registry.flowingOf(kind);
 
-  static int get count => defs.length;
+  static int get count => registry.count;
 
-  static int indexOf(String id) {
-    final i = _indexById[id];
-    if (i == null) throw ArgumentError('unknown block: $id');
-    return i;
-  }
+  static int indexOf(String id) => registry.indexOf(id);
 
-  static bool has(String id) => _indexById.containsKey(id);
+  static bool has(String id) => registry.has(id);
   static BlockDef def(int index) => defs[index];
   static String idOf(int index) => defs[index].id;
   static String displayName(int index) => defs[index].name;
@@ -266,22 +281,14 @@ class Blocks {
       defs[index].shape == BlockShape.cross || defs[index].shape == BlockShape.flower;
 
   /// A block another block may be placed INTO: air, plants, liquids.
-  static bool isReplaceable(int index) {
-    final sh = defs[index].shape;
-    return index == air || sh == BlockShape.cross || sh == BlockShape.flower || sh == BlockShape.liquid;
-  }
+  static bool isReplaceable(int index) => registry.isReplaceable(index);
 
   static double hardness(int index) => defs[index].hardness;
   static ToolType toolOf(int index) => defs[index].tool;
   static int minTier(int index) => defs[index].tier;
 
   /// The item dropped when broken: "" means nothing.
-  static String dropOf(int index) {
-    final drop = defs[index].drop;
-    if (drop == '-') return '';
-    if (drop == '') return defs[index].id;
-    return drop;
-  }
+  static String dropOf(int index) => registry.dropOf(index);
 
   static int lightOf(int index) => defs[index].light;
 
@@ -290,7 +297,7 @@ class Blocks {
 
   /// VK1.3: this game's say in voxel_core's [Pathfinder]: lava is never
   /// entered, a slow floor costs its inverse speed (soul sand 2).
-  static final PathCosts pathCosts = PathCosts(avoid: (b) => liquidKind(b) == 'lava', floorCost: (b) => 1.0 / speedMult(b));
+  static final PathCosts pathCosts = registry.pathCosts(avoidLiquids: const {'lava'});
 
   /// Stage 32: the material family a block sounds like: "stone", "wood",
   /// "earth", "metal", "glass", "plant" or "liquid" (`Sfx` has a break / place /
@@ -383,31 +390,10 @@ class Blocks {
 
   /// The liquid kinds, in the order voxel_core indexes them. A source and its
   /// `_flow` form share a kind.
-  static const List<String> liquidKinds = ['water', 'lava'];
+  static List<String> get liquidKinds => registry.liquidKinds;
 
-  /// The engine's view of this table (VP1.4): shape, solidity, light, colour
-  /// and liquid kind per id. Everything else stays in [BlockDef].
-  static final VoxelBlockTable table = VoxelBlockTable([
-    for (var i = 0; i < defs.length; i++)
-      VoxelBlockDef(
-        shape: defs[i].shape,
-        solid: defs[i].solid,
-        opaque: defs[i].opaque,
-        r: defs[i].r,
-        g: defs[i].g,
-        b: defs[i].b,
-        a: defs[i].a,
-        emission: defs[i].light,
-        liquidKind: isLiquid(i) ? _liquidKindIndex(liquidKind(i)) : VoxelBlockDef.noLiquid,
-        liquidSource: isLiquidSource(i),
-      ),
-  ]);
-
-  static int _liquidKindIndex(String kind) {
-    final k = liquidKinds.indexOf(kind);
-    if (k < 0) throw StateError('liquid kind "$kind" is not in Blocks.liquidKinds');
-    return k;
-  }
+  /// The engine's view of this table (VP1.4; VK3.1: projected by [registry]).
+  static VoxelBlockTable get table => registry.table;
 
   static Float32List palette() => table.palette;
 

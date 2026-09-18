@@ -11,6 +11,7 @@ workspace:
   - packages/voxel_core
   - packages/voxel_scene
   - packages/voxel_scene/example
+  - packages/voxel_content
   - packages/voxel_worldgen
 
 dependencies:
@@ -23,6 +24,7 @@ dependencies:
   path_provider: ^2.1.6
   pointer_lock: ^0.4.1
   vector_math: ^2.4.2
+  voxel_content: ^0.0.0
   voxel_core: ^0.0.0
   voxel_scene: ^0.0.0
   voxel_worldgen: ^0.0.0
