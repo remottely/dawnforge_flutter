@@ -30,6 +30,7 @@ import '../game/net.dart';
 import '../game/rails.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
+import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning;
 import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 
@@ -185,7 +186,6 @@ class Player extends SceneBody implements Target {
   late final PointLight torchLight;
   final Node _torchNode = Node();
   double _attackCooldown = 0.0;
-  double _fallStartY = 0.0;
   double _hungerTimer = 0.0;
   double _regenTimer = 0.0;
   double damageFlash = 0.0;
@@ -207,16 +207,16 @@ class Player extends SceneBody implements Target {
   Vector3 _bobOffset = Vector3.zero(); // this frame's sway, camera only
   double _bobRoll = 0.0; // and its tilt, as a slice of the right vector
   double _bobPitch = 0.0; // and its nose-up, as a slice of the up vector
-  double _stagger = 0.0; // knockback window, the input does not brake it
   double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
   final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
   int stepsTaken = 0; // footsteps played (for the probe)
   // The 2D game's player `footstep_interval`, a little quicker sprinting.
   static const double footstepInterval = 0.4;
   static const double footstepIntervalSprint = 0.3;
-  bool _hopping = false; // a half-step hop: double gravity until the feet land
-  bool _leavingWater = false; // the launch over a bank: a jump's arc, never the swim's cap
-  double _sinceWater = 1.0; // seconds since the body was last in a liquid
+  /// VK5.1: the on-foot rules (gravity, swimming, jumps, auto steps, the
+  /// launch out of water, the fall's height, the knockback window) are the
+  /// kit's, shared with its creatures.
+  late final CharacterMotor motor = CharacterMotor(this, const MotorTuning(jumpVelocity: jumpVelocity, climbSpeed: climbSpeed));
 
   /// The player's own tones; the shirt is the class colour.
   static final Vector3 skinTone = Vector3(0.93, 0.76, 0.62);
@@ -724,16 +724,8 @@ class Player extends SceneBody implements Target {
     final jumpHeld = gameplay && input.down(GameAction.jump);
     // Fly mode (F5): no gravity, vertical on jump / sneak.
     if (main.flyMode) {
-      velocity.y = (jumpHeld ? 12.0 : 0.0) - (sneaking ? 12.0 : 0.0);
       speed *= flySpeedScale;
-      final wishF = wish * speed;
-      if (_stagger <= 0.0) {
-        // stage 32: a shoved body carries for 0.3 s
-        velocity.x = lerpd(velocity.x, wishF.x, dt * 10.0);
-        velocity.z = lerpd(velocity.z, wishF.z, dt * 10.0);
-      }
-      move(dt);
-      _fallStartY = position.y;
+      motor.fly(dt, wish: wish, speed: speed, rise: jumpHeld, sink: sneaking);
       // Flying is walking on the air: the body turns and strides as on foot,
       // never the glide's open arms.
       gliding = false;
@@ -744,104 +736,50 @@ class Player extends SceneBody implements Target {
       return;
     }
     // Climbing (Cube World): push into a wall while holding jump. Behind the
-    // `climbWalls` setting, off by default.
-    climbing = false;
-    if (Settings.instance.climbWalls && jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5) {
-      climbing = true;
-      velocity.y = climbSpeed;
-      spendStamina(10.0 * dt);
-    } else if (_onLadder()) {
-      velocity.y = jumpHeld ? climbSpeed : (sneaking ? -climbSpeed : 0.0);
-      climbing = jumpHeld;
-    } else if (_leavingWater) {
-      velocity.y -= gravity * dt;
-    } else if (swimming) {
-      if (jumpHeld) {
-        velocity.y = math.min(velocity.y + 20.0 * dt, 4.0);
-      } else {
-        applyGravity(dt);
-      }
-    } else {
-      applyGravity(dt);
-      if (_hopping) applyGravity(dt);
-      if (jumpHeld && onFloor) _jump();
-    }
+    // `climbWalls` setting, off by default. The motor climbs it as a ladder.
+    final wallClimb =
+        Settings.instance.climbWalls && jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5;
+    if (wallClimb) spendStamina(10.0 * dt);
+    if (jumpHeld && onFloor && !wallClimb && !_onLadder() && !swimming) Tutorial.instance.event('jump');
 
     // Gliding: hold G in the air with a glider in the inventory.
     gliding = false;
-    if (gameplay && input.down(GameAction.glide) && !onFloor && !inLiquid && velocity.y < 0.0 && inventory.countOf('glider') > 0) {
+    if (gameplay && input.down(GameAction.glide) && motor.canGlide && inventory.countOf('glider') > 0) {
       gliding = true;
       Achievements.instance.unlock('glider');
-      velocity.y = math.max(velocity.y, -1.6);
       wish = wish.length < 0.1 ? fwd : wish;
       speed = 11.0;
     }
 
     // Dodge dash: a short burst with invulnerability, the body leaning into
     // it with the arms thrown back.
+    double? accel = gliding ? 3.0 : null;
     if (_dodge > 0.0) {
       _dodge -= dt;
       wish = _dodgeDir;
       speed = 13.0;
+      accel = 40.0;
       model.dashing = true;
     }
-    final accel = _dodge > 0.0 ? 40.0 : (onFloor || _hopping ? 14.0 : (gliding ? 3.0 : 6.0));
-    if (_stagger <= 0.0) {
-      // Stage 32: a shoved body carries for 0.3 s before the input steers it.
-      velocity.x = lerpd(velocity.x, wish.x * speed, dt * accel);
-      velocity.z = lerpd(velocity.z, wish.z * speed, dt * accel);
-    }
 
-    final wasFloor = onFloor;
     final posBefore = position.clone();
-    move(dt);
-    if (onFloor || inLiquid || climbing) _hopping = false;
-    if (onFloor || climbing || velocity.y <= 0.0) _leavingWater = false;
+    final events = motor.step(dt,
+        wish: wish,
+        speed: speed,
+        jump: jumpHeld,
+        sneak: sneaking,
+        onLadder: wallClimb || _onLadder(),
+        glide: gliding,
+        accel: accel);
+    climbing = motor.climbing;
     if (onFloor) {
       // Stage 30: the stats block's metres walked (the ground displacement).
       final d = position - posBefore;
       GameState.instance.distanceWalked += math.sqrt(d.x * d.x + d.z * d.z);
     }
-    if (wish.length > 0.1 && !climbing && !inLiquid) {
-      // Nothing is ever lifted into place. A half step (a slab, a stair) is
-      // hopped — the jump's launch speed under double gravity, so half the
-      // height in half the time — and a full block is jumped (Minecraft's
-      // auto-jump). Every creature in the world climbs a step the same way.
-      final step = stepAhead(fullBlock: !sneaking);
-      if (step > 0.0) {
-        velocity.y = jumpVelocity;
-        _hopping = step == VoxelBody.halfStep;
-        _fallStartY = position.y;
-      }
-    }
-    // A swimmer bobbing at the surface is out of the water for a few ticks at
-    // a time; the launch still counts it as swimming for half a second, or a
-    // bank touched on the way up would wait for the next bob.
-    _sinceWater = inLiquid ? 0.0 : _sinceWater + dt;
-    if (hitWall && _sinceWater < 0.5 && !onFloor && jumpHeld && wish.length > 0.1 && !climbing && !_leavingWater) {
-      // Minecraft's climb out of the water: swimming into a bank with jump
-      // held launches the body over it at once. The swim alone rises at most
-      // 4 m/s and stops when the feet leave the water, so it bobs under a lip
-      // one block high. The launch clears the lowest lift that fits (at most
-      // 1.9, so a tall wall is never climbed) with a quarter block to spare.
-      for (var lift = 0.1; lift <= 1.9; lift += 0.1) {
-        if (!stepFits(lift)) continue;
-        velocity.y = math.sqrt(2.0 * gravity * (lift + 0.25));
-        _leavingWater = true;
-        _fallStartY = position.y;
-        break;
-      }
-    }
     // Fall damage.
-    if (!wasFloor && onFloor) {
-      final fall = _fallStartY - position.y;
-      if (fall > 4.0 && !inLiquid) takeDamage(((fall - 4.0) * 1.2).floorToDouble(), 'fall');
-    }
-    if (onFloor || gliding || climbing || inLiquid) {
-      _fallStartY = position.y;
-    } else if (velocity.y > 0.0) {
-      _fallStartY = math.max(_fallStartY, position.y);
-    }
+    final fall = events.landedAfter;
+    if (fall > 4.0) takeDamage(((fall - 4.0) * 1.2).floorToDouble(), 'fall');
     if (inLava) {
       effects.apply('burning', 3.0);
       _lavaTimer += dt;
@@ -920,7 +858,6 @@ class Player extends SceneBody implements Target {
     }
     if (gameplay && input.down(GameAction.use) && _useCooldown <= 0.0 && _useRepeats()) _usePressed();
     damageFlash = math.max(damageFlash - dt * 3.0, 0.0);
-    _stagger = math.max(_stagger - dt, 0.0);
     world.updateAround(position);
   }
 
@@ -1703,7 +1640,7 @@ class Player extends SceneBody implements Target {
   void probeBreak(IVec3 b, int id) => _breakBlock(b, id);
 
   /// Stage 29: an arrival puts the body down; the fall starts there.
-  void resetFall() => _fallStartY = position.y;
+  void resetFall() => motor.resetFall();
 
   void _breakBlock(IVec3 b, int id) {
     // Stage 29: the fortress core only gives way once the Underworld Lord of its fortress is dead.
@@ -2019,7 +1956,7 @@ class Player extends SceneBody implements Target {
       // a 60 ms hold of the pose, and the HUD's red vignette.
       _shakeTime = shakeSeconds;
       _shakeAmp = math.min(reduced / 10.0, 0.3);
-      _stagger = Mob.staggerSeconds;
+      motor.stagger = Mob.staggerSeconds;
       model.flash(0.1);
       model.freeze(0.06);
       main.hud.onPlayerHurt();
@@ -2204,7 +2141,7 @@ class Player extends SceneBody implements Target {
       position = h.position + Vector3(-math.sin(yaw + math.pi * 0.5), 0.3, -math.cos(yaw + math.pi * 0.5)) * 1.2;
     }
     velocity = Vector3.zero();
-    _fallStartY = position.y;
+    motor.resetFall();
   }
 
   bool isMounted() => mount != null;
@@ -2232,7 +2169,7 @@ class Player extends SceneBody implements Target {
     if (gameplay && input.down(GameAction.jump)) h.rideJump = true;
     position = saddlePosition(h);
     velocity = h.velocity.clone();
-    _fallStartY = position.y;
+    motor.resetFall();
     model.animate(dt, 0.0, true, false, false);
     model.yaw = lerpAngle(model.yaw, h.modelYaw(), dt * 8.0);
     model.setHeld(heldItem());
@@ -2443,8 +2380,7 @@ class Player extends SceneBody implements Target {
   void probeJump() => _jump();
 
   void _jump() {
-    velocity.y = jumpVelocity;
-    _fallStartY = position.y;
+    motor.jump();
     Tutorial.instance.event('jump');
   }
 

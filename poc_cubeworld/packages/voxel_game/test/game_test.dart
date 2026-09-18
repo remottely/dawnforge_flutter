@@ -86,6 +86,31 @@ void main() {
     expect(creative.player.hp, creative.player.spec.hp);
   });
 
+  test('the motor glides (a capped fall that never hurts) and flies (no gravity)', () async {
+    final game = await _start(_flat());
+    final p = game.player;
+    final motor = p.motor;
+    p.position = Vector3(p.position.x, 40, p.position.z);
+    motor.resetFall();
+    var landed = 0.0;
+    for (var i = 0; i < 60 * 20 && !p.onFloor; i++) {
+      landed = motor.step(1 / 60, wish: Vector3.zero(), speed: 0.0, glide: motor.canGlide).landedAfter;
+      expect(p.velocity.y, greaterThanOrEqualTo(-motor.tuning.glideFall - 1e-5));
+    }
+    expect(p.onFloor, isTrue);
+    expect(landed, lessThan(0.1), reason: 'a glide is footing: twenty blocks down, nothing fallen');
+    final y = p.position.y;
+    for (var i = 0; i < 30; i++) {
+      motor.fly(1 / 60, wish: Vector3.zero(), speed: 0.0, rise: true);
+    }
+    expect(p.position.y, closeTo(y + motor.tuning.flySpeed * 0.5, 0.05));
+    for (var i = 0; i < 30; i++) {
+      motor.fly(1 / 60, wish: Vector3.zero(), speed: 0.0);
+    }
+    expect(p.position.y, closeTo(y + motor.tuning.flySpeed * 0.5, 0.05), reason: 'a flyer hangs where it stops');
+    expect(motor.step(1 / 60, wish: Vector3.zero(), speed: 0.0).landedAfter, 0.0);
+  });
+
   test('mining the block underfoot drops its item, which is picked up', () async {
     final game = await _start(_flat());
     final p = game.player;
