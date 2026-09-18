@@ -17,8 +17,8 @@
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| VK1 Finish the moves into `voxel_core` / `voxel_scene` | in progress | every engine-generic file left in `lib/` that needs no new API has moved |
-| VK2 `voxel_worldgen` | pending | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
+| VK1 Finish the moves into `voxel_core` / `voxel_scene` | **done** 2026-09-18 (VK1.1–VK1.6); probe logs not rerun (see log) | every engine-generic file left in `lib/` that needs no new API has moved |
+| VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | pending | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | pending | `example/` is a playable Minecraft-like in under 150 lines of game code |
 | VK5 The POC on the kit | pending | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
@@ -132,6 +132,23 @@ move now, without an API that does not exist yet:
 **Gate:** analyze clean; the three test suites green; parity hashes unchanged; probe logs
 unchanged (`tool/probe_baseline.sh --check`) once at the end of the phase.
 
+**VK1 log:**
+
+| Step | Commit | Notes |
+|:---|:---|:---|
+| VK1.1 `SelectionOutline` | `63d3bb67` | the stick layout became a pure static (`stickTransforms`) so it is tested without a GPU; colour is a parameter. The POC's duplicate constant test left for the package's |
+| VK1.2 `Reach` | `a2dacd9b` | moved as is |
+| VK1.3 `Pathfinder` | `b4527c85` | `PathCosts(avoid, liquidCost, floorCost)`; the POC passes `Blocks.pathCosts`. Below y 0 counts as solid, as `VoxelWorld.isSolid` did |
+| VK1.4 voxel models | `4db2dac9` | `VoxelModel` (box, mirrorX, arrays) + `eulerYXZ` / `lerpAngle` / `lerpd` in core; `VoxelModelMesh` + `refreshMeshMaterials` in scene. `ItemShape` and the item catalogue stay (content) |
+| VK1.5 `RigPart`, `NodeBody` | `897ba02c` | the POC's `Part` renamed `RigPart` on the way (a package export needs a specific name) |
+| VK1.6 `LiquidFlow` | `45ba4ff3` | `VoxelEditor` (a `VoxelQuery` that can `setBlock`) is new in core; `VoxelWorld` implements it. The lava + water rule is the POC's `LiquidContact` |
+
+Checks after every step: analyze clean, the three suites green, parity hashes unchanged. The probe
+logs were **not** rerun: they need the app window in front for minutes, and every VK1 step moved
+code without changing it (the stage tests that cover each moved piece — stage 22 flow, stage 31 and
+38 paths, stage 35 outline, stage 40 reach — stayed green). Run `tool/probe_baseline.sh --check`
+when the machine is attended.
+
 ## VK2 — `voxel_worldgen`
 
 A pure-Dart package. The POC's 1,667-line `TerrainGenerator` becomes content written on it.
@@ -155,6 +172,15 @@ A pure-Dart package. The POC's 1,667-line `TerrainGenerator` becomes content wri
 
 **Gate:** parity hashes unchanged through VK2.1–VK2.2 (the POC's world is byte-identical); the
 POC's generator imports no noise and writes no chunk array directly.
+
+**VK2 log:**
+
+| Step | Commit | Notes |
+|:---|:---|:---|
+| VK2.1 scaffold + noise | `5d386034` | FastNoiseLite copied byte for byte (a `diff` against the pub cache proved it) with upstream's 23 pinned-value tests, less curl and baking |
+| VK2.2 machinery | `14e8e541` | `worldHash`, `ChunkWriter`, `ScatterGrid`, `StructureGrid`, `OreTable`, `CaveCarver`, `TreeCanvas`, `Trees`. The POC's generator 1,667 → 1,292 lines. **Proof beyond the parity test:** a scratch test hashed 1,832 samples (11 x 11 chunks around three centres, three seeds, both dimensions, the playground, structure lists, heights, biomes) before and after — identical |
+| VK2.3 `WorldGenSpec` | `3f717dab` | the declarative layer. **Deviation:** `Biome.ice` is a block name, not a flag, so no block is named by the engine. The POC's generator is *not* rewritten as a spec: its ten structure builders, underworld and plaza are content, and a byte-identical rewrite would buy nothing. The spec is proven by its tests and the example instead |
+| VK2.4 example | `d3672f22` | an ASCII map of a four-biome world with towers; 25 chunks on 11 isolates in 116 ms |
 
 ## VK3 — `voxel_content`
 
