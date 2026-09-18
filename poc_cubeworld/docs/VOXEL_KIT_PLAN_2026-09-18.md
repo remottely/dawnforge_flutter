@@ -1,0 +1,226 @@
+# Voxel Kit Plan — from two engine packages to a Bonfire-style game kit
+
+> **The executable plan that follows `VOXEL_PACKAGES_PLAN_2026-09-14.md`.** Written 2026-09-18.
+> Stable IDs (`VK<phase>.<step>`) — reference them in commits.
+>
+> **The goal, in the developer's words:** make a Minecraft clone as easy to start as a
+> [Bonfire](https://pub.dev/packages/bonfire) game — a developer declares blocks, mobs, rules and
+> world generation in a few lines and gets a playable world.
+>
+> **Same ground rules as the VP plan.** Everything stays on branch `poc_cubeworld`, packages at
+> `0.0.0`, `publish_to: none`, no per-package changelog until the fresh-repo `0.0.1` export
+> (publishing is paused by the developer since 2026-09-15). **The POC keeps working at every
+> commit:** a file moves into a package and the POC imports it from there in the same commit;
+> tests, parity hashes and probe logs stay as they were.
+
+## Progress
+
+| Phase | State | Gate |
+|:---|:---|:---|
+| VK1 Finish the moves into `voxel_core` / `voxel_scene` | in progress | every engine-generic file left in `lib/` that needs no new API has moved |
+| VK2 `voxel_worldgen` | pending | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
+| VK3 `voxel_content` | pending | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
+| VK4 `voxel_game` — the kit | pending | `example/` is a playable Minecraft-like in under 150 lines of game code |
+| VK5 The POC on the kit | pending | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+
+---
+
+## The package map
+
+```
+voxel_core       pure Dart   grid, mesher, streaming, physics, rays          (exists)
+                              + reach, pathfinder, liquid flow, voxel models   (VK1)
+voxel_scene      flutter_scene  chunk view, terrain material, mirrored camera (exists)
+                              + outline, model meshes, rig parts, scene bodies (VK1)
+voxel_worldgen   pure Dart   noise, terrain recipes, biomes, caves, ores,
+                             trees, structures → a ChunkGenerator             (VK2)
+voxel_content    pure Dart   block / item registries by string id, tags,
+                             variants, recipes, inventory, loot, effects      (VK3)
+voxel_game       Flutter     the kit: VoxelGame widget, loop, input, player
+                             controller, cameras, mobs, spawns, drops         (VK4)
+```
+
+Dependencies only point down: `voxel_game` → everything; `voxel_worldgen` and `voxel_content`
+→ `voxel_core`; `voxel_scene` → `voxel_core`. No package imports `package:cubeworld_poc`.
+
+Out of scope here, named so nothing drifts into the kit by accident: `voxel_audio` (the SoLoud
+synth bank and the music crossfader), `voxel_net` (transport, block prediction, a replicated
+entity channel) and `voxel_signals` (circuits, rails). They follow once VK4 has an entity model
+to replicate and to wire.
+
+## The API the kit is aiming at
+
+This is the test of VK4: a new game is this file plus assets it does not need.
+
+```dart
+void main() => runVoxelGame(VoxelGameSpec(
+  blocks: [
+    BlockType('stone', color: 0x7F7F84, hardness: 1.5, tool: 'pickaxe'),
+    BlockType('dirt', color: 0x74502F, tool: 'shovel'),
+    BlockType('grass', color: 0x4C9437, drop: 'dirt', tool: 'shovel'),
+    BlockType('sand', color: 0xDDCC88, tool: 'shovel'),
+    BlockType('log', color: 0x6B4F2A, tool: 'axe'),
+    BlockType('leaves', color: 0x3A7A2A, opaque: false),
+    BlockType.liquid('water', color: 0x3366CC, alpha: 0.6),
+    BlockType('torch', color: 0xFFD070, shape: BlockShape.torch, light: 14),
+  ],
+  world: WorldGenSpec(
+    seaLevel: 46,
+    terrain: TerrainRecipe.continental(hills: 12, mountains: 30),
+    biomes: [
+      Biome('plains', top: 'grass', under: 'dirt', trees: TreeSpec.oak(chance: 0.2)),
+      Biome('desert', top: 'sand', under: 'sand', climate: Climate(hot: true, dry: true)),
+    ],
+    ores: [Ore('coal_ore', maxY: 80, share: 0.02)],
+  ),
+  player: PlayerSpec(hp: 20, reach: 5, camera: CameraMode.thirdPerson),
+  mobs: [
+    MobSpec('zombie', hp: 20, speed: 3.2, rig: Rig.humanoid(skin: 0x4C8A4C),
+        brain: [Hostile(range: 16), MeleeAttack(damage: 3)],
+        spawn: SpawnRule(maxLight: 7, weight: 10)),
+    MobSpec('sheep', hp: 8, rig: Rig.quadruped(color: 0xEEEEEE),
+        brain: [Wander(), FleeWhenHurt()],
+        drops: [Drop('wool', 1, 2)],
+        spawn: SpawnRule(biomes: ['plains'], group: (2, 4))),
+  ],
+));
+```
+
+What makes this possible, and what each phase owes it:
+
+- **Blocks by string id.** `voxel_content` numbers them in declaration order (air is 0) and
+  projects the `VoxelBlockTable` the engine reads. The number is the save contract, so the
+  registry is append-only by rule and says so in its docs.
+- **Declarative world generation.** `WorldGenSpec` is plain data plus pure callbacks, so it
+  crosses `Isolate.spawn` to the worker pool (a closure is sendable when it captures nothing
+  unsendable — the VP1.5 finding). It builds a `ChunkGenerator`.
+- **Behaviour as a list, not flags.** The POC's `Mob` is an FSM steered by eleven booleans on
+  `SpeciesDef` (`hostile`, `ranged`, `explodes`, `hops`, `flying`, …). The kit makes each one a
+  behaviour (`Hostile`, `MeleeAttack`, `RangedAttack`, `Explode`, `Wander`, `FleeWhenHurt`,
+  `FollowOwner`, `Rideable`) and each gait a locomotion (`Walker`, `Hopper`, `Flier`). A game
+  adds its own by implementing the same interface — the Bonfire move (`SimpleEnemy` +
+  mixins), without Bonfire's inheritance tree.
+- **Escape hatches on every level.** `VoxelGame` takes a spec *or* the parts; every system is
+  replaceable (`systems:`); hooks (`onBlockBroken`, `onMobKilled`, `onTick`) reach game code
+  without subclassing; the HUD is a Flutter widget slot.
+
+---
+
+## VK1 — finish the moves
+
+The two audits of 2026-09-18 read every file left in `lib/` (70 files, 21k lines). What can
+move now, without an API that does not exist yet:
+
+- **VK1.1** `SelectionOutline` → `voxel_scene`. `GodotCamera` is deleted and its seven importers
+  call `MirroredCamera` (it only forwarded two statics).
+- **VK1.2** `Reach` → `voxel_core/physics/` (it imports only `voxel_core` today).
+- **VK1.3** `Pathfinder` → `voxel_core/navigation/`, over `VoxelQuery` and a `PathCosts` policy
+  (`avoid(id)`, `costOf(feet, below)`, `isFloor(id)`). The POC supplies lava, fences and the
+  block speed as its policy.
+- **VK1.4** The model half of `VoxelMeshBuilder`: a pure `VoxelModel` (voxel map, `box`,
+  `mirrorX`) and the angle helpers (`eulerYXZ`, `lerpAngle`, `lerpd`) → `voxel_core/model/`;
+  `build`, `meshNode`, the shared material and `refreshMeshMaterials` → `voxel_scene`. The item
+  shape catalogue stays in the POC.
+- **VK1.5** `Part` (the rig pivot) and a generic `SceneBody` (node, `syncNode`, `removed`, world
+  typed as `VoxelQuery`) → `voxel_scene`. The POC's `SceneBody` keeps `inLava` and the facade
+  type as a subclass.
+- **VK1.6** Liquid flow → `voxel_core/liquids/` as `LiquidFlow`: it reads liquid kinds from the
+  `VoxelBlockTable` and takes, per kind, a flowing id, a period and a reach, plus a contact rule
+  (the POC's lava + water → obsidian / cobblestone). The three string compares in
+  `voxel_world.dart` leave.
+
+**Gate:** analyze clean; the three test suites green; parity hashes unchanged; probe logs
+unchanged (`tool/probe_baseline.sh --check`) once at the end of the phase.
+
+## VK2 — `voxel_worldgen`
+
+A pure-Dart package. The POC's 1,667-line `TerrainGenerator` becomes content written on it.
+
+- **VK2.1** Scaffold + noise. `FastNoiseLite` is copied from `flutter_scene` 0.23.0
+  (`lib/src/noise/fast_noise_lite.dart`, MIT, self-contained by its own header) with its
+  licence notice; the POC's generator imports it from the package. Parity hashes prove the copy.
+- **VK2.2** The machinery, each piece moved out of the generator and called back by it:
+  `ChunkWriter` (`put`, `get`, `levelColumn`, world-space and clipped to one chunk),
+  `ScatterGrid` (one feature per N×N patch with an inset), `TreeCanvas` (a tree drawn in world
+  space, kept to what a flood fill from the stump reaches, printed clipped — the piece that
+  makes trees agree across chunk borders), `StructureGrid` (a region grid with its own hash,
+  neighbour lookup and a clearance against another grid), `OreTable` (depth bands over a vein
+  hash) and `CaveCarver` (cheese noise, caverns, an entrance threshold).
+- **VK2.3** The declarative layer: `WorldGenSpec` (`seaLevel`, `terrain`, `biomes`, `ores`,
+  `caves`, `structures`, `dimensions`), `TerrainRecipe` (the continental / hills / ridge / river
+  height as parameters), `Biome` with a `Climate` window (temperature, humidity, altitude) and
+  `TreeSpec` presets (oak, spruce, palm, …). `WorldGenSpec.build(blocks)` returns a
+  `ChunkGenerator` plus `surfaceHeight` / `biomeAt` / `structuresNear` queries.
+- **VK2.4** An example: the hills of `voxel_scene/example` rewritten as a 30-line spec.
+
+**Gate:** parity hashes unchanged through VK2.1–VK2.2 (the POC's world is byte-identical); the
+POC's generator imports no noise and writes no chunk array directly.
+
+## VK3 — `voxel_content`
+
+- **VK3.1** `BlockType` + `BlockRegistry`: string id, colour, shape, solid, opaque, light,
+  hardness, tool, tier, drop, speed, **tags** (replacing id-substring tests such as `_flow`,
+  `piston_`, `powered_rail_`) and **variant groups** (orientations, on / off, open / closed).
+  It projects `VoxelBlockTable`. The POC's 128 rows become `BlockType` rows in the same order;
+  `Blocks`' static API forwards, so its 35 importers do not change in this step.
+- **VK3.2** `ItemType` + `ItemRegistry` (every block is an item unless a variant folds it),
+  `mineTime`, tool tiers as data.
+- **VK3.3** `Inventory` (slot count and hotbar size as parameters), `Recipe` / `Crafting`
+  (shapeless, per station), `LootTable` (entries, `roll`, a positional seed), `StatusEffects`
+  with an effect registry whose stat modifiers are data.
+
+**Gate:** the POC's block / item / recipe / loot tables are rows; parity hashes unchanged; save
+round-trip tests (stage 24) unchanged.
+
+## VK4 — `voxel_game`, the kit
+
+- **VK4.1** Scaffold: `VoxelGame` widget and `runVoxelGame`; the fixed 1/60 s step loop with at
+  most four catch-up steps; a `GameSystem` list replacing the hard-wired tick order; the world
+  facade (streamer + worker pool + chunk view + liquid flow) built from the spec.
+- **VK4.2** `InputMap<A>`: the POC's `GameInput` made generic over the action type (keys,
+  mouse buttons, gamepad buttons and sticks, pointer lock with a drag fallback). Default
+  bindings for a stock `VoxelAction` enum.
+- **VK4.3** `CharacterController` over `VoxelBody`: walk / sprint / sneak / swim / wade, the
+  auto-step with the half-step hop, the water exit, fall damage, ladders as a climb rule.
+  The player and the kit's `Walker` share it (the POC has it twice, player and mob).
+- **VK4.4** Cameras: first person with the hand view, third person with the orbit and its
+  clearance sweep, view bob and shake. Aim: ray + nearest body + the outline; mine and place
+  driven by `voxel_content` hardness and tools.
+- **VK4.5** Entities and mobs: `Target` (anything that can be hurt), `MobSpec`, the behaviour
+  and locomotion interfaces with the stock set named above, the five stock rigs (humanoid,
+  quadruped, blob, spider, bird) built from `Part`s, hit feel (knockback, hit-stop, flash,
+  topple), `SpawnRule`s (ring sampling, light gate, biome filter, cap and despawn radius),
+  `Pickup` drops and `ProjectileSpec`.
+- **VK4.6** Environment: the day / night sky, sun steps (the VP3.1 finding), fog tied to the
+  render distance, underwater tint — `DayNightSky` in `voxel_scene`, driven by the kit.
+- **VK4.7** The example: the spec above, playable, in `voxel_game/example/`.
+
+**Gate:** the example runs on macOS and is under 150 lines of game code; every stock behaviour
+has a headless test (a mob, a flat world, N ticks, an assertion on where it went).
+
+## VK5 — the POC on the kit
+
+The POC's `Player` (2,473 lines) and `Mob` (1,543 lines) delegate piece by piece: locomotion
+first (VK4.3's controller), then the cameras, then rigs, then brains; the POC's species table
+becomes `MobSpec`s with its own behaviours for what is Dawnforge's (traders, affixes, bosses).
+Each step keeps `--strike`, `--move-probe`, `--anim-probe` and `--outline-probe` printing what
+they printed.
+
+---
+
+## Verification — the same checks after every step
+
+From `poc_cubeworld/`: `flutter analyze` (zero errors; zero issues in `packages/`);
+`flutter test`; `dart test` in each pure package; `flutter test` in each Flutter package;
+`test/voxel_parity_test.dart` unchanged. `tool/probe_baseline.sh --check` at every phase gate
+(it needs the window in front, so it is run when the machine is attended).
+
+## Decision register
+
+| ID | Question | Decision | Why |
+|:---|:---|:---|:---|
+| `VKD1` | One big kit package, or several? | **Five packages, the kit on top** | A game that only wants the world (a builder, a viewer) takes `voxel_worldgen` + `voxel_scene` without player or mobs; the pure packages stay testable with `dart test` |
+| `VKD2` | Bonfire-style inheritance (`SimpleEnemy` → subclasses) or composition? | **Composition: behaviour and locomotion lists** | The POC's `Mob` shows where inheritance plus flags ends: one 1,543-line class. A list is declared in one line and extended by one class |
+| `VKD3` | Blocks addressed by string or by number? | **String at the API, number in the engine** | A game author writes `'stone'`; the engine keeps its byte grid. The registry is the only place the two meet |
+| `VKD4` | Noise: depend on `flutter_scene` or copy? | **Copy into `voxel_worldgen`** | `flutter_scene` pulls Flutter into a pure package; the file is MIT and self-contained by design |
+| `VKD5` | Does the kit replace the POC's code before it exists? | **No — the kit grows first (VK4), the POC moves onto it after (VK5)** | Rewriting `Player`/`Mob` onto an API still being designed would move the target twice |
