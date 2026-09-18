@@ -19,8 +19,8 @@
 |:---|:---|:---|
 | VK1 Finish the moves into `voxel_core` / `voxel_scene` | **done** 2026-09-18 (VK1.1–VK1.6); probe logs not rerun (see log) | every engine-generic file left in `lib/` that needs no new API has moved |
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
-| VK3 `voxel_content` | pending | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
-| VK4 `voxel_game` — the kit | pending | `example/` is a playable Minecraft-like in under 150 lines of game code |
+| VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
+| VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.7 in one commit); VK4.8+ open | `example/` is a playable Minecraft-like in under 150 lines of game code |
 | VK5 The POC on the kit | pending | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
 
 ---
@@ -48,42 +48,47 @@ synth bank and the music crossfader), `voxel_net` (transport, block prediction, 
 entity channel) and `voxel_signals` (circuits, rails). They follow once VK4 has an entity model
 to replicate and to wire.
 
-## The API the kit is aiming at
+## The API the kit ships (VK4, `packages/voxel_game/example/lib/main.dart`)
 
-This is the test of VK4: a new game is this file plus assets it does not need.
+A whole game is one `const` declaration and one call. This is an excerpt of the example; the
+full file is about 80 lines.
 
 ```dart
-void main() => runVoxelGame(VoxelGameSpec(
+void main() => runVoxelGame(game);
+
+const game = VoxelGameSpec(
   blocks: [
-    BlockType('stone', color: 0x7F7F84, hardness: 1.5, tool: 'pickaxe'),
-    BlockType('dirt', color: 0x74502F, tool: 'shovel'),
-    BlockType('grass', color: 0x4C9437, drop: 'dirt', tool: 'shovel'),
-    BlockType('sand', color: 0xDDCC88, tool: 'shovel'),
-    BlockType('log', color: 0x6B4F2A, tool: 'axe'),
-    BlockType('leaves', color: 0x3A7A2A, opaque: false),
-    BlockType.liquid('water', color: 0x3366CC, alpha: 0.6),
-    BlockType('torch', color: 0xFFD070, shape: BlockShape.torch, light: 14),
+    BlockType('stone', color: 0x7F7F84, hardness: 1.5, tool: 'pickaxe', tier: 1, drop: 'cobblestone'),
+    BlockType('grass', color: 0x5C9E3A, hardness: 0.6, tool: 'shovel', drop: 'dirt'),
+    BlockType('torch', color: 0xFFD070, shape: BlockShape.torch, solid: false, hardness: 0, light: 14),
+    BlockType.liquid('water', color: 0x3366CC),
+    // ...
   ],
+  items: [ItemType('wooden_pickaxe', color: 0xB08850, tool: 'pickaxe', tier: 1, stack: 1, durability: 60)],
+  recipes: [Recipe('planks', 4, {'log': 1})],
   world: WorldGenSpec(
-    seaLevel: 46,
-    terrain: TerrainRecipe.continental(hills: 12, mountains: 30),
     biomes: [
-      Biome('plains', top: 'grass', under: 'dirt', trees: TreeSpec.oak(chance: 0.2)),
-      Biome('desert', top: 'sand', under: 'sand', climate: Climate(hot: true, dry: true)),
+      Biome('desert', top: 'sand', climate: Climate.hotDry),
+      Biome('plains', top: 'grass', under: 'dirt',
+          trees: [TreeSpec.oak(log: 'log', leaves: 'leaves')], treeChance: 12),
     ],
-    ores: [Ore('coal_ore', maxY: 80, share: 0.02)],
+    ores: [Ore('coal_ore', share: 0.11)],
+    structures: [StructureSpec('tower', build: tower, biomes: ['plains'], radius: 3)],
   ),
-  player: PlayerSpec(hp: 20, reach: 5, camera: CameraMode.thirdPerson),
+  player: PlayerSpec(startingItems: {'wooden_pickaxe': 1}),
   mobs: [
-    MobSpec('zombie', hp: 20, speed: 3.2, rig: Rig.humanoid(skin: 0x4C8A4C),
-        brain: [Hostile(range: 16), MeleeAttack(damage: 3)],
-        spawn: SpawnRule(maxLight: 7, weight: 10)),
-    MobSpec('sheep', hp: 8, rig: Rig.quadruped(color: 0xEEEEEE),
-        brain: [Wander(), FleeWhenHurt()],
-        drops: [Drop('wool', 1, 2)],
-        spawn: SpawnRule(biomes: ['plains'], group: (2, 4))),
+    MobSpec('zombie', hp: 20, rig: Rig.humanoid(skin: 0x5E9A5A, armsForward: true, redEyes: true),
+        brain: [MeleeAttack(damage: 3), Hunt(range: 18), Wander()], spawn: SpawnRule.dark()),
+    MobSpec('sheep', hp: 8, rig: Rig.quadruped(body: 0xEEEEEE),
+        brain: [FleeWhenHurt(), LookAtPlayer(), Wander()], drops: [Drop('wool', 1, 2)],
+        spawn: SpawnRule.daylight(biomes: ['plains'])),
   ],
-));
+);
+
+void tower(StructureSite s) {
+  s.level(-2, -2, 2, 2, 'cobblestone');
+  s.fill(-2, 0, -2, 2, 7 + s.roll(1) % 4, 2, 'cobblestone', hollow: true);
+}
 ```
 
 What makes this possible, and what each phase owes it:
@@ -223,6 +228,39 @@ round-trip tests (stage 24) unchanged.
 
 **Gate:** the example runs on macOS and is under 150 lines of game code; every stock behaviour
 has a headless test (a mob, a flat world, N ticks, an assertion on where it went).
+
+**VK3 log:**
+
+| Step | Commit | Notes |
+|:---|:---|:---|
+| VK3.1 package + blocks | `135870b4` | the whole package landed here (blocks, items, mining, inventory, recipes, loot, effects, 12 tests). The POC keeps its 128 `BlockDef` rows and its `ToolType` enum and projects them once into `Blocks.registry`; numbering, the engine table, liquid kinds, drops, replaceable, flowing forms and path costs come from the package. Parity and the scratch wide check unchanged |
+| VK3.2 items | — | **Deferred for the POC.** Its `ItemDef` carries an `int` block index and a `ToolType`, where `ItemType` carries a block name and an open tool string; a subclass cannot retype the fields, so adopting it means renaming ~70 call sites. The kit uses `ItemType` and `MiningRules` directly. **Found:** the POC's `mineTime` gives a tool-less item with a tier the tier's speed on a tool-less block; `MiningRules` does not, so the POC keeps its own |
+| VK3.3 inventory, recipes, loot, effects | `08a234c4` | `Inventory` extends the package's; `Recipes` is a `RecipeBook`; `LootTables` rolls `LootTable`; `StatusEffects` extends the package's, and its four stat hooks became `StatModifier` data. Every caller kept its names |
+
+**VK4 log (`fa394cda`, one commit — the pieces reference each other):** 1,900 lines, 10 headless tests
+that play the game through `InputMap` on a flat world. Design decisions made on the way:
+
+- **Behaviours are Minecraft's goals, not an FSM.** Each declares the body slots it needs (move,
+  look, attack) and a priority. A running goal is pre-empted only by a lower number on a slot it
+  holds, so a zombie chases (`Hunt`, move) and bites (`MeleeAttack`, attack) at once. A creeper's
+  `Explode` takes the legs from `Hunt` without losing the target: `Hunt.stop` forgets the target
+  only when it is really lost (a test caught that).
+- **Behaviours are `const` and shared by every mob of a spec**, so they hold no state. Per-mob
+  state lives in `Mob.memory(behavior, create)`, and timers live in `Mob.cooldown`.
+- **The fall height is the highest point since the feet last had footing**, not the POC's "rising
+  only" rule, which missed a body that was placed in the air.
+- **`Spawner` became `MobSpawner`** (flutter_scene exports a particle `Spawner`).
+- **Headless is a first-class mode** (`VoxelGame.startHeadless`, `GameWorld.headless`): jobs are
+  answered on the calling isolate, no scene, no rigs. Every behaviour is tested there.
+- **Seen running:** the example built for macOS, captured from inside the app with a scratch
+  probe (`RepaintBoundary`, the app's sandbox temp). 169 chunks in 1.3 s, and in third person the
+  player among a sheep and a slime.
+
+**VK4 open (the kit is playable, not finished):**
+- **VK4.8** An inventory and crafting screen (recipes are declared but only craftable from code).
+- **VK4.9** Save and load: `EditDeltaCodec` for the edits, JSON for the player and the mobs.
+- **VK4.10** The first-person hand (the POC's `HandView`) and the mining crack.
+- **VK4.11** Hit feel: a mob's red flash, the player's damage tint, the camera shake.
 
 ## VK5 — the POC on the kit
 
