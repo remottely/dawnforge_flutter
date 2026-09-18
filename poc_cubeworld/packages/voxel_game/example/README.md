@@ -1,8 +1,8 @@
 # voxel_game example
 
-A Minecraft-like declared in one file (`lib/main.dart`): fourteen blocks, a four-biome
-world with rivers, trees, coal and towers, a player with a pickaxe and a sword, sheep
-and chickens by day, zombies, skeletons, creepers and slimes by night.
+A small Minecraft-like in one file (`lib/main.dart`): twelve blocks, a world
+of forest and plains with trees and coal, a few recipes, a player with a
+pickaxe, sheep by day and zombies by night.
 
 ```bash
 flutter run -d macos

@@ -3,7 +3,7 @@ description: >-
   voxel_game's example: a Minecraft-like declared in one file — blocks,
   a four-biome world with towers, a player, animals and night creatures.
 publish_to: none
-version: 0.0.1
+version: 0.0.0
 
 environment:
   sdk: ^3.13.0

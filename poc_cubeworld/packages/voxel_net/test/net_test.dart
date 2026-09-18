@@ -31,6 +31,8 @@ void main() {
     expect(later, ['after'], reason: 'held while nobody listened, then handed over in order');
     await client.close();
     expect(await left.future.timeout(const Duration(seconds: 5)), 2);
+    await peer.connection.socket.done.timeout(const Duration(seconds: 5));
+    expect(peer.connection.isClosed, isTrue, reason: "the host releases a leaver's socket");
     await host.close();
   });
 }

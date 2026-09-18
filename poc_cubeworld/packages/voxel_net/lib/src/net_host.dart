@@ -29,6 +29,8 @@ class NetHost {
       peer.connection.listen((m) => onMessage?.call(peer, m));
       peer.connection.done.then((_) {
         if (peers.remove(peer.id) != null) onLeave?.call(peer);
+        // The client hung up: release the host's end of the socket too.
+        return peer.connection.close();
       });
     });
   }
