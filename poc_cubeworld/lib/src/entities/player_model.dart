@@ -7,31 +7,13 @@ import 'package:voxel_core/voxel_core.dart';
 import 'voxel_mesh_builder.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
-/// A pivot with Euler angles applied every frame (Godot's Node3D rotation).
-class Part {
-  Part(this.node, this.base) {
-    node.position = base.clone();
-  }
-  final Node node;
-  final Vector3 base;
-  double rx = 0, ry = 0, rz = 0;
-  double sx = 1, sy = 1, sz = 1;
-  double offX = 0, offY = 0, offZ = 0;
-
-  void apply() {
-    node.rotation = eulerYXZ(rx, ry, rz);
-    node.position = Vector3(base.x + offX, base.y + offY, base.z + offZ);
-    node.scale = Vector3(sx, sy, sz);
-  }
-}
-
 /// A Cube World style humanoid built from voxels, with procedural walk / swing
 /// animation.
 class PlayerModel {
   static const double s = 0.055; // metres per voxel
 
   final Node root = Node(name: 'PlayerModel');
-  late Part head, torso, armL, armR, legL, legR;
+  late RigPart head, torso, armL, armR, legL, legR;
   final Node hand = Node();
   Node? _held;
   String _heldId = '';
@@ -141,11 +123,11 @@ class PlayerModel {
     _held = null;
   }
 
-  Part _part(Map<IVec3, Vector3> voxels, Vector3 at) {
+  RigPart _part(Map<IVec3, Vector3> voxels, Vector3 at) {
     final pivot = Node();
     pivot.add(VoxelModelMesh.node(voxels, s));
     root.add(pivot);
-    return Part(pivot, at);
+    return RigPart(pivot, at);
   }
 
   void setHeld(String itemId) {

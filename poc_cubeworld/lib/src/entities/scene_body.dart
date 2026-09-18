@@ -1,27 +1,19 @@
-import 'package:flutter_scene/scene.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 import '../core/blocks.dart';
 import '../world/voxel_world.dart';
 
-/// The POC's body: voxel_core's [VoxelBody] (VP1.8) plus what only this game
-/// needs — the scene node that carries its visuals, the world it lives in
-/// typed as the POC's facade, and lava named as a liquid kind.
-class SceneBody extends VoxelBody {
-  final Node node = Node();
+/// The POC's body: voxel_scene's [NodeBody] (VK1.5) plus what only this game
+/// needs — the world it lives in typed as the POC's facade, and lava named as
+/// a liquid kind.
+class SceneBody extends NodeBody {
   late VoxelWorld world;
-
-  /// Gone from the world; the game drops it at the end of the frame.
-  bool removed = false;
 
   @override
   void setup(covariant VoxelWorld q, double hw, double h) {
     world = q;
     super.setup(q, hw, h);
   }
-
-  /// Pushes the position into the scene node. Call after moving.
-  void syncNode() => node.position = position.clone();
 
   static final int _lava = Blocks.liquidKinds.indexOf('lava');
 

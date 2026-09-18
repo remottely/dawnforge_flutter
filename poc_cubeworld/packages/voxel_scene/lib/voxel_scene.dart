@@ -3,6 +3,8 @@
 library;
 
 export 'src/mirrored_camera.dart';
+export 'src/node_body.dart';
+export 'src/rig_part.dart';
 export 'src/selection_outline.dart';
 export 'src/terrain_material.dart';
 export 'src/voxel_chunk_view.dart';

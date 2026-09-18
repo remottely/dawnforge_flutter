@@ -34,7 +34,7 @@ class Mob extends SceneBody {
   double _timer = 0.0;
   Vector3 _dir = Vector3.zero();
   double _attackCd = 0.0;
-  final Map<String, Part> _parts = {};
+  final Map<String, RigPart> _parts = {};
 
   /// How high this mob's back is above its feet — where a rider's hips go.
   /// Filled by [_buildModel] from the voxels it actually laid down, so the
@@ -506,7 +506,7 @@ class Mob extends SceneBody {
   /// A part whose voxels are [voxels] at [s] metres each, pivoting at [at].
   /// With [narrow], the part is centred on its pivot in x / z and drawn
   /// [partInset] in on each of those sides, about its own middle.
-  Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s, {bool narrow = false}) {
+  RigPart _part(Map<IVec3, Vector3> voxels, Vector3 at, double s, {bool narrow = false}) {
     final pivot = VoxelModelMesh.node({}, 1.0);
     final lo = Vector3.all(double.infinity), hi = Vector3.all(double.negativeInfinity);
     for (final k in voxels.keys) {
@@ -530,7 +530,7 @@ class Mob extends SceneBody {
     }
     pivot.add(VoxelModelMesh.node(voxels, s, origin)..scale = shrink);
     node.add(pivot);
-    final part = Part(pivot, base);
+    final part = RigPart(pivot, base);
     _restBoxes[part] = Aabb3.minMax(
       (lo - origin)..multiply(shrink * s),
       (hi - origin)..multiply(shrink * s),
@@ -547,7 +547,7 @@ class Mob extends SceneBody {
   double modelTop() => _restTop() * _modelFit * sizeScale;
 
   /// Each part's box around its pivot, as built (before any pose).
-  final Map<Part, Aabb3> _restBoxes = {};
+  final Map<RigPart, Aabb3> _restBoxes = {};
 
   /// Probe: every part's box in the model's space, in the rest pose (the
   /// part's own scale applied, no rotation). Two boxes sharing a face plane
