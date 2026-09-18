@@ -10,6 +10,9 @@ export 'src/features/scatter_grid.dart';
 export 'src/features/structure_grid.dart';
 export 'src/features/tree_canvas.dart';
 export 'src/features/trees.dart';
+export 'src/spec/spec_generator.dart';
+export 'src/spec/structure_site.dart';
+export 'src/spec/world_gen_spec.dart';
 export 'src/noise/fast_noise_lite.dart'
     show
         CellularDistanceFunction,
