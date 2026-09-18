@@ -21,6 +21,8 @@ export 'package:voxel_worldgen/voxel_worldgen.dart'
         TreeSpec,
         WorldGenSpec;
 
+export 'src/camera/shoulder_orbit.dart';
+export 'src/camera/view_bob.dart';
 export 'src/camera/view_camera.dart';
 export 'src/core/voxel_game.dart';
 export 'src/entities/game_entity.dart';

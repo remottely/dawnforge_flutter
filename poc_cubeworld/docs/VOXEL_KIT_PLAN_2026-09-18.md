@@ -21,7 +21,7 @@
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
-| VK5 The POC on the kit | in progress (VK5.2) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+| VK5 The POC on the kit | in progress (VK5.3) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
 | VK6 `voxel_audio` | **done** 2026-09-18 (VK6.1–VK6.4; the POC's `Sfx` on it) | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
 | VK7 `voxel_signals` | **done** 2026-09-18 (VK7.1–VK7.3, plus VK7.4 `SignalSpec` in the kit) | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
 | VK8 `voxel_net` | **done** 2026-09-18 (`21500e4a`: transport, host / join in the kit; drops stay local, mob loot on the host; never run with two real apps) | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
@@ -320,7 +320,7 @@ they printed.
 
 - **VK5.1** The player's locomotion on `CharacterMotor` — done.
 - **VK5.2** The mob's locomotion on `CharacterMotor` — done.
-- **VK5.3** The cameras on `ViewCamera` / `FirstPersonView`.
+- **VK5.3** The cameras on `ViewCamera` / `FirstPersonView` — done (the camera; the hand stays).
 - **VK5.4** The rigs on `Rig.*`.
 - **VK5.5** The brains: the species table as `MobSpec`s, Dawnforge's own behaviours.
 
@@ -346,6 +346,20 @@ down after the move, one tick longer), and `move mount water` 68/59 ticks over/s
 64/55 (the stroke replaces the liquid's gravity instead of fighting it, and the launch over the
 bank carries), every expectation on the line still met. One `--anim-probe` run stopped after
 its sheep line; two reruns of that build finished.
+
+Log. VK5.3: the kit's camera splits into two engine-neutral pieces, `ShoulderOrbit` (the
+third-person seat whose shoulder and rise grow with the distance, the eye's box swept along it
+with the jolt and the sway, in at once and out gently) and `ViewBob` (Minecraft's bob: the drop,
+the sway, a breath of roll and nose-up, cycled by distance, with cadence, gait and lean knobs for
+a mount's trot); `ViewCamera` is rebuilt on them and gains the roll and the nose-up, with kit
+tests. The POC's `Player` drops its own sweep, orbit and bob for them, tuned to its numbers; its
+shake (the stage 32 jolt from the game's random), `blocksCamera` and the trot's constants stay
+Dawnforge's. The hand stays the POC's `HandView`: it is built from the POC's model and answers
+the bob's phase, where the kit's `FirstPersonView` is a plainer arm, so moving it is a rig
+concern (VK5.4), not a camera one. Probes against a HEAD build: `--stage31`, `--stage32`,
+`--radius=8` and `--outline-probe` print the same; `anim camera` prints the same peaks (0.0500,
+0.1698, 0.2210); `move mount steps`' largest one-tick rise moves 0.126..0.158 between runs of
+either build.
 
 ---
 

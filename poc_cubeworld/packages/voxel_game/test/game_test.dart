@@ -346,4 +346,33 @@ void main() {
     expect(w.blockNameAt(base + const IVec3(2, 0, 1)), 'air');
     expect(w.blockNameAt(base + const IVec3(2, -1, 1)), 'air', reason: 'the ground under it went with it');
   });
+
+  test('the shoulder orbit comes in at once at a wall and goes out gently', () {
+    final orbit = ShoulderOrbit();
+    final pivot = Vector3(0.5, 1.5, 0.5), right = Vector3(1, 0, 0), up = Vector3(0, 1, 0), back = Vector3(0, 0, 1);
+    bool open(int x, int y, int z) => true;
+    bool walled(int x, int y, int z) => z != 2;
+    orbit.settle(1 / 60, pivot: pivot, right: right, up: up, back: back, jitter: Vector3.zero(), cellIsClear: walled);
+    expect(pivot.z + orbit.offset(right, up, back, orbit.current).z + ShoulderOrbit.eyeRadius, lessThanOrEqualTo(2.0));
+    final pinned = orbit.current;
+    orbit.settle(1 / 60, pivot: pivot, right: right, up: up, back: back, jitter: Vector3.zero(), cellIsClear: open);
+    expect(orbit.current, greaterThan(pinned));
+    expect(orbit.current, lessThan(orbit.distance));
+    expect(orbit.offset(right, up, back, 0.0).length, lessThan(1e-9), reason: 'an eye pulled all the way in sits on the head');
+  });
+
+  test('the view bob sways a walker and settles a stander', () {
+    final bob = ViewBob();
+    final right = Vector3(1, 0, 0), up = Vector3(0, 1, 0);
+    for (var i = 0; i < 60; i++) {
+      bob.update(1 / 60, walking: true, speed: 4.3, walkSpeed: 4.3, right: right, up: up);
+    }
+    expect(bob.weight, greaterThan(0.9));
+    expect(bob.offset.y, lessThanOrEqualTo(0.0), reason: 'the eye drops, never rises');
+    for (var i = 0; i < 120; i++) {
+      bob.update(1 / 60, walking: false, speed: 0.0, walkSpeed: 4.3, right: right, up: up);
+    }
+    expect(bob.offset.length, 0.0);
+    expect(bob.roll, 0.0);
+  });
 }

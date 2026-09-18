@@ -30,7 +30,7 @@ import '../game/net.dart';
 import '../game/rails.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
-import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning;
+import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning, ShoulderOrbit, ViewBob;
 import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 
@@ -74,11 +74,6 @@ class Player extends SceneBody implements Target {
   static const double orbitDistance = 4.8;
   static const double orbitShoulder = 0.55;
   static const double orbitRise = 0.15;
-
-  /// Half the box the eye is treated as. The near plane is a rectangle 0.05 m
-  /// in front of the eye, so the eye is not a point: this covers its furthest
-  /// corner at any field of view and leaves a margin over it.
-  static const double eyeRadius = 0.25;
 
   /// The body hides once the eye is nearer than this to the head.
   static const double modelHideDistance = 1.1;
@@ -175,8 +170,9 @@ class Player extends SceneBody implements Target {
 
   double yaw = 0.0;
   double pitch = -0.35;
-  double _camDistance = orbitDistance;
-  double get camDistance => _camDistance;
+  /// The third-person seat, pulled in by walls (the kit's).
+  final ShoulderOrbit orbit = ShoulderOrbit(distance: orbitDistance, shoulder: orbitShoulder, rise: orbitRise);
+  double get camDistance => orbit.current;
   double fov = 72.0;
   /// The skeleton around the aimed block or mob.
   final SelectionOutline outline = SelectionOutline();
@@ -202,11 +198,9 @@ class Player extends SceneBody implements Target {
   double _shakeTime = 0.0; // camera shake left, seconds
   double _shakeAmp = 0.0; // its amplitude in metres
   Vector3 _shake = Vector3.zero(); // this frame's jolt, added to the camera only
-  double _bobPhase = 0.0; // the walk cycle, in radians, advanced by distance
-  double _bobWeight = 0.0; // how much of the sway is in, eased in and out
-  Vector3 _bobOffset = Vector3.zero(); // this frame's sway, camera only
-  double _bobRoll = 0.0; // and its tilt, as a slice of the right vector
-  double _bobPitch = 0.0; // and its nose-up, as a slice of the up vector
+  final ViewBob _bob = ViewBob()
+    ..amplitude = bobAmplitude
+    ..swayRatio = bobSwayRatio; // the walk's sway of the eye, camera only
   double _mineFxTimer = 0.0; // swing + chips + dig voice while mining
   final List<Node> crackLines = []; // the four crack stages, six faces each (stage * 6 + face)
   int stepsTaken = 0; // footsteps played (for the probe)
@@ -314,7 +308,7 @@ class Player extends SceneBody implements Target {
     firstPerson = fp;
     model.visible = !fp;
     handView.visible = fp;
-    if (!fp) _camDistance = _clearOrbit();
+    if (!fp) orbit.current = orbit.clearFrom(pivot: pivotPosition, right: rightVec, up: upVec, back: backVec, jitter: _shake + _bob.offset, cellIsClear: _cellIsClear);
   }
 
   String heldItem() => inventory.idAt(selectedSlot);
@@ -359,28 +353,19 @@ class Player extends SceneBody implements Target {
 
   Vector3 get cameraPosition {
     if (firstPerson) return pivotPosition;
-    return pivotPosition + orbitOffset(rightVec, upVec, backVec, _camDistance);
-  }
-
-  /// The eye's offset from the pivot at orbit distance [dist]. Both the
-  /// shoulder and the rise are a share of how far out the eye is, so the
-  /// offset shrinks to nothing at the head and the whole segment from the
-  /// pivot to the eye is a straight line [_clearOrbit] can sweep.
-  static Vector3 orbitOffset(Vector3 right, Vector3 up, Vector3 back, double dist) {
-    final t = dist / orbitDistance;
-    return right * (orbitShoulder * t) + up * (orbitRise * t) + back * dist;
+    return pivotPosition + orbit.offset(rightVec, upVec, backVec, orbit.current);
   }
 
   /// Where the near plane actually sits this frame: the orbit seat plus the
   /// jolt and the sway. [_updateCamera] keeps *this* point out of the rock,
   /// not the seat, because a wall does not care which of the three put the eye
   /// inside it.
-  Vector3 get eyePosition => cameraPosition + _shake + _bobOffset;
+  Vector3 get eyePosition => cameraPosition + _shake + _bob.offset;
 
   PerspectiveCamera camera() => MirroredCamera(
         position: eyePosition,
-        target: eyePosition + forward + upVec * _bobPitch,
-        up: upVec + rightVec * _bobRoll,
+        target: eyePosition + forward + upVec * _bob.pitch,
+        up: upVec + rightVec * _bob.roll,
         fovRadiansY: fov * math.pi / 180.0,
         fovNear: 0.05,
         fovFar: 700.0,
@@ -401,33 +386,12 @@ class Player extends SceneBody implements Target {
     _updateBob(dt);
     _updateHandView(dt);
     if (firstPerson) return;
-    final clear = _clearOrbit();
-    // In at once, out gently. An eye *eased* into place is an eye inside the
-    // wall for the length of the ease, and a single frame of that is a frame
-    // of seeing the whole cave system through the rock.
-    _camDistance = clear < _camDistance ? clear : lerpd(_camDistance, clear, dt * 6.0);
-    model.visible = _camDistance > modelHideDistance;
-  }
-
-  /// How far down the orbit the eye may sit this frame.
-  ///
-  /// A bare ray down [backVec] was not enough, and each of the three things it
-  /// left out put the near plane inside a wall — which reads as no wall at
-  /// all, because a face is only drawn from the outside, so every cave behind
-  /// it shows through. The ray started at the shoulder while the eye also
-  /// rises; the ray was a line while the eye carries a near plane around it;
-  /// and the ray ignored the jolt and the sway, which move the eye after the
-  /// fact. So the box the eye really occupies is swept along the exact segment
-  /// it will travel, jolt and sway included, and stops at the last clear step.
-  double _clearOrbit() {
-    final jitter = _shake + _bobOffset;
-    final pivot = pivotPosition;
-    final right = rightVec, up = upVec, back = backVec;
-    return clearDistance(
-      orbitDistance,
-      (double d) => pivot + orbitOffset(right, up, back, d) + jitter,
-      _cellIsClear,
-    );
+    // The box the eye really occupies is swept along the exact segment it
+    // will travel, jolt and sway included: a bare ray from the shoulder left
+    // the rise, the near plane and the jitter out, and each of them put the
+    // near plane inside a wall, which shows every cave behind it.
+    orbit.settle(dt, pivot: pivotPosition, right: rightVec, up: upVec, back: backVec, jitter: _shake + _bob.offset, cellIsClear: _cellIsClear);
+    model.visible = orbit.current > modelHideDistance;
   }
 
   bool _cellIsClear(int x, int y, int z) => y >= 0 && !blocksCamera(world.getBlockXYZ(x, y, z));
@@ -437,41 +401,6 @@ class Player extends SceneBody implements Target {
   /// pane of glass, a shut door, a fence. Grass, flowers, torches, rails and
   /// water are none of those, and the camera passes through them.
   static bool blocksCamera(int block) => Blocks.isOpaque(block) || Blocks.isSolid(block);
-
-  /// The furthest a box of [eyeRadius] may slide along [eyeAt] from 0 to
-  /// [wanted] with every cell it touches accepted by [cellIsClear]. Marched
-  /// from 0 outward, never from [wanted] inward: an air pocket on the far side
-  /// of a wall is not room the camera may have.
-  static double clearDistance(
-    double wanted,
-    Vector3 Function(double distance) eyeAt,
-    bool Function(int x, int y, int z) cellIsClear,
-  ) {
-    const step = eyeRadius * 0.5;
-    var clear = 0.0;
-    while (clear < wanted) {
-      final next = math.min(clear + step, wanted);
-      if (!boxIsClear(eyeAt(next), eyeRadius, cellIsClear)) return clear;
-      clear = next;
-    }
-    return wanted;
-  }
-
-  /// True when every cell the box of half-width [radius] around [at] touches
-  /// is accepted by [cellIsClear].
-  static bool boxIsClear(Vector3 at, double radius, bool Function(int x, int y, int z) cellIsClear) {
-    final x0 = (at.x - radius).floor(), x1 = (at.x + radius).floor();
-    final y0 = (at.y - radius).floor(), y1 = (at.y + radius).floor();
-    final z0 = (at.z - radius).floor(), z1 = (at.z + radius).floor();
-    for (var y = y0; y <= y1; y++) {
-      for (var z = z0; z <= z1; z++) {
-        for (var x = x0; x <= x1; x++) {
-          if (!cellIsClear(x, y, z)) return false;
-        }
-      }
-    }
-    return true;
-  }
 
   /// Stage 32: a random jolt in the camera plane that dies out over
   /// [shakeSeconds], scaled by the damage taken (the aim never moves).
@@ -548,25 +477,20 @@ class Player extends SceneBody implements Target {
     // gliding and climbing have no footfalls to answer to.
     final walking = grounded && !gliding && !climbing && riding == null && cart == null && speed > 0.6;
     final gait = gaitAmplitude(mounted: h != null, sprinting: h?.rideSprint ?? false);
-    final want = walking && Settings.instance.viewBob ? (speed / walkSpeed).clamp(0.0, 1.7) : 0.0;
-    _bobWeight = lerpd(_bobWeight, want.toDouble(), dt * 9.0);
-    // One cycle — two footfalls — every 3.3 m walked, Minecraft's cadence.
-    if (walking) _bobPhase = (_bobPhase + speed * dt * 1.9 * (h == null ? 1.0 : trotCadence)) % (math.pi * 2);
-    if (_bobWeight < 0.001) {
-      _bobOffset = Vector3.zero();
-      _bobRoll = 0.0;
-      _bobPitch = 0.0;
-      return;
-    }
-    final amp = _bobWeight * bobAmplitude * gait;
-    final sin = math.sin(_bobPhase);
-    _bobOffset = rightVec * (sin * amp * bobSwayRatio) - upVec * (math.cos(_bobPhase).abs() * amp);
-    _bobRoll = sin * amp * 0.03 * (h == null ? 1.0 : trotRoll);
-    _bobPitch = math.cos(_bobPhase - 0.2).abs() * amp * 0.05;
+    _bob.update(dt,
+        walking: walking,
+        speed: speed,
+        walkSpeed: walkSpeed,
+        right: rightVec,
+        up: upVec,
+        enabled: Settings.instance.viewBob,
+        cadence: h == null ? 1.0 : trotCadence,
+        gait: gait,
+        rollScale: h == null ? 1.0 : trotRoll);
   }
 
   /// The sway the camera carries this frame (for the probe).
-  Vector3 viewBobOffset() => _bobOffset;
+  Vector3 viewBobOffset() => _bob.offset;
 
   /// Puts the first-person hand back in front of the eye. The camera has no
   /// view pass of its own here, so the hand is an ordinary world-space node
@@ -576,18 +500,18 @@ class Player extends SceneBody implements Target {
   void _updateHandView(double dt) {
     if (!firstPerson) return;
     handView.setHeld(heldItem());
-    final f = (forward + upVec * _bobPitch).normalized();
-    var u = upVec + rightVec * _bobRoll;
+    final f = (forward + upVec * _bob.pitch).normalized();
+    var u = upVec + rightVec * _bob.roll;
     final r = f.cross(u).normalized();
     u = r.cross(f).normalized();
     handView.update(
       dt: dt,
-      eye: cameraPosition + _shake + _bobOffset,
+      eye: cameraPosition + _shake + _bob.offset,
       right: r,
       up: u,
       forward: f,
-      phase: _bobPhase,
-      weight: _bobWeight,
+      phase: _bob.phase,
+      weight: _bob.weight,
     );
   }
 

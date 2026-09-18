@@ -4,6 +4,7 @@ import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
+import 'package:voxel_game/voxel_game.dart' show ShoulderOrbit;
 
 /// Stage 43: the third-person eye never ends up inside a block.
 ///
@@ -16,6 +17,8 @@ import 'package:vector_math/vector_math.dart';
 void main() {
   final stone = Blocks.indexOf('stone');
   const air = Blocks.air;
+  // The player's seat, on the kit's orbit.
+  final orbit = ShoulderOrbit(distance: Player.orbitDistance, shoulder: Player.orbitShoulder, rise: Player.orbitRise);
 
   /// The eye path of a player standing at the origin, looking down -Z (yaw 0),
   /// so [Player.backVec] is +Z and the orbit runs away from the wall behind.
@@ -25,7 +28,7 @@ void main() {
     final up = Vector3(0, 1, 0);
     final back = Vector3(0, 0, 1);
     final j = jitter ?? Vector3.zero();
-    return (double d) => pivot + Player.orbitOffset(right, up, back, d) + j;
+    return (double d) => pivot + orbit.offset(right, up, back, d) + j;
   }
 
   group('the eye is a box, not a point', () {
@@ -44,29 +47,29 @@ void main() {
       // Cell (0, 0, 0) is solid, everything else is air.
       bool clear(int x, int y, int z) => !(x == 0 && y == 0 && z == 0);
       // A centre well inside the air cell beside it: clear.
-      expect(Player.boxIsClear(Vector3(1.5, 0.5, 0.5), Player.eyeRadius, clear), isTrue);
+      expect(ShoulderOrbit.boxIsClear(Vector3(1.5, 0.5, 0.5), ShoulderOrbit.eyeRadius, clear), isTrue);
       // A centre still in the air cell, but within a radius of the solid one.
-      expect(Player.boxIsClear(Vector3(1.0 + Player.eyeRadius * 0.5, 0.5, 0.5), Player.eyeRadius, clear), isFalse);
+      expect(ShoulderOrbit.boxIsClear(Vector3(1.0 + ShoulderOrbit.eyeRadius * 0.5, 0.5, 0.5), ShoulderOrbit.eyeRadius, clear), isFalse);
     });
   });
 
   group('the orbit sweep', () {
     test('open sky leaves the eye at the full orbit distance', () {
-      final d = Player.clearDistance(Player.orbitDistance, eyePath(), (_, _, _) => true);
+      final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), (_, _, _) => true);
       expect(d, Player.orbitDistance);
     });
 
     test('a wall behind the head stops the eye in front of it', () {
       // Wall filling z >= 3 (the orbit runs toward +z).
       bool clear(int x, int y, int z) => z < 3;
-      final d = Player.clearDistance(Player.orbitDistance, eyePath(), clear);
+      final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), clear);
       expect(d, lessThan(Player.orbitDistance));
       // Every point up to `d` is genuinely clear, the box included.
       for (var t = 0.0; t <= d; t += 0.05) {
-        expect(Player.boxIsClear(eyePath()(t), Player.eyeRadius, clear), isTrue, reason: 'at $t');
+        expect(ShoulderOrbit.boxIsClear(eyePath()(t), ShoulderOrbit.eyeRadius, clear), isTrue, reason: 'at $t');
       }
       // And the eye it lands on keeps the whole near-plane box out of the wall.
-      expect(eyePath()(d).z + Player.eyeRadius, lessThan(3.0));
+      expect(eyePath()(d).z + ShoulderOrbit.eyeRadius, lessThan(3.0));
     });
 
     test('the rise is swept too: a ledge only the risen eye meets still stops it', () {
@@ -74,40 +77,40 @@ void main() {
       // y 1.5, so a ray at pivot height passes clean through the gap the
       // 0.15 m rise does not: the sweep must see what the ray missed.
       bool clear(int x, int y, int z) => !(y == 1 && z >= 2);
-      final d = Player.clearDistance(Player.orbitDistance, eyePath(), clear);
+      final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), clear);
       expect(d, lessThan(2.0));
     });
 
     test('a jolt toward the wall shortens the orbit, never buries the eye', () {
       bool clear(int x, int y, int z) => z < 3;
-      final still = Player.clearDistance(Player.orbitDistance, eyePath(), clear);
-      final jolted = Player.clearDistance(
+      final still = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), clear);
+      final jolted = ShoulderOrbit.clearDistance(
         Player.orbitDistance,
         eyePath(jitter: Vector3(0, 0, 0.4)),
         clear,
       );
       expect(jolted, lessThan(still));
-      expect(eyePath(jitter: Vector3(0, 0, 0.4))(jolted).z + Player.eyeRadius, lessThan(3.0));
+      expect(eyePath(jitter: Vector3(0, 0, 0.4))(jolted).z + ShoulderOrbit.eyeRadius, lessThan(3.0));
     });
 
     test('a pocket beyond a wall is not room the camera may have', () {
       // A one-cell wall at z == 2 with open air past it.
       bool clear(int x, int y, int z) => z != 2;
-      final d = Player.clearDistance(Player.orbitDistance, eyePath(), clear);
+      final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), clear);
       expect(eyePath()(d).z, lessThan(2.0));
     });
 
     test('a head walled in on every side pins the eye to the head', () {
-      final d = Player.clearDistance(Player.orbitDistance, eyePath(), (_, _, _) => false);
+      final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), (_, _, _) => false);
       expect(d, 0.0);
       // And the body is hidden there, so the eye is never inside its own head.
       expect(d, lessThan(Player.modelHideDistance));
     });
 
     test('the shoulder eases in, so a pinned eye sits on the head and not beside it', () {
-      final atHead = Player.orbitOffset(Player.rightFor(0.0), Vector3(0, 1, 0), Vector3(0, 0, 1), 0.0);
+      final atHead = orbit.offset(Player.rightFor(0.0), Vector3(0, 1, 0), Vector3(0, 0, 1), 0.0);
       expect(atHead.length, lessThan(1e-5));
-      final seated = Player.orbitOffset(Player.rightFor(0.0), Vector3(0, 1, 0), Vector3(0, 0, 1), Player.orbitDistance);
+      final seated = orbit.offset(Player.rightFor(0.0), Vector3(0, 1, 0), Vector3(0, 0, 1), Player.orbitDistance);
       expect(seated.z, closeTo(Player.orbitDistance, 1e-5));
       expect(seated.y, closeTo(Player.orbitRise, 1e-5));
       expect(math.sqrt(seated.x * seated.x), closeTo(Player.orbitShoulder, 1e-5));
@@ -118,8 +121,8 @@ void main() {
       // coarser than the cell could straddle it.
       for (var wall = 1; wall <= 4; wall++) {
         bool clear(int x, int y, int z) => z != wall;
-        final d = Player.clearDistance(Player.orbitDistance, eyePath(), clear);
-        expect(eyePath()(d).z + Player.eyeRadius, lessThanOrEqualTo(wall.toDouble()),
+        final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyePath(), clear);
+        expect(eyePath()(d).z + ShoulderOrbit.eyeRadius, lessThanOrEqualTo(wall.toDouble()),
             reason: 'wall at z == $wall');
       }
     });
@@ -153,9 +156,9 @@ void main() {
         for (var pi = -8; pi <= 8; pi++) {
           final pitch = pi * 0.09;
           final b = basis(yaw, pitch);
-          Vector3 eyeAt(double d) => pivot + Player.orbitOffset(b.right, b.up, b.back, d);
-          final d = Player.clearDistance(Player.orbitDistance, eyeAt, clear);
-          if (!Player.boxIsClear(eyeAt(d), Player.eyeRadius, clear)) inside++;
+          Vector3 eyeAt(double d) => pivot + orbit.offset(b.right, b.up, b.back, d);
+          final d = ShoulderOrbit.clearDistance(Player.orbitDistance, eyeAt, clear);
+          if (!ShoulderOrbit.boxIsClear(eyeAt(d), ShoulderOrbit.eyeRadius, clear)) inside++;
         }
       }
       expect(inside, 0);
