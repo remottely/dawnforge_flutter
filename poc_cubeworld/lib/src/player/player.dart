@@ -17,7 +17,6 @@ import '../entities/hand_view.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
 import '../entities/scene_body.dart';
-import '../entities/selection_outline.dart';
 import '../entities/voxel_mesh_builder.dart';
 import '../game/achievements.dart';
 import '../game/effects.dart';
@@ -33,7 +32,7 @@ import '../game/rails.dart';
 import '../game/reach.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
-import '../world/godot_camera.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 
 class PlayerClass {
@@ -269,7 +268,7 @@ class Player extends SceneBody implements Target {
     _crackMat = UnlitMaterial()
       ..baseColorFactor = Vector4(0, 0, 0, 0)
       ..alphaMode = AlphaMode.blend;
-    crack = GodotCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1.01, 1.01, 1.01)), _crackMat), castsShadows: false)
+    crack = MirroredCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1.01, 1.01, 1.01)), _crackMat), castsShadows: false)
       ..visible = false;
     _buildCrackStages();
 
@@ -339,7 +338,7 @@ class Player extends SceneBody implements Target {
   Vector3 get forward => Vector3(-math.sin(yaw) * math.cos(pitch), math.sin(pitch), -math.cos(yaw) * math.cos(pitch));
   Vector3 get flatForward => flatForwardFor(yaw);
   // Godot's right-handed basis (`player.gd`: `right := Vector3(cos(_yaw), 0,
-  // -sin(_yaw))`); `GodotCamera` renders that handedness, so +X is screen-right
+  // -sin(_yaw))`); `MirroredCamera` renders that handedness, so +X is screen-right
   // at yaw 0 and D strafes toward it.
   Vector3 get rightVec => rightFor(yaw);
   Vector3 get upVec => Vector3(math.sin(pitch) * math.sin(yaw), math.cos(pitch), math.sin(pitch) * math.cos(yaw));
@@ -380,7 +379,7 @@ class Player extends SceneBody implements Target {
   /// inside it.
   Vector3 get eyePosition => cameraPosition + _shake + _bobOffset;
 
-  PerspectiveCamera camera() => GodotCamera(
+  PerspectiveCamera camera() => MirroredCamera(
         position: eyePosition,
         target: eyePosition + forward + upVec * _bobPitch,
         up: upVec + rightVec * _bobRoll,

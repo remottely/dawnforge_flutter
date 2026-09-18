@@ -3,7 +3,7 @@ import 'dart:ui' show Size;
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
-import 'package:cubeworld_poc/src/world/godot_camera.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import 'package:flutter_scene/scene.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
@@ -23,7 +23,7 @@ void main() {
     final eye = Vector3(0, 0, 0);
     final ahead = eye + Player.flatForwardFor(0.0);
     final east = Vector3(1, 0, -5);
-    final godot = GodotCamera(position: eye, target: ahead, up: Vector3(0, 1, 0));
+    final godot = MirroredCamera(position: eye, target: ahead, up: Vector3(0, 1, 0));
     final plain = PerspectiveCamera(position: eye, target: ahead, up: Vector3(0, 1, 0));
     expect(ndcX(godot, east), greaterThan(0.0));
     expect(ndcX(plain, east), lessThan(0.0)); // the cause: a left-handed view
@@ -57,7 +57,7 @@ void main() {
     expect(Player.flatForwardFor(yaw).x, greaterThan(0.0));
     // And it still lands on the right half of the frame the old view showed.
     final eye = Vector3.zero();
-    final cam = GodotCamera(position: eye, target: eye + Player.flatForwardFor(0.0), up: Vector3(0, 1, 0));
+    final cam = MirroredCamera(position: eye, target: eye + Player.flatForwardFor(0.0), up: Vector3(0, 1, 0));
     expect(cam.worldToScreen(eye + Player.flatForwardFor(yaw) * 5.0, size)!.dx, greaterThan(size.width / 2));
   });
 

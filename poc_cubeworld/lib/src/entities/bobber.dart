@@ -6,7 +6,7 @@ import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/sfx.dart';
 import '../player/player.dart';
-import '../world/godot_camera.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 
 /// A fishing bobber: flies from the rod hand to the water cell it was cast at,
@@ -41,15 +41,15 @@ class Bobber {
   }
 
   void _buildBody() {
-    final float = GodotCamera.primitiveNode(
+    final float = MirroredCamera.primitiveNode(
       Mesh(SphereGeometry(radius: 0.11), UnlitMaterial()..baseColorFactor = Vector4(0.90, 0.20, 0.15, 1)),
     );
-    final cap = GodotCamera.primitiveNode(
+    final cap = MirroredCamera.primitiveNode(
       Mesh(SphereGeometry(radius: 0.06), UnlitMaterial()..baseColorFactor = Vector4(0.95, 0.95, 0.92, 1)),
     )..position = Vector3(0, 0.12, 0);
     node.add(float);
     node.add(cap);
-    _line = GodotCamera.primitiveNode(
+    _line = MirroredCamera.primitiveNode(
       Mesh(CuboidGeometry(Vector3(0.012, 0.012, 1.0)), UnlitMaterial()..baseColorFactor = Vector4(0.12, 0.12, 0.12, 1)),
       castsShadows: false,
     );

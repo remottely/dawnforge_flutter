@@ -23,7 +23,6 @@ import '../entities/spawner.dart';
 import '../entities/target.dart';
 import '../entities/voxel_mesh_builder.dart';
 import '../player/player.dart';
-import '../world/godot_camera.dart';
 import '../world/terrain_generator.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
@@ -486,7 +485,7 @@ class Game extends ChangeNotifier {
       shadowNormalBias: 0.06,
       // The terrain and the voxel models wind like Godot, which the unmirrored
       // shadow pass reads as the engine's back faces: `front` here draws the
-      // real back faces into the map (what `back` did before `GodotCamera`).
+      // real back faces into the map (what `back` did before `MirroredCamera`).
       shadowCasterFaces: _arg('--casterfaces=', 'back') == 'front' ? ShadowCasterFaces.back : ShadowCasterFaces.front,
       shadowAmbientStrength: 0.0,
     );
@@ -1534,7 +1533,7 @@ class Game extends ChangeNotifier {
     final mat = UnlitMaterial()
       ..baseColorFactor = Vector4(color.x, color.y, color.z, 0.55)
       ..alphaMode = AlphaMode.blend;
-    final node = GodotCamera.primitiveNode(Mesh(SphereGeometry(radius: 0.5), mat), castsShadows: false)..position = at.clone();
+    final node = MirroredCamera.primitiveNode(Mesh(SphereGeometry(radius: 0.5), mat), castsShadows: false)..position = at.clone();
     entities.add(node);
     _effects.add(_Effect(node, mat, radius, color));
   }
@@ -1553,7 +1552,7 @@ class Game extends ChangeNotifier {
         ..baseColorFactor = Vector4(color.x * f, color.y * f, color.z * f, 1)
         ..roughnessFactor = 1.0
         ..metallicFactor = 0.0;
-      final node = GodotCamera.primitiveNode(Mesh(cube, mat), castsShadows: false)
+      final node = MirroredCamera.primitiveNode(Mesh(cube, mat), castsShadows: false)
         ..position = at + Vector3(random.nextDouble() * 0.6 - 0.3, random.nextDouble() * 0.6 - 0.2, random.nextDouble() * 0.6 - 0.3)
         ..scale = Vector3(size, size, size);
       entities.add(node);
@@ -1689,7 +1688,7 @@ class Game extends ChangeNotifier {
     world.setBlock(at, Blocks.air);
     final c = Blocks.def(Blocks.indexOf('tnt'));
     final mat = UnlitMaterial()..baseColorFactor = Vector4(c.r, c.g, c.b, 1);
-    final node = GodotCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1, 1, 1)), mat))..position = at.centre;
+    final node = MirroredCamera.primitiveNode(Mesh(CuboidGeometry(Vector3(1, 1, 1)), mat))..position = at.centre;
     entities.add(node);
     _tnts.add(_Tnt(node, mat, at));
     Sfx.play('dig', -6.0, 1.5);

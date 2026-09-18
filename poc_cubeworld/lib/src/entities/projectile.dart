@@ -6,7 +6,7 @@ import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 import '../game/game.dart';
 import '../player/player.dart';
-import '../world/godot_camera.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 import 'mob.dart';
 import 'voxel_mesh_builder.dart';
@@ -56,7 +56,7 @@ class Projectile {
       node.add(VoxelMeshBuilder.meshNode(v, 0.09, Vector3(0.5, 0.5, 0.5)));
       _light = PointLight(color: col, intensity: 6.0, range: 4.0);
       node.addComponent(PointLightComponent(_light!));
-      final trail = GodotCamera.primitiveNode(
+      final trail = MirroredCamera.primitiveNode(
         Mesh(
           CuboidGeometry(Vector3(radius * 0.8, radius * 0.8, 1.6)),
           UnlitMaterial()

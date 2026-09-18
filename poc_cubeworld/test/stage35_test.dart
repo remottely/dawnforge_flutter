@@ -1,5 +1,4 @@
 import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/entities/selection_outline.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
@@ -62,15 +61,5 @@ void main() {
       ..height = 1.1;
     final b = Player.mobBox(m);
     expect([b.x0, b.y0, b.z0, b.x1, b.y1, b.z1], [10.05, 64, -3.95, 10.95, 65.1, -3.05].map((v) => closeTo(v, 1e-9)).toList());
-  });
-
-  test('the skeleton stands off its box, and its bias clears a stick buried in a neighbour', () {
-    expect(SelectionOutline.gap, greaterThan(0));
-    // Half a stick minus the standoff is how deep an edge sinks into a flush
-    // neighbour; the bias must pull it clear with room for a grazing angle.
-    final buried = SelectionOutline.thickness / 2 - SelectionOutline.gap;
-    expect(SelectionOutline.depthBias, greaterThan(4 * buried));
-    // And stay far short of a block, or a cube's back edges show through it.
-    expect(SelectionOutline.depthBias, lessThan(0.1));
   });
 }

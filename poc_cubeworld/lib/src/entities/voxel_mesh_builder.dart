@@ -73,7 +73,7 @@ class VoxelMeshBuilder {
           v++;
         }
         // Godot's winding (clockwise seen from the normal side), drawn front
-        // facing through `GodotCamera`.
+        // facing through `MirroredCamera`.
         indices[ii++] = first;
         indices[ii++] = first + 1;
         indices[ii++] = first + 2;
@@ -102,7 +102,7 @@ class VoxelMeshBuilder {
   /// [x, x+1], so its mirror covers [-x-1, -x]. Rebuilding the map is how a
   /// left wing is made from a right one: scaling a node by -1 would mirror it
   /// too, but it also reverses the winding, and this renderer draws Godot's
-  /// winding front-facing (see `GodotCamera`).
+  /// winding front-facing (see `MirroredCamera`).
   static Map<IVec3, Vector3> mirrorX(Map<IVec3, Vector3> voxels) => {
         for (final e in voxels.entries) IVec3(-e.key.x - 1, e.key.y, e.key.z): e.value,
       };
