@@ -5,33 +5,20 @@ import 'package:vector_math/vector_math.dart';
 import '../core/voxel_game.dart';
 import '../entities/projectile.dart';
 import '../entities/target.dart';
+import 'goal.dart';
 import 'mob.dart';
-
-/// What a behaviour needs of the body while it runs. Two behaviours that
-/// share a slot cannot run together: the one with the lower [Behavior.priority]
-/// number wins it, and a behaviour that holds none of the other's slots runs
-/// beside it (a mob can chase with its legs and bite with its jaws).
-enum BehaviorSlot {
-  /// Where the mob walks.
-  move,
-
-  /// Where the mob looks.
-  look,
-
-  /// What the mob strikes.
-  attack,
-}
 
 /// One thing a mob does, Minecraft's "goal": it asks to start, runs while it
 /// may continue, and competes for [slots] by [priority] (lower wins). A mob's
 /// brain is a list of them; add your own by subclassing, or inline with
-/// [Behavior.custom].
+/// [Behavior.custom]. It is a [Goal] over the kit's [Mob], chosen by a
+/// [GoalSelector].
 ///
 /// Behaviours are declared once and shared by every mob of a spec, so they
 /// hold no state: per-mob state lives in [Mob.memory].
-abstract class Behavior {
+abstract class Behavior extends Goal<Mob, VoxelGame> {
   /// A behaviour of [priority] (lower wins a slot).
-  const Behavior({this.priority = 50});
+  const Behavior({super.priority = 50});
 
   /// A behaviour from closures: [canStart] asks, [tick] runs it.
   const factory Behavior.custom({
@@ -40,27 +27,6 @@ abstract class Behavior {
     required void Function(Mob mob, VoxelGame game, double dt) tick,
     Set<BehaviorSlot> slots,
   }) = _CustomBehavior;
-
-  /// Lower runs first and takes a shared slot from higher.
-  final int priority;
-
-  /// What of the body it needs.
-  Set<BehaviorSlot> get slots => const {BehaviorSlot.move};
-
-  /// Whether it wants to start now.
-  bool canStart(Mob mob, VoxelGame game);
-
-  /// Whether it keeps running; by default while it could start.
-  bool canContinue(Mob mob, VoxelGame game) => canStart(mob, game);
-
-  /// Called when it starts.
-  void start(Mob mob, VoxelGame game) {}
-
-  /// Runs one step of [dt] while it holds its slots.
-  void tick(Mob mob, VoxelGame game, double dt);
-
-  /// Called when it stops (it could not continue, or lost a slot).
-  void stop(Mob mob, VoxelGame game) {}
 }
 
 class _CustomBehavior extends Behavior {

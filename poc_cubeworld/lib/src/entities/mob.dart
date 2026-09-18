@@ -5,7 +5,8 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
-import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning, RigAnimator, RigKind, RigMotion;
+import 'package:voxel_game/voxel_game.dart'
+    show BehaviorSlot, CharacterMotor, Goal, GoalSelector, MotorTuning, RigAnimator, RigKind, RigMotion;
 import '../core/species.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';
@@ -21,15 +22,52 @@ import 'target.dart';
 import 'scene_body.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
+part 'mob_brain.dart';
+
 enum MobState { idle, wander, chase, attack, flee, dead }
 
-/// A creature: voxel model by body type, a small state machine, health bar,
-/// drops and XP.
+/// A creature: voxel model by body type, a brain of goals ([brainOf]), health
+/// bar, drops and XP.
 class Mob extends SceneBody {
   late SpeciesDef species;
   double hp = 1;
   double maxHp = 1;
-  MobState state = MobState.idle;
+
+  /// VK5.5: what it is doing, as the rest of the game reads it: dead, or the
+  /// state of the goal holding its legs.
+  MobState get state => _dead ? MobState.dead : (_brain.holding(BehaviorSlot.move) as MobGoal?)?.label(this) ?? MobState.idle;
+
+  /// VK5.5: the goals it thinks with, its species' ([brainOf]) from
+  /// [setupMob] on; a tamed creature's are its owner's.
+  GoalSelector<Mob, Game> _brain = GoalSelector(const []);
+  bool _dead = false;
+
+  /// Roaming, walking rather than standing (the [Roam] goal's phase).
+  bool _wandering = false;
+
+  /// A hit asked for a chase or a flight; the next think answers it, once.
+  bool _provoked = false;
+  bool _frightened = false;
+
+  // What the brain senses each tick: the nearest target, how far, the way to
+  // it (flat for a walker), and how far a hostile notices it.
+  double _dist = 0.0;
+  Vector3 _toTarget = Vector3.zero();
+  double _aggro = 0.0;
+  bool _targetDead = false;
+
+  /// A hostile (or angry) creature that notices its living target.
+  bool get _sees => (species.hostile || _angry) && _dist < _aggro && !_targetDead;
+
+  /// The chase is over: the target died or got 2.2 times the aggro range away.
+  bool get _lost => _targetDead || _dist > _aggro * 2.2;
+
+  /// Its target is fair game for a strike: it sees it, a hit provoked it, or
+  /// it is already chasing.
+  bool get _engaged => _provoked || _sees || state == MobState.chase;
+
+  /// How near a melee strike lands.
+  double get _reach => 1.9 + halfWidth;
   late Game main;
   late Player player;
   double _timer = 0.0;
@@ -47,7 +85,17 @@ class Mob extends SceneBody {
   bool _angry = false;
   double _age = 0.0;
   double _hopCd = 0.0;
-  bool tamed = false;
+
+  /// Tamed: it thinks with its owner's goals from the moment this is set,
+  /// however it is set (a taming, a save, a puppet's flags, a probe).
+  bool get tamed => _tamed;
+  set tamed(bool value) {
+    if (value == _tamed) return;
+    _tamed = value;
+    _brain = GoalSelector(brainOf(species, tamed: value));
+  }
+
+  bool _tamed = false;
 
   /// Stage 33: the playground exhibit that placed this creature ('' for none):
   /// the spawner never despawns or counts it, and the save does not keep it.
@@ -308,7 +356,6 @@ class Mob extends SceneBody {
   void tame(Player by) {
     tamed = true;
     _angry = false;
-    state = MobState.idle;
     main.mobs.remove(this);
     main.pets.add(this);
     maxHp += 10.0;
@@ -322,57 +369,6 @@ class Mob extends SceneBody {
     }
   }
 
-  void _petThink(double dt, double dist, Vector3 toPlayer) {
-    // A mount never fights: it trots after its owner while they are near, and
-    // waits otherwise.
-    if (isMount) {
-      if (dist > 20.0 || dist < 2.5) {
-        _dir = Vector3.zero();
-      } else if (dist > 4.0) {
-        _dir = toPlayer.normalized();
-      }
-      return;
-    }
-    // Fight what the player fights, otherwise heel.
-    final pt = _petTarget;
-    if (pt != null && (pt.removed || pt.state == MobState.dead)) _petTarget = null;
-    if (_petTarget == null) {
-      var best = 12.0;
-      for (final mob in main.mobs) {
-        if (mob.species.hostile && mob.state == MobState.chase) {
-          final d = (mob.position - position).length;
-          if (d < best) {
-            best = d;
-            _petTarget = mob;
-          }
-        }
-      }
-    }
-    final target = _petTarget;
-    if (target != null) {
-      final toT = target.position - position;
-      toT.y = 0.0;
-      if (toT.length < 1.6 + halfWidth) {
-        _dir = Vector3.zero();
-        _face(toT);
-        if (_attackCd <= 0.0) {
-          _attackCd = 1.0;
-          target.takeDamage(species.damage + 2, position, 4.0, this);
-          main.spawnDamageNumber(target.centre(), species.damage + 2, Vector3(0.6, 0.8, 1.0));
-        }
-      } else {
-        _dir = toT.normalized();
-      }
-      return;
-    }
-    if (dist > 4.0) {
-      _dir = toPlayer.normalized();
-    } else if (dist < 2.0) {
-      _dir = Vector3.zero();
-    }
-    if (dist > 30.0) position = player.position + Vector3(1, 0.5, 1);
-  }
-
   void setupMob(VoxelWorld w, Game m, Player p, SpeciesDef sp) {
     species = sp;
     setup(w, sp.halfWidth, sp.height);
@@ -381,6 +377,7 @@ class Mob extends SceneBody {
     player = p;
     maxHp = sp.hp;
     hp = maxHp;
+    _brain = GoalSelector(brainOf(sp, tamed: _tamed));
     GameState.instance.seen.add(sp.id);
     _buildModel();
     if (sp.ghost) {
@@ -439,7 +436,7 @@ class Mob extends SceneBody {
     _angry = false;
     _target = null;
     if (state == MobState.chase || state == MobState.attack) {
-      state = MobState.idle;
+      _brain.stopAll(this, main);
       _timer = seconds;
     }
   }
@@ -506,7 +503,7 @@ class Mob extends SceneBody {
     ridden = rider != 0;
     if (isTamed && !tamed) {
       tamed = true;
-      main.mobs.remove(this);
+        main.mobs.remove(this);
       if (!main.pets.contains(this)) main.pets.add(this);
       barVisible = true;
     }
@@ -777,9 +774,9 @@ class Mob extends SceneBody {
     }
     if ((attacker is Player || attacker is RemotePlayer) && (species.hostile || species.neutral)) {
       _angry = true;
-      state = MobState.chase;
+      _provoked = true;
     } else if (!species.hostile) {
-      state = MobState.flee;
+      _frightened = true;
       _timer = 4.0;
       _dir = push;
     }
@@ -787,7 +784,8 @@ class Mob extends SceneBody {
   }
 
   void _die() {
-    state = MobState.dead;
+    _dead = true;
+    _brain.reset();
     final st = GameState.instance;
     st.mobsKilled += 1;
     st.kills[species.id] = (st.kills[species.id] ?? 0) + 1;
@@ -928,20 +926,16 @@ class Mob extends SceneBody {
       _moveAndAnimate(dt);
       return;
     }
-    _target = _nearestTarget();
-    final target = _target!;
-    final dist = (position - target.position).length;
-    final toPlayer = target.position - position;
-    if (!species.flying) toPlayer.y = 0.0;
-    final aggro = species.hostile && blinded <= 0.0 ? 18.0 : 0.0;
-    final ranged = species.ranged;
-    final reach = 1.9 + halfWidth;
-
-    if (tamed) {
-      _petThink(dt, dist, toPlayer);
-    } else {
-      _stateThink(dist, toPlayer, aggro, ranged, reach);
-    }
+    final target = _target = _nearestTarget();
+    _dist = (position - target.position).length;
+    _toTarget = target.position - position;
+    if (!species.flying) _toTarget.y = 0.0;
+    _aggro = species.hostile && blinded <= 0.0 ? 18.0 : 0.0;
+    _targetDead = target.isDead;
+    _brain.think(this, main);
+    _provoked = false;
+    _frightened = false;
+    _brain.tick(this, main, dt);
     if (state == MobState.dead || removed) return;
     final steer = _probeWalk;
     if (steer != null) _dir = steer;
@@ -1024,82 +1018,6 @@ class Mob extends SceneBody {
     final to = t.centre() - centre();
     final d = to.length;
     return d < 0.01 || Reach.toBarrier(world, centre(), to / d, d) >= d;
-  }
-
-  void _stateThink(double dist, Vector3 toPlayer, double aggro, bool ranged, double reach) {
-    final target = _target!;
-    final targetDead = target.isDead;
-    final rng = main.random;
-    switch (state) {
-      case MobState.idle:
-        _dir = Vector3.zero();
-        if (_timer <= 0.0) {
-          state = MobState.wander;
-          _timer = 1.5 + rng.nextDouble() * 2.5;
-          final a = rng.nextDouble() * math.pi * 2;
-          _dir = Vector3(math.cos(a), 0, math.sin(a));
-        }
-        if ((species.hostile || _angry) && dist < aggro && !targetDead) state = MobState.chase;
-      case MobState.wander:
-        if (_timer <= 0.0) {
-          state = MobState.idle;
-          _timer = 1.0 + rng.nextDouble() * 4.0;
-        }
-        final h = home;
-        if (h != null) {
-          final away = position - h;
-          away.y = 0.0;
-          // Stage 26: a villager turns back to its village.
-          if (away.length > homeRadius) _dir = _steer(-away, h);
-        }
-        if ((species.hostile || _angry) && dist < aggro && !targetDead) state = MobState.chase;
-      case MobState.chase:
-        if (targetDead || dist > aggro * 2.2) {
-          state = MobState.idle;
-          _angry = false;
-        }
-        _dir = _steer(toPlayer, target.position);
-        if (ranged) {
-          if (dist < 6.0) {
-            _dir = -_dir;
-          } else if (dist < 13.0) {
-            _dir = Vector3.zero();
-          }
-          if (dist < 16.0 && _attackCd <= 0.0) {
-            _attackCd = 2.2;
-            _face(toPlayer);
-            main.spawnProjectile(centre() + Vector3(0, 0.3, 0), (target.centre() - centre()).normalized() * 24.0,
-                species.damage, this, species.body == 'humanoid' ? 'arrow' : 'frost');
-          }
-        } else if (dist < reach && canReach(target)) {
-          state = MobState.attack;
-        }
-      case MobState.attack:
-        _dir = Vector3.zero();
-        _face(toPlayer);
-        if (species.explodes) {
-          _fuse += 0.016;
-          _modelScale = 1.0 + _fuse * 0.5;
-          if (_fuse > 1.1) {
-            main.explode(centre(), 3.0, 9.0 + mobLevel, this);
-            removed = true;
-          }
-          return;
-        }
-        if (dist > reach + 0.4 || !canReach(target)) {
-          state = MobState.chase;
-        } else if (_attackCd <= 0.0) {
-          _attackCd = 1.3;
-          _anim.startSwing();
-          hurtTarget(target, damageDealt());
-          Sfx.play('hit', -4.0);
-        }
-      case MobState.flee:
-        if (_timer <= 0.0) state = MobState.idle;
-        if (dist < 12.0 && toPlayer.length2 > 0) _dir = -toPlayer.normalized();
-      case MobState.dead:
-        break;
-    }
   }
 
   /// Stage 31: the horizontal direction to walk toward [goal]: the next waypoint
@@ -1210,7 +1128,7 @@ class Mob extends SceneBody {
         // dives back.
         if (!world.isSolid(IVec3.floor(position + Vector3(0, -3, 0)))) _dir.y = -0.7;
       }
-      if (_dir.length > 0.1) state = MobState.wander;
+      if (_dir.length > 0.1) _wandering = true;
     }
     final bob = math.sin(_age * 9.0) * 0.8;
     velocity.x = lerpd(velocity.x, _dir.x * speed, dt * 6.0);
@@ -1328,7 +1246,6 @@ class Mob extends SceneBody {
   void restoreTamed() {
     tamed = true;
     _angry = false;
-    state = MobState.idle;
     barVisible = true;
   }
 

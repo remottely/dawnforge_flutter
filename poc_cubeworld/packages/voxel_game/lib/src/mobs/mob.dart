@@ -8,6 +8,7 @@ import '../entities/game_entity.dart';
 import '../entities/target.dart';
 import '../player/character_motor.dart';
 import 'behaviors.dart';
+import 'goal.dart';
 import 'mob_spec.dart';
 import 'rig.dart';
 
@@ -60,7 +61,7 @@ class Mob extends GameEntity implements Target {
   late VoxelGame _game;
   final Map<Behavior, Object> _memory = {};
   final Map<Behavior, double> _cooldowns = {};
-  final Set<Behavior> _running = {};
+  late final GoalSelector<Mob, VoxelGame> _brain = GoalSelector(spec.brain);
   bool _dead = false;
   double _deathTime = 0.0;
   double _hurtFlash = 0.0;
@@ -193,42 +194,17 @@ class Mob extends GameEntity implements Target {
     sinceHurt += dt;
     _hurtFlash = math.max(_hurtFlash - dt, 0.0);
     _look = null;
-    _think(game);
-    for (final b in _running.toList()) {
-      if (_running.contains(b)) b.tick(this, game, dt);
-    }
+    _brain.think(this, game);
+    if (_brain.holding(BehaviorSlot.move) == null) halt();
+    _brain.tick(this, game, dt);
     _locomote(game, dt);
     _animate(dt);
     if (position.y < -10.0) removed = true;
     syncNode();
   }
 
-  void _think(VoxelGame game) {
-    final brain = spec.brain;
-    for (final b in _running.toList()) {
-      if (!b.canContinue(this, game)) {
-        _running.remove(b);
-        b.stop(this, game);
-      }
-    }
-    for (final b in brain) {
-      if (_running.contains(b)) continue;
-      // Every slot it needs is free, or held by something it outranks.
-      final rivals = [for (final r in _running) if (r.slots.any(b.slots.contains)) r];
-      if (rivals.any((r) => r.priority <= b.priority)) continue;
-      if (!b.canStart(this, game)) continue;
-      for (final r in rivals) {
-        _running.remove(r);
-        r.stop(this, game);
-      }
-      _running.add(b);
-      b.start(this, game);
-    }
-    if (!_running.any((b) => b.slots.contains(BehaviorSlot.move))) halt();
-  }
-
   /// The behaviours running now.
-  Iterable<Behavior> get running => _running;
+  Iterable<Behavior> get running => _brain.running.cast<Behavior>();
 
   void _locomote(VoxelGame game, double dt) {
     final speed = spec.speed * _speedScale;
@@ -364,7 +340,7 @@ class Mob extends GameEntity implements Target {
     if (_dead) return;
     _dead = true;
     hp = 0.0;
-    _running.clear();
+    _brain.reset();
     if (dropLoot) {
       for (final d in spec.drops) {
         if (_game.random.nextDouble() >= d.chance) continue;

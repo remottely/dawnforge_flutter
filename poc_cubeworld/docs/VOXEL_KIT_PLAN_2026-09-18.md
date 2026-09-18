@@ -21,7 +21,7 @@
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
-| VK5 The POC on the kit | in progress (VK5.4) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+| VK5 The POC on the kit | **done** 2026-09-18 (VK5.1–VK5.5; the POC's own geometry, hand and loop stay, see log) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
 | VK6 `voxel_audio` | **done** 2026-09-18 (VK6.1–VK6.4; the POC's `Sfx` on it) | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
 | VK7 `voxel_signals` | **done** 2026-09-18 (VK7.1–VK7.3, plus VK7.4 `SignalSpec` in the kit) | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
 | VK8 `voxel_net` | **done** 2026-09-18 (`21500e4a`: transport, host / join in the kit; drops stay local, mob loot on the host; never run with two real apps) | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
@@ -322,7 +322,7 @@ they printed.
 - **VK5.2** The mob's locomotion on `CharacterMotor` — done.
 - **VK5.3** The cameras on `ViewCamera` / `FirstPersonView` — done (the camera; the hand stays).
 - **VK5.4** The rigs on `Rig.*` — done (the motion; the geometry and the hand stay the POC's).
-- **VK5.5** The brains: the species table as `MobSpec`s, Dawnforge's own behaviours.
+- **VK5.5** The brains: the species table as `MobSpec`s, Dawnforge's own behaviours — done (goals on the kit's selector).
 
 Log. VK5.1: `CharacterMotor` gained `jump()`, `resetFall()`, `canGlide`, a `glide` step (a
 capped fall that counts as footing), an `accel` override (a dash, a glide) and `fly()` (creative
@@ -374,6 +374,25 @@ from the POC's player model. Probes against a HEAD build: `--stage31`, `--stage3
 `--radius=8` and `--outline-probe` print the same, and so do `anim wings` (sweep and fold),
 `anim blob` and the chicken's legs; the other `anim` values and `move`'s water ticks move as they
 do between runs of one build.
+
+Log. VK5.5: the kit's brain splits out of its `Mob` into `Goal<M, G>` and `GoalSelector<M, G>`
+(slots, priority, a goal taking the slots of what it outranks), generic over any creature and
+game; the kit's `Behavior` is now a `Goal<Mob, VoxelGame>` with the same API, and a kit test runs
+a selector over a creature that is not a `Mob`. The POC's `Mob` drops its state machine: each
+state is a Dawnforge goal (`Roam`, `Chase`, `Kite`, `Strike`, `Fuse`, `Flee`, and a pet's
+`PetFight`, `Heel` and `MountWait`) in `mob_brain.dart`, and `brainOf` reads a species row as
+its goal list, as a kit `MobSpec` declares its `brain`; a tamed creature thinks with its owner's
+goals from the moment `tamed` is set. `state` is now read off the goal holding the legs. The
+rows stay `SpeciesDef`s, not kit `MobSpec`s: the POC's `Mob` is not the kit's, and a row carries
+Dawnforge's own look, XP, affixes, taming and trades. Stun, riding, puppets and the probe's walk
+stay outside the brain, as they were outside the state machine. A transition now happens in the
+tick its condition holds instead of the next one (a zombie in reach strikes one tick sooner); a
+pet hit by its owner now reads `idle` where the old state machine left a `chase` or `flee` it
+never reset (nothing a pet does read it). Probes against a HEAD build: `--stage31`, `--stage32`, `--stage23`,
+`--stage29`, `--radius=8` and `--outline-probe` print the same; `--stage18`, `--stage20`,
+`--stage26`, `--anim-probe` and `move`'s water ticks move as they do between runs of one build
+(the game's random is unseeded). One run of six printed a gallop peak of 0.2206 against 0.2210;
+the ridden horse never consults the brain.
 
 ---
 

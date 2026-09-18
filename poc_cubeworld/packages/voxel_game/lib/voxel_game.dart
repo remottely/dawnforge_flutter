@@ -33,6 +33,7 @@ export 'src/input/input_map.dart';
 export 'src/input/voxel_action.dart';
 export 'src/loop/fixed_step_loop.dart';
 export 'src/mobs/behaviors.dart';
+export 'src/mobs/goal.dart';
 export 'src/mobs/mob.dart';
 export 'src/mobs/mob_spec.dart';
 export 'src/mobs/rig.dart';
