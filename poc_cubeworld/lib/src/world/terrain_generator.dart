@@ -72,6 +72,19 @@ class TerrainGenerator implements ChunkGenerator {
     _quartzOre = ids['nether_quartz_ore']!;
     _netherBrick = ids['nether_brick']!;
     _fortressCore = ids['fortress_core']!;
+    // VK2.2: ores, trees and caves are voxel_worldgen's machinery, fed this
+    // game's blocks and thresholds.
+    _ores = OreTable([
+      OreVein(_diamondOre, belowY: 14, upTo: 60),
+      OreVein(_goldOre, belowY: 32, upTo: 200),
+      OreVein(_ironOre, belowY: 64, upTo: 520),
+      OreVein(_redstoneOre, belowY: 30, upTo: 710), // stage 27: about a third of coal's share, deep only
+      OreVein(_coalOre, upTo: 1100),
+    ]);
+    _oakTree = TreeBlocks(log: _oakLog, leaves: _oakLeaves);
+    _spruceTree = TreeBlocks(log: _spruceLog, leaves: _spruceLeaves);
+    _jungleTree = TreeBlocks(log: _jungleLog, leaves: _oakLeaves, vines: _vines);
+    _canvas = TreeCanvas(isSoft: _isSoft, groundAt: surfaceHeight, floorY: seaLevel, hash: hash);
     setSeed(seed);
   }
 
@@ -139,17 +152,16 @@ class TerrainGenerator implements ChunkGenerator {
       _railEw,
       // Stage 29: the underworld's blocks and the fortress bricks.
       _hellstone, _soulSand, _glowstone, _quartzOre, _netherBrick, _fortressCore;
+  late final OreTable _ores;
+  late final TreeBlocks _oakTree, _spruceTree, _jungleTree;
+  late final TreeCanvas _canvas;
+  late CaveCarver _caves;
 
   int _seed = 0;
   int get seed => _seed;
-  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _cave, _cavern, _detail, _river, _hell, _hellPatch;
+  late FastNoiseLite _continental, _hills, _mountainMask, _ridge, _temperature, _humidity, _detail, _river, _hell, _hellPatch;
 
-  static FastNoiseLite _make(int seed, double freq, int octaves, [FractalType fractal = FractalType.fbm]) =>
-      FastNoiseLite(seed: seed)
-        ..noiseType = NoiseType.openSimplex2S
-        ..fractalType = fractal
-        ..octaves = octaves
-        ..frequency = freq;
+  static const _make = simplexNoise;
 
   void setSeed(int seed) {
     _seed = seed;
@@ -159,8 +171,7 @@ class TerrainGenerator implements ChunkGenerator {
     _ridge = _make(seed ^ 0x3456789, 0.014, 3, FractalType.ridged);
     _temperature = _make(seed ^ 0x456789A, 0.0020, 2);
     _humidity = _make(seed ^ 0x56789AB, 0.0024, 2);
-    _cave = _make(seed ^ 0x6789ABC, 0.050, 2);
-    _cavern = _make(seed ^ 0x789ABCD, 0.020, 2);
+    _caves = CaveCarver(cave: _make(seed ^ 0x6789ABC, 0.050, 2), cavern: _make(seed ^ 0x789ABCD, 0.020, 2), seaLevel: seaLevel);
     _detail = _make(seed ^ 0x89ABCDE, 0.06, 1); // stage 26: the swamp pools
     _river = _make(seed ^ 0x9ABCDEF, 0.0030, 2);
     _hell = _make(seed ^ 0x0A1B2C3, 0.030, 2); // stage 29: the underworld's caverns
@@ -169,12 +180,8 @@ class TerrainGenerator implements ChunkGenerator {
 
   static int index(int x, int y, int z) => ChunkSize.index(x, y, z);
 
-  static double _smooth(double a, double b, double t) {
-    t = ((t - a) / (b - a)).clamp(0.0, 1.0);
-    return t * t * (3.0 - 2.0 * t);
-  }
-
-  static double _lerp(double a, double b, double t) => a + (b - a) * t;
+  static const _smooth = smoothstep;
+  static const _lerp = lerpd;
 
   int surfaceHeight(int x, int z) {
     if (!playground) return _naturalHeight(x, z);
@@ -238,16 +245,7 @@ class TerrainGenerator implements ChunkGenerator {
     return biomePlains;
   }
 
-  static int _u32(int v) => v & 0xFFFFFFFF;
-
-  int hash(int x, int y, int z) {
-    var h = _u32(x * 73856093) ^ _u32(y * 19349663) ^ _u32(z * 83492791) ^ _u32(_u32(_seed) * 2654435761);
-    h = _u32(h);
-    h ^= h >> 13;
-    h = _u32(h * 0x5bd1e995);
-    h ^= h >> 15;
-    return h;
-  }
+  int hash(int x, int y, int z) => worldHash(_seed, x, y, z);
 
   /// The chunk of the generator's current dimension ([setDimension]).
   Uint8List generate(int chunkX, int chunkZ) => generateIn(chunkX, chunkZ, _dimension);
@@ -300,42 +298,22 @@ class TerrainGenerator implements ChunkGenerator {
 
           // Ores replace stone: a 2x2x2 cell decides a vein, a block hash thins it.
           if (id == _stone || id == _darkStone) {
-            final cell = hash(wx >> 1, y >> 1, wz >> 1);
-            final fine = hash(wx, y, wz);
-            if (fine % 100 < 55) {
-              final r = cell % 10000;
-              if (y < 14 && r < 60) {
-                id = _diamondOre;
-              } else if (y < 32 && r < 200) {
-                id = _goldOre;
-              } else if (y < 64 && r < 520) {
-                id = _ironOre;
-              } else if (y < 30 && r < 710) {
-                id = _redstoneOre; // stage 27: about a third of coal's share, deep only
-              } else if (r < 1100) {
-                id = _coalOre;
-              }
-            }
+            id = _ores.pick(y, hash(wx >> 1, y >> 1, wz >> 1), hash(wx, y, wz)) ?? id;
           }
 
           // Caves: cheese caves everywhere in rock, caverns deeper, sealed near
           // the surface unless an entrance noise opens it.
-          if (id != _air && id != _bedrock && id != _water && id != _ice && y > 1 && !(playground && inPlaza(wx, wz, 2))) {
-            final c = _cave.getNoise3(wx.toDouble(), y * 1.5, wz.toDouble());
-            final depth = h - y;
-            var open = false;
-            if (c > 0.44 && depth > 3) open = true;
-            if (y < 40 && _cavern.getNoise3(wx.toDouble(), y * 2.0, wz.toDouble()) > 0.55 && depth > 6) open = true;
-            if (c > 0.60 && depth <= 3 && h > seaLevel + 2) open = true; // entrance
-            if (open) id = y <= 10 ? _lava : _air;
+          if (id != _air && id != _bedrock && id != _water && id != _ice && y > 1 && _carved(wx, y, wz, h)) {
+            id = y <= 10 ? _lava : _air;
           }
 
           if (id != _air) blocks[index(x, y, z)] = id;
         }
       }
     }
-    _decorate(blocks, ox, oz, structuresNearIn(chunkX, chunkZ, dimOverworld));
-    _buildStructures(blocks, chunkX, chunkZ);
+    final w = ChunkWriter(blocks, chunkX, chunkZ);
+    _decorate(w, structuresNearIn(chunkX, chunkZ, dimOverworld));
+    _buildStructures(w);
     return blocks;
   }
 
@@ -370,26 +348,15 @@ class TerrainGenerator implements ChunkGenerator {
   /// The column of the patch holding ([wx], [wz]) where its tree may grow, and
   /// the patch's hash. Pure position, so every chunk agrees on it; public so a
   /// test can walk the grid without generating a world.
-  ({int x, int z, int hash}) treePatchOf(int wx, int wz) {
-    const span = _treePatch - 2 * _treeInset;
-    final px = _floorDiv(wx, _treePatch), pz = _floorDiv(wz, _treePatch);
-    final h = hash(px, 91, pz);
-    return (
-      x: px * _treePatch + _treeInset + (h >> 8) % span,
-      z: pz * _treePatch + _treeInset + (h >> 16) % span,
-      hash: h,
-    );
-  }
+  ({int x, int z, int hash}) treePatchOf(int wx, int wz) => _treeGrid.spotOf(_seed, wx, wz);
 
-  /// The eight directions a limb or a frond can take.
-  static const List<(int, int)> _compass = [
-    (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1), //
-  ];
+  static const ScatterGrid _treeGrid = ScatterGrid(patch: _treePatch, inset: _treeInset, salt: 91);
 
   /// Trees, cacti and plants. The small stuff belongs to this chunk's own
   /// columns; a tree is looked for over every column that can REACH this chunk,
   /// so a crown crossing a border arrives whole.
-  void _decorate(Uint8List blocks, int ox, int oz, List<({int x, int y, int z, int type})> near) {
+  void _decorate(ChunkWriter w, List<({int x, int y, int z, int type})> near) {
+    final ox = w.ox, oz = w.oz;
     for (var z = -_reach; z < sizeZ + _reach; z++) {
       for (var x = -_reach; x < sizeX + _reach; x++) {
         final inside = x >= 0 && x < sizeX && z >= 0 && z < sizeZ;
@@ -404,11 +371,11 @@ class TerrainGenerator implements ChunkGenerator {
         final biome = _biomeFor(wx, wz, h);
         final pool = biome == biomeSwamp && _swampPool(wx, wz, h, biome);
         if (tree && patch.hash % 100 < treeChance(biome) && !pool && _treeGround(wx, wz, h) && !_underStructure(near, wx, wz)) {
-          _growTree(blocks, ox, oz, wx, h, wz, biome, patch.hash);
+          _growTree(w, wx, h, wz, biome, patch.hash);
         }
         if (!inside || pool) continue; // nothing grows in a pool
-        if (blocks[index(x, h - 1, z)] == _air) continue;
-        _plantSmall(blocks, x, h, z, wx, wz, biome, hash(wx, 7, wz));
+        if (w.blocks[index(x, h - 1, z)] == _air) continue;
+        _plantSmall(w, x, h, z, wx, wz, biome, hash(wx, 7, wz));
       }
     }
   }
@@ -430,11 +397,7 @@ class TerrainGenerator implements ChunkGenerator {
   /// a tree and a builder can both ask it about a column that is not theirs.
   bool _carved(int wx, int wy, int wz, int h) {
     if (playground && inPlaza(wx, wz, 2)) return false;
-    final depth = h - wy;
-    final c = _cave.getNoise3(wx.toDouble(), wy * 1.5, wz.toDouble());
-    if (c > 0.44 && depth > 3) return true;
-    if (wy < 40 && depth > 6 && _cavern.getNoise3(wx.toDouble(), wy * 2.0, wz.toDouble()) > 0.55) return true;
-    return c > 0.60 && depth <= 3 && h > seaLevel + 2;
+    return _caves.carved(wx, wy, wz, h);
   }
 
   /// Stage 42: how far around a structure no tree may root — what it writes
@@ -467,116 +430,18 @@ class TerrainGenerator implements ChunkGenerator {
     return false;
   }
 
-  // --- the tree canvas ----------------------------------------------------------
-  // Stage 42: a tree is drawn here first and only then printed into the world.
-  // [_blitTree] walks the six faces outward from the stump and keeps just what
-  // the walk reaches, so a frayed leaf with nothing under it, a vine hanging off
-  // the air and a branch touching the trunk by a corner alone all fall away
-  // before anyone can see them float. The canvas is in world coordinates, which
-  // is the other half of the fix: every hash a shape rolls is now the same hash
-  // in both chunks that share the tree.
-
-  static const int _canvasR = 8, _canvasW = _canvasR * 2 + 1, _canvasH = 40;
-  static const int _canvasLayer = _canvasW * _canvasW;
-  final Uint8List _canvas = Uint8List(_canvasLayer * _canvasH);
-  final Uint8List _kept = Uint8List(_canvasLayer * _canvasH);
-  final List<int> _painted = <int>[];
-  final List<int> _walk = <int>[];
-
-  /// The surface height under each column of the canvas, sampled at most once
-  /// per tree — [_colStamp] holds the serial number of the tree that filled it.
-  final Int32List _colHeight = Int32List(_canvasLayer);
-  final Int32List _colStamp = Int32List(_canvasLayer);
-  int _treeSerial = 0;
-
-  /// The world column and ground height the canvas is centred on.
-  int _treeX = 0, _treeY = 0, _treeZ = 0;
+  // --- trees (stage 42; VK2.2: voxel_worldgen's TreeCanvas and Trees) -------------
 
   /// Leaves and vines: what a log may be drawn over, and what may never be
   /// drawn over anything.
   bool _isSoft(int id) => id == _oakLeaves || id == _spruceLeaves || id == _vines;
 
-  /// Paints one block of the tree being drawn, in world coordinates.
-  void _ink(int x, int y, int z, int id) {
-    final dx = x - _treeX, dy = y - _treeY, dz = z - _treeZ;
-    if (dx < -_canvasR || dx > _canvasR || dz < -_canvasR || dz > _canvasR) return;
-    if (dy < 0 || dy >= _canvasH) return;
-    final i = (dy * _canvasW + dz + _canvasR) * _canvasW + dx + _canvasR;
-    final cur = _canvas[i];
-    if (cur == 0) {
-      _painted.add(i);
-    } else if (_isSoft(id) || !_isSoft(cur)) {
-      return; // only a log is drawn over a leaf, and nothing over a log
-    }
-    _canvas[i] = id;
-  }
-
-  /// What the canvas holds at a world position, 0 for nothing.
-  int _inked(int x, int y, int z) {
-    final dx = x - _treeX, dy = y - _treeY, dz = z - _treeZ;
-    if (dx < -_canvasR || dx > _canvasR || dz < -_canvasR || dz > _canvasR) return 0;
-    if (dy < 0 || dy >= _canvasH) return 0;
-    return _canvas[(dy * _canvasW + dz + _canvasR) * _canvasW + dx + _canvasR];
-  }
-
   /// Draws the biome's tree on the canvas and prints the part of it that holds
   /// together onto this chunk.
-  void _growTree(Uint8List b, int ox, int oz, int wx, int y, int wz, int biome, int hsh) {
-    _treeX = wx;
-    _treeY = y;
-    _treeZ = wz;
-    _treeSerial++;
+  void _growTree(ChunkWriter w, int wx, int y, int wz, int biome, int hsh) {
+    _canvas.begin(wx, y, wz);
     _plantTree(wx, y, wz, biome, hsh);
-    _blitTree(b, ox, oz);
-  }
-
-  /// True where the world will not take the tree's block: inside the ground or
-  /// under the water. Positional like [_treeGround], never read from the chunk.
-  bool _blockedAt(int i) {
-    final dy = i ~/ _canvasLayer, col = i % _canvasLayer;
-    final wy = _treeY + dy;
-    if (wy <= seaLevel) return true;
-    if (_colStamp[col] != _treeSerial) {
-      _colStamp[col] = _treeSerial;
-      _colHeight[col] = surfaceHeight(_treeX + col % _canvasW - _canvasR, _treeZ + col ~/ _canvasW - _canvasR);
-    }
-    return wy < _colHeight[col];
-  }
-
-  /// Walks one face out of a kept block.
-  void _stepTo(int i, bool inside) {
-    if (!inside || _canvas[i] == 0 || _kept[i] != 0 || _blockedAt(i)) return;
-    _kept[i] = 1;
-    _walk.add(i);
-  }
-
-  /// The flood fill from the stump, then the print, then the wipe.
-  void _blitTree(Uint8List b, int ox, int oz) {
-    _walk.clear();
-    for (final i in _painted) {
-      if (i < _canvasLayer) _stepTo(i, true); // the blocks standing on the ground
-    }
-    for (var q = 0; q < _walk.length; q++) {
-      final i = _walk[q];
-      final dy = i ~/ _canvasLayer, rest = i % _canvasLayer;
-      final dz = rest ~/ _canvasW, dx = rest % _canvasW;
-      _stepTo(i - 1, dx > 0);
-      _stepTo(i + 1, dx < _canvasW - 1);
-      _stepTo(i - _canvasW, dz > 0);
-      _stepTo(i + _canvasW, dz < _canvasW - 1);
-      _stepTo(i - _canvasLayer, dy > 0);
-      _stepTo(i + _canvasLayer, dy < _canvasH - 1);
-    }
-    for (final i in _painted) {
-      if (_kept[i] != 0) {
-        final dy = i ~/ _canvasLayer, rest = i % _canvasLayer;
-        final dz = rest ~/ _canvasW, dx = rest % _canvasW;
-        _setIfInside(b, _treeX + dx - _canvasR - ox, _treeY + dy, _treeZ + dz - _canvasR - oz, _canvas[i]);
-      }
-      _canvas[i] = 0;
-      _kept[i] = 0;
-    }
-    _painted.clear();
+    _canvas.print(w);
   }
 
   /// The tree this biome grows, planted on the canvas with its patch's [hsh].
@@ -585,168 +450,72 @@ class TerrainGenerator implements ChunkGenerator {
     switch (biome) {
       case biomeForest:
         if ((hsh >> 20) % 100 < 30) {
-          _placeBigOak(x, y, z, 14 + tall, hsh);
+          Trees.bigOak(_canvas, x, y, z, 14 + tall, hsh, _oakTree);
         } else {
-          _placeOak(x, y, z, 9 + tall % 4, hsh);
+          Trees.oak(_canvas, x, y, z, 9 + tall % 4, hsh, _oakTree);
         }
       case biomePlains:
-        _placeOak(x, y, z, 9 + tall % 4, hsh);
+        Trees.oak(_canvas, x, y, z, 9 + tall % 4, hsh, _oakTree);
       case biomeSwamp:
-        _placeWillow(x, y, z, 9 + tall % 3, hsh);
+        Trees.willow(_canvas, x, y, z, 9 + tall % 3, hsh, _oakTree);
       case biomeJungle:
-        _placeJungleTree(x, y, z, 16 + tall + (hsh >> 18) % 3, hsh);
+        Trees.jungle(_canvas, x, y, z, 16 + tall + (hsh >> 18) % 3, hsh, _jungleTree);
       case biomeSnow:
-        _placeSpruce(x, y, z, 12 + tall);
+        Trees.spruce(_canvas, x, y, z, 12 + tall, _spruceTree);
       case biomeMountain:
-        if (y < 96) _placeSpruce(x, y, z, 11 + tall);
+        if (y < 96) Trees.spruce(_canvas, x, y, z, 11 + tall, _spruceTree);
       case biomeDesert || biomeBeach:
-        _placePalm(x, y, z, 8 + tall, hsh);
+        Trees.palm(_canvas, x, y, z, 8 + tall, hsh, _jungleTree);
     }
   }
 
   /// Grass, flowers, mushrooms, reeds, cacti and melons: one roll per column.
-  void _plantSmall(Uint8List b, int x, int y, int z, int wx, int wz, int biome, int hsh) {
+  void _plantSmall(ChunkWriter w, int x, int y, int z, int wx, int wz, int biome, int hsh) {
     final roll = hsh % 1000;
     switch (biome) {
       case biomeForest:
         if (roll < 185) {
-          _setIfInside(b, x, y, z, _tallGrass);
+          _setIfInside(w, x, y, z, _tallGrass);
         } else if (roll < 210) {
-          _setIfInside(b, x, y, z, _mushroom);
+          _setIfInside(w, x, y, z, _mushroom);
         } else if (roll < 230) {
-          _setIfInside(b, x, y, z, _flowerRed);
+          _setIfInside(w, x, y, z, _flowerRed);
         }
       case biomePlains:
         if (roll < 144) {
-          _setIfInside(b, x, y, z, _tallGrass);
+          _setIfInside(w, x, y, z, _tallGrass);
         } else if (roll < 166) {
-          _setIfInside(b, x, y, z, _flowerYellow);
+          _setIfInside(w, x, y, z, _flowerYellow);
         } else if (roll < 184) {
-          _setIfInside(b, x, y, z, _flowerRed);
+          _setIfInside(w, x, y, z, _flowerRed);
         }
       case biomeSwamp:
         // Godot tests PoolEdge first; the roll goes first here (same result,
         // four fewer height samples on most columns).
         if (roll < 550 && _poolEdge(wx, wz)) {
-          _setIfInside(b, x, y, z, _reeds);
+          _setIfInside(w, x, y, z, _reeds);
         } else if (roll < 278) {
-          _setIfInside(b, x, y, z, _tallGrass);
+          _setIfInside(w, x, y, z, _tallGrass);
         } else if (roll < 318) {
-          _setIfInside(b, x, y, z, _mushroom);
+          _setIfInside(w, x, y, z, _mushroom);
         }
       case biomeJungle:
         if (roll < 292) {
-          _setIfInside(b, x, y, z, _fern);
+          _setIfInside(w, x, y, z, _fern);
         } else if (roll < 382) {
-          _setIfInside(b, x, y, z, _tallGrass);
+          _setIfInside(w, x, y, z, _tallGrass);
         } else if (roll < 394) {
-          _placeMelons(b, x, y, z, hsh);
+          _placeMelons(w, x, y, z, hsh);
         }
       case biomeDesert:
         if (roll < 12) {
           final ch = 2 + ((hsh >> 10) % 2);
           for (var i = 0; i < ch; i++) {
-            _setIfInside(b, x, y + i, z, _cactus);
+            _setIfInside(w, x, y + i, z, _cactus);
           }
         } else if (roll < 40) {
-          _setIfInside(b, x, y, z, _deadBush);
+          _setIfInside(w, x, y, z, _deadBush);
         }
-    }
-  }
-
-  /// A rounded crown: a ball of leaves [r] wide, squashed in y and frayed at the
-  /// rim so no two look stamped from the same mould. Its centre block is always
-  /// laid, which is what hangs the ball on the trunk it is drawn around.
-  void _crown(int x, int y, int z, int r, int leaves) {
-    final rim = r * r + r;
-    for (var dy = -r; dy <= r; dy++) {
-      for (var dz = -r; dz <= r; dz++) {
-        for (var dx = -r; dx <= r; dx++) {
-          final d2 = dx * dx + dz * dz + dy * dy * 2;
-          if (d2 > rim) continue;
-          if (d2 > rim - r && hash(x + dx, y + dy, z + dz) % 4 == 0) continue;
-          _ink(x + dx, y + dy, z + dz, leaves);
-        }
-      }
-    }
-  }
-
-  /// A limb: [len] steps out along ([dx], [dz]), rising every other one, with a
-  /// small crown on its end. A diagonal step is taken one axis at a time and
-  /// leaves its corner block behind, because two logs that meet at an edge hold
-  /// nothing — every block of this world joins its neighbour by a face.
-  void _limb(int x, int y, int z, int dx, int dz, int len, int log, int leaves) {
-    var lx = x, ly = y, lz = z;
-    for (var i = 0; i < len; i++) {
-      if (dx != 0) {
-        lx += dx;
-        _ink(lx, ly, lz, log);
-      }
-      if (dz != 0) {
-        lz += dz;
-        _ink(lx, ly, lz, log);
-      }
-      if (i.isOdd) {
-        ly++;
-        _ink(lx, ly, lz, log);
-      }
-    }
-    _crown(lx, ly + 1, lz, 2, leaves);
-  }
-
-  /// Stage 41, the oak: a bare trunk 9-12 blocks tall, two limbs near the top
-  /// and a rounded crown over them. Nothing of it hangs at head height, so a
-  /// forest is walked through instead of squeezed past.
-  void _placeOak(int x, int y, int z, int trunk, int hsh) {
-    final top = y + trunk;
-    for (var i = 0; i < 2; i++) {
-      final dir = _compass[((hsh >> (4 + i * 3)) + i * 3) % 8];
-      _limb(x, top - 3 + i, z, dir.$1, dir.$2, 2, _oakLog, _oakLeaves);
-    }
-    _crown(x, top - 1, z, 3, _oakLeaves);
-    for (var i = 0; i <= trunk; i++) {
-      _ink(x, y + i, z, _oakLog);
-    }
-  }
-
-  /// Stage 41, the forest giant: a 2x2 trunk 14-18 blocks tall, four limbs and
-  /// a crown five blocks wide riding over the canopy of its neighbours.
-  void _placeBigOak(int x, int y, int z, int trunk, int hsh) {
-    final top = y + trunk;
-    _crown(x, top, z, 5, _oakLeaves);
-    _crown(x + 1, top - 2, z + 1, 4, _oakLeaves);
-    for (var i = 0; i < 4; i++) {
-      final dir = _compass[(i * 2 + (hsh >> 6) % 2) % 8];
-      final bx = x + (dir.$1 > 0 ? 1 : 0), bz = z + (dir.$2 > 0 ? 1 : 0);
-      _limb(bx, top - 5 + i % 2, bz, dir.$1, dir.$2, 3, _oakLog, _oakLeaves);
-    }
-    for (var i = 0; i <= trunk; i++) {
-      for (var dz = 0; dz <= 1; dz++) {
-        for (var dx = 0; dx <= 1; dx++) {
-          _ink(x + dx, y + i, z + dz, _oakLog);
-        }
-      }
-    }
-  }
-
-  /// Stage 41, the spruce: a tall bare trunk under tiers that widen downward,
-  /// the lowest of them well over a walker's head.
-  void _placeSpruce(int x, int y, int z, int trunk) {
-    final bare = math.max(5, trunk ~/ 3);
-    for (var dy = bare; dy <= trunk; dy++) {
-      final fromTop = trunk - dy;
-      var r = math.min(4, 1 + fromTop ~/ 4);
-      if (fromTop % 3 == 2) r -= 1; // the skirts pinch in between the tiers
-      for (var dz = -r; dz <= r; dz++) {
-        for (var dx = -r; dx <= r; dx++) {
-          if (dx * dx + dz * dz > r * r + 1) continue;
-          _ink(x + dx, y + dy, z + dz, _spruceLeaves);
-        }
-      }
-    }
-    _ink(x, y + trunk + 1, z, _spruceLeaves);
-    for (var i = 0; i < trunk; i++) {
-      _ink(x, y + i, z, _spruceLog);
     }
   }
 
@@ -761,145 +530,22 @@ class TerrainGenerator implements ChunkGenerator {
     return false;
   }
 
-  /// Stage 41, the swamp willow: a trunk 9-11 tall under a wide flat canopy
-  /// whose rim droops in hanging leaf columns.
-  void _placeWillow(int x, int y, int z, int trunk, int hsh) {
-    final top = y + trunk;
-    for (var layer = 0; layer < 2; layer++) {
-      final ly = top - layer;
-      for (var dz = -4; dz <= 4; dz++) {
-        for (var dx = -4; dx <= 4; dx++) {
-          if (dx * dx + dz * dz > (layer == 0 ? 12 : 18)) continue;
-          _ink(x + dx, ly, z + dz, _oakLeaves);
-        }
-      }
-    }
-    for (var dz = -4; dz <= 4; dz++) {
-      for (var dx = -4; dx <= 4; dx++) {
-        final d2 = dx * dx + dz * dz;
-        if (d2 < 10 || d2 > 18 || hash(x + dx, 5, z + dz) % 3 == 0) continue;
-        for (var i = 1; i <= 2 + (hash(x + dx, 6, z + dz) % 3); i++) {
-          _ink(x + dx, top - 1 - i, z + dz, _oakLeaves);
-        }
-      }
-    }
-    final dir = _compass[(hsh >> 7) % 8];
-    _limb(x, top - 3, z, dir.$1, dir.$2, 2, _oakLog, _oakLeaves);
-    for (var i = 0; i <= trunk; i++) {
-      _ink(x, y + i, z, _oakLog);
-    }
-  }
-
-  /// Stage 41, the jungle giant: a 2x2 trunk 16-24 blocks tall, a crown at the
-  /// top, a second one halfway up and vines falling from both rims.
-  void _placeJungleTree(int x, int y, int z, int trunk, int hsh) {
-    final top = y + trunk;
-    _crown(x, top, z, 4, _oakLeaves);
-    _crown(x + 1, top - 6, z + 1, 3, _oakLeaves);
-    for (var i = 0; i < 2; i++) {
-      final dir = _compass[((hsh >> (5 + i * 4)) + i * 4) % 8];
-      final bx = x + (dir.$1 > 0 ? 1 : 0), bz = z + (dir.$2 > 0 ? 1 : 0);
-      _limb(bx, top - 7, bz, dir.$1, dir.$2, 2, _jungleLog, _oakLeaves);
-    }
-    _vineFall(x, top - 2, z, 4, hsh);
-    _vineFall(x + 1, top - 7, z + 1, 3, hsh ^ 0x5f5f);
-    for (var i = 0; i <= trunk; i++) {
-      for (var dz = 0; dz <= 1; dz++) {
-        for (var dx = 0; dx <= 1; dx++) {
-          _ink(x + dx, y + i, z + dz, _jungleLog);
-        }
-      }
-    }
-  }
-
-  /// Vines falling 2-6 blocks from the rim of a crown [r] wide. Stage 42: a
-  /// vine only hangs where the canvas already holds a leaf to hang it on.
-  void _vineFall(int x, int y, int z, int r, int hsh) {
-    for (var dz = -r; dz <= r; dz++) {
-      for (var dx = -r; dx <= r; dx++) {
-        final d2 = dx * dx + dz * dz;
-        if (d2 < (r - 1) * (r - 1) || d2 > r * r + 1) continue;
-        if (_inked(x + dx, y, z + dz) == 0) continue;
-        final vh = hash(x + dx, 8, z + dz) ^ hsh;
-        if (vh % 5 < 2) continue;
-        for (var i = 1; i <= 2 + ((vh >> 4) % 5); i++) {
-          _ink(x + dx, y - i, z + dz, _vines);
-        }
-      }
-    }
-  }
-
-  /// Stage 41, the palm of the beaches and the oases: a bare leaning trunk
-  /// under a star of fronds, the one tree the desert and the sand ever grow.
-  /// Stage 42: the lean steps one axis at a time, so the trunk climbs by faces
-  /// and never hangs off the corner of the log below it.
-  void _placePalm(int x, int y, int z, int trunk, int hsh) {
-    final lean = _compass[(hsh >> 9) % 8];
-    var tx = x, tz = z;
-    for (var i = 0; i <= trunk; i++) {
-      if (i > 4 && i % 5 == 0) {
-        if (lean.$1 != 0) {
-          tx += lean.$1;
-          _ink(tx, y + i - 1, tz, _jungleLog);
-        }
-        if (lean.$2 != 0) {
-          tz += lean.$2;
-          _ink(tx, y + i - 1, tz, _jungleLog);
-        }
-      }
-      _ink(tx, y + i, tz, _jungleLog);
-    }
-    final top = y + trunk;
-    _ink(tx, top + 1, tz, _oakLeaves);
-    for (var d = 0; d < 8; d++) {
-      final dir = _compass[d];
-      _frond(tx, top + 1, tz, dir.$1, dir.$2, 2 + ((hsh >> (d * 2)) % 2));
-    }
-  }
-
-  /// One frond of a palm: leaves stepping out a face at a time from the crown's
-  /// heart, drooping by one block at the tip.
-  void _frond(int x, int y, int z, int dx, int dz, int len) {
-    var fx = x, fy = y, fz = z;
-    for (var i = 1; i <= len; i++) {
-      if (dx != 0) {
-        fx += dx;
-        _ink(fx, fy, fz, _oakLeaves);
-      }
-      if (dz != 0) {
-        fz += dz;
-        _ink(fx, fy, fz, _oakLeaves);
-      }
-      if (i == len) {
-        fy -= 1;
-        _ink(fx, fy, fz, _oakLeaves);
-      }
-    }
-  }
-
   /// A melon patch: the block itself and up to two neighbours on the ground.
-  void _placeMelons(Uint8List b, int x, int y, int z, int hsh) {
-    _setIfInside(b, x, y, z, _melon);
-    if ((hsh >> 14) % 2 == 0) _setIfInside(b, x + 1, y, z, _melon);
-    if ((hsh >> 15) % 2 == 0) _setIfInside(b, x, y, z + 1, _melon);
+  void _placeMelons(ChunkWriter w, int x, int y, int z, int hsh) {
+    _setIfInside(w, x, y, z, _melon);
+    if ((hsh >> 14) % 2 == 0) _setIfInside(w, x + 1, y, z, _melon);
+    if ((hsh >> 15) % 2 == 0) _setIfInside(w, x, y, z + 1, _melon);
   }
 
-  void _setIfInside(Uint8List b, int x, int y, int z, int id) {
-    if (x < 0 || x >= sizeX || z < 0 || z >= sizeZ || y < 0 || y >= sizeY) return;
-    final i = index(x, y, z);
-    if (b[i] == _air || id == 0) {
-      b[i] = id;
-    } else if (id != 0 && b[i] != 0 && _isSoft(b[i])) {
-      b[i] = id; // trunks overwrite canopy
-    }
-  }
+  /// Chunk-local: over air, or over leaves (trunks overwrite canopy).
+  void _setIfInside(ChunkWriter w, int x, int y, int z, int id) => w.place(x, y, z, id, over: _isSoft);
 
   // --- structures ---------------------------------------------------------------
   // One candidate per 6x6-chunk region, decided by hash so every chunk agrees. A
   // chunk writes only the blocks of the structure that fall inside it.
   static const int _regionChunks = 6;
 
-  static int _floorDiv(int a, int b) => (a / b).floor();
+  static const _floorDiv = floorDiv;
 
   /// (x, y, z, type) of the structure whose region contains this chunk, or null.
   ({int x, int y, int z, int type})? _regionStructure(int regionX, int regionZ) {
@@ -955,8 +601,8 @@ class TerrainGenerator implements ChunkGenerator {
     return list;
   }
 
-  void _buildStructures(Uint8List blocks, int chunkX, int chunkZ) {
-    final ox = chunkX * sizeX, oz = chunkZ * sizeZ;
+  void _buildStructures(ChunkWriter w) {
+    final chunkX = w.chunkX, chunkZ = w.chunkZ;
     final rx = _floorDiv(chunkX, _regionChunks), rz = _floorDiv(chunkZ, _regionChunks);
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
@@ -964,13 +610,13 @@ class TerrainGenerator implements ChunkGenerator {
         if (s == null || !_structureAllowed(s)) continue;
         switch (s.type) {
           case structDungeon:
-            _dungeon(blocks, ox, oz, s.x, s.y, s.z);
+            _dungeon(w, s.x, s.y, s.z);
           case structTower:
-            _tower(blocks, ox, oz, s.x, s.y, s.z);
+            _tower(w, s.x, s.y, s.z);
           case structCamp:
-            _camp(blocks, ox, oz, s.x, s.y, s.z);
+            _camp(w, s.x, s.y, s.z);
           case structVillage:
-            _village(blocks, ox, oz, s.x, s.y, s.z);
+            _village(w, s.x, s.y, s.z);
         }
       }
     }
@@ -981,25 +627,19 @@ class TerrainGenerator implements ChunkGenerator {
         if (s == null || !_structureAllowed(s)) continue;
         switch (s.type) {
           case structRuin:
-            _ruins(blocks, ox, oz, s.x, s.y, s.z);
+            _ruins(w, s.x, s.y, s.z);
           case structWell:
-            _well(blocks, ox, oz, s.x, s.y, s.z);
+            _well(w, s.x, s.y, s.z);
           case structMine:
-            _mine(blocks, ox, oz, s.x, s.y, s.z);
+            _mine(w, s.x, s.y, s.z);
           case structTemple:
-            _temple(blocks, ox, oz, s.x, s.y, s.z);
+            _temple(w, s.x, s.y, s.z);
         }
       }
     }
   }
 
-  void _put(Uint8List b, int ox, int oz, int wx, int wy, int wz, int id) {
-    final x = wx - ox, z = wz - oz;
-    if (x < 0 || x >= sizeX || z < 0 || z >= sizeZ || wy < 1 || wy >= sizeY) return;
-    b[index(x, wy, z)] = id;
-  }
-
-  void _dungeon(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _dungeon(ChunkWriter w, int cx, int cy, int cz) {
     // Three rooms in a row joined by corridors; boss room at the end with the chest.
     for (var room = 0; room < 3; room++) {
       final rcx = cx + room * 12, rcz = cz;
@@ -1010,42 +650,42 @@ class TerrainGenerator implements ChunkGenerator {
           for (var y = 0; y <= hgt; y++) {
             final wall = x == -half || x == half || z == -half || z == half || y == 0 || y == hgt;
             final id = wall ? (hash(rcx + x, cy + y, rcz + z) % 4 == 0 ? _mossyBricks : _stoneBricks) : _air;
-            _put(b, ox, oz, rcx + x, cy + y, rcz + z, id);
+            w.put(rcx + x, cy + y, rcz + z, id);
           }
         }
       }
-      _put(b, ox, oz, rcx - half + 1, cy + 1, rcz - half + 1, _lamp);
-      _put(b, ox, oz, rcx + half - 1, cy + 1, rcz + half - 1, _lamp);
-      if (room < 2) _put(b, ox, oz, rcx, cy + 1, rcz + 2, _spawnerId);
+      w.put(rcx - half + 1, cy + 1, rcz - half + 1, _lamp);
+      w.put(rcx + half - 1, cy + 1, rcz + half - 1, _lamp);
+      if (room < 2) w.put(rcx, cy + 1, rcz + 2, _spawnerId);
       if (room == 2) {
-        _put(b, ox, oz, rcx, cy + 1, rcz, _chest);
-        _put(b, ox, oz, rcx + 2, cy + 1, rcz - 2, _boneBlock);
-        _put(b, ox, oz, rcx - 3, cy + 1, rcz + 3, _goldOre);
+        w.put(rcx, cy + 1, rcz, _chest);
+        w.put(rcx + 2, cy + 1, rcz - 2, _boneBlock);
+        w.put(rcx - 3, cy + 1, rcz + 3, _goldOre);
       }
       if (room < 2) {
         for (var x = half; x <= half + 12 - 4; x++) {
           for (var y = 1; y <= 2; y++) {
-            _put(b, ox, oz, rcx + x, cy + y, rcz, _air);
+            w.put(rcx + x, cy + y, rcz, _air);
           }
-          _put(b, ox, oz, rcx + x, cy, rcz, _stoneBricks);
-          _put(b, ox, oz, rcx + x, cy + 3, rcz, _stoneBricks);
-          _put(b, ox, oz, rcx + x, cy + 1, rcz - 1, _stoneBricks);
-          _put(b, ox, oz, rcx + x, cy + 2, rcz - 1, _stoneBricks);
-          _put(b, ox, oz, rcx + x, cy + 1, rcz + 1, _stoneBricks);
-          _put(b, ox, oz, rcx + x, cy + 2, rcz + 1, _stoneBricks);
+          w.put(rcx + x, cy, rcz, _stoneBricks);
+          w.put(rcx + x, cy + 3, rcz, _stoneBricks);
+          w.put(rcx + x, cy + 1, rcz - 1, _stoneBricks);
+          w.put(rcx + x, cy + 2, rcz - 1, _stoneBricks);
+          w.put(rcx + x, cy + 1, rcz + 1, _stoneBricks);
+          w.put(rcx + x, cy + 2, rcz + 1, _stoneBricks);
         }
       }
     }
     // A shaft up to the surface from the first room, with ladders.
     final top = surfaceHeight(cx - 3, cz - 3);
     for (var y = cy + 1; y < top + 1; y++) {
-      _put(b, ox, oz, cx - 3, y, cz - 3, _air);
-      _put(b, ox, oz, cx - 3, y, cz - 4, y < top - 1 ? _stoneBricks : 0);
-      _put(b, ox, oz, cx - 3, y, cz - 3, _ladderId);
+      w.put(cx - 3, y, cz - 3, _air);
+      w.put(cx - 3, y, cz - 4, y < top - 1 ? _stoneBricks : 0);
+      w.put(cx - 3, y, cz - 3, _ladderId);
     }
   }
 
-  void _tower(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _tower(ChunkWriter w, int cx, int cy, int cz) {
     const h = 9;
     for (var x = -2; x <= 2; x++) {
       for (var z = -2; z <= 2; z++) {
@@ -1063,17 +703,17 @@ class TerrainGenerator implements ChunkGenerator {
           } else if (y == h - 1) {
             id = _planks;
           }
-          _put(b, ox, oz, cx + x, cy + y, cz + z, id);
+          w.put(cx + x, cy + y, cz + z, id);
         }
-        if (wall && (x + z) % 2 == 0) _put(b, ox, oz, cx + x, cy + h + 1, cz + z, _stoneBricks);
+        if (wall && (x + z) % 2 == 0) w.put(cx + x, cy + h + 1, cz + z, _stoneBricks);
       }
     }
-    _put(b, ox, oz, cx, cy + h, cz, _chest);
-    _put(b, ox, oz, cx - 1, cy + h, cz - 1, _lamp);
+    w.put(cx, cy + h, cz, _chest);
+    w.put(cx - 1, cy + h, cz - 1, _lamp);
     for (var y = 1; y < h - 1; y++) {
-      _put(b, ox, oz, cx - 1, cy + y, cz - 1, _ladderId);
+      w.put(cx - 1, cy + y, cz - 1, _ladderId);
     }
-    _put(b, ox, oz, cx - 1, cy + h - 1, cz - 1, _air);
+    w.put(cx - 1, cy + h - 1, cz - 1, _air);
   }
 
   /// Stage 26: 4-7 huts on a ring around a central well, each levelled onto its
@@ -1103,30 +743,30 @@ class TerrainGenerator implements ChunkGenerator {
   /// by keeping the trees out ([_structureClearance]) instead of cutting them
   /// down: a saw that ran here after the trees left every crown it cut hanging
   /// over the village with no trunk under it.
-  void _village(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _village(ChunkWriter w, int cx, int cy, int cz) {
     final n = _hutCount(cx, cz);
     final wy = surfaceHeight(cx, cz);
     for (var i = 0; i < n; i++) {
       final hut = _hutAt(cx, cz, i);
       final hy = surfaceHeight(hut.x, hut.z);
-      _hut(b, ox, oz, hut.x, hy, hut.z, i);
-      _path(b, ox, oz, hut.x, hut.z, cx, cz);
+      _hut(w, hut.x, hy, hut.z, i);
+      _path(w, hut.x, hut.z, cx, cz);
     }
     // Well
     for (var x = -1; x <= 1; x++) {
       for (var z = -1; z <= 1; z++) {
         final rim = x.abs() == 1 || z.abs() == 1;
-        _levelColumn(b, ox, oz, cx + x, cz + z, wy - 1, wy + 5, _cobblestone);
-        _put(b, ox, oz, cx + x, wy, cz + z, rim ? _stoneBricks : _water);
-        _put(b, ox, oz, cx + x, wy - 1, cz + z, rim ? _stoneBricks : _water);
+        _levelColumn(w, cx + x, cz + z, wy - 1, wy + 5, _cobblestone);
+        w.put(cx + x, wy, cz + z, rim ? _stoneBricks : _water);
+        w.put(cx + x, wy - 1, cz + z, rim ? _stoneBricks : _water);
         for (var y = 1; y < 4; y++) {
-          if (x.abs() == 1 && z.abs() == 1) _put(b, ox, oz, cx + x, wy + y, cz + z, _oakLog);
+          if (x.abs() == 1 && z.abs() == 1) w.put(cx + x, wy + y, cz + z, _oakLog);
         }
-        _put(b, ox, oz, cx + x, wy + 4, cz + z, _planks);
+        w.put(cx + x, wy + 4, cz + z, _planks);
       }
     }
-    _put(b, ox, oz, cx + 3, wy, cz, _lamp);
-    _put(b, ox, oz, cx - 3, wy, cz, _lamp);
+    w.put(cx + 3, wy, cz, _lamp);
+    w.put(cx - 3, wy, cz, _lamp);
     // Farm plot: 9x7 fenced, two rows of ripe wheat on farmland either side of a
     // water channel.
     final fx = cx + 5, fz = cz - _villageRing - 6;
@@ -1135,49 +775,49 @@ class TerrainGenerator implements ChunkGenerator {
       for (var x = -4; x <= 4; x++) {
         final wx = fx + x, wz = fz + z;
         final edge = x.abs() == 4 || z.abs() == 3;
-        _levelColumn(b, ox, oz, wx, wz, fy - 1, fy + 3, _dirt);
+        _levelColumn(w, wx, wz, fy - 1, fy + 3, _dirt);
         if (edge) {
-          _put(b, ox, oz, wx, fy - 1, wz, _grass);
-          _put(b, ox, oz, wx, fy, wz, _fence);
+          w.put(wx, fy - 1, wz, _grass);
+          w.put(wx, fy, wz, _fence);
         } else if (z == 0) {
-          _put(b, ox, oz, wx, fy - 1, wz, _water);
+          w.put(wx, fy - 1, wz, _water);
         } else {
-          _put(b, ox, oz, wx, fy - 1, wz, _farmland);
-          _put(b, ox, oz, wx, fy, wz, _wheat);
+          w.put(wx, fy - 1, wz, _farmland);
+          w.put(wx, fy, wz, _wheat);
         }
       }
     }
-    _put(b, ox, oz, fx, fy, fz + 3, _air); // the gate
-    _put(b, ox, oz, fx + 4, fy + 1, fz + 3, _torch);
+    w.put(fx, fy, fz + 3, _air); // the gate
+    w.put(fx + 4, fy + 1, fz + 3, _torch);
   }
 
   /// A gravel path along x then along z, one block wide, laid on each column's
   /// own ground.
-  void _path(Uint8List b, int ox, int oz, int fromX, int fromZ, int toX, int toZ) {
+  void _path(ChunkWriter w, int fromX, int fromZ, int toX, int toZ) {
     final stepX = toX > fromX ? 1 : -1, stepZ = toZ > fromZ ? 1 : -1;
     for (var x = fromX; x != toX; x += stepX) {
       if ((x - toX).abs() <= 2 && (fromZ - toZ).abs() <= 2) break;
       final y = surfaceHeight(x, fromZ);
-      _put(b, ox, oz, x, y - 1, fromZ, _gravel);
-      _put(b, ox, oz, x, y, fromZ, _air);
+      w.put(x, y - 1, fromZ, _gravel);
+      w.put(x, y, fromZ, _air);
     }
     for (var z = fromZ; z != toZ; z += stepZ) {
       if ((z - toZ).abs() <= 2) break;
       final y = surfaceHeight(toX, z);
-      _put(b, ox, oz, toX, y - 1, z, _gravel);
-      _put(b, ox, oz, toX, y, z, _air);
+      w.put(toX, y - 1, z, _gravel);
+      w.put(toX, y, z, _air);
     }
   }
 
   /// A 5x5 hut: cobblestone floor, plank walls with log corners, a door gap
   /// facing the well side, a glass window, a plank ceiling ringed with slabs,
   /// and inside a torch, a bed and a chest (`LootTables.tables['village']`).
-  void _hut(Uint8List b, int ox, int oz, int cx, int cy, int cz, int variant) {
+  void _hut(ChunkWriter out, int cx, int cy, int cz, int variant) {
     const w = 2, d = 2, h = 4;
     final doorZ = variant % 2 == 0 ? d : -d;
     for (var x = -w; x <= w; x++) {
       for (var z = -d; z <= d; z++) {
-        _levelColumn(b, ox, oz, cx + x, cz + z, cy - 1, cy + h + 2, _cobblestone);
+        _levelColumn(out, cx + x, cz + z, cy - 1, cy + h + 2, _cobblestone);
         for (var y = -2; y <= h + 1; y++) {
           var id = _air;
           final wall = x.abs() == w || z.abs() == d;
@@ -1197,30 +837,30 @@ class TerrainGenerator implements ChunkGenerator {
             final window = y == 2 && (x == 0 && z == -doorZ);
             id = door ? _air : (window ? _glassId : _planks);
           }
-          _put(b, ox, oz, cx + x, cy + y, cz + z, id);
+          out.put(cx + x, cy + y, cz + z, id);
         }
       }
     }
     final back = -doorZ + (doorZ > 0 ? 1 : -1);
     final front = doorZ - (doorZ > 0 ? 1 : -1);
-    _put(b, ox, oz, cx - w + 1, cy + 1, cz + back, _chest);
-    _put(b, ox, oz, cx + w - 1, cy + 1, cz + back, _bed);
-    _put(b, ox, oz, cx, cy + 3, cz, _torch);
-    if (variant == 2) _put(b, ox, oz, cx + w - 1, cy + 1, cz + front, _craftingTable);
-    if (variant == 3) _put(b, ox, oz, cx - w + 1, cy + 1, cz + front, _furnace);
+    out.put(cx - w + 1, cy + 1, cz + back, _chest);
+    out.put(cx + w - 1, cy + 1, cz + back, _bed);
+    out.put(cx, cy + 3, cz, _torch);
+    if (variant == 2) out.put(cx + w - 1, cy + 1, cz + front, _craftingTable);
+    if (variant == 3) out.put(cx - w + 1, cy + 1, cz + front, _furnace);
   }
 
-  void _camp(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _camp(ChunkWriter w, int cx, int cy, int cz) {
     for (var x = -3; x <= 3; x++) {
       for (var z = -2; z <= 2; z++) {
         // Stage 42: a block taller than it was, because the roof now carries a
         // block under each step and the shelter would have lost its headroom.
         final roof = 4 - z.abs();
-        _put(b, ox, oz, cx + x, cy + roof, cz + z, _planks);
+        w.put(cx + x, cy + roof, cz + z, _planks);
         // Stage 42: the slope of the roof climbs by faces. Each row used to sit
         // one block over and one across from the next, touching it by an edge
         // alone, so the ridge of the tent hung over a gap it never reached.
-        if (roof > 1) _put(b, ox, oz, cx + x, cy + roof - 1, cz + z, _planks);
+        if (roof > 1) w.put(cx + x, cy + roof - 1, cz + z, _planks);
         if (x.abs() == 3) {
           // And the corner post stands on its own ground: pitched on a slope,
           // the camp used to hold a post in the air.
@@ -1236,15 +876,15 @@ class TerrainGenerator implements ChunkGenerator {
             }
           }
           for (var y = foot; y < cy + roof; y++) {
-            _put(b, ox, oz, cx + x, y, cz + z, z.abs() == 2 ? _oakLog : _air);
+            w.put(cx + x, y, cz + z, z.abs() == 2 ? _oakLog : _air);
           }
         }
       }
     }
-    _put(b, ox, oz, cx, cy, cz, _chest);
-    _put(b, ox, oz, cx + 6, cy, cz, _lamp);
+    w.put(cx, cy, cz, _chest);
+    w.put(cx + 6, cy, cz, _lamp);
     for (var y = math.min(cy - 1, surfaceHeight(cx + 6, cz)); y <= cy - 1; y++) {
-      _put(b, ox, oz, cx + 6, y, cz, _stone); // the lamp's block reaches the ground too
+      w.put(cx + 6, y, cz, _stone); // the lamp's block reaches the ground too
     }
   }
 
@@ -1295,32 +935,18 @@ class TerrainGenerator implements ChunkGenerator {
     return (x: sx, y: surface, z: sz, type: type);
   }
 
-  /// The block already in this chunk at a world position; null outside it.
-  int? _get(Uint8List b, int ox, int oz, int wx, int wy, int wz) {
-    final x = wx - ox, z = wz - oz;
-    if (x < 0 || x >= sizeX || z < 0 || z >= sizeZ || wy < 1 || wy >= sizeY) return null;
-    return b[index(x, wy, z)];
-  }
-
   bool _isRock(int id) =>
       id == _stone || id == _darkStone || id == _coalOre || id == _ironOre || id == _goldOre;
 
   /// Fills the column below [floorY] down to the local ground and clears the air
   /// above it up to [clearTo], so a structure sits on the ground on a slope instead
   /// of floating or sinking.
-  void _levelColumn(Uint8List b, int ox, int oz, int wx, int wz, int floorY, int clearTo, int fill) {
-    final ground = surfaceHeight(wx, wz);
-    for (var y = ground - 1; y < floorY; y++) {
-      _put(b, ox, oz, wx, y, wz, fill);
-    }
-    for (var y = floorY + 1; y <= clearTo; y++) {
-      _put(b, ox, oz, wx, y, wz, _air);
-    }
-  }
+  void _levelColumn(ChunkWriter w, int wx, int wz, int floorY, int clearTo, int fill) =>
+      w.levelColumn(wx, wz, surfaceHeight(wx, wz), floorY, clearTo, fill);
 
   /// Broken stone-brick walls 2-4 high with gaps around a cracked cobblestone floor;
   /// a chest half the time, one or two plants growing on the wall tops.
-  void _ruins(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _ruins(ChunkWriter w, int cx, int cy, int cz) {
     const half = 3;
     final h = hash(cx, 31, cz);
     final plantA = h % 24, plantB = (h >> 5) % 24;
@@ -1328,42 +954,42 @@ class TerrainGenerator implements ChunkGenerator {
     for (var z = -half; z <= half; z++) {
       for (var x = -half; x <= half; x++) {
         final wx = cx + x, wz = cz + z;
-        _levelColumn(b, ox, oz, wx, wz, cy - 1, cy + 5, _cobblestone);
+        _levelColumn(w, wx, wz, cy - 1, cy + 5, _cobblestone);
         final hole = hash(wx, 32, wz) % 4 == 0;
-        _put(b, ox, oz, wx, cy - 1, wz, hole ? _grass : _cobblestone);
+        w.put(wx, cy - 1, wz, hole ? _grass : _cobblestone);
         final edge = x.abs() == half || z.abs() == half;
         if (!edge) continue;
         final wh = hash(wx, 33, wz);
         final height = wh % 10 < 3 ? 0 : 2 + ((wh >> 4) % 3);
         for (var y = 0; y < height; y++) {
-          _put(b, ox, oz, wx, cy + y, wz, hash(wx, cy + y, wz) % 5 < 2 ? _mossyBricks : _stoneBricks);
+          w.put(wx, cy + y, wz, hash(wx, cy + y, wz) % 5 < 2 ? _mossyBricks : _stoneBricks);
         }
         if (height > 0 && (edgeIndex == plantA || edgeIndex == plantB)) {
-          _put(b, ox, oz, wx, cy + height, wz, (wh >> 12) % 2 == 0 ? _tallGrass : _flowerRed);
+          w.put(wx, cy + height, wz, (wh >> 12) % 2 == 0 ? _tallGrass : _flowerRed);
         }
         edgeIndex++;
       }
     }
-    if ((h >> 10) % 2 == 0) _put(b, ox, oz, cx, cy, cz, _chest);
+    if ((h >> 10) % 2 == 0) w.put(cx, cy, cz, _chest);
   }
 
   /// A 3x3 cobblestone ring one block above the ground, water four deep in the
   /// middle, two fence posts and a plank roof at height 3.
-  void _well(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _well(ChunkWriter w, int cx, int cy, int cz) {
     for (var z = -1; z <= 1; z++) {
       for (var x = -1; x <= 1; x++) {
         final wx = cx + x, wz = cz + z;
         final rim = x.abs() == 1 || z.abs() == 1;
-        _levelColumn(b, ox, oz, wx, wz, cy - 5, cy + 2, _cobblestone);
+        _levelColumn(w, wx, wz, cy - 5, cy + 2, _cobblestone);
         for (var y = cy - 4; y <= cy; y++) {
-          _put(b, ox, oz, wx, y, wz, rim ? _cobblestone : _water);
+          w.put(wx, y, wz, rim ? _cobblestone : _water);
         }
-        _put(b, ox, oz, wx, cy + 3, wz, _planks);
+        w.put(wx, cy + 3, wz, _planks);
       }
     }
     for (var y = 1; y <= 2; y++) {
-      _put(b, ox, oz, cx - 1, cy + y, cz, _fence);
-      _put(b, ox, oz, cx + 1, cy + y, cz, _fence);
+      w.put(cx - 1, cy + y, cz, _fence);
+      w.put(cx + 1, cy + y, cz, _fence);
     }
   }
 
@@ -1371,25 +997,25 @@ class TerrainGenerator implements ChunkGenerator {
   /// long towards +x with log-and-plank support beams every 4 blocks, a torch pair on
   /// every second beam, ore veins exposed in the walls, a chest at the end and a
   /// spawner a third of the time.
-  void _mine(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _mine(ChunkWriter w, int cx, int cy, int cz) {
     final h = hash(cx, 41, cz);
     final len = 20 + (h % 11);
     const fy = mineFloorY;
     // Head frame on the surface: a 3x3 clearing with four fence posts and a roof.
     for (var z = -1; z <= 1; z++) {
       for (var x = -1; x <= 1; x++) {
-        _levelColumn(b, ox, oz, cx + x, cz + z, cy - 1, cy + 3, _cobblestone);
-        _put(b, ox, oz, cx + x, cy - 1, cz + z, _cobblestone);
-        _put(b, ox, oz, cx + x, cy + 2, cz + z, _planks);
+        _levelColumn(w, cx + x, cz + z, cy - 1, cy + 3, _cobblestone);
+        w.put(cx + x, cy - 1, cz + z, _cobblestone);
+        w.put(cx + x, cy + 2, cz + z, _planks);
         if (x.abs() == 1 && z.abs() == 1) {
-          _put(b, ox, oz, cx + x, cy, cz + z, _fence);
-          _put(b, ox, oz, cx + x, cy + 1, cz + z, _fence);
+          w.put(cx + x, cy, cz + z, _fence);
+          w.put(cx + x, cy + 1, cz + z, _fence);
         }
       }
     }
     // Shaft: ladder from the corridor floor up through the surface block.
     for (var y = fy + 1; y <= cy; y++) {
-      _put(b, ox, oz, cx, y, cz, _ladderId);
+      w.put(cx, y, cz, _ladderId);
     }
     for (var x = 1; x <= len; x++) {
       final wx = cx + x;
@@ -1398,51 +1024,51 @@ class TerrainGenerator implements ChunkGenerator {
           final wy = fy + y, wz = cz + z;
           final inside = z.abs() <= 1 && y >= 1 && y <= 3;
           if (inside) {
-            _put(b, ox, oz, wx, wy, wz, _air);
+            w.put(wx, wy, wz, _air);
             continue;
           }
-          final cur = _get(b, ox, oz, wx, wy, wz);
+          final cur = w.get(wx, wy, wz);
           if (cur == null) continue;
           if (cur == _air || cur == _lava || cur == _water) {
-            _put(b, ox, oz, wx, wy, wz, _stone);
+            w.put(wx, wy, wz, _stone);
             continue;
           }
           if (!_isRock(cur)) continue;
           final vein = hash(wx, wy, wz) % 100;
           if (vein < 5) {
-            _put(b, ox, oz, wx, wy, wz, _goldOre);
+            w.put(wx, wy, wz, _goldOre);
           } else if (vein < 18) {
-            _put(b, ox, oz, wx, wy, wz, _ironOre);
+            w.put(wx, wy, wz, _ironOre);
           }
         }
       }
       if (x % 4 == 2) {
         final lit = x % 8 == 2;
         for (var y = 1; y <= 2; y++) {
-          _put(b, ox, oz, wx, fy + y, cz - 1, _oakLog);
-          _put(b, ox, oz, wx, fy + y, cz + 1, _oakLog);
+          w.put(wx, fy + y, cz - 1, _oakLog);
+          w.put(wx, fy + y, cz + 1, _oakLog);
         }
-        _put(b, ox, oz, wx, fy + 3, cz, _planks);
-        _put(b, ox, oz, wx, fy + 3, cz - 1, lit ? _torch : _planks);
-        _put(b, ox, oz, wx, fy + 3, cz + 1, lit ? _torch : _planks);
+        w.put(wx, fy + 3, cz, _planks);
+        w.put(wx, fy + 3, cz - 1, lit ? _torch : _planks);
+        w.put(wx, fy + 3, cz + 1, lit ? _torch : _planks);
       }
     }
     // Stage 28: a rail down the centre line, from the shaft to the chest.
     for (var x = 1; x < len; x++) {
-      _put(b, ox, oz, cx + x, fy + 1, cz, _railEw);
+      w.put(cx + x, fy + 1, cz, _railEw);
     }
-    _put(b, ox, oz, cx + len, fy + 1, cz, _chest);
-    if ((h >> 8) % 3 == 0) _put(b, ox, oz, cx + len - 3, fy + 1, cz, _spawnerId);
+    w.put(cx + len, fy + 1, cz, _chest);
+    if ((h >> 8) % 3 == 0) w.put(cx + len - 3, fy + 1, cz, _spawnerId);
   }
 
   /// A sandstone step pyramid, 9x9 at the base and five levels of two blocks each,
   /// with a hollow 3x3x3 chamber at the base holding two chests and a lamp, a pressure
   /// plate in the chamber floor centre with TNT under it, and an entrance corridor on
   /// the south (+z) side.
-  void _temple(Uint8List b, int ox, int oz, int cx, int cy, int cz) {
+  void _temple(ChunkWriter w, int cx, int cy, int cz) {
     for (var z = -4; z <= 4; z++) {
       for (var x = -4; x <= 4; x++) {
-        _levelColumn(b, ox, oz, cx + x, cz + z, cy - 1, cy + 12, _sandstone);
+        _levelColumn(w, cx + x, cz + z, cy - 1, cy + 12, _sandstone);
       }
     }
     for (var level = 0; level < 5; level++) {
@@ -1450,7 +1076,7 @@ class TerrainGenerator implements ChunkGenerator {
       for (var dy = 0; dy < 2; dy++) {
         for (var z = -hw; z <= hw; z++) {
           for (var x = -hw; x <= hw; x++) {
-            _put(b, ox, oz, cx + x, cy + level * 2 + dy, cz + z, _sandstone);
+            w.put(cx + x, cy + level * 2 + dy, cz + z, _sandstone);
           }
         }
       }
@@ -1458,18 +1084,18 @@ class TerrainGenerator implements ChunkGenerator {
     for (var z = -1; z <= 1; z++) {
       for (var x = -1; x <= 1; x++) {
         for (var y = 1; y <= 3; y++) {
-          _put(b, ox, oz, cx + x, cy + y, cz + z, _air);
+          w.put(cx + x, cy + y, cz + z, _air);
         }
       }
     }
-    _put(b, ox, oz, cx, cy - 1, cz, _tnt);
-    _put(b, ox, oz, cx, cy, cz, _pressurePlate); // stage 23: the trap that lights it
-    _put(b, ox, oz, cx - 1, cy + 1, cz - 1, _chest);
-    _put(b, ox, oz, cx + 1, cy + 1, cz - 1, _chest);
-    _put(b, ox, oz, cx, cy + 4, cz, _lamp);
+    w.put(cx, cy - 1, cz, _tnt);
+    w.put(cx, cy, cz, _pressurePlate); // stage 23: the trap that lights it
+    w.put(cx - 1, cy + 1, cz - 1, _chest);
+    w.put(cx + 1, cy + 1, cz - 1, _chest);
+    w.put(cx, cy + 4, cz, _lamp);
     for (var z = 2; z <= 4; z++) {
       for (var y = 1; y <= 2; y++) {
-        _put(b, ox, oz, cx, cy + y, cz + z, _air);
+        w.put(cx, cy + y, cz + z, _air);
       }
     }
   }
@@ -1530,7 +1156,7 @@ class TerrainGenerator implements ChunkGenerator {
         }
       }
     }
-    _buildFortresses(blocks, chunkX, chunkZ);
+    _buildFortresses(ChunkWriter(blocks, chunkX, chunkZ));
     return blocks;
   }
 
@@ -1569,13 +1195,12 @@ class TerrainGenerator implements ChunkGenerator {
     );
   }
 
-  void _buildFortresses(Uint8List blocks, int chunkX, int chunkZ) {
-    final ox = chunkX * sizeX, oz = chunkZ * sizeZ;
-    final fx = _floorDiv(chunkX, _fortressRegionChunks), fz = _floorDiv(chunkZ, _fortressRegionChunks);
+  void _buildFortresses(ChunkWriter w) {
+    final fx = _floorDiv(w.chunkX, _fortressRegionChunks), fz = _floorDiv(w.chunkZ, _fortressRegionChunks);
     for (var dz = -1; dz <= 1; dz++) {
       for (var dx = -1; dx <= 1; dx++) {
         final f = _fortressAt(fx + dx, fz + dz);
-        if (f != null) _fortress(blocks, ox, oz, f.x, f.y, f.z);
+        if (f != null) _fortress(w, f.x, f.y, f.z);
       }
     }
   }
@@ -1586,12 +1211,12 @@ class TerrainGenerator implements ChunkGenerator {
   /// off the hall, a blaze spot at the middle, and a throne room 9x9x7 at the
   /// far end with lava channels along its walls and the fortress core in the
   /// centre of its floor.
-  void _fortress(Uint8List b, int ox, int oz, int sx, int sy, int sz) {
+  void _fortress(ChunkWriter w, int sx, int sy, int sz) {
     final len = _fortressLength(sx, sz);
     // Hall shell: walls z = +-3, floor y = sy, ceiling y = sy + 6, interior air.
     for (var x = 0; x <= len; x++) {
       final wx = sx + x;
-      if (wx < ox - 1 || wx > ox + sizeX) continue;
+      if (wx < w.ox - 1 || wx > w.ox + sizeX) continue;
       for (var z = -3; z <= 3; z++) {
         for (var y = 0; y <= 6; y++) {
           final wall = z.abs() == 3 || y == 0 || y == 6;
@@ -1599,26 +1224,26 @@ class TerrainGenerator implements ChunkGenerator {
           if (wall && z.abs() == 3 && y >= 2 && y <= 4 && x % 6 == 3 && x > 2 && x < len - 2) id = _air; // window
           if (wall && z.abs() == 3 && y == 3 && x % 6 == 0) id = _glowstone; // a sconce between the windows
           if (y == 6 && z == 0 && x % 8 == 4) id = _glowstone;
-          _put(b, ox, oz, wx, sy + y, sz + z, id);
+          w.put(wx, sy + y, sz + z, id);
         }
       }
       // Pillars to the bedrock floor at both wall lines, every 8 blocks.
       if (x % 8 == 0) {
         for (var y = sy - 1; y > hellFloorY; y--) {
-          _put(b, ox, oz, wx, y, sz - 3, _netherBrick);
-          _put(b, ox, oz, wx, y, sz + 3, _netherBrick);
+          w.put(wx, y, sz - 3, _netherBrick);
+          w.put(wx, y, sz + 3, _netherBrick);
         }
       }
     }
     // Side rooms: 5x5 interior off the +z wall at a third, off the -z wall at two thirds.
-    _sideRoom(b, ox, oz, sx + len ~/ 3, sy, sz, 1);
-    _sideRoom(b, ox, oz, sx + len * 2 ~/ 3, sy, sz, -1);
+    _sideRoom(w, sx + len ~/ 3, sy, sz, 1);
+    _sideRoom(w, sx + len * 2 ~/ 3, sy, sz, -1);
     // Throne room: 9x9 interior, 7 tall, centred 5 past the hall's end.
     final cx = sx + len + 5, cz = sz;
     for (var x = -5; x <= 5; x++) {
       for (var z = -5; z <= 5; z++) {
         final wx = cx + x, wz = cz + z;
-        if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
+        if (wx < w.ox || wx >= w.ox + sizeX || wz < w.oz || wz >= w.oz + sizeZ) continue;
         for (var y = 0; y <= 8; y++) {
           final wall = x.abs() == 5 || z.abs() == 5 || y == 0 || y == 8;
           var id = wall ? _netherBrick : _air;
@@ -1628,40 +1253,40 @@ class TerrainGenerator implements ChunkGenerator {
           if (y == 0 && (z.abs() == 4 || x.abs() == 4) && !(x == -4 && z.abs() <= 1)) id = _lava; // moat sunk in the floor ring
           if (y == 8 && (x % 3 == 0) && (z % 3 == 0)) id = _glowstone;
           if (y == 0 && x == 0 && z == 0) id = _fortressCore;
-          _put(b, ox, oz, wx, sy + y, wz, id);
+          w.put(wx, sy + y, wz, id);
         }
         // The room floor's underside and pillars so the moat has a bed.
-        _put(b, ox, oz, wx, sy - 1, wz, _netherBrick);
+        w.put(wx, sy - 1, wz, _netherBrick);
         if (x.abs() == 5 && z.abs() == 5) {
           for (var y = sy - 2; y > hellFloorY; y--) {
-            _put(b, ox, oz, wx, y, wz, _netherBrick);
+            w.put(wx, y, wz, _netherBrick);
           }
         }
       }
     }
     // A glowstone-lit dais step at the far wall behind the core.
     for (var z = -2; z <= 2; z++) {
-      _put(b, ox, oz, cx + 3, sy + 1, cz + z, _netherBrick);
+      w.put(cx + 3, sy + 1, cz + z, _netherBrick);
     }
-    _put(b, ox, oz, cx + 3, sy + 2, cz, _glowstone);
+    w.put(cx + 3, sy + 2, cz, _glowstone);
   }
 
-  void _sideRoom(Uint8List b, int ox, int oz, int rx, int ry, int hz, int side) {
+  void _sideRoom(ChunkWriter w, int rx, int ry, int hz, int side) {
     // Interior z from hz + side*4 .. hz + side*8 (5 cells), x rx-2..rx+2; the hall wall opens.
     final zc = hz + side * 6;
     for (var x = -3; x <= 3; x++) {
       for (var z = -3; z <= 3; z++) {
         final wx = rx + x, wz = zc + z;
-        if (wx < ox || wx >= ox + sizeX || wz < oz || wz >= oz + sizeZ) continue;
+        if (wx < w.ox || wx >= w.ox + sizeX || wz < w.oz || wz >= w.oz + sizeZ) continue;
         for (var y = 0; y <= 5; y++) {
           final wall = x.abs() == 3 || z.abs() == 3 || y == 0 || y == 5;
           var id = wall ? _netherBrick : _air;
           if (wz == hz + side * 3 && x.abs() <= 1 && y >= 1 && y <= 3) id = _air; // doorway through the hall wall
-          _put(b, ox, oz, wx, ry + y, wz, id);
+          w.put(wx, ry + y, wz, id);
         }
       }
     }
-    _put(b, ox, oz, rx, ry + 1, hz + side * 7, _chest);
-    _put(b, ox, oz, rx, ry + 4, zc, _glowstone);
+    w.put(rx, ry + 1, hz + side * 7, _chest);
+    w.put(rx, ry + 4, zc, _glowstone);
   }
 }
