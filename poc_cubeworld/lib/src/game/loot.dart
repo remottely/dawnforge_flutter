@@ -1,16 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:voxel_content/voxel_content.dart';
 import 'package:voxel_core/voxel_core.dart';
+
 import '../world/voxel_world.dart';
 
-/// One row of a loot table: [chance] to appear at all, then [min]..[max] of it.
-class LootEntry {
-  const LootEntry(this.item, this.min, this.max, this.chance);
-  final String item;
-  final int min;
-  final int max;
-  final double chance;
-}
+export 'package:voxel_content/voxel_content.dart' show LootEntry;
 
 /// Stage 23: what a structure's chest holds, one table per structure. Every
 /// entry is rolled once: `chance` to appear at all, then `min..max` of it. The
@@ -101,20 +96,13 @@ class LootTables {
   /// `IVec3.hashCode` held other items after a restart, and a host and its
   /// client could disagree about it. Chests, chest minecarts and villager offers
   /// all seed through here.
-  static int seedFor(IVec3 at, int worldSeed) =>
-      ((at.x * 73856093) ^ (at.y * 19349663) ^ (at.z * 83492791) ^ worldSeed) & 0x7FFFFFFF;
+  static int seedFor(IVec3 at, int worldSeed) => LootTable.seedFor(at, worldSeed);
 
   /// The stacks a chest of [table] holds, in table order.
   static List<({String id, int count})> roll(String table, math.Random rng) {
     final rows = tables[table];
     if (rows == null) throw ArgumentError('unknown loot table $table');
-    final out = <({String id, int count})>[];
-    for (final e in rows) {
-      if (rng.nextDouble() >= e.chance) continue;
-      final n = e.min + rng.nextInt(e.max - e.min + 1);
-      if (n > 0) out.add((id: e.item, count: n));
-    }
-    return out;
+    return LootTable(rows).roll(rng);
   }
 
   /// The table of the structure nearest to [at] (within 48 m), "camp" when no

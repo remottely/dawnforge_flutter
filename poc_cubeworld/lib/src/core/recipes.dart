@@ -1,18 +1,18 @@
+import 'package:voxel_content/voxel_content.dart' show Recipe, RecipeBook;
+
 import '../game/inventory.dart';
 
-/// Recipe list. station: "" by hand, "crafting_table", "furnace".
-class Recipe {
-  const Recipe(this.result, this.count, this.ingredients, this.station);
-  final String result;
-  final int count;
-  final Map<String, int> ingredients;
-  final String station;
-}
+export 'package:voxel_content/voxel_content.dart' show Recipe;
+
+/// Recipe list. station: "" by hand, "crafting_table", "furnace",
+/// "brewing_stand". VK3.3: voxel_content's [Recipe] rows in a [RecipeBook].
 
 class Recipes {
   Recipes._();
 
-  static final List<Recipe> list = _build();
+  static final RecipeBook book = RecipeBook(_build());
+
+  static List<Recipe> get list => book.recipes;
 
   static List<Recipe> _build() {
     final out = <Recipe>[];
@@ -21,7 +21,7 @@ class Recipes {
         for (final e in ingredients.entries)
           if (e.value > 0) e.key: e.value,
       };
-      out.add(Recipe(result, count, clean, station));
+      out.add(Recipe(result, count, clean, station: station));
     }
 
     r('oak_planks', 4, {'oak_log': 1});
@@ -127,22 +127,9 @@ class Recipes {
     return out;
   }
 
-  static List<Recipe> available(String station) =>
-      [for (final r in list) if (r.station == '' || r.station == station) r];
+  static List<Recipe> available(String station) => book.available(station);
 
-  static bool canCraft(Recipe r, Inventory inv) {
-    for (final e in r.ingredients.entries) {
-      if (inv.countOf(e.key) < e.value) return false;
-    }
-    return true;
-  }
+  static bool canCraft(Recipe r, Inventory inv) => book.canCraft(r, inv);
 
-  static bool craft(Recipe r, Inventory inv) {
-    if (!canCraft(r, inv)) return false;
-    for (final e in r.ingredients.entries) {
-      inv.remove(e.key, e.value);
-    }
-    inv.add(r.result, r.count);
-    return true;
-  }
+  static bool craft(Recipe r, Inventory inv) => book.craft(r, inv);
 }
