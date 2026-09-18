@@ -36,6 +36,7 @@ export 'src/mobs/behaviors.dart';
 export 'src/mobs/mob.dart';
 export 'src/mobs/mob_spec.dart';
 export 'src/mobs/rig.dart';
+export 'src/mobs/rig_animator.dart';
 export 'src/mobs/spawner.dart';
 export 'src/player/character_motor.dart';
 export 'src/player/player_entity.dart';

@@ -5,7 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
-import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning;
+import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning, RigAnimator, RigKind, RigMotion;
 import '../core/species.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';
@@ -42,7 +42,6 @@ class Mob extends SceneBody {
   /// saddle follows the model rather than the collision box, which for a horse
   /// is a good 0.4 m taller than anything you can sit on.
   double backHeight = 1.0;
-  double _phase = 0.0;
   double hurt = 0.0;
   bool barVisible = false;
   bool _angry = false;
@@ -82,7 +81,6 @@ class Mob extends SceneBody {
   /// How much the built model is shrunk to fit under its collider (1 when it
   /// already fits): set once by [_buildModel].
   double _modelFit = 1.0;
-  double _squash = 1.0;
   double _shakeX = 0.0;
   double _deathTimer = -1.0;
 
@@ -99,13 +97,10 @@ class Mob extends SceneBody {
   // instead of switching on at a speed threshold, wings beat on their own
   // cycle, a melee arm swings through an arc, a blob splats when it lands, and
   // a spider's resting splay is kept apart from its gait.
-  double _moveWeight = 0.0; // how much of the walk cycle is in, eased
-  double _wingPhase = 0.0; // the wingbeat, in radians, on its own clock
-  double _wingWeight = 0.0; // how much of the beat is in against the folded rest
-  double _attackSwing = 0.0; // the melee arm's arc, 1 -> 0
-  double _landSquash = 0.0; // a blob's splat, 0.22 -> 0
-  bool _wasOnFloor = true;
   final List<double> _legFan = []; // a spider's resting splay, per leg
+
+  /// The kit's animator, posing the parts [_buildModel] laid down.
+  late final RigAnimator _anim = RigAnimator(rigKind(species.body), _parts, motion: motion, armRest: armRest(species), legFan: _legFan);
 
   /// The wingbeat, and the whole of it: [wingRate] is the beat in radians a
   /// second (22 is about three and a half beats a second), [wingSweep] how far
@@ -122,6 +117,20 @@ class Mob extends SceneBody {
   static const double attackSeconds = 0.35;
   static const double landSquash = 0.22;
   static const double landSeconds = 0.18;
+
+  /// These creatures' motion on the kit's animator: a melee swing moves the
+  /// arm only, never a nod or a peck.
+  static const RigMotion motion = RigMotion(
+    wingRate: wingRate,
+    wingSweep: wingSweep,
+    wingFold: wingFold,
+    wingFoldSpan: wingFoldSpan,
+    swingSeconds: attackSeconds,
+    landSquash: landSquash,
+    landSeconds: landSeconds,
+    swingNod: 0.0,
+    swingPeck: 0.0,
+  );
 
   // Stage 32: combat feel and the classic daylight rule.
   double _freeze = 0.0; // hit-stop: the pose holds for 60 ms
@@ -964,7 +973,7 @@ class Mob extends SceneBody {
   Vector3? partWorld(String name) => _parts[name]?.node.globalTransform.getTranslation();
 
   /// Stage 34, for the probe: a blob's squash (over 1 stretched, under 1 flat).
-  double squash() => _squash;
+  double squash() => _anim.squash;
 
   /// Ridden: the rider's wish drives the body at the species speed, sprint
   /// x1.4, jump on the floor.
@@ -1081,7 +1090,7 @@ class Mob extends SceneBody {
           state = MobState.chase;
         } else if (_attackCd <= 0.0) {
           _attackCd = 1.3;
-          _attackSwing = 1.0;
+          _anim.startSwing();
           hurtTarget(target, damageDealt());
           Sfx.play('hit', -4.0);
         }
@@ -1224,11 +1233,16 @@ class Mob extends SceneBody {
   /// Radians of walk cycle per metre covered, by body: short legs take more
   /// steps to cross the same ground than long ones, so one rate for every
   /// creature made a chicken glide and a horse mince.
-  static double gaitRate(String body) => switch (body) {
-        'bird' => 4.2,
-        'spider' => 3.0,
-        'quadruped' => 2.6,
-        _ => 2.2,
+  static double gaitRate(String body) => RigMotion.gaitRateOf(rigKind(body));
+
+  /// The kit's body plan a species' `body` names.
+  static RigKind rigKind(String body) => switch (body) {
+        'quadruped' => RigKind.quadruped,
+        'humanoid' => RigKind.humanoid,
+        'blob' => RigKind.blob,
+        'spider' => RigKind.spider,
+        'bird' => RigKind.bird,
+        _ => throw ArgumentError.value(body, 'body', 'no such body plan'),
       };
 
   /// Where a humanoid's arms hang at rest: out in front for a melee undead —
@@ -1236,168 +1250,34 @@ class Mob extends SceneBody {
   /// archer, a villager or anything that throws, which used to shamble too.
   static double armRest(SpeciesDef sp) => sp.hostile && !sp.ranged ? 1.4 : 0.0;
 
-  /// A wing's angle at [phase], positive up, blended out of the folded rest
-  /// pose by [weight]. [wingRate], [wingSweep] and [wingFold] are the beat.
-  static double wingAngle(double phase, double weight) => lerpd(wingFold, math.sin(phase) * wingSweep, weight);
-
   void _animate(double dt) {
     if (_freeze > 0.0) {
       _applyModel(); // stage 32: hit-stop, the pose holds (the body still moves)
       return;
     }
     final sp = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-    // The walk eases in and out rather than switching on at a threshold: a
-    // creature slowing to a halt used to drop its legs mid-stride, and one
-    // hovering on the edge of the threshold flickered between the two.
-    _moveWeight = lerpd(_moveWeight, sp > 0.3 ? 1.0 : 0.0, dt * 8.0);
-    _phase += dt * sp * gaitRate(species.body);
     // Stage 32: idle life. Every body breathes (2% on the height); a passive
     // mob's head turns toward the player within 6 m.
     if (species.body != 'blob' && !species.explodes) _breath = 1.0 + 0.02 * math.sin(_age * 2.4);
-    final head = _parts['head'];
-    if (head != null && !species.hostile) {
+    double? look;
+    if (!species.hostile) {
       final to = player.centre() - centre();
-      var want = 0.0;
+      look = 0.0;
       if (math.sqrt(to.x * to.x + to.z * to.z) < headTurnRange) {
-        want = math.atan2(-to.x, -to.z) - _modelYaw;
-        want = (want + math.pi) % (math.pi * 2) - math.pi;
-        want = want.clamp(-1.2, 1.2);
+        look = math.atan2(-to.x, -to.z) - _modelYaw;
+        look = (look + math.pi) % (math.pi * 2) - math.pi;
       }
-      head.ry = lerpAngle(head.ry, want, dt * 5.0);
     }
-    final a = math.sin(_phase) * 0.7 * _moveWeight;
-    _animateWings(dt);
-    _animateLegs(a);
-    _animateTail(a);
-    switch (species.body) {
-      case 'quadruped':
-        _animateQuadruped(a);
-      case 'humanoid':
-        _animateHumanoid(dt, a);
-      case 'blob':
-        _animateBlob(dt);
-      case 'bird':
-        _animateBird(a);
-    }
+    _anim.pose(dt, age: _age, speed: sp, onFloor: onFloor, flying: species.flying, lookYaw: look, verticalSpeed: velocity.y);
     _shakeX = hurt > 0.0 ? math.sin(_age * 80.0) * 0.05 : 0.0;
-    _wasOnFloor = onFloor;
     _applyModel();
-  }
-
-  /// The wings. A flier beats them the whole time it is up; a ground bird
-  /// beats only while its feet are off the floor — a chicken walked off a
-  /// ledge — and folds them against the body otherwise. The beat runs on its
-  /// own clock, because a wingbeat does not slow down with the ground speed
-  /// the way a footfall does; the weight blends the fold in and out, so a
-  /// landing bird tucks its wings instead of snapping them shut.
-  void _animateWings(double dt) {
-    final left = _parts['wing0'];
-    final right = _parts['wing1'];
-    if (left == null || right == null) return;
-    final beating = species.flying || !onFloor;
-    _wingWeight = lerpd(_wingWeight, beating ? 1.0 : 0.0, dt * 8.0);
-    if (_wingWeight > 0.001) _wingPhase = (_wingPhase + dt * wingRate) % (math.pi * 2);
-    final angle = wingAngle(_wingPhase, _wingWeight);
-    // The tip twists as it comes over the top, so the beat reads as a stroke
-    // through the air instead of a hinge opening and closing.
-    final twist = math.cos(_wingPhase) * 0.3 * _wingWeight;
-    final span = lerpd(wingFoldSpan, 1.0, _wingWeight);
-    left.rz = -angle;
-    right.rz = angle;
-    left.rx = twist;
-    right.rx = twist;
-    left.sx = span;
-    right.sx = span;
-  }
-
-  /// The legs. Four legs trot on their diagonals (the near-fore lands with the
-  /// off-hind), two alternate, and eight walk the alternating tetrapod every
-  /// spider uses: four legs reach while the other four push, so the body is
-  /// always held up by a stable triangle instead of rippling.
-  void _animateLegs(double a) {
-    for (var i = 0; i < 8; i++) {
-      final p = _parts['leg$i'];
-      if (p == null) continue;
-      if (species.body == 'spider') {
-        final side = i % 2 == 0 ? 1.0 : -1.0;
-        final group = ((i % 2) ^ ((i ~/ 2) % 2)) == 0 ? 1.0 : -1.0;
-        p.rz = math.sin(_phase) * 0.3 * group * _moveWeight + math.sin(_age * 1.7 + i) * 0.05;
-        p.ry = _legFan[i] + math.cos(_phase) * 0.3 * group * side * _moveWeight;
-      } else {
-        final swing = ((i % 2 == 0) == (i < 2)) ? a : -a;
-        // A bird in the air tucks its legs back instead of pedalling.
-        p.rx = species.body == 'bird' ? lerpd(swing, 0.9, _wingWeight) : swing;
-      }
-    }
-  }
-
-  /// The tail: a slow idle sway of its own, a harder swing with the gait, and
-  /// fanned up while its owner is flying.
-  void _animateTail(double a) {
-    final tail = _parts['tail'];
-    if (tail == null) return;
-    tail.ry = math.sin(_age * 1.6) * 0.18 + a * 0.35;
-    tail.rx = -0.5 * _wingWeight + math.cos(_phase) * 0.12 * _moveWeight;
-  }
-
-  /// A trotting body rises and falls twice a cycle — once per diagonal pair
-  /// landing — and the head nods a beat behind it.
-  void _animateQuadruped(double a) {
-    final lift = math.sin(_phase * 2.0) * 0.02 * _moveWeight;
-    _parts['body']
-      ?..offY = lift
-      ..rx = -a * 0.06;
-    _parts['head']
-      ?..offY = lift * 0.8
-      ..rx = math.sin(_phase * 2.0 + 0.7) * 0.10 * _moveWeight;
-  }
-
-  /// Arms and shoulders. A melee swing is an arc that peaks and comes back
-  /// over [attackSeconds]; it used to be an angle written straight onto the
-  /// arm and left there until the walk lerped it away.
-  void _animateHumanoid(double dt, double a) {
-    final arm0 = _parts['arm0'];
-    final arm1 = _parts['arm1'];
-    if (arm0 == null || arm1 == null) return;
-    _attackSwing = math.max(_attackSwing - dt / attackSeconds, 0.0);
-    final rest = armRest(species);
-    // Arms at the sides swing with the stride; arms held out in front only
-    // stir, or the shamble turns into a windmill.
-    final reach = rest == 0.0 ? 0.8 : 0.3;
-    final chop = math.sin((1.0 - _attackSwing) * math.pi) * 1.3;
-    arm0.rx = rest - a * reach + chop;
-    arm1.rx = rest + a * reach;
-    final bob = math.sin(_phase).abs() * 0.02 * _moveWeight;
-    _parts['body']
-      ?..ry = -a * 0.12
-      ..offY = bob;
-    _parts['head']?.offY = bob;
-  }
-
-  /// A blob breathes by squashing, stretches as it rises off a hop, and splats
-  /// flat the tick it lands.
-  void _animateBlob(double dt) {
-    if (onFloor && !_wasOnFloor) _landSquash = landSquash;
-    _landSquash = math.max(_landSquash - dt / landSeconds, 0.0);
-    final rise = onFloor ? 0.0 : (velocity.y * 0.02).clamp(-0.12, 0.18);
-    _squash = 1.0 + math.sin(_age * 6.0) * 0.05 + rise - _landSquash;
-  }
-
-  /// A walking bird throws its head forward and lets its body catch up — the
-  /// one move that makes a chicken read as a chicken — and noses down as it
-  /// takes to the air.
-  void _animateBird(double a) {
-    _parts['head']
-      ?..offZ = -math.sin(_phase * 2.0) * 0.035 * _moveWeight
-      ..rx = math.cos(_phase * 2.0) * 0.12 * _moveWeight;
-    _parts['body']?.rx = -0.15 * _wingWeight + math.sin(_phase * 2.0) * 0.05 * _moveWeight;
   }
 
   void _applyModel() {
     for (final p in _parts.values) {
       p.apply();
     }
-    final sq = species.body == 'blob' ? _squash : 1.0;
+    final sq = species.body == 'blob' ? _anim.squash : 1.0;
     node.rotation = _toppleX == 0.0 ? Quaternion.axisAngle(Vector3(0, 1, 0), _modelYaw) : eulerYXZ(_toppleX, _modelYaw, 0);
     final ms = _modelScale * sizeScale * _modelFit;
     node.scale = Vector3(ms / math.sqrt(sq), ms * sq * _breath, ms / math.sqrt(sq));

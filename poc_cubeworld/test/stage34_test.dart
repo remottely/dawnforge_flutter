@@ -43,7 +43,7 @@ void main() {
   group('the wingbeat', () {
     test('a folded wing rests against the body whatever the phase', () {
       for (var i = 0; i < 8; i++) {
-        expect(Mob.wingAngle(i * math.pi / 4, 0.0), Mob.wingFold, reason: 'phase $i');
+        expect(Mob.motion.wingAngle(i * math.pi / 4, 0.0), Mob.wingFold, reason: 'phase $i');
       }
       // Down against the flank, not held out: a wing near level reads as a
       // bird standing with two boards nailed to it.
@@ -54,14 +54,14 @@ void main() {
     });
 
     test('a full beat carries the tip a full sweep up and the same down', () {
-      expect(Mob.wingAngle(math.pi / 2, 1.0), closeTo(Mob.wingSweep, 1e-9));
-      expect(Mob.wingAngle(-math.pi / 2, 1.0), closeTo(-Mob.wingSweep, 1e-9));
-      expect(Mob.wingAngle(0.0, 1.0), closeTo(0.0, 1e-9));
+      expect(Mob.motion.wingAngle(math.pi / 2, 1.0), closeTo(Mob.wingSweep, 1e-9));
+      expect(Mob.motion.wingAngle(-math.pi / 2, 1.0), closeTo(-Mob.wingSweep, 1e-9));
+      expect(Mob.motion.wingAngle(0.0, 1.0), closeTo(0.0, 1e-9));
       // Up and down are the same size: a beat that favoured one side would
       // read as a wing stuck part-open.
       var up = 0.0, down = 0.0;
       for (var i = 0; i < 360; i++) {
-        final a = Mob.wingAngle(i * math.pi / 180.0, 1.0);
+        final a = Mob.motion.wingAngle(i * math.pi / 180.0, 1.0);
         up = math.max(up, a);
         down = math.min(down, a);
       }
@@ -70,7 +70,7 @@ void main() {
 
     test('half folded sits halfway between the fold and the beat', () {
       final beat = math.sin(1.0) * Mob.wingSweep;
-      expect(Mob.wingAngle(1.0, 0.5), closeTo((Mob.wingFold + beat) / 2, 1e-9));
+      expect(Mob.motion.wingAngle(1.0, 0.5), closeTo((Mob.wingFold + beat) / 2, 1e-9));
     });
 
     test('the beat is fast enough to read as a beat and not a wave', () {

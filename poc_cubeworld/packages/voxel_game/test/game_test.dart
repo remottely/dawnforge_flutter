@@ -375,4 +375,11 @@ void main() {
     expect(bob.offset.length, 0.0);
     expect(bob.roll, 0.0);
   });
+
+  test('a rig motion folds its wings at rest and beats a full sweep in the air', () {
+    const motion = RigMotion(wingSweep: 0.95, wingFold: -0.95);
+    expect(motion.wingAngle(1.3, 0.0), -0.95);
+    expect(motion.wingAngle(1.5707963267948966, 1.0), closeTo(0.95, 1e-9));
+    expect(RigMotion.gaitRateOf(RigKind.bird), greaterThan(RigMotion.gaitRateOf(RigKind.quadruped)), reason: 'short legs take more steps');
+  });
 }

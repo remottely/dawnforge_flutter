@@ -21,7 +21,7 @@
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
-| VK5 The POC on the kit | in progress (VK5.3) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+| VK5 The POC on the kit | in progress (VK5.4) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
 | VK6 `voxel_audio` | **done** 2026-09-18 (VK6.1–VK6.4; the POC's `Sfx` on it) | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
 | VK7 `voxel_signals` | **done** 2026-09-18 (VK7.1–VK7.3, plus VK7.4 `SignalSpec` in the kit) | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
 | VK8 `voxel_net` | **done** 2026-09-18 (`21500e4a`: transport, host / join in the kit; drops stay local, mob loot on the host; never run with two real apps) | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
@@ -321,7 +321,7 @@ they printed.
 - **VK5.1** The player's locomotion on `CharacterMotor` — done.
 - **VK5.2** The mob's locomotion on `CharacterMotor` — done.
 - **VK5.3** The cameras on `ViewCamera` / `FirstPersonView` — done (the camera; the hand stays).
-- **VK5.4** The rigs on `Rig.*`.
+- **VK5.4** The rigs on `Rig.*` — done (the motion; the geometry and the hand stay the POC's).
 - **VK5.5** The brains: the species table as `MobSpec`s, Dawnforge's own behaviours.
 
 Log. VK5.1: `CharacterMotor` gained `jump()`, `resetFall()`, `canGlide`, a `glide` step (a
@@ -360,6 +360,20 @@ concern (VK5.4), not a camera one. Probes against a HEAD build: `--stage31`, `--
 `--radius=8` and `--outline-probe` print the same; `anim camera` prints the same peaks (0.0500,
 0.1698, 0.2210); `move mount steps`' largest one-tick rise moves 0.126..0.158 between runs of
 either build.
+
+Log. VK5.4: the kit's `RigInstance` splits its animation into `RigAnimator`, which poses any
+named parts as a `RigKind` (legs on their diagonals or a spider's tetrapod, wings beating and
+folding, the tail, the arms' swing and chop, the quadruped's trot lift, the bird's head throw,
+the blob's squash and splat), tuned by a `RigMotion` (gait rate, wingbeat, fold, swing time, the
+splat, and the nod and peck a swing adds). `RigInstance` builds the kit's geometry and hands
+its parts over. The POC's `Mob` keeps its own geometry per species (its models are Dawnforge's
+look, far richer than the stock plans), its hit-stop, breath, shake and topple, and poses on the
+animator with its own numbers (fold -0.95 at span 0.45, the splat 0.22 over 0.18 s, no nod and
+no peck), a species' `body` mapped to a `RigKind`. The first-person `HandView` stays: it is built
+from the POC's player model. Probes against a HEAD build: `--stage31`, `--stage32`,
+`--radius=8` and `--outline-probe` print the same, and so do `anim wings` (sweep and fold),
+`anim blob` and the chicken's legs; the other `anim` values and `move`'s water ticks move as they
+do between runs of one build.
 
 ---
 

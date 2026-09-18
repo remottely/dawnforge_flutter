@@ -5,6 +5,8 @@ import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
+import 'rig_animator.dart';
+
 /// The body plans of the stock rigs.
 enum RigKind {
   /// Two legs, two arms, a head: a zombie, a villager, the player.
@@ -117,12 +119,11 @@ class RigInstance {
   final Map<String, RigPart> parts = {};
 
   final List<double> _legFan = [];
+  /// What poses [parts] every frame.
+  late final RigAnimator animator = RigAnimator(rig.kind, parts, armRest: _armRest, legFan: _legFan);
   double _fit = 1.0;
   double _yaw = 0.0;
-  double _phase = 0.0, _moveWeight = 0.0, _age = 0.0;
-  double _wingPhase = 0.0, _wingWeight = 0.0;
-  double _swing = 0.0, _squash = 1.0, _landSquash = 0.0;
-  bool _wasOnFloor = true;
+  double _age = 0.0;
 
   /// The yaw the model faces, eased toward what [animate] is told.
   double get yaw => _yaw;
@@ -279,15 +280,8 @@ class RigInstance {
 
   double get _armRest => rig.armsForward ? 1.4 : 0.0;
 
-  double get _gaitRate => switch (rig.kind) {
-        RigKind.bird => 4.2,
-        RigKind.spider => 3.0,
-        RigKind.quadruped => 2.6,
-        _ => 2.2,
-      };
-
   /// Starts an attack swing (a humanoid's arm, a bird's peck).
-  void swing() => _swing = 1.0;
+  void swing() => animator.startSwing();
 
   /// Poses the rig for one frame of [dt]: moving at [speed] metres a second,
   /// facing [targetYaw], standing [onFloor] or [flying]; [lookYaw] turns the
@@ -295,80 +289,7 @@ class RigInstance {
   void animate(double dt, {required double speed, required double targetYaw, bool onFloor = true, bool flying = false, double? lookYaw, double verticalSpeed = 0.0}) {
     _age += dt;
     _yaw = lerpAngle(_yaw, targetYaw, math.min(1.0, dt * 12.0));
-    _moveWeight = lerpd(_moveWeight, speed > 0.3 ? 1.0 : 0.0, math.min(1.0, dt * 8.0));
-    _phase += dt * speed * _gaitRate;
-    final a = math.sin(_phase) * 0.7 * _moveWeight;
-    final head = parts['head'];
-    if (head != null) head.ry = lerpAngle(head.ry, (lookYaw ?? 0.0).clamp(-1.2, 1.2), math.min(1.0, dt * 5.0));
-    // Wings beat in the air, fold on the ground.
-    final left = parts['wing0'], right = parts['wing1'];
-    if (left != null && right != null) {
-      _wingWeight = lerpd(_wingWeight, flying || !onFloor ? 1.0 : 0.0, math.min(1.0, dt * 8.0));
-      if (_wingWeight > 0.001) _wingPhase = (_wingPhase + dt * 22.0) % (math.pi * 2);
-      final angle = lerpd(-0.15, math.sin(_wingPhase) * 0.9, _wingWeight);
-      final twist = math.cos(_wingPhase) * 0.3 * _wingWeight;
-      final span = lerpd(0.55, 1.0, _wingWeight);
-      left
-        ..rz = -angle
-        ..rx = twist
-        ..sx = span;
-      right
-        ..rz = angle
-        ..rx = twist
-        ..sx = span;
-    }
-    for (var i = 0; i < 8; i++) {
-      final p = parts['leg$i'];
-      if (p == null) continue;
-      if (rig.kind == RigKind.spider) {
-        final side = i % 2 == 0 ? 1.0 : -1.0;
-        final group = ((i % 2) ^ ((i ~/ 2) % 2)) == 0 ? 1.0 : -1.0;
-        p.rz = math.sin(_phase) * 0.3 * group * _moveWeight + math.sin(_age * 1.7 + i) * 0.05;
-        p.ry = _legFan[i] + math.cos(_phase) * 0.3 * group * side * _moveWeight;
-      } else {
-        final swing = ((i % 2 == 0) == (i < 2)) ? a : -a;
-        p.rx = rig.kind == RigKind.bird ? lerpd(swing, 0.9, _wingWeight) : swing;
-      }
-    }
-    final tail = parts['tail'];
-    if (tail != null) {
-      tail.ry = math.sin(_age * 1.6) * 0.18 + a * 0.35;
-      tail.rx = -0.5 * _wingWeight + math.cos(_phase) * 0.12 * _moveWeight;
-    }
-    _swing = math.max(_swing - dt / 0.35, 0.0);
-    switch (rig.kind) {
-      case RigKind.quadruped:
-        final lift = math.sin(_phase * 2.0) * 0.02 * _moveWeight;
-        parts['body']
-          ?..offY = lift
-          ..rx = -a * 0.06;
-        head
-          ?..offY = lift * 0.8
-          ..rx = math.sin(_phase * 2.0 + 0.7) * 0.10 * _moveWeight - _swing * 0.4;
-      case RigKind.humanoid:
-        final reach = _armRest == 0.0 ? 0.8 : 0.3;
-        final chop = math.sin((1.0 - _swing) * math.pi) * 1.3 * (_swing > 0.0 ? 1.0 : 0.0);
-        parts['arm0']?.rx = _armRest - a * reach + chop;
-        parts['arm1']?.rx = _armRest + a * reach;
-        final bob = math.sin(_phase).abs() * 0.02 * _moveWeight;
-        parts['body']
-          ?..ry = -a * 0.12
-          ..offY = bob;
-        head?.offY = bob;
-      case RigKind.blob:
-        if (onFloor && !_wasOnFloor) _landSquash = 0.35;
-        _landSquash = math.max(_landSquash - dt / 0.2, 0.0);
-        final rise = onFloor ? 0.0 : (verticalSpeed * 0.02).clamp(-0.12, 0.18);
-        _squash = 1.0 + math.sin(_age * 6.0) * 0.05 + rise - _landSquash;
-      case RigKind.bird:
-        head
-          ?..offZ = -math.sin(_phase * 2.0) * 0.035 * _moveWeight
-          ..rx = math.cos(_phase * 2.0) * 0.12 * _moveWeight + _swing * 0.6;
-        parts['body']?.rx = -0.15 * _wingWeight + math.sin(_phase * 2.0) * 0.05 * _moveWeight;
-      case RigKind.spider:
-        break;
-    }
-    _wasOnFloor = onFloor;
+    animator.pose(dt, age: _age, speed: speed, onFloor: onFloor, flying: flying, lookYaw: lookYaw, verticalSpeed: verticalSpeed);
     for (final p in parts.values) {
       p.apply();
     }
@@ -379,7 +300,7 @@ class RigInstance {
   void place(Vector3 position, {double scale = 1.0, double topple = 0.0, double shake = 0.0}) {
     root.rotation = topple == 0.0 ? Quaternion.axisAngle(Vector3(0, 1, 0), _yaw) : eulerYXZ(topple, _yaw, 0);
     final ms = scale * _fit;
-    final sq = rig.kind == RigKind.blob ? _squash : 1.0;
+    final sq = rig.kind == RigKind.blob ? animator.squash : 1.0;
     root.scale = Vector3(ms / math.sqrt(sq), ms * sq, ms / math.sqrt(sq));
     root.position = position + Vector3(shake, 0, 0);
   }
