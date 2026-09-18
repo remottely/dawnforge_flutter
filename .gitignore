@@ -47,3 +47,5 @@ app.*.map.json
 # AI harness — machine-local rebuildable cache
 .claude/cache/
 .venv/
+Seguinte: eu mudei de ideia sobre alguma.md
+TODO.md

@@ -6,6 +6,11 @@
 // Re-pinned at s16 (2026-09-17): stage 41 spaces the trees on a patch grid and grows them
 // taller, so every overworld chunk holds different bytes. The underworld (no trees) and
 // the edit delta hash as they did at `b57cf2a2`, which is the proof that nothing else moved.
+//
+// Touched again at s17 (2026-09-17): stage 42 drops the parts of a tree that hang off
+// nothing. Both chunks generate byte for byte as they did at s16 — what moved is two
+// arrays of chunk (0,0)'s solid mesh, because a tree in the ring around it lost a block
+// at the border. Everything else, including the whole of (5,-3), is untouched.
 import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
@@ -31,9 +36,9 @@ const Map<String, int> _expected = {
   'gen 0,0': 0x3214e21d,
   'mesh 0,0 solid positions': 0xc71122b5,
   'mesh 0,0 solid normals': 0xdaac9e45,
-  'mesh 0,0 solid colors': 0x4dca4e3e,
+  'mesh 0,0 solid colors': 0x4074935e,
   'mesh 0,0 solid light': 0x8d7a6255,
-  'mesh 0,0 solid indices': 0x94916ef1,
+  'mesh 0,0 solid indices': 0x03fde051,
   'mesh 0,0 liquid positions': 0x45520479,
   'mesh 0,0 liquid normals': 0x2ea0e105,
   'mesh 0,0 liquid colors': 0xdf49b56d,
