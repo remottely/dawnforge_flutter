@@ -1,0 +1,30 @@
+name: voxel_game
+description: >-
+  A Minecraft-like in a few lines: declare blocks, world generation, the player
+  and mobs, and get a playable voxel world on flutter_scene. The kit over
+  voxel_core, voxel_scene, voxel_worldgen and voxel_content.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Exact pin, as voxel_scene: the renderer's private gpu shim moves between releases.
+  flutter_scene: 0.23.0
+  gamepads: ^0.1.12
+  pointer_lock: ^0.4.1
+  vector_math: ^2.1.4
+  voxel_content: ^0.0.0
+  voxel_core: ^0.0.0
+  voxel_scene: ^0.0.0
+  voxel_worldgen: ^0.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

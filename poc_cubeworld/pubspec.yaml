@@ -12,6 +12,8 @@ workspace:
   - packages/voxel_scene
   - packages/voxel_scene/example
   - packages/voxel_content
+  - packages/voxel_game
+  - packages/voxel_game/example
   - packages/voxel_worldgen
 
 dependencies:

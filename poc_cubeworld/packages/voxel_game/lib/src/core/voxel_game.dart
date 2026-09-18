@@ -1,0 +1,322 @@
+import 'dart:math' as math;
+
+import 'package:flutter_scene/scene.dart';
+import 'package:vector_math/vector_math.dart';
+import 'package:voxel_content/voxel_content.dart';
+import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_scene/voxel_scene.dart';
+
+import '../camera/view_camera.dart';
+import '../entities/game_entity.dart';
+import '../entities/item_pickup.dart';
+import '../entities/projectile.dart';
+import '../entities/target.dart';
+import '../input/input_map.dart';
+import '../input/voxel_action.dart';
+import '../loop/fixed_step_loop.dart';
+import '../mobs/mob.dart';
+import '../mobs/mob_spec.dart';
+import '../mobs/spawner.dart';
+import '../player/player_entity.dart';
+import '../spec/voxel_game_spec.dart';
+import '../world/game_world.dart';
+
+/// A running game made from a [VoxelGameSpec]: the world, the player, the
+/// creatures and items in it, the clock and the sky. [frame] advances it by
+/// real time in fixed steps; everything a game hooks into is reachable from
+/// here.
+///
+/// Headless ([VoxelGame.startHeadless]) it has no scene, no worker isolates and no
+/// visuals, and steps as fast as it is asked: tests, bots and servers.
+class VoxelGame {
+  VoxelGame._(this.spec, this.blocks, this.items, this.world, {required this.headless})
+      : random = math.Random(spec.seed),
+        input = InputMap<VoxelAction>(VoxelAction.defaultBindings),
+        recipes = RecipeBook(spec.recipes),
+        timeOfDay = spec.sky.startTime {
+    pathCosts = blocks.pathCosts(avoidLiquids: const {'lava'});
+    player = PlayerEntity(spec.player, Inventory(stackSize: (id) => items[id].stack, maxDurability: (id) => items[id].durability));
+    spawner = MobSpawner(this);
+  }
+
+  /// A game with a scene and worker isolates; await it before the first
+  /// [frame]. The static resources of flutter_scene and the terrain shader
+  /// must be loaded first (`VoxelGameWidget` does both).
+  static Future<VoxelGame> start(VoxelGameSpec spec) async {
+    final blocks = spec.buildBlocks();
+    final world = GameWorld(blocks, spec.world, spec.seed, loadRadius: spec.renderDistance, liquids: spec.liquids);
+    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: false);
+    game.scene = Scene();
+    game.sky = DayNightSky(game.scene!);
+    game.scene!.add(world.root!);
+    game._begin();
+    await world.start();
+    return game;
+  }
+
+  /// A game with no renderer and no isolates: chunks are generated as they
+  /// are needed, on this isolate. [loadRadius] chunks around the player.
+  static Future<VoxelGame> startHeadless(VoxelGameSpec spec, {int loadRadius = 2}) async {
+    final blocks = spec.buildBlocks();
+    final world = GameWorld.headless(blocks, spec.world, spec.seed, loadRadius: loadRadius, liquids: spec.liquids);
+    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: true);
+    game._begin();
+    await world.start();
+    return game;
+  }
+
+  void _begin() {
+    player.attach(this);
+    scene?.add(player.node);
+    // The spawn: the nearest dry column to the origin along a spiral.
+    final g = world.generator;
+    var spawn = (x: 0, z: 0);
+    for (var r = 0; r < 400; r += 8) {
+      final a = r * 0.7;
+      final x = (math.cos(a) * r).round(), z = (math.sin(a) * r).round();
+      if (g.surfaceHeight(x, z) > spec.world.seaLevel + 1) {
+        spawn = (x: x, z: z);
+        break;
+      }
+    }
+    _spawnColumn = spawn;
+    player.position = Vector3(spawn.x + 0.5, g.surfaceHeight(spawn.x, spawn.z).toDouble(), spawn.z + 0.5);
+  }
+
+  /// What was declared.
+  final VoxelGameSpec spec;
+
+  /// The blocks, air first.
+  final BlockRegistry<BlockType> blocks;
+
+  /// The items: one per holdable block, plus the spec's.
+  final ItemRegistry<ItemType> items;
+
+  /// The world.
+  final GameWorld world;
+
+  /// Whether there is no scene and no visuals.
+  final bool headless;
+
+  /// The scene; null headless.
+  Scene? scene;
+
+  /// The sky, sun and fog; null headless.
+  DayNightSky? sky;
+
+  /// The player's controls. A widget feeds it; code can [InputMap.hold].
+  final InputMap<VoxelAction> input;
+
+  /// Crafting.
+  final RecipeBook recipes;
+
+  /// How long blocks take to break.
+  MiningRules get mining => spec.mining;
+
+  /// The game's own random numbers, seeded by the world seed.
+  final math.Random random;
+
+  /// The path policy of every walking creature: lava is never entered.
+  late final PathCosts pathCosts;
+
+  /// The player.
+  late final PlayerEntity player;
+
+  /// Natural spawning.
+  late final MobSpawner spawner;
+
+  /// The living creatures.
+  final List<Mob> mobs = [];
+
+  /// Everything else that moves: items on the ground, projectiles.
+  final List<GameEntity> entities = [];
+
+  /// The camera's rig.
+  final ViewCamera view = ViewCamera();
+
+  final FixedStepLoop _loop = FixedStepLoop();
+  ({int x, int z}) _spawnColumn = (x: 0, z: 0);
+
+  /// Seconds of game time.
+  double time = 0.0;
+
+  /// 0 midnight, 0.25 sunrise, 0.5 noon, 0.75 sunset.
+  double timeOfDay;
+
+  /// Whether the player reads the controls (false while a menu is open).
+  bool gameplay = true;
+
+  /// Whether the player stands in a loaded world yet.
+  bool get ready => player.placed;
+
+  /// 0 at night, 1 at noon: how much the sky's light counts.
+  double get daylight {
+    final elevation = math.sin((timeOfDay - 0.25) * math.pi * 2);
+    return (elevation * 3.0 + 0.15).clamp(0.0, 1.0);
+  }
+
+  /// Advances by [dt] seconds of real time: whole fixed steps, the chunk
+  /// streaming, the sky.
+  void frame(double dt) {
+    final steps = _loop.advance(dt, step);
+    if (steps == 0) input.endTick();
+    world.update(player.position);
+    final s = sky;
+    if (s != null) {
+      final intensity = s.update(timeOfDay, fogDistance: world.loadRadius * 16.0);
+      world.setSkyIntensity(intensity);
+    }
+  }
+
+  /// One fixed step of [dt]: the player, the creatures, the items, the
+  /// liquids, spawning, then the spec's systems and hook.
+  void step(double dt) {
+    if (!player.placed) {
+      player.tryPlace(_spawnColumn.x, _spawnColumn.z);
+      input.endTick();
+      return;
+    }
+    time += dt;
+    if (spec.sky.cycle) timeOfDay = (timeOfDay + dt / spec.sky.dayLength) % 1.0;
+    player.tick(this, dt, gameplay: gameplay);
+    for (final m in List.of(mobs)) {
+      m.tick(this, dt);
+    }
+    for (final e in List.of(entities)) {
+      e.tick(this, dt);
+    }
+    world.tickFlow(dt);
+    spawner.tick(this, dt);
+    for (final s in spec.systems) {
+      s.tick(this, dt);
+    }
+    spec.onTick?.call(this, dt);
+    _prune();
+    input.endTick();
+  }
+
+  void _prune() {
+    for (final m in mobs.where((m) => m.removed).toList()) {
+      mobs.remove(m);
+      scene?.remove(m.node);
+    }
+    for (final e in entities.where((e) => e.removed).toList()) {
+      entities.remove(e);
+      scene?.remove(e.node);
+    }
+  }
+
+  /// The camera for this frame.
+  Camera camera() => view.camera(this);
+
+  /// Every living thing a projectile can hit: the player and the creatures.
+  Iterable<Target> get allTargets sync* {
+    yield player;
+    yield* mobs;
+  }
+
+  /// What a hunter looks for: the player, and the creatures named in [prey].
+  Iterable<Target> targetsOf(List<String> prey) sync* {
+    if (!player.isDead) yield player;
+    if (prey.isEmpty) return;
+    for (final m in mobs) {
+      if (prey.contains(m.spec.id)) yield m;
+    }
+  }
+
+  /// Adds [entity] to the world.
+  T add<T extends GameEntity>(T entity) {
+    if (entity is Mob) {
+      mobs.add(entity);
+    } else {
+      entities.add(entity);
+    }
+    entity.attached(this);
+    scene?.add(entity.node);
+    entity.syncNode();
+    return entity;
+  }
+
+  /// A creature of the spec's mob [id] at [at].
+  Mob spawnMob(String id, Vector3 at) {
+    final spec = this.spec.mobs.firstWhere((m) => m.id == id, orElse: () => throw ArgumentError.value(id, 'id', 'no such mob'));
+    return add(Mob(spec, at));
+  }
+
+  /// [count] of [item] dropped at [at].
+  ItemPickup dropItem(String item, int count, Vector3 at, {Vector3? throwVelocity}) {
+    if (!items.has(item)) throw ArgumentError.value(item, 'item', 'no such item');
+    return add(ItemPickup(item, count, at,
+        throwVelocity: throwVelocity ?? Vector3(random.nextDouble() * 2 - 1, 3.0, random.nextDouble() * 2 - 1)));
+  }
+
+  /// Shoots [projectile] from [from] toward [at], by [owner].
+  Projectile shoot(ProjectileSpec projectile, {required Vector3 from, required Vector3 at, Target? owner}) {
+    final to = at - from;
+    final d = to.length;
+    final dir = d > 0 ? to / d : Vector3(0, 0, -1);
+    // Aim over the target by the drop over the flight.
+    if (projectile.gravity > 0.0) {
+      final t = d / projectile.speed;
+      dir.y += 0.5 * projectile.gravity * t * t / math.max(d, 0.001);
+      dir.normalize();
+    }
+    return add(Projectile(projectile, from, dir * projectile.speed, owner));
+  }
+
+  /// Breaks the block at [cell]: air in its place, and its drop on the ground
+  /// when [dropFor] (the tool held, or null for the hand) earns one.
+  void breakBlock(IVec3 cell, {ItemType? dropFor, bool drop = true, bool byPlayer = false}) {
+    final id = world.getBlock(cell);
+    if (id == BlockRegistry.air || blocks[id].isLiquid) return;
+    final type = blocks[id];
+    if (!world.setBlock(cell, BlockRegistry.air)) return;
+    final item = blocks.dropOf(id);
+    if (drop && item.isNotEmpty && items.has(item) && spec.mining.drops(type, dropFor)) {
+      dropItem(item, 1, Vector3(cell.x + 0.5, cell.y + 0.3, cell.z + 0.5));
+    }
+    if (byPlayer) spec.onBlockBroken?.call(this, type.id, cell);
+  }
+
+  /// A blast at [centre]: up to [damage] to every target within [radius]
+  /// (falling to 0 at the edge) and, with [breaksBlocks], the breakable
+  /// blocks inside it gone.
+  void explode(Vector3 centre, {double radius = 3.0, double damage = 12.0, bool breaksBlocks = true, Target? source}) {
+    for (final t in allTargets.toList()) {
+      if (t.isDead) continue;
+      final d = t.centre().distanceTo(centre);
+      if (d > radius * 1.5) continue;
+      final k = (1.0 - d / (radius * 1.5)).clamp(0.0, 1.0);
+      t.takeDamage(Damage(damage * k, source: 'explosion', from: centre, knockback: 10.0 * k, attacker: source));
+    }
+    if (!breaksBlocks) return;
+    final r = radius.ceil();
+    final c = IVec3.floor(centre);
+    for (var y = -r; y <= r; y++) {
+      for (var z = -r; z <= r; z++) {
+        for (var x = -r; x <= r; x++) {
+          if (x * x + y * y + z * z > radius * radius) continue;
+          final cell = c + IVec3(x, y, z);
+          final id = world.getBlock(cell);
+          if (id == BlockRegistry.air || blocks[id].hardness < 0 || blocks[id].isLiquid) continue;
+          breakBlock(cell, drop: random.nextDouble() < 0.3);
+        }
+      }
+    }
+  }
+
+  /// Called by a mob as it dies.
+  void mobDied(Mob mob) => spec.onMobKilled?.call(this, mob);
+
+  /// Called by the player as it dies.
+  void playerDied() {}
+
+  /// Stops the worker isolates and the input devices.
+  void dispose() {
+    world.dispose();
+    input.dispose();
+  }
+
+  /// The spec of mob [id].
+  MobSpec mobSpec(String id) => spec.mobs.firstWhere((m) => m.id == id);
+}
