@@ -249,4 +249,59 @@ void main() {
     expect(game.soundFamily(game.blocks.indexOf('water')), SoundFamily.liquid);
     expect(game.soundFamily(game.blocks.indexOf('stone')), SoundFamily.stone);
   });
+
+  test('declared circuits: a lever lights a lamp down a wire, a plate under the player too, TNT blows', () async {
+    const blocks = [
+      ..._blocks,
+      BlockType('wire', color: 0x701010, shape: BlockShape.wire, solid: false, hardness: 0),
+      BlockType('wire_lit', color: 0xFF3020, shape: BlockShape.wire, solid: false, hardness: 0, light: 3),
+      BlockType('lever', color: 0x806040, shape: BlockShape.torch, solid: false, hardness: 0),
+      BlockType('lever_on', color: 0xA08060, shape: BlockShape.torch, solid: false, hardness: 0),
+      BlockType('lamp', color: 0x604020),
+      BlockType('lamp_lit', color: 0xFFD080, light: 15),
+      BlockType('plate', color: 0x909090, shape: BlockShape.slab, hardness: 0.5),
+      BlockType('tnt', color: 0xD03020, hardness: 0),
+    ];
+    final spec = _flat();
+    final game = await _start(VoxelGameSpec(
+      blocks: blocks,
+      world: spec.world,
+      sky: spec.sky,
+      signals: const SignalSpec(
+        wire: ('wire', 'wire_lit'),
+        levers: {'lever': 'lever_on'},
+        plates: {'plate'},
+        lamps: {'lamp': 'lamp_lit'},
+        explosives: {'tnt': 2.0},
+      ),
+    ));
+    final w = game.world;
+    final base = IVec3.floor(game.player.position) + const IVec3(3, 0, 0);
+    w.setBlockNamed(base, 'lever');
+    for (var i = 1; i <= 4; i++) {
+      w.setBlockNamed(base + IVec3(i, 0, 0), 'wire');
+    }
+    w.setBlockNamed(base + const IVec3(5, 0, 0), 'lamp');
+    await _run(game, 0.3);
+    expect(w.blockNameAt(base + const IVec3(5, 0, 0)), 'lamp');
+    game.signals!.use(base);
+    await _run(game, 0.3);
+    expect(w.blockNameAt(base + const IVec3(2, 0, 0)), 'wire_lit');
+    expect(w.blockNameAt(base + const IVec3(5, 0, 0)), 'lamp_lit');
+
+    // A plate under the player's feet powers the lamp beside it.
+    final feet = IVec3.floor(game.player.position);
+    w.setBlockNamed(feet + const IVec3(0, -1, 0), 'stone');
+    w.setBlockNamed(feet + const IVec3(0, 0, -2), 'lamp');
+    w.setBlockNamed(feet + const IVec3(0, 0, -1), 'plate');
+    game.player.position = Vector3(feet.x + 0.5, feet.y + 0.6, feet.z - 0.5);
+    await _run(game, 0.5);
+    expect(w.blockNameAt(feet + const IVec3(0, 0, -2)), 'lamp_lit');
+
+    // TNT beside the lit wire goes off.
+    w.setBlockNamed(base + const IVec3(2, 0, 1), 'tnt');
+    await _run(game, 0.3);
+    expect(w.blockNameAt(base + const IVec3(2, 0, 1)), 'air');
+    expect(w.blockNameAt(base + const IVec3(2, -1, 1)), 'air', reason: 'the ground under it went with it');
+  });
 }

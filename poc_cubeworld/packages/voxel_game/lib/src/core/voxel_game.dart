@@ -7,6 +7,7 @@ import 'package:voxel_audio/voxel_audio.dart';
 import 'package:voxel_content/voxel_content.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
+import 'package:voxel_signals/voxel_signals.dart';
 
 import '../camera/first_person_view.dart';
 import '../camera/view_camera.dart';
@@ -21,6 +22,7 @@ import '../mobs/mob.dart';
 import '../mobs/mob_spec.dart';
 import '../mobs/spawner.dart';
 import '../player/player_entity.dart';
+import '../spec/signal_spec.dart';
 import '../spec/voxel_game_spec.dart';
 import '../world/game_world.dart';
 import '../world/world_save.dart';
@@ -41,7 +43,51 @@ class VoxelGame {
     pathCosts = blocks.pathCosts(avoidLiquids: const {'lava'});
     player = PlayerEntity(spec.player, Inventory(stackSize: (id) => items[id].stack, maxDurability: (id) => items[id].durability));
     spawner = MobSpawner(this);
+    final s = spec.signals;
+    if (s != null) {
+      final net = signals = SignalNetwork(world, _signalRules(s));
+      world.addListener(net.touch);
+      _plates = {for (final p in s.plates) blocks.indexOf(p)};
+    }
   }
+
+  SignalRules _signalRules(SignalSpec s) {
+    int id(String name) => blocks.indexOf(name);
+    final reactions = <int, SignalReaction>{};
+    for (final e in s.lamps.entries) {
+      final r = SignalReactions.swap(id(e.key), id(e.value));
+      reactions[id(e.key)] = r;
+      reactions[id(e.value)] = r;
+    }
+    if (s.doors.isNotEmpty) {
+      final pairs = {for (final e in s.doors.entries) id(e.key): id(e.value)};
+      final door = SignalReactions.door(pairs, onSwing: (c) => playSound('door', at: Vector3(c.x + 0.5, c.y + 1.0, c.z + 0.5), volumeDb: -6));
+      for (final e in pairs.entries) {
+        reactions[e.key] = door;
+        reactions[e.value] = door;
+      }
+    }
+    for (final e in s.explosives.entries) {
+      reactions[id(e.key)] = SignalReactions.trigger((c) {
+        world.setBlock(c, BlockRegistry.air);
+        explode(Vector3(c.x + 0.5, c.y + 0.5, c.z + 0.5), radius: e.value, damage: e.value * 4.0);
+      });
+    }
+    return SignalRules(
+      wireOff: id(s.wire.$1),
+      wireOn: id(s.wire.$2),
+      sources: {for (final l in s.levers.values) id(l), for (final b in s.buttons.values) id(b.$1), for (final x in s.sources) id(x)},
+      pressSources: {for (final p in s.plates) id(p)},
+      toggles: {for (final e in s.levers.entries) ...{id(e.key): id(e.value), id(e.value): id(e.key)}},
+      buttons: {for (final e in s.buttons.entries) id(e.key): (pressed: id(e.value.$1), seconds: e.value.$2)},
+      reactions: reactions,
+    );
+  }
+
+  /// The circuits; null when the spec declares none.
+  SignalNetwork? signals;
+
+  Set<int> _plates = const {};
 
   /// A game with a scene and worker isolates; await it before the first
   /// [frame]. The static resources of flutter_scene and the terrain shader
@@ -246,6 +292,18 @@ class VoxelGame {
       e.tick(this, dt);
     }
     world.tickFlow(dt);
+    final net = signals;
+    if (net != null) {
+      if (_plates.isNotEmpty) {
+        final pressed = <IVec3>{};
+        for (final b in [if (!player.isDead) player, ...mobs.where((m) => !m.isDead)]) {
+          final feet = IVec3.floor(b.position + Vector3(0, 0.05, 0));
+          if (_plates.contains(world.getBlock(feet))) pressed.add(feet);
+        }
+        net.setPressed(pressed);
+      }
+      net.tick(dt);
+    }
     spawner.tick(this, dt);
     for (final s in spec.systems) {
       s.tick(this, dt);

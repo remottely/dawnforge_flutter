@@ -47,3 +47,5 @@ export 'src/ui/inventory_screen.dart';
 export 'src/world/world_save.dart';
 export 'src/camera/first_person_view.dart';
 export 'src/spec/sound_spec.dart';
+export 'package:voxel_signals/voxel_signals.dart' show SignalNetwork, SignalReaction, SignalReactions, SignalRules, RailGraph, RailVariant;
+export 'src/spec/signal_spec.dart';

@@ -8,6 +8,7 @@ import '../mobs/mob.dart';
 import '../mobs/mob_spec.dart';
 import '../player/player_spec.dart';
 import '../world/game_world.dart';
+import 'signal_spec.dart';
 import 'sky_spec.dart';
 import 'sound_spec.dart';
 
@@ -36,6 +37,7 @@ class VoxelGameSpec {
     this.mobs = const [],
     this.sky = const SkySpec(),
     this.sounds = const SoundSpec(),
+    this.signals,
     this.seed = 1,
     this.renderDistance = 6,
     this.mining = const MiningRules(),
@@ -71,6 +73,9 @@ class VoxelGameSpec {
 
   /// Sound effects and music.
   final SoundSpec sounds;
+
+  /// Circuits, or null for none.
+  final SignalSpec? signals;
 
   /// The world seed.
   final int seed;

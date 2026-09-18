@@ -378,6 +378,13 @@ class PlayerEntity extends NodeBody implements Target {
 
   void _use() {
     final hit = aimedBlock;
+    // A lever or a button is used, not built against.
+    final net = _game.signals;
+    if (hit != null && net != null && !_game.input.down(VoxelAction.sneak) && net.use(hit.block)) {
+      _swingArm();
+      _game.playSound('click', at: Vector3(hit.block.x + 0.5, hit.block.y + 0.5, hit.block.z + 0.5), volumeDb: -4.0);
+      return;
+    }
     // A station opens its crafting instead of taking a block against it.
     if (hit != null) {
       final aimed = _game.world.blockNameAt(hit.block);
