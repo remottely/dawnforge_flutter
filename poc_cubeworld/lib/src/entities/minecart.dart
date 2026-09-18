@@ -8,7 +8,7 @@ import 'package:voxel_core/voxel_core.dart';
 import '../game/inventory.dart';
 import '../game/rails.dart';
 import '../world/voxel_world.dart';
-import 'voxel_mesh_builder.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 /// Stage 28: a cart that lives on the rail graph rather than in free space
 /// (Godot `src/entities/minecart.gd`). Its state is the rail cell it is in, the
@@ -72,18 +72,18 @@ class Minecart {
       final iron = Vector3(0.55, 0.55, 0.58);
       final dark = Vector3(0.32, 0.32, 0.35);
       final wood = Vector3(0.55, 0.38, 0.20);
-      VoxelMeshBuilder.box(v, const IVec3(-4, 0, -3), const IVec3(4, 0, 3), dark);
-      VoxelMeshBuilder.box(v, const IVec3(-5, 1, -4), const IVec3(-4, 4, 4), iron);
-      VoxelMeshBuilder.box(v, const IVec3(4, 1, -4), const IVec3(5, 4, 4), iron);
-      VoxelMeshBuilder.box(v, const IVec3(-4, 1, -4), const IVec3(4, 4, -3), iron);
-      VoxelMeshBuilder.box(v, const IVec3(-4, 1, 3), const IVec3(4, 4, 4), iron);
-      if (kind == 'chest_minecart') VoxelMeshBuilder.box(v, const IVec3(-3, 1, -2), const IVec3(3, 4, 2), wood);
+      VoxelModel.box(v, const IVec3(-4, 0, -3), const IVec3(4, 0, 3), dark);
+      VoxelModel.box(v, const IVec3(-5, 1, -4), const IVec3(-4, 4, 4), iron);
+      VoxelModel.box(v, const IVec3(4, 1, -4), const IVec3(5, 4, 4), iron);
+      VoxelModel.box(v, const IVec3(-4, 1, -4), const IVec3(4, 4, -3), iron);
+      VoxelModel.box(v, const IVec3(-4, 1, 3), const IVec3(4, 4, 4), iron);
+      if (kind == 'chest_minecart') VoxelModel.box(v, const IVec3(-3, 1, -2), const IVec3(3, 4, 2), wood);
       for (final wx in const [-3, 3]) {
         for (final wz in const [-3, 2]) {
-          VoxelMeshBuilder.box(v, IVec3(wx - 1, -1, wz), IVec3(wx + 1, 0, wz + 1), dark);
+          VoxelModel.box(v, IVec3(wx - 1, -1, wz), IVec3(wx + 1, 0, wz + 1), dark);
         }
       }
-      _model.add(VoxelMeshBuilder.meshNode(v, 0.1, Vector3(0.5, 0.1, 0.5)));
+      _model.add(VoxelModelMesh.node(v, 0.1, Vector3(0.5, 0.1, 0.5)));
       node.add(_model);
     }
     placeOn(at);

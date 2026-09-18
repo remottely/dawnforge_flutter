@@ -18,7 +18,7 @@ import 'player_model.dart';
 import 'remote_player.dart';
 import 'target.dart';
 import 'scene_body.dart';
-import 'voxel_mesh_builder.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 enum MobState { idle, wander, chase, attack, flee, dead }
 
@@ -393,7 +393,7 @@ class Mob extends SceneBody {
         ..alphaMode = AlphaMode.blend;
     }
     _tint?.baseColorFactor = color;
-    if (_flash <= 0.0) _applyOverride(_tint ?? VoxelMeshBuilder.material());
+    if (_flash <= 0.0) _applyOverride(_tint ?? VoxelModelMesh.material());
   }
 
   void _applyOverride(Material material) {
@@ -507,7 +507,7 @@ class Mob extends SceneBody {
   /// With [narrow], the part is centred on its pivot in x / z and drawn
   /// [partInset] in on each of those sides, about its own middle.
   Part _part(Map<IVec3, Vector3> voxels, Vector3 at, double s, {bool narrow = false}) {
-    final pivot = VoxelMeshBuilder.meshNode({}, 1.0);
+    final pivot = VoxelModelMesh.node({}, 1.0);
     final lo = Vector3.all(double.infinity), hi = Vector3.all(double.negativeInfinity);
     for (final k in voxels.keys) {
       final v = k.toVector3();
@@ -528,7 +528,7 @@ class Mob extends SceneBody {
         ..x = 1.0 - 2.0 * partInset / ((hi.x - lo.x) * s)
         ..z = 1.0 - 2.0 * partInset / ((hi.z - lo.z) * s);
     }
-    pivot.add(VoxelMeshBuilder.meshNode(voxels, s, origin)..scale = shrink);
+    pivot.add(VoxelModelMesh.node(voxels, s, origin)..scale = shrink);
     node.add(pivot);
     final part = Part(pivot, base);
     _restBoxes[part] = Aabb3.minMax(
@@ -604,18 +604,18 @@ class Mob extends SceneBody {
         final bodyW = (w * 22).toInt();
         final legH = (height * 6).toInt();
         var v = <IVec3, Vector3>{};
-        VoxelMeshBuilder.box(v, IVec3(-bodyW ~/ 2, 0, -bodyLen ~/ 2), IVec3(bodyW ~/ 2, bodyH, bodyLen ~/ 2), colors[0]);
+        VoxelModel.box(v, IVec3(-bodyW ~/ 2, 0, -bodyLen ~/ 2), IVec3(bodyW ~/ 2, bodyH, bodyLen ~/ 2), colors[0]);
         _parts['body'] = _part(v, Vector3(0, legH * s, 0), s);
         backHeight = (legH + bodyH) * s; // the top of the barrel: the saddle line
         v = {};
         final hs = (bodyW * 0.7).toInt();
-        VoxelMeshBuilder.box(v, IVec3(-hs ~/ 2, -hs ~/ 2, -hs), IVec3(hs ~/ 2, hs ~/ 2, 0), colors.length > 1 ? colors[1] : colors[0]);
+        VoxelModel.box(v, IVec3(-hs ~/ 2, -hs ~/ 2, -hs), IVec3(hs ~/ 2, hs ~/ 2, 0), colors.length > 1 ? colors[1] : colors[0]);
         v[IVec3(-hs ~/ 2 + 1, 0, -hs)] = dark;
         v[IVec3(hs ~/ 2 - 1, 0, -hs)] = dark;
         _parts['head'] = _part(v, Vector3(0, (legH + bodyH * 0.8) * s, -bodyLen / 2 * s), s);
         for (var i = 0; i < 4; i++) {
           v = {};
-          VoxelMeshBuilder.box(v, IVec3(-1, -legH, -1), const IVec3(1, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
+          VoxelModel.box(v, IVec3(-1, -legH, -1), const IVec3(1, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
           final lx = (bodyW / 2 - 1.5) * s * (i % 2 == 0 ? 1 : -1);
           final lz = (bodyLen / 2 - 2) * s * (i < 2 ? 1 : -1);
           // Narrowed: with an odd barrel width the leg's outer face was the
@@ -627,7 +627,7 @@ class Mob extends SceneBody {
         // statue at a distance.
         v = {};
         final tailLen = math.max(bodyLen ~/ 3, 3);
-        VoxelMeshBuilder.box(v, IVec3(-1, -tailLen, 0), const IVec3(0, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
+        VoxelModel.box(v, IVec3(-1, -tailLen, 0), const IVec3(0, 0, 1), colors.length > 1 ? colors[1] : colors[0] * 0.8);
         // The pivot sits on the barrel's back face, not on its centre line: a
         // tail hung from `bodyLen / 2` is inside the animal. A centimetre off
         // that face, or the tail's front and the rump share a plane and fight.
@@ -638,20 +638,20 @@ class Mob extends SceneBody {
         final pants = colors[2];
         final k = height / 1.75;
         var v = <IVec3, Vector3>{};
-        VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), pants);
+        VoxelModel.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), pants);
         _parts['leg0'] = _part(v, Vector3(-0.11 * k, 0.66 * k, 0), s);
         _parts['leg1'] = _part(v, Vector3(0.11 * k, 0.66 * k, 0), s);
         v = {};
-        VoxelMeshBuilder.box(v, const IVec3(-4, 0, -2), const IVec3(3, 11, 1), shirt);
+        VoxelModel.box(v, const IVec3(-4, 0, -2), const IVec3(3, 11, 1), shirt);
         _parts['body'] = _part(v, Vector3(0, 0.66 * k, 0), s);
         v = {};
-        VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), skin);
+        VoxelModel.box(v, const IVec3(-2, -12, -2), const IVec3(1, -1, 1), skin);
         // 0.345, not 0.33: at 0.33 the arm's inner face is the torso's side,
         // the flicker `PlayerModel` fixed the same way.
         _parts['arm0'] = _part(v, Vector3(-0.345 * k, 1.30 * k, 0), s);
         _parts['arm1'] = _part(v, Vector3(0.345 * k, 1.30 * k, 0), s);
         v = {};
-        VoxelMeshBuilder.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.04);
+        VoxelModel.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.04);
         final eye = species.hostile ? Vector3(0.9, 0.1, 0.1) : dark;
         v[const IVec3(-3, 4, -4)] = eye;
         v[const IVec3(2, 4, -4)] = eye;
@@ -663,7 +663,7 @@ class Mob extends SceneBody {
         final v = <IVec3, Vector3>{};
         final r = (halfWidth * 16).toInt();
         final h = (height * 14).toInt();
-        VoxelMeshBuilder.box(v, IVec3(-r, 0, -r), IVec3(r, h, r), colors[0], 0.08);
+        VoxelModel.box(v, IVec3(-r, 0, -r), IVec3(r, h, r), colors[0], 0.08);
         for (var x = -r; x <= r; x++) {
           for (var z = -r; z <= r; z++) {
             if (x.abs() == r || z.abs() == r) v.remove(IVec3(x, h, z));
@@ -675,8 +675,8 @@ class Mob extends SceneBody {
         _parts['body'] = _part(v, Vector3.zero(), s);
       case 'spider':
         var v = <IVec3, Vector3>{};
-        VoxelMeshBuilder.box(v, const IVec3(-4, 0, -3), const IVec3(4, 4, 5), colors[0], 0.06);
-        VoxelMeshBuilder.box(v, const IVec3(-3, 0, -7), const IVec3(3, 3, -3), colors[0] * 0.9, 0.06);
+        VoxelModel.box(v, const IVec3(-4, 0, -3), const IVec3(4, 4, 5), colors[0], 0.06);
+        VoxelModel.box(v, const IVec3(-3, 0, -7), const IVec3(3, 3, -3), colors[0] * 0.9, 0.06);
         v[const IVec3(-2, 3, -7)] = colors[1];
         v[const IVec3(2, 3, -7)] = colors[1];
         v[const IVec3(-1, 2, -7)] = colors[1];
@@ -685,8 +685,8 @@ class Mob extends SceneBody {
         for (var i = 0; i < 8; i++) {
           v = {};
           final side = i % 2 == 0 ? 1 : -1;
-          VoxelMeshBuilder.box(v, const IVec3(0, 0, 0), const IVec3(5, 0, 0), colors[0]);
-          VoxelMeshBuilder.box(v, const IVec3(5, -5, 0), const IVec3(5, 0, 0), colors[0]);
+          VoxelModel.box(v, const IVec3(0, 0, 0), const IVec3(5, 0, 0), colors[0]);
+          VoxelModel.box(v, const IVec3(5, -5, 0), const IVec3(5, 0, 0), colors[0]);
           final leg = _part(v, Vector3(side * 0.25, 0.42, (i ~/ 2 - 1.5) * 0.18), s);
           leg.sx = side.toDouble();
           // The splay is the pose the legs rest in; the gait is added to it
@@ -698,12 +698,12 @@ class Mob extends SceneBody {
         }
       case 'bird':
         var v = <IVec3, Vector3>{};
-        VoxelMeshBuilder.box(v, const IVec3(-2, 0, -3), const IVec3(2, 4, 3), colors[0]);
+        VoxelModel.box(v, const IVec3(-2, 0, -3), const IVec3(2, 4, 3), colors[0]);
         _parts['body'] = _part(v, Vector3(0, 0.25, 0), s);
         v = {};
-        VoxelMeshBuilder.box(v, const IVec3(-1, 0, -2), const IVec3(1, 3, 1), colors[0]);
-        VoxelMeshBuilder.box(v, const IVec3(0, 1, -3), const IVec3(0, 1, -3), Vector3(0.95, 0.7, 0.2));
-        VoxelMeshBuilder.box(v, const IVec3(0, 3, -1), const IVec3(0, 4, -1), colors[1]);
+        VoxelModel.box(v, const IVec3(-1, 0, -2), const IVec3(1, 3, 1), colors[0]);
+        VoxelModel.box(v, const IVec3(0, 1, -3), const IVec3(0, 1, -3), Vector3(0.95, 0.7, 0.2));
+        VoxelModel.box(v, const IVec3(0, 3, -1), const IVec3(0, 4, -1), colors[1]);
         _parts['head'] = _part(v, Vector3(0, 0.5, -0.18), s);
         // Wings on the flanks. One wing is built reaching out +X and the other
         // is the same voxels mirrored, so both wind — and so light — the same
@@ -712,17 +712,17 @@ class Mob extends SceneBody {
         final feather = colors.length > 1 ? colors[1] : colors[0] * 0.85;
         // Broad at the shoulder, tapering to the tip, so it reads as a wing
         // from the side and not as a stick held out.
-        VoxelMeshBuilder.box(wing, const IVec3(0, 0, -2), const IVec3(3, 0, 2), colors[0]);
-        VoxelMeshBuilder.box(wing, const IVec3(4, 0, -1), const IVec3(5, 0, 2), feather);
-        VoxelMeshBuilder.box(wing, const IVec3(6, 0, 0), const IVec3(7, 0, 2), feather);
+        VoxelModel.box(wing, const IVec3(0, 0, -2), const IVec3(3, 0, 2), colors[0]);
+        VoxelModel.box(wing, const IVec3(4, 0, -1), const IVec3(5, 0, 2), feather);
+        VoxelModel.box(wing, const IVec3(6, 0, 0), const IVec3(7, 0, 2), feather);
         _parts['wing1'] = _part(wing, Vector3(0.18, 0.44, 0.0), s);
-        _parts['wing0'] = _part(VoxelMeshBuilder.mirrorX(wing), Vector3(-0.12, 0.44, 0.0), s);
+        _parts['wing0'] = _part(VoxelModel.mirrorX(wing), Vector3(-0.12, 0.44, 0.0), s);
         v = {};
-        VoxelMeshBuilder.box(v, const IVec3(-1, 0, 0), const IVec3(1, 0, 3), feather);
+        VoxelModel.box(v, const IVec3(-1, 0, 0), const IVec3(1, 0, 3), feather);
         _parts['tail'] = _part(v, Vector3(0, 0.38, 0.22), s);
         for (var i = 0; i < 2; i++) {
           v = {};
-          VoxelMeshBuilder.box(v, const IVec3(0, -4, 0), const IVec3(0, 0, 0), Vector3(0.95, 0.7, 0.2));
+          VoxelModel.box(v, const IVec3(0, -4, 0), const IVec3(0, 0, 0), Vector3(0.95, 0.7, 0.2));
           _parts['leg$i'] = _part(v, Vector3((i - 0.5) * 0.12, 0.25, 0), s);
         }
     }
@@ -851,7 +851,7 @@ class Mob extends SceneBody {
       _flash -= dt;
       if (_flash <= 0.0) {
         _flash = 0.0;
-        _applyOverride(_tint ?? VoxelMeshBuilder.material());
+        _applyOverride(_tint ?? VoxelModelMesh.material());
       }
     }
   }

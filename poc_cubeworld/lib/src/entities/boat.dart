@@ -7,7 +7,7 @@ import 'package:voxel_core/voxel_core.dart';
 import '../game/game.dart';
 import '../world/voxel_world.dart';
 import 'scene_body.dart';
-import 'voxel_mesh_builder.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 /// A rowing boat: floats on liquid, driven by whoever sits in it (F to board /
 /// leave). Stage 25: the host owns every boat. A [replica] (client side) never
@@ -41,13 +41,13 @@ class Boat extends SceneBody {
     final v = <IVec3, Vector3>{};
     final wood = Vector3(0.55, 0.38, 0.20);
     final dark = Vector3(0.40, 0.27, 0.14);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -7), const IVec3(4, 0, 7), dark);
-    VoxelMeshBuilder.box(v, const IVec3(-5, 1, -8), const IVec3(-4, 3, 8), wood);
-    VoxelMeshBuilder.box(v, const IVec3(4, 1, -8), const IVec3(5, 3, 8), wood);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 1, -9), const IVec3(4, 3, -8), wood);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 1, 8), const IVec3(4, 3, 9), wood);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 1, -1), const IVec3(4, 1, 1), dark);
-    _hull.add(VoxelMeshBuilder.meshNode(v, 0.1, Vector3(0.5, 0, 0.5)));
+    VoxelModel.box(v, const IVec3(-4, 0, -7), const IVec3(4, 0, 7), dark);
+    VoxelModel.box(v, const IVec3(-5, 1, -8), const IVec3(-4, 3, 8), wood);
+    VoxelModel.box(v, const IVec3(4, 1, -8), const IVec3(5, 3, 8), wood);
+    VoxelModel.box(v, const IVec3(-4, 1, -9), const IVec3(4, 3, -8), wood);
+    VoxelModel.box(v, const IVec3(-4, 1, 8), const IVec3(4, 3, 9), wood);
+    VoxelModel.box(v, const IVec3(-4, 1, -1), const IVec3(4, 1, 1), dark);
+    _hull.add(VoxelModelMesh.node(v, 0.1, Vector3(0.5, 0, 0.5)));
     node.add(_hull);
     syncNode();
   }

@@ -17,7 +17,6 @@ import '../entities/hand_view.dart';
 import '../entities/player_model.dart';
 import '../entities/target.dart';
 import '../entities/scene_body.dart';
-import '../entities/voxel_mesh_builder.dart';
 import '../game/achievements.dart';
 import '../game/effects.dart';
 import '../core/recipes.dart';

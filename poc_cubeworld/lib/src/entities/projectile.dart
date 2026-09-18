@@ -9,7 +9,6 @@ import '../player/player.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 import 'mob.dart';
-import 'voxel_mesh_builder.dart';
 
 /// Arrows and magic bolts: a segment swept against blocks and body boxes on
 /// the physics tick. The projectile owns its hit (dev's host-authoritative
@@ -45,15 +44,15 @@ class Projectile {
     knockback = kb;
     final v = <IVec3, Vector3>{};
     if (kind == 'arrow') {
-      VoxelMeshBuilder.box(v, const IVec3(0, 0, 0), const IVec3(0, 0, 7), Vector3(0.55, 0.42, 0.25));
-      VoxelMeshBuilder.box(v, const IVec3(0, 0, 8), const IVec3(0, 0, 9), Vector3(0.7, 0.7, 0.72));
-      VoxelMeshBuilder.box(v, const IVec3(0, -1, 0), const IVec3(0, 1, 1), Vector3(0.9, 0.9, 0.9));
-      node.add(VoxelMeshBuilder.meshNode(v, 0.06, Vector3(0.5, 0.5, 9)));
+      VoxelModel.box(v, const IVec3(0, 0, 0), const IVec3(0, 0, 7), Vector3(0.55, 0.42, 0.25));
+      VoxelModel.box(v, const IVec3(0, 0, 8), const IVec3(0, 0, 9), Vector3(0.7, 0.7, 0.72));
+      VoxelModel.box(v, const IVec3(0, -1, 0), const IVec3(0, 1, 1), Vector3(0.9, 0.9, 0.9));
+      node.add(VoxelModelMesh.node(v, 0.06, Vector3(0.5, 0.5, 9)));
     } else {
       final col = colour();
       final size = radius < 0.3 ? 1 : 2;
-      VoxelMeshBuilder.box(v, IVec3(-size, -size, -size), IVec3(size, size, size), col, 0.15);
-      node.add(VoxelMeshBuilder.meshNode(v, 0.09, Vector3(0.5, 0.5, 0.5)));
+      VoxelModel.box(v, IVec3(-size, -size, -size), IVec3(size, size, size), col, 0.15);
+      node.add(VoxelModelMesh.node(v, 0.09, Vector3(0.5, 0.5, 0.5)));
       _light = PointLight(color: col, intensity: 6.0, range: 4.0);
       node.addComponent(PointLightComponent(_light!));
       final trail = MirroredCamera.primitiveNode(

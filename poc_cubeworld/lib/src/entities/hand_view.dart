@@ -5,6 +5,7 @@ import 'package:vector_math/vector_math.dart';
 import 'package:voxel_core/voxel_core.dart';
 
 import 'voxel_mesh_builder.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 /// The first-person hand: the player's right forearm and whatever it is
 /// holding, drawn a little over half a metre in front of the eye.
@@ -66,10 +67,10 @@ class HandView {
     // A 4x4 bar running +Z, which is backward, out of the screen: the fist is
     // at the origin and the elbow runs away behind the near plane, exactly as
     // an arm held in front of you leaves the eye.
-    VoxelMeshBuilder.box(v, const IVec3(-2, -2, 0), const IVec3(1, 1, 3), skin, 0.02);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -2, 4), const IVec3(1, 1, 4), trim, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -2, 5), const IVec3(1, 1, 14), cloth, 0.03);
-    _arm.add(VoxelMeshBuilder.meshNode(v, s));
+    VoxelModel.box(v, const IVec3(-2, -2, 0), const IVec3(1, 1, 3), skin, 0.02);
+    VoxelModel.box(v, const IVec3(-2, -2, 4), const IVec3(1, 1, 4), trim, 0.03);
+    VoxelModel.box(v, const IVec3(-2, -2, 5), const IVec3(1, 1, 14), cloth, 0.03);
+    _arm.add(VoxelModelMesh.node(v, s));
     // Down and out, so the elbow leaves the frame at the bottom right corner
     // instead of standing in the middle of the view like a post.
     _arm.rotation = eulerYXZ(0.72, 0.62, 0.0);

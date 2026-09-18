@@ -5,6 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import 'package:voxel_core/voxel_core.dart';
 import 'voxel_mesh_builder.dart';
+import 'package:voxel_scene/voxel_scene.dart';
 
 /// A pivot with Euler angles applied every frame (Godot's Node3D rotation).
 class Part {
@@ -85,26 +86,26 @@ class PlayerModel {
     // The front of every part is z = -4 (head) or z = -2 (body, limbs).
 
     var v = <IVec3, Vector3>{};
-    VoxelMeshBuilder.box(v, const IVec3(-2, -9, -2), const IVec3(1, -1, 1), pants, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -2, -2), const IVec3(1, -1, 1), pantsDark, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -11, -2), const IVec3(1, -10, 1), boots, 0.04);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -12, 1), sole, 0.02);
+    VoxelModel.box(v, const IVec3(-2, -9, -2), const IVec3(1, -1, 1), pants, 0.03);
+    VoxelModel.box(v, const IVec3(-2, -2, -2), const IVec3(1, -1, 1), pantsDark, 0.03);
+    VoxelModel.box(v, const IVec3(-2, -11, -2), const IVec3(1, -10, 1), boots, 0.04);
+    VoxelModel.box(v, const IVec3(-2, -12, -2), const IVec3(1, -12, 1), sole, 0.02);
     legL = _part(v, Vector3(-0.11, 0.66, 0.0));
     legR = _part(v, Vector3(0.11, 0.66, 0.0));
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -2), const IVec3(3, 11, 1), cloth, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -2), const IVec3(3, 2, 1), trim, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -2), const IVec3(3, 1, 1), belt, 0.04);
-    VoxelMeshBuilder.box(v, const IVec3(-1, 0, -2), const IVec3(0, 1, -2), buckle, 0.02);
-    VoxelMeshBuilder.box(v, const IVec3(-2, 11, -2), const IVec3(1, 11, -2), skin, 0.02); // the neckline
-    VoxelMeshBuilder.box(v, const IVec3(-1, 10, -2), const IVec3(0, 10, -2), skin, 0.02);
+    VoxelModel.box(v, const IVec3(-4, 2, -2), const IVec3(3, 11, 1), cloth, 0.03);
+    VoxelModel.box(v, const IVec3(-4, 2, -2), const IVec3(3, 2, 1), trim, 0.03);
+    VoxelModel.box(v, const IVec3(-4, 0, -2), const IVec3(3, 1, 1), belt, 0.04);
+    VoxelModel.box(v, const IVec3(-1, 0, -2), const IVec3(0, 1, -2), buckle, 0.02);
+    VoxelModel.box(v, const IVec3(-2, 11, -2), const IVec3(1, 11, -2), skin, 0.02); // the neckline
+    VoxelModel.box(v, const IVec3(-1, 10, -2), const IVec3(0, 10, -2), skin, 0.02);
     torso = _part(v, Vector3(0.0, 0.66, 0.0));
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-2, -4, -2), const IVec3(1, -1, 1), cloth, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -5, -2), const IVec3(1, -5, 1), trim, 0.03);
-    VoxelMeshBuilder.box(v, const IVec3(-2, -12, -2), const IVec3(1, -6, 1), skin, 0.02);
+    VoxelModel.box(v, const IVec3(-2, -4, -2), const IVec3(1, -1, 1), cloth, 0.03);
+    VoxelModel.box(v, const IVec3(-2, -5, -2), const IVec3(1, -5, 1), trim, 0.03);
+    VoxelModel.box(v, const IVec3(-2, -12, -2), const IVec3(1, -6, 1), skin, 0.02);
     // The arm is 0.22 wide, so a pivot at 0.33 put its inner face exactly on
     // the torso's side (x = 0.22): the two faces fought for the same pixels
     // and flickered. A 1.5 cm gap keeps them apart.
@@ -114,11 +115,11 @@ class PlayerModel {
     armR.node.add(hand);
 
     v = {};
-    VoxelMeshBuilder.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.02);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 6, -4), const IVec3(3, 7, 3), hair, 0.06);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 1, 3), const IVec3(3, 5, 3), hair, 0.06);
-    VoxelMeshBuilder.box(v, const IVec3(-4, 2, -3), const IVec3(-4, 5, 3), hair, 0.06);
-    VoxelMeshBuilder.box(v, const IVec3(3, 2, -3), const IVec3(3, 5, 3), hair, 0.06);
+    VoxelModel.box(v, const IVec3(-4, 0, -4), const IVec3(3, 7, 3), skin, 0.02);
+    VoxelModel.box(v, const IVec3(-4, 6, -4), const IVec3(3, 7, 3), hair, 0.06);
+    VoxelModel.box(v, const IVec3(-4, 1, 3), const IVec3(3, 5, 3), hair, 0.06);
+    VoxelModel.box(v, const IVec3(-4, 2, -3), const IVec3(-4, 5, 3), hair, 0.06);
+    VoxelModel.box(v, const IVec3(3, 2, -3), const IVec3(3, 5, 3), hair, 0.06);
     v[const IVec3(-4, 5, -4)] = hair; // the fringe falls over the left temple
     v[const IVec3(-3, 5, -4)] = hair;
     v[const IVec3(3, 5, -4)] = hair;
@@ -142,7 +143,7 @@ class PlayerModel {
 
   Part _part(Map<IVec3, Vector3> voxels, Vector3 at) {
     final pivot = Node();
-    pivot.add(VoxelMeshBuilder.meshNode(voxels, s));
+    pivot.add(VoxelModelMesh.node(voxels, s));
     root.add(pivot);
     return Part(pivot, at);
   }

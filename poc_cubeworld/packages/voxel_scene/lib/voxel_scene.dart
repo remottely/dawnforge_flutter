@@ -6,3 +6,4 @@ export 'src/mirrored_camera.dart';
 export 'src/selection_outline.dart';
 export 'src/terrain_material.dart';
 export 'src/voxel_chunk_view.dart';
+export 'src/voxel_model_mesh.dart';

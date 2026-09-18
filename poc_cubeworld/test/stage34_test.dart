@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/entities/voxel_mesh_builder.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
@@ -15,8 +14,8 @@ void main() {
   group('a mirrored part', () {
     test('a voxel at x covers [x, x+1], so its mirror covers [-x-1, -x]', () {
       final wing = <IVec3, Vector3>{};
-      VoxelMeshBuilder.box(wing, const IVec3(0, 0, -2), const IVec3(3, 0, 2), Vector3(1, 0, 0));
-      final left = VoxelMeshBuilder.mirrorX(wing);
+      VoxelModel.box(wing, const IVec3(0, 0, -2), const IVec3(3, 0, 2), Vector3(1, 0, 0));
+      final left = VoxelModel.mirrorX(wing);
       expect(left.length, wing.length);
       // The right wing reaches out over x 0..4, the left one out over -4..0.
       expect(wing.keys.map((k) => k.x).reduce(math.min), 0);
@@ -32,8 +31,8 @@ void main() {
 
     test('mirroring twice is the identity', () {
       final v = <IVec3, Vector3>{};
-      VoxelMeshBuilder.box(v, const IVec3(-3, 1, -1), const IVec3(5, 2, 4), Vector3(0.2, 0.4, 0.6));
-      final back = VoxelMeshBuilder.mirrorX(VoxelMeshBuilder.mirrorX(v));
+      VoxelModel.box(v, const IVec3(-3, 1, -1), const IVec3(5, 2, 4), Vector3(0.2, 0.4, 0.6));
+      final back = VoxelModel.mirrorX(VoxelModel.mirrorX(v));
       expect(back.length, v.length);
       for (final e in v.entries) {
         expect(back[e.key], e.value, reason: '${e.key}');
