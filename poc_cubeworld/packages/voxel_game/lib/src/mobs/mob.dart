@@ -237,7 +237,7 @@ class Mob extends GameEntity implements Target {
     if (goal != null) wish = spec.gait == Gait.fly ? _flyToward(goal) : _steer(game, goal, dt);
     switch (spec.gait) {
       case Gait.walk:
-        motor.step(dt, wish: wish, speed: speed, jump: motor.swimming && headInLiquid);
+        motor.step(dt, wish: wish, speed: speed, jump: motor.swimming && headInLiquid, leaveWater: true);
       case Gait.hop:
         _hopCooldown -= dt;
         final wants = wish.length2 > 0.01;

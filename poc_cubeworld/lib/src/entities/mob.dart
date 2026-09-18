@@ -5,6 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_game/voxel_game.dart' show CharacterMotor, MotorTuning;
 import '../core/species.dart';
 import '../game/achievements.dart';
 import '../game/game.dart';
@@ -126,7 +127,6 @@ class Mob extends SceneBody {
   double _freeze = 0.0; // hit-stop: the pose holds for 60 ms
   double _flash = 0.0; // the white hit tint, 100 ms
   double _burnTimer = 0.0;
-  double _stagger = 0.0; // knockback window: the steering lets the shove carry
   bool burning = false; // a zombie / skeleton under the noon sky, out of water
   double _breath = 1.0;
   double _toppleX = 0.0; // the death: the body tips over on its local X
@@ -144,8 +144,13 @@ class Mob extends SceneBody {
   /// What swimming costs a creature's speed.
   static const double swimSpeedMult = 0.6;
 
-  /// A half step is hopped: double gravity until the feet land again.
-  bool _stepHop = false;
+  /// VK5.2: the kit's on-foot rules — gravity and the swim stroke, the step
+  /// jumps (a half step hopped under double gravity), the launch over a bank
+  /// and the knockback window. A flier keeps its own [_fly].
+  late final CharacterMotor motor = CharacterMotor(
+      this,
+      const MotorTuning(
+          jumpVelocity: stepJumpSpeed, groundAccel: 8.0, airAccel: 8.0, swimStroke: swimStroke, swimRise: swimRise));
 
   static const double knockbackSpeed = 4.0;
   static const double knockbackUp = 3.0;
@@ -753,7 +758,8 @@ class Mob extends SceneBody {
     velocity += knockbackVelocity(position, from, knockback);
     _freeze = hitStop;
     _flash = hitFlash;
-    _stagger = staggerSeconds;
+    // A hopper steers its own leap (rate 3) and never had the window.
+    if (!species.hops) motor.stagger = staggerSeconds;
     _applyOverride(PlayerModel.flashMaterial());
     Sfx.play('hurt_${hurtGroup()}', -8.0);
     if (species.trader) {
@@ -846,7 +852,6 @@ class Mob extends SceneBody {
   /// the tint back when it ends.
   void _tickFeel(double dt) {
     _freeze = math.max(_freeze - dt, 0.0);
-    _stagger = math.max(_stagger - dt, 0.0);
     if (_flash > 0.0) {
       _flash -= dt;
       if (_flash <= 0.0) {
@@ -966,13 +971,9 @@ class Mob extends SceneBody {
   void _rideTick(double dt) {
     var speed = species.speed * (rideSprint ? 1.4 : 1.0);
     if (swimming) speed *= swimSpeedMult;
-    _fallOrSwim(dt);
-    if (rideJump && onFloor) velocity.y = 9.0;
+    motor.step(dt,
+        wish: rideInput, speed: speed, jump: rideJump || swimming && headInLiquid, jumpSpeed: 9.0, leaveWater: true);
     rideJump = false;
-    velocity.x = lerpd(velocity.x, rideInput.x * speed, dt * 8.0);
-    velocity.z = lerpd(velocity.z, rideInput.z * speed, dt * 8.0);
-    move(dt);
-    _stepJump(rideInput);
     _dir = rideInput;
     _face(rideInput);
     _animate(dt);
@@ -1149,22 +1150,25 @@ class Mob extends SceneBody {
       return;
     }
     if (swimming) speed *= swimSpeedMult;
-    final hops = species.hops;
-    _fallOrSwim(dt);
-    if (hops) {
-      if (onFloor && _dir.length > 0.1 && _hopCd <= 0.0) {
-        velocity.y = 7.0;
-        _hopCd = state != MobState.chase ? 0.9 : 0.5;
-      }
-      velocity.x = lerpd(velocity.x, !onFloor ? _dir.x * speed : 0.0, dt * 3.0);
-      velocity.z = lerpd(velocity.z, !onFloor ? _dir.z * speed : 0.0, dt * 3.0);
-    } else if (_stagger <= 0.0) {
+    // A swimmer paddles up while its head is under and sinks back when it is
+    // out, so it rides the surface; pushing at a bank it launches over it.
+    final stroke = swimming && headInLiquid;
+    if (species.hops) {
+      // A hopper leaps (7 m/s) and steers only in the air; on the floor it
+      // stops.
+      final hop = onFloor && _dir.length > 0.1 && _hopCd <= 0.0;
+      if (hop) _hopCd = state != MobState.chase ? 0.9 : 0.5;
+      motor.step(dt,
+          wish: onFloor ? Vector3.zero() : _dir,
+          speed: speed,
+          jump: hop || stroke,
+          jumpSpeed: 7.0,
+          accel: 3.0,
+          leaveWater: true);
+    } else {
       // Stage 32: a shoved body carries for 0.3 s before it steers again.
-      velocity.x = lerpd(velocity.x, _dir.x * speed, dt * 8.0);
-      velocity.z = lerpd(velocity.z, _dir.z * speed, dt * 8.0);
+      motor.step(dt, wish: _dir, speed: speed, jump: stroke, leaveWater: true);
     }
-    move(dt);
-    _stepJump(_dir);
     if (_dir.length > 0.1) _face(_dir);
     _animate(dt);
     if (position.y < -5.0) removed = true;
@@ -1173,40 +1177,6 @@ class Mob extends SceneBody {
 
   /// Deep enough in a liquid to swim in it rather than wade through it.
   bool get swimming => inLiquid && !wading;
-
-  /// Gravity for one tick, and what a body does in water: nothing walks on it.
-  /// A swimmer paddles up while its head is under and sinks back when it is
-  /// out, so it rides the surface — the same bob the player makes holding
-  /// jump. A half step being hopped falls at double gravity, so the hop is
-  /// half the height of a jump.
-  void _fallOrSwim(double dt) {
-    applyGravity(dt);
-    if (_stepHop) applyGravity(dt);
-    if (swimming && headInLiquid) velocity.y = math.min(velocity.y + swimStroke * dt, swimRise);
-  }
-
-  /// Every creature climbs a step by jumping it, mount and rider included;
-  /// nothing in this world is ever lifted a floor up. Called after [move], the
-  /// step it reads is the one just walked into.
-  void _stepJump(Vector3 wish) {
-    if (onFloor || inLiquid) _stepHop = false;
-    if (wish.length < 0.1 || !hitWall) return;
-    if (swimming) {
-      // A swimmer pushing at a bank: the stroke alone only reaches the
-      // surface, so the body launches over the lowest lip that fits, the way
-      // the player climbs out of the water.
-      for (var lift = 0.1; lift <= 1.9; lift += 0.1) {
-        if (!stepFits(lift)) continue;
-        velocity.y = math.sqrt(2.0 * gravity * (lift + 0.25));
-        return;
-      }
-      return;
-    }
-    final step = stepAhead();
-    if (step <= 0.0) return;
-    velocity.y = stepJumpSpeed;
-    _stepHop = step == VoxelBody.halfStep;
-  }
 
   /// Stage 23: a flier ignores gravity. Wandering it flutters on a random 3D
   /// heading that changes every few tenths of a second (the bat's erratic

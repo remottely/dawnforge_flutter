@@ -111,6 +111,23 @@ void main() {
     expect(motor.step(1 / 60, wish: Vector3.zero(), speed: 0.0).landedAfter, 0.0);
   });
 
+  test('a jump off the floor launches at the step\'s jumpSpeed, or the tuning\'s', () async {
+    final game = await _start(_flat());
+    final p = game.player;
+    final motor = p.motor;
+    for (var i = 0; i < 60 && !p.onFloor; i++) {
+      motor.idle(1 / 60);
+    }
+    expect(p.onFloor, isTrue);
+    expect(motor.step(1 / 60, wish: Vector3.zero(), speed: 0.0, jump: true, jumpSpeed: 9.0).jumped, isTrue);
+    expect(p.velocity.y, closeTo(9.0, 1e-5), reason: 'the launch is set after the step\'s gravity');
+    for (var i = 0; i < 120 && !p.onFloor; i++) {
+      motor.idle(1 / 60);
+    }
+    motor.step(1 / 60, wish: Vector3.zero(), speed: 0.0, jump: true);
+    expect(p.velocity.y, closeTo(motor.tuning.jumpVelocity, 1e-5));
+  });
+
   test('mining the block underfoot drops its item, which is picked up', () async {
     final game = await _start(_flat());
     final p = game.player;

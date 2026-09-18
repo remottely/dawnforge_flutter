@@ -21,7 +21,7 @@
 | VK2 `voxel_worldgen` | **done** 2026-09-18 (VK2.1–VK2.4) | the POC's `TerrainGenerator` is written on the package; parity hashes unchanged |
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
-| VK5 The POC on the kit | in progress (VK5.1) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
+| VK5 The POC on the kit | in progress (VK5.2) | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
 | VK6 `voxel_audio` | **done** 2026-09-18 (VK6.1–VK6.4; the POC's `Sfx` on it) | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
 | VK7 `voxel_signals` | **done** 2026-09-18 (VK7.1–VK7.3, plus VK7.4 `SignalSpec` in the kit) | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
 | VK8 `voxel_net` | **done** 2026-09-18 (`21500e4a`: transport, host / join in the kit; drops stay local, mob loot on the host; never run with two real apps) | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
@@ -319,7 +319,7 @@ Each step keeps `--strike`, `--move-probe`, `--anim-probe` and `--outline-probe`
 they printed.
 
 - **VK5.1** The player's locomotion on `CharacterMotor` — done.
-- **VK5.2** The mob's locomotion on `CharacterMotor`.
+- **VK5.2** The mob's locomotion on `CharacterMotor` — done.
 - **VK5.3** The cameras on `ViewCamera` / `FirstPersonView`.
 - **VK5.4** The rigs on `Rig.*`.
 - **VK5.5** The brains: the species table as `MobSpec`s, Dawnforge's own behaviours.
@@ -333,6 +333,19 @@ Probes built from HEAD and from the change: `--stage31`, `--stage32`, `--radius=
 `--move-probe` print the same. One run printed `water exit ... after 74 ticks` against 76; four
 reruns of both builds printed 76, because the probe resumes on a microtask. `docs/baseline/` is
 stale (the terrain moved after VP0.2), so each check builds HEAD beside the change.
+
+Log. VK5.2: `CharacterMotor.step` gained `jumpSpeed` (a jump off the floor at another launch,
+the mount's 9 m/s leap that clears a fence) and `leaveWater` (a creature launches over a bank
+without a jump key; the kit's `Mob` passes it too), with a kit test. The POC's `Mob` walks,
+hops (accel 3, a 7 m/s leap, no knockback window) and carries its rider on the motor, tuned to
+its own numbers (step jump 8, accel 8, stroke 20 up to 2); a flier keeps its own flight, as in
+the kit. Probes against a HEAD build: `--stage31`, `--radius=8` and `--outline-probe` print the
+same; `--anim-probe` moves between runs of one build (frame-timed), HEAD's included. Two lines
+changed on purpose: `stage32 knockback` 1.62 m to 1.69 m (the motor counts the knockback window
+down after the move, one tick longer), and `move mount water` 68/59 ticks over/swimming to
+64/55 (the stroke replaces the liquid's gravity instead of fighting it, and the launch over the
+bank carries), every expectation on the line still met. One `--anim-probe` run stopped after
+its sheep line; two reruns of that build finished.
 
 ---
 

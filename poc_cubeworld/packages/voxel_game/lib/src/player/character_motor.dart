@@ -100,9 +100,9 @@ class CharacterMotor {
     stagger = seconds;
   }
 
-  /// Launches a jump from where the body stands.
-  void jump() {
-    body.velocity.y = tuning.jumpVelocity;
+  /// Launches a jump from where the body stands, at [speed] or the tuning's.
+  void jump([double? speed]) {
+    body.velocity.y = speed ?? tuning.jumpVelocity;
     _fallStart = body.position.y;
   }
 
@@ -117,7 +117,10 @@ class CharacterMotor {
   /// block) with [sneak]; [onLadder] makes the body climb (a wall climbed is a
   /// ladder too). [glide] caps the fall at [MotorTuning.glideFall] and counts
   /// as footing for the fall's height; [accel] replaces the walk's catch-up
-  /// rate for this step (a dash, a glide's slow steering).
+  /// rate for this step (a dash, a glide's slow steering), and [jumpSpeed]
+  /// the launch of a jump off the floor (a mount's leap). A swimmer pushing
+  /// at a bank launches over it while [jump] is held, or whenever
+  /// [leaveWater] says so (a creature always wants out).
   MotorEvents step(double dt,
       {required Vector3 wish,
       required double speed,
@@ -125,7 +128,9 @@ class CharacterMotor {
       bool sneak = false,
       bool onLadder = false,
       bool glide = false,
-      double? accel}) {
+      double? accel,
+      double? jumpSpeed,
+      bool? leaveWater}) {
     final events = MotorEvents();
     final b = body;
     climbing = false;
@@ -145,7 +150,7 @@ class CharacterMotor {
       b.applyGravity(dt);
       if (_hopping) b.applyGravity(dt);
       if (jump && b.onFloor) {
-        this.jump();
+        this.jump(jumpSpeed);
         events.jumped = true;
       }
     }
@@ -173,7 +178,7 @@ class CharacterMotor {
       }
     }
     _sinceWater = b.inLiquid ? 0.0 : _sinceWater + dt;
-    if (b.hitWall && _sinceWater < 0.5 && !b.onFloor && jump && wishing && !climbing && !_leavingWater) {
+    if (b.hitWall && _sinceWater < 0.5 && !b.onFloor && (leaveWater ?? jump) && wishing && !climbing && !_leavingWater) {
       // Out of the water over a bank: the lowest lift that fits, and a
       // quarter block to spare. A wall taller than 1.9 is never climbed.
       for (var lift = 0.1; lift <= 1.9; lift += 0.1) {
