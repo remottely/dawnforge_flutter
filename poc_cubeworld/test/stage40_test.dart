@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/game/game_state.dart';
-import 'package:cubeworld_poc/src/game/reach.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';

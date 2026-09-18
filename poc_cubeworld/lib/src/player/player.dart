@@ -29,7 +29,6 @@ import '../game/input.dart';
 import '../game/inventory.dart';
 import '../game/net.dart';
 import '../game/rails.dart';
-import '../game/reach.dart';
 import '../game/sfx.dart';
 import '../game/talents.dart';
 import 'package:voxel_scene/voxel_scene.dart';

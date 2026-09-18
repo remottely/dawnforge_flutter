@@ -1,7 +1,9 @@
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
 
-/// Stage 40: reach — the one rule every swing, every use and every bite obeys.
+import 'voxel_body.dart';
+import 'voxel_raycast.dart';
+
+/// Reach: the one rule every swing, every use and every bite obeys.
 ///
 /// What stands nearest along the line is what is acted on, and nothing acts
 /// through it. A creature behind a block is out of reach until the block is

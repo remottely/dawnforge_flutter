@@ -19,7 +19,6 @@ import 'remote_player.dart';
 import 'target.dart';
 import 'scene_body.dart';
 import '../game/pathfinder.dart';
-import '../game/reach.dart';
 import 'voxel_mesh_builder.dart';
 
 enum MobState { idle, wander, chase, attack, flee, dead }
