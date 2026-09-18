@@ -22,8 +22,8 @@
 | VK3 `voxel_content` | **done** 2026-09-18 (VK3.1, VK3.3; VK3.2's POC half deferred, see log) | `Blocks` / `Items` / `Recipes` / `Inventory` / `LootTables` / `StatusEffects` are rows fed to package registries |
 | VK4 `voxel_game` — the kit | **done** 2026-09-18 (VK4.1–VK4.11) | `example/` is a playable Minecraft-like in under 150 lines of game code |
 | VK5 The POC on the kit | pending | the POC's player, mobs and loop run on `voxel_game`; probes unchanged |
-| VK6 `voxel_audio` | pending | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
-| VK7 `voxel_signals` | pending | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
+| VK6 `voxel_audio` | **done** 2026-09-18 (VK6.1–VK6.4; the POC's `Sfx` on it) | the kit plays procedural sound effects for steps, digging, placing, hits and hurts with no audio files; music by context |
+| VK7 `voxel_signals` | **done** 2026-09-18 (VK7.1–VK7.3, plus VK7.4 `SignalSpec` in the kit) | levers, wires, lamps, doors and rails as declared block roles, the POC's circuits and rails written on it |
 | VK8 `voxel_net` | pending | two kit games share a world over TCP: block edits, the player, mobs and drops replicated from a host |
 
 ---
@@ -288,6 +288,19 @@ files) and crossfades music by context (`music.dart`), on `flutter_soloud`.
   declared per block by role; flood-fill rebuild capped per tick, as the POC's `Circuits` does.
 - **VK7.2** Auto-connecting blocks (the POC's `Rails`): a connection table per orientation variant.
 - **VK7.3** The POC's circuits and rails on the package, stage 27 and 28 tests unchanged.
+
+**VK6 log:** `bc22ad58` — the package (`renderWav`, `StockSounds`, `SoundBank`, `SilentSounds`,
+`MusicDirector`, 4 tests) and the kit wiring (`SoundSpec`, families from a `sound:` tag or inferred,
+distance attenuation, a headless test of what is heard). The example opened the audio device.
+`588e4f49` — the POC's `Sfx` became a facade over `SoundBank` (its four own sounds as recipes, its
+recorded footsteps as takes). The POC's `Music` stays (probe counters, its own tracks);
+`MusicDirector` is the kit's.
+
+**VK7 log:** `eca91d61` — `SignalNetwork` (the POC's algorithm step for step over declared roles),
+stock reactions, `RailGraph`; 5 tests. `1702de7c` — the POC's `Circuits` and `Rails` on it, stage
+23 / 27 / 28 tests unchanged. `0d79ffa2` — `SignalSpec` in the kit (levers, buttons, plates pressed
+by any body, lamps, doors, explosives), a headless test, circuits in the example. Pistons and
+powered rails are available as `SignalReactions` but not yet declarable in `SignalSpec`.
 
 ## VK8 — `voxel_net`
 
