@@ -184,6 +184,16 @@ class GameWorld implements VoxelEditor {
   /// Writes block [name] at [cell]; false when its chunk is not loaded.
   bool setBlockNamed(IVec3 cell, String name) => setBlock(cell, blocks.indexOf(name));
 
+  /// Every edit made to the generated world, by dimension and chunk: what a
+  /// save keeps. Live maps; copy before changing.
+  EditsByDimension get edits => _streamer.editsByDimension;
+
+  /// Replaces the edits (a save read back); call before the first [update].
+  void replaceEdits(EditsByDimension all) => _streamer.replaceEdits(all);
+
+  /// Cells edited so far.
+  int get editCount => _streamer.editCount;
+
   /// Calls [listener] after every block change.
   void addListener(BlockChangedListener listener) => _listeners.add(listener);
 

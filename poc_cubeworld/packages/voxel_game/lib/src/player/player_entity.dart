@@ -115,9 +115,29 @@ class PlayerEntity extends NodeBody implements Target {
     game.scene!.add(o.node);
   }
 
+  Vector3? _restoreAt;
+
+  /// Puts the player back where a save left it (standing there once its chunk
+  /// loads), with [spawn] as the respawn point.
+  void restore(Vector3 at, Vector3 spawn) {
+    _restoreAt = at.clone();
+    spawnPoint = spawn.clone();
+    position = at.clone();
+  }
+
   /// Puts the player on the ground at column ([x], [z]) once its chunk is
-  /// loaded; true when placed.
+  /// loaded (or where a save left it); true when placed.
   bool tryPlace(int x, int z) {
+    final saved = _restoreAt;
+    if (saved != null) {
+      if (!_game.world.isLoaded(IVec3.floor(saved))) return false;
+      position = saved.clone();
+      velocity = Vector3.zero();
+      _restoreAt = null;
+      _placed = true;
+      syncNode();
+      return true;
+    }
     if (!_game.world.isLoaded(IVec3(x, 0, z))) return false;
     position = Vector3(x + 0.5, _game.world.groundHeight(x, z) + 0.01, z + 0.5);
     spawnPoint = position.clone();
@@ -179,6 +199,7 @@ class PlayerEntity extends NodeBody implements Target {
         cameraMode = cameraMode == CameraMode.firstPerson ? CameraMode.thirdPerson : CameraMode.firstPerson;
       }
       if (input.justPressed(VoxelAction.drop)) _dropHeld();
+      if (input.justPressed(VoxelAction.inventory)) game.openScreen.value = '';
     }
     _walk(dt, gameplay);
     _updateAim();
@@ -321,6 +342,14 @@ class PlayerEntity extends NodeBody implements Target {
 
   void _use() {
     final hit = aimedBlock;
+    // A station opens its crafting instead of taking a block against it.
+    if (hit != null) {
+      final aimed = _game.world.blockNameAt(hit.block);
+      if (_game.stations.contains(aimed) && !_game.input.down(VoxelAction.sneak)) {
+        _game.openScreen.value = aimed;
+        return;
+      }
+    }
     final item = _heldType;
     if (hit == null || item == null || item.block == null) return;
     final cell = hit.block + hit.normal;

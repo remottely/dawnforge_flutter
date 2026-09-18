@@ -1,7 +1,7 @@
 // A Minecraft-like in one declaration: `flutter run -d macos`.
 import 'package:voxel_game/voxel_game.dart';
 
-void main() => runVoxelGame(game, title: 'Voxel game');
+void main() => runVoxelGame(game, title: 'Voxel game', saveSlot: 'world1');
 
 const game = VoxelGameSpec(
   seed: 2024,
@@ -15,6 +15,7 @@ const game = VoxelGameSpec(
     BlockType('log', color: 0x6B4F2A, hardness: 2.0, tool: 'axe'),
     BlockType('leaves', color: 0x3F8A2E, hardness: 0.2, opaque: false),
     BlockType('planks', color: 0xB08850, hardness: 2.0, tool: 'axe'),
+    BlockType('crafting_table', color: 0x9C6B3C, hardness: 2.5, tool: 'axe'),
     BlockType('coal_ore', color: 0x3A3A3E, hardness: 3.0, tool: 'pickaxe', tier: 1, drop: 'coal'),
     BlockType('torch', color: 0xFFD070, shape: BlockShape.torch, solid: false, hardness: 0, light: 14),
     BlockType('flower', color: 0xE04040, shape: BlockShape.flower, solid: false, hardness: 0),
@@ -31,6 +32,9 @@ const game = VoxelGameSpec(
   recipes: [
     Recipe('planks', 4, {'log': 1}),
     Recipe('torch', 4, {'coal': 1, 'planks': 1}),
+    Recipe('crafting_table', 1, {'planks': 4}),
+    Recipe('wooden_pickaxe', 1, {'planks': 5}, station: 'crafting_table'),
+    Recipe('stone_sword', 1, {'cobblestone': 2, 'planks': 1}, station: 'crafting_table'),
   ],
   world: WorldGenSpec(
     bedrock: 'stone',

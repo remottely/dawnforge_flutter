@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_content/voxel_content.dart';
@@ -20,6 +21,7 @@ import '../mobs/spawner.dart';
 import '../player/player_entity.dart';
 import '../spec/voxel_game_spec.dart';
 import '../world/game_world.dart';
+import '../world/world_save.dart';
 
 /// A running game made from a [VoxelGameSpec]: the world, the player, the
 /// creatures and items in it, the clock and the sky. [frame] advances it by
@@ -42,30 +44,34 @@ class VoxelGame {
   /// A game with a scene and worker isolates; await it before the first
   /// [frame]. The static resources of flutter_scene and the terrain shader
   /// must be loaded first (`VoxelGameWidget` does both).
-  static Future<VoxelGame> start(VoxelGameSpec spec) async {
+  ///
+  /// With [save] the world is the saved one: its seed, its edits, its clock
+  /// and its player.
+  static Future<VoxelGame> start(VoxelGameSpec spec, {SavedWorld? save}) async {
     final blocks = spec.buildBlocks();
-    final world = GameWorld(blocks, spec.world, spec.seed, loadRadius: spec.renderDistance, liquids: spec.liquids);
+    final world = GameWorld(blocks, spec.world, save?.seed ?? spec.seed, loadRadius: spec.renderDistance, liquids: spec.liquids);
     final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: false);
     game.scene = Scene();
     game.sky = DayNightSky(game.scene!);
     game.scene!.add(world.root!);
-    game._begin();
+    game._begin(save);
     await world.start();
     return game;
   }
 
   /// A game with no renderer and no isolates: chunks are generated as they
   /// are needed, on this isolate. [loadRadius] chunks around the player.
-  static Future<VoxelGame> startHeadless(VoxelGameSpec spec, {int loadRadius = 2}) async {
+  static Future<VoxelGame> startHeadless(VoxelGameSpec spec, {int loadRadius = 2, SavedWorld? save}) async {
     final blocks = spec.buildBlocks();
-    final world = GameWorld.headless(blocks, spec.world, spec.seed, loadRadius: loadRadius, liquids: spec.liquids);
+    final world = GameWorld.headless(blocks, spec.world, save?.seed ?? spec.seed, loadRadius: loadRadius, liquids: spec.liquids);
     final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: true);
-    game._begin();
+    game._begin(save);
     await world.start();
     return game;
   }
 
-  void _begin() {
+  void _begin(SavedWorld? save) {
+    if (save != null) world.replaceEdits(save.edits);
     player.attach(this);
     scene?.add(player.node);
     // The spawn: the nearest dry column to the origin along a spiral.
@@ -81,6 +87,7 @@ class VoxelGame {
     }
     _spawnColumn = spawn;
     player.position = Vector3(spawn.x + 0.5, g.surfaceHeight(spawn.x, spawn.z).toDouble(), spawn.z + 0.5);
+    if (save != null) WorldSaves.restore(this, save);
   }
 
   /// What was declared.
@@ -145,6 +152,14 @@ class VoxelGame {
 
   /// Whether the player reads the controls (false while a menu is open).
   bool gameplay = true;
+
+  /// The screen the player asked for: null for none, `''` for the bag, a
+  /// block id for that station's crafting (a crafting table, a furnace). The
+  /// widget shows it; set it to null to close.
+  final ValueNotifier<String?> openScreen = ValueNotifier(null);
+
+  /// Every station some recipe names.
+  late final Set<String> stations = {for (final r in spec.recipes) if (r.station.isNotEmpty) r.station};
 
   /// Whether the player stands in a loaded world yet.
   bool get ready => player.placed;

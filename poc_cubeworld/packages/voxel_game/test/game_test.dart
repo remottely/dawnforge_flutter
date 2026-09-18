@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_game/voxel_game.dart';
@@ -189,5 +191,39 @@ void main() {
     await _run(game, 3.0);
     expect(game.world.blockNameAt(at + const IVec3(1, 0, 0)), 'water_flow');
     expect(steps, greaterThan(100));
+  });
+
+  test('a saved world comes back: its edits, its player, its bag and its clock', () async {
+    final dir = Directory.systemTemp.createTempSync('voxel_saves');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final saves = WorldSaves(dir);
+    final game = await _start(_flat(player: const PlayerSpec(startingItems: {'planks': 5})));
+    final p = game.player;
+    final cell = IVec3.floor(p.position) + const IVec3(2, 0, 0);
+    game.world.setBlockNamed(cell, 'planks');
+    p.inventory.remove('planks', 2);
+    game.input.hold(VoxelAction.moveForward, true);
+    await _run(game, 0.5);
+    game.input.hold(VoxelAction.moveForward, false);
+    await _run(game, 0.3);
+    p.yaw = 1.25;
+    game.timeOfDay = 0.8;
+    final where = p.position.clone();
+    saves.save(game, 'slot1');
+    expect(saves.list(), ['slot1']);
+
+    final back = await VoxelGame.startHeadless(_flat(player: const PlayerSpec(startingItems: {'planks': 5})), save: saves.read('slot1'));
+    back.spawner.enabled = false;
+    for (var i = 0; i < 600 && !back.ready; i++) {
+      back.frame(1 / 60);
+      await Future<void>.delayed(Duration.zero);
+    }
+    expect(back.world.blockNameAt(cell), 'planks');
+    expect(back.player.position.distanceTo(where), lessThan(0.05));
+    expect(back.player.yaw, 1.25);
+    expect(back.player.inventory.countOf('planks'), 3);
+    expect(back.timeOfDay, closeTo(0.8, 1e-9));
+    saves.delete('slot1');
+    expect(saves.list(), isEmpty);
   });
 }
