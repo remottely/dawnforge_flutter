@@ -19,7 +19,7 @@ typedef StructureAt = ({int x, int y, int z, int type});
 /// live in voxel_scene's [VoxelChunkView] (VP2.2), the streamer's sink. This
 /// class keeps what is the game's: the terrain generator, liquid flow,
 /// circuits, dimension rules and the save format.
-class VoxelWorld implements VoxelQuery {
+class VoxelWorld implements VoxelEditor {
   VoxelWorld({required this.seedValue, int loadRadius = 8, this.playground = false}) {
     _streamer = ChunkStreamer(table: Blocks.table, sink: _view, loadRadius: loadRadius);
     _generator = TerrainGenerator(ids: Blocks.generatorIds(), seed: seedValue, playground: playground);
@@ -169,181 +169,58 @@ class VoxelWorld implements VoxelQuery {
 
   bool isLiquid(IVec3 b) => Blocks.isLiquid(getBlock(b));
 
+  @override
   bool setBlock(IVec3 b, int id) {
     final old = getBlock(b);
     if (!_streamer.setBlock(b, id)) return false;
-    _flowTouch(b, old, id);
+    flow.touch(this, b, old, id);
     if (flowEnabled) circuits.touch(b, old, id);
     onBlockChanged?.call(b, old, id);
     return true;
   }
 
-  // --- liquid flow (stage 22) ------------------------------------------------------
-  // Host-only cellular flow, seeded by EDITS alone so an idle world costs
-  // nothing: generated lakes are sources resting on solid and never enter the
-  // queue.
+  // --- liquid flow (stage 22; VK1.6: voxel_core's LiquidFlow) ---------------------
 
-  static const int flowBudget = 400;
-  static const Map<String, double> flowPeriod = {'water': 0.25, 'lava': 0.6};
-  static const Map<String, int> flowReach = {'water': 4, 'lava': 2};
+  /// Host-only cellular flow, seeded by edits alone. Water steps every 0.25 s
+  /// and spreads 4, lava every 0.6 s and spreads 2 (kinds in
+  /// [Blocks.liquidKinds] order); lava touching water hardens, a source into
+  /// obsidian when the pack has it, otherwise cobblestone.
+  late final LiquidFlow flow = LiquidFlow(
+    table: Blocks.table,
+    rules: [
+      LiquidRule(flowingId: Blocks.flowOf('water'), period: 0.25, reach: 4),
+      LiquidRule(flowingId: Blocks.flowOf('lava'), period: 0.6, reach: 2),
+    ],
+    canEnter: Blocks.isReplaceable,
+    contact: _liquidContact,
+  );
+
+  static final int _water = Blocks.liquidKinds.indexOf('water');
+  static final int _lava = Blocks.liquidKinds.indexOf('lava');
+
+  static int? _liquidContact(int kind, bool source, int touching) {
+    if (kind != _lava || touching != _water) return null;
+    return Blocks.indexOf(source && Blocks.has('obsidian') ? 'obsidian' : 'cobblestone');
+  }
 
   /// A flowing cell loaded from a save: it re-derives its distance when touched.
-  static const int flowUnknown = 99;
-  static const List<IVec3> _six = [
-    IVec3(1, 0, 0), IVec3(-1, 0, 0), IVec3(0, 1, 0), IVec3(0, -1, 0), IVec3(0, 0, 1), IVec3(0, 0, -1),
-  ];
-  static const List<IVec3> _four = [IVec3(1, 0, 0), IVec3(-1, 0, 0), IVec3(0, 0, 1), IVec3(0, 0, -1)];
+  static const int flowUnknown = LiquidFlow.unknown;
 
   /// False on a client: the host owns the flow and every cell it writes
-  /// arrives as a plain block edit.
-  bool flowEnabled = true;
-
-  /// Liquid cells to visit, in insertion order (Godot's Dictionary keys).
-  Set<IVec3> _flowQueue = <IVec3>{};
-
-  /// Horizontal steps from the feeding source (flowing cells only).
-  final Map<IVec3, int> _flowDist = {};
-  final Map<String, double> _flowTimer = {'water': 0.0, 'lava': 0.0};
+  /// arrives as a plain block edit. Gates the circuits too.
+  bool get flowEnabled => flow.enabled;
+  set flowEnabled(bool value) => flow.enabled = value;
 
   /// Cells written by the flow, for the probe.
-  int flowUpdates = 0;
+  int get flowUpdates => flow.updates;
 
-  int get flowPending => _flowQueue.length;
+  int get flowPending => flow.pending;
 
   /// The recorded distance of a cell, or [fallback] when it has none.
-  int flowDistOf(IVec3 b, [int fallback = 0]) => _flowDist[b] ?? fallback;
-
-  /// Every edit wakes the liquids around it: the cell itself when it is one,
-  /// and each liquid neighbour (a feeder that vanished, a wall that opened, a
-  /// lava cell now touching water).
-  void _flowTouch(IVec3 b, int old, int id) {
-    if (!flowEnabled) return;
-    if (Blocks.isLiquid(id)) {
-      _flowQueue.add(b);
-    } else if (Blocks.isLiquid(old)) {
-      _flowDist.remove(b);
-    }
-    for (final d in _six) {
-      final n = b + d;
-      if (Blocks.isLiquid(getBlock(n))) _flowQueue.add(n);
-    }
-  }
-
-  /// The distance of a liquid cell from its source: 0 for a source or a cell
-  /// fed from above.
-  int _distOf(IVec3 b, int id) => Blocks.isLiquidSource(id) ? 0 : (_flowDist[b] ?? flowUnknown);
+  int flowDistOf(IVec3 b, [int fallback = 0]) => flow.distOf(b, fallback);
 
   /// Once per simulation tick on the host / solo.
-  void tickFlow(double dt) {
-    if (!flowEnabled) return;
-    if (_flowQueue.isEmpty) {
-      for (final k in _flowTimer.keys) {
-        _flowTimer[k] = 0.0;
-      }
-      return;
-    }
-    final due = <String>{};
-    for (final k in _flowTimer.keys) {
-      _flowTimer[k] = _flowTimer[k]! + dt;
-      if (_flowTimer[k]! >= flowPeriod[k]!) {
-        _flowTimer[k] = 0.0;
-        due.add(k);
-      }
-    }
-    if (due.isEmpty) return;
-    final batch = _flowQueue;
-    _flowQueue = <IVec3>{};
-    var visited = 0;
-    for (final b in batch) {
-      final id = getBlock(b);
-      final kind = Blocks.liquidKind(id);
-      if (kind == '') continue;
-      if (!due.contains(kind) || visited >= flowBudget) {
-        _flowQueue.add(b); // not its turn yet, or over budget: next tick
-        continue;
-      }
-      visited += 1;
-      _flowCell(b, id, kind);
-    }
-  }
-
-  void _flowCell(IVec3 b, int id, String kind) {
-    // Lava touching water hardens: a source into obsidian when the pack has
-    // it, otherwise cobblestone; a flowing cell into cobblestone.
-    if (kind == 'lava') {
-      for (final d in _six) {
-        if (Blocks.liquidKind(getBlock(b + d)) == 'water') {
-          final hard = Blocks.isLiquidSource(id) && Blocks.has('obsidian') ? 'obsidian' : 'cobblestone';
-          _flowSet(b, Blocks.indexOf(hard));
-          return;
-        }
-      }
-    }
-    var dist = _distOf(b, id);
-    if (!Blocks.isLiquidSource(id)) {
-      // A flowing cell lives only while something feeds it: the same liquid
-      // above, or a horizontal neighbour closer to a source. Re-derive the
-      // distance from the best feeder.
-      var fed = flowUnknown;
-      if (Blocks.liquidKind(getBlock(b + IVec3.up)) == kind) {
-        fed = 0;
-      } else {
-        for (final d in _four) {
-          final n = b + d;
-          final nid = getBlock(n);
-          if (Blocks.liquidKind(nid) == kind) fed = math.min(fed, _distOf(n, nid) + 1);
-        }
-      }
-      // A feeder must be strictly closer to the source than this cell was (a
-      // sibling or a child does not count), so removing a source drains its
-      // whole puddle in order.
-      if (fed > flowReach[kind]! || fed > dist) fed = flowUnknown;
-      if (fed == flowUnknown) {
-        _flowDist.remove(b);
-        _flowSet(b, Blocks.air);
-        return;
-      }
-      if (fed != dist) {
-        _flowDist[b] = fed;
-        dist = fed;
-        for (final d in _four) {
-          if (Blocks.liquidKind(getBlock(b + d)) == kind) _flowQueue.add(b + d);
-        }
-      }
-    }
-    // Spread: down first (a fall resets the distance); sideways only when
-    // resting on a solid or on a source. Above a flowing cell the column just
-    // keeps falling: the cell that lands on something does the spreading, so a
-    // stream is one block wide.
-    final below = b + IVec3.down;
-    final belowId = getBlock(below);
-    if (_flowCanEnter(belowId)) {
-      _flowDist[below] = 0;
-      _flowSet(below, Blocks.flowOf(kind));
-      return;
-    }
-    if (!(Blocks.isSolid(belowId) || Blocks.isLiquidSource(belowId))) return;
-    if (dist >= flowReach[kind]!) return;
-    for (final d in _four) {
-      final n = b + d;
-      final nid = getBlock(n);
-      if (_flowCanEnter(nid)) {
-        _flowDist[n] = dist + 1;
-        _flowSet(n, Blocks.flowOf(kind));
-      } else if (Blocks.liquidKind(nid) == kind && !Blocks.isLiquidSource(nid) && _distOf(n, nid) > dist + 1) {
-        _flowDist[n] = dist + 1;
-        _flowQueue.add(n);
-      }
-    }
-  }
-
-  /// Air and plants give way to a liquid; anything else (another liquid
-  /// included) does not.
-  bool _flowCanEnter(int id) => Blocks.isReplaceable(id) && !Blocks.isLiquid(id);
-
-  void _flowSet(IVec3 b, int id) {
-    if (setBlock(b, id)) flowUpdates += 1;
-  }
+  void tickFlow(double dt) => flow.tick(this, dt);
 
   /// Highest solid block y at a column among LOADED chunks, or the generator's guess.
   int groundHeight(int x, int z) {
@@ -370,8 +247,7 @@ class VoxelWorld implements VoxelQuery {
   void switchDimension(int d) {
     if (d == dimension) return;
     _generator.setDimension(d);
-    _flowQueue.clear();
-    _flowDist.clear();
+    flow.clear();
     final onTnt = circuits.onTntPowered;
     circuits = Circuits(this)..onTntPowered = onTnt;
     _streamer.switchDimension(d);

@@ -7,6 +7,7 @@ export 'src/grid/block_shape.dart';
 export 'src/grid/chunk_size.dart';
 export 'src/grid/selection_box.dart';
 export 'src/grid/voxel_block_table.dart';
+export 'src/liquids/liquid_flow.dart';
 export 'src/math/angles.dart';
 export 'src/math/ivec3.dart';
 export 'src/mesh/chunk_mesher.dart';
