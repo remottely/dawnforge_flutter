@@ -362,6 +362,19 @@ class ChunkStreamer {
     return true;
   }
 
+  /// Writes [id] at [b] now when its chunk is loaded ([setBlock]); otherwise
+  /// records the edit, and it lands when the chunk generates. For an edit
+  /// that must not be lost (one from another player).
+  void storeEdit(IVec3 b, int id) {
+    if (b.y < 1 || b.y >= ChunkSize.sizeY) return;
+    final pos = chunkOf(b);
+    if (chunks.containsKey(pos)) {
+      setBlock(b, id);
+      return;
+    }
+    (_edits[pos] ??= {})[ChunkSize.index(b.x - pos.x * ChunkSize.sizeX, b.y, b.z - pos.z * ChunkSize.sizeZ)] = id;
+  }
+
   void _queueRemesh(ChunkPos pos) {
     if (!chunks.containsKey(pos) || !_meshed.contains(pos)) return;
     if (_meshInflight.contains(pos) || _surfaceReady.containsKey(pos)) _remeshAgain.add(pos);

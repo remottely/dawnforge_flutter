@@ -28,15 +28,18 @@ typedef HudBuilder = Widget Function(BuildContext context, VoxelGame game);
 ///
 /// With [saveSlot] the world is kept in that slot of the app's support
 /// folder (`worlds/<slot>`): loaded when it exists, saved every minute and
-/// when the widget goes away.
-Future<void> runVoxelGame(VoxelGameSpec spec, {String title = 'Voxel game', HudBuilder? hud, String? saveSlot}) async {
+/// when the widget goes away. With [hostPort] others can join the game on
+/// that port; with [join] (`'192.168.0.10'`, or `'host:port'`) this game
+/// joins one instead.
+Future<void> runVoxelGame(VoxelGameSpec spec,
+    {String title = 'Voxel game', HudBuilder? hud, String? saveSlot, int? hostPort, String? join}) async {
   WidgetsFlutterBinding.ensureInitialized();
   await VoxelGameWidget.loadResources();
   runApp(MaterialApp(
     title: title,
     debugShowCheckedModeBanner: false,
     theme: ThemeData.dark(),
-    home: Scaffold(body: VoxelGameWidget(spec: spec, hud: hud, saveSlot: saveSlot)),
+    home: Scaffold(body: VoxelGameWidget(spec: spec, hud: hud, saveSlot: saveSlot, hostPort: hostPort, join: join)),
   ));
 }
 
@@ -48,7 +51,25 @@ Future<void> runVoxelGame(VoxelGameSpec spec, {String title = 'Voxel game', HudB
 class VoxelGameWidget extends StatefulWidget {
   /// A game of [spec] with [hud] over it ([DefaultHud] when null);
   /// [onReady] receives the game once it runs.
-  const VoxelGameWidget({super.key, required this.spec, this.hud, this.onReady, this.saveSlot, this.saves, this.autosave = const Duration(minutes: 1)});
+  const VoxelGameWidget({
+    super.key,
+    required this.spec,
+    this.hud,
+    this.onReady,
+    this.saveSlot,
+    this.saves,
+    this.autosave = const Duration(minutes: 1),
+    this.hostPort,
+    this.join,
+  });
+
+  /// Host the game on this port, or null for a game nobody joins.
+  final int? hostPort;
+
+  /// Join the game at this address (`host` or `host:port`, port 7777 by
+  /// default) instead of starting one; its world is the host's and is never
+  /// saved here.
+  final String? join;
 
   /// The game.
   final VoxelGameSpec spec;
@@ -100,13 +121,22 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
   }
 
   Future<void> _start() async {
-    final slot = widget.saveSlot;
-    SavedWorld? saved;
-    if (slot != null) {
-      final saves = _saves = widget.saves ?? await VoxelGameWidget.defaultSaves();
-      if (saves.exists(slot)) saved = saves.read(slot);
+    final join = widget.join;
+    final VoxelGame game;
+    if (join != null) {
+      final parts = join.split(':');
+      game = await VoxelGame.joinGame(widget.spec, parts[0], port: parts.length > 1 ? int.parse(parts[1]) : 7777);
+    } else {
+      final slot = widget.saveSlot;
+      SavedWorld? saved;
+      if (slot != null) {
+        final saves = _saves = widget.saves ?? await VoxelGameWidget.defaultSaves();
+        if (saves.exists(slot)) saved = saves.read(slot);
+      }
+      game = await VoxelGame.start(widget.spec, save: saved);
+      final port = widget.hostPort;
+      if (port != null) await game.host(port: port);
     }
-    final game = await VoxelGame.start(widget.spec, save: saved);
     if (_disposed) {
       game.dispose();
       return;
@@ -115,7 +145,7 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
     game.openScreen.addListener(_screenChanged);
     setState(() => _game = game);
     unawaited(_startAudio(game));
-    if (slot != null) _autosave = Timer.periodic(widget.autosave, (_) => _save());
+    if (widget.saveSlot != null && join == null) _autosave = Timer.periodic(widget.autosave, (_) => _save());
     widget.onReady?.call(game);
   }
 
@@ -146,7 +176,7 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
 
   void _save() {
     final game = _game, saves = _saves, slot = widget.saveSlot;
-    if (game == null || saves == null || slot == null || !game.ready) return;
+    if (game == null || saves == null || slot == null || !game.ready || !game.authority) return;
     saves.save(game, slot);
   }
 

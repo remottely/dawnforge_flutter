@@ -1,7 +1,13 @@
 // A Minecraft-like in one declaration: `flutter run -d macos`.
 import 'package:voxel_game/voxel_game.dart';
 
-void main() => runVoxelGame(game, title: 'Voxel game', saveSlot: 'world1');
+/// `--dart-define=HOST=true` opens the game to others on port 7777;
+/// `--dart-define=JOIN=192.168.0.10` joins one instead.
+void main() => runVoxelGame(game,
+    title: 'Voxel game', saveSlot: _join.isEmpty ? 'world1' : null, hostPort: _host ? 7777 : null, join: _join.isEmpty ? null : _join);
+
+const _host = bool.fromEnvironment('HOST');
+const _join = String.fromEnvironment('JOIN');
 
 const game = VoxelGameSpec(
   seed: 2024,

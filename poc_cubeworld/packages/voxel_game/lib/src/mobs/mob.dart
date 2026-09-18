@@ -79,6 +79,27 @@ class Mob extends GameEntity implements Target {
   /// Whether the last path could not reach where it was asked to go.
   bool pathBlocked = false;
 
+  /// Its number in a networked game (the host's), 0 in a lone one.
+  int netId = 0;
+
+  /// A copy of the host's mob on a client: it neither thinks nor moves by
+  /// itself, it follows [applyNetState], and a hit on it is sent to the host.
+  bool replica = false;
+
+  Vector3? _netTo;
+
+  /// The yaw it faces, radians.
+  double get facing => _facing;
+
+  /// A replica's state from the host: where it is, facing where, its health,
+  /// and whether it died.
+  void applyNetState(Vector3 at, double yaw, double health, {bool dead = false}) {
+    _netTo = at.clone();
+    _facing = yaw;
+    hp = health;
+    if (dead && !_dead) kill(dropLoot: false);
+  }
+
   @override
   bool get isDead => _dead;
 
@@ -156,6 +177,16 @@ class Mob extends GameEntity implements Target {
       _deathTime += dt;
       rig?.place(Vector3.zero(), topple: math.min(_deathTime * 4.0, math.pi / 2));
       if (_deathTime > 1.2) removed = true;
+      return;
+    }
+    if (replica) {
+      final to = _netTo ?? position;
+      final before = position.clone();
+      position = position + (to - position) * math.min(1.0, dt * 12.0);
+      velocity = (position - before) / math.max(dt, 1e-6);
+      _hurtFlash = math.max(_hurtFlash - dt, 0.0);
+      _animate(dt);
+      syncNode();
       return;
     }
     if (!game.world.isLoaded(IVec3.floor(position))) return;
@@ -303,6 +334,12 @@ class Mob extends GameEntity implements Target {
   @override
   double takeDamage(Damage damage) {
     if (_dead) return 0.0;
+    if (replica) {
+      _hurtFlash = 0.25;
+      _game.playSound(spec.hurtSound ?? _defaultHurt, at: centre(), volumeDb: -4.0);
+      _game.session?.hitMob(this, damage);
+      return 0.0;
+    }
     final taken = math.min(hp, damage.amount);
     hp -= damage.amount;
     sinceHurt = 0.0;

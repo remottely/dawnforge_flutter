@@ -181,6 +181,16 @@ class GameWorld implements VoxelEditor {
     return true;
   }
 
+  /// Writes [id] at [cell] now, or when its chunk generates if it is not
+  /// loaded: an edit that must not be lost (another player's).
+  void storeEdit(IVec3 cell, int id) {
+    if (isLoaded(cell)) {
+      setBlock(cell, id);
+    } else {
+      _streamer.storeEdit(cell, id);
+    }
+  }
+
   /// Writes block [name] at [cell]; false when its chunk is not loaded.
   bool setBlockNamed(IVec3 cell, String name) => setBlock(cell, blocks.indexOf(name));
 

@@ -1,0 +1,15 @@
+name: voxel_net
+description: >-
+  The network layer for voxel games: a host and clients over TCP exchanging
+  newline-delimited JSON messages. Pure Dart (dart:io).
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

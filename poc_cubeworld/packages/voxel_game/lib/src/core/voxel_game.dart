@@ -5,6 +5,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_audio/voxel_audio.dart';
 import 'package:voxel_content/voxel_content.dart';
+import 'package:voxel_net/voxel_net.dart' show NetHost;
 import 'package:voxel_core/voxel_core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 import 'package:voxel_signals/voxel_signals.dart';
@@ -21,6 +22,8 @@ import '../loop/fixed_step_loop.dart';
 import '../mobs/mob.dart';
 import '../mobs/mob_spec.dart';
 import '../mobs/spawner.dart';
+import '../net/remote_player.dart';
+import '../net/sessions.dart';
 import '../player/player_entity.dart';
 import '../spec/signal_spec.dart';
 import '../spec/voxel_game_spec.dart';
@@ -35,7 +38,7 @@ import '../world/world_save.dart';
 /// Headless ([VoxelGame.startHeadless]) it has no scene, no worker isolates and no
 /// visuals, and steps as fast as it is asked: tests, bots and servers.
 class VoxelGame {
-  VoxelGame._(this.spec, this.blocks, this.items, this.world, {required this.headless})
+  VoxelGame._(this.spec, this.blocks, this.items, this.world, {required this.headless, this.authority = true})
       : random = math.Random(spec.seed),
         input = InputMap<VoxelAction>(VoxelAction.defaultBindings),
         recipes = RecipeBook(spec.recipes),
@@ -43,6 +46,12 @@ class VoxelGame {
     pathCosts = blocks.pathCosts(avoidLiquids: const {'lava'});
     player = PlayerEntity(spec.player, Inventory(stackSize: (id) => items[id].stack, maxDurability: (id) => items[id].durability));
     spawner = MobSpawner(this);
+    if (!authority) {
+      // A client: the host runs the liquids, the circuits and the spawning.
+      world.flow.enabled = false;
+      spawner.enabled = false;
+      return;
+    }
     final s = spec.signals;
     if (s != null) {
       final net = signals = SignalNetwork(world, _signalRules(s));
@@ -95,10 +104,10 @@ class VoxelGame {
   ///
   /// With [save] the world is the saved one: its seed, its edits, its clock
   /// and its player.
-  static Future<VoxelGame> start(VoxelGameSpec spec, {SavedWorld? save}) async {
+  static Future<VoxelGame> start(VoxelGameSpec spec, {SavedWorld? save, bool authority = true}) async {
     final blocks = spec.buildBlocks();
     final world = GameWorld(blocks, spec.world, save?.seed ?? spec.seed, loadRadius: spec.renderDistance, liquids: spec.liquids);
-    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: false);
+    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: false, authority: authority);
     game.scene = Scene();
     game.sky = DayNightSky(game.scene!);
     game.scene!.add(world.root!);
@@ -110,10 +119,10 @@ class VoxelGame {
 
   /// A game with no renderer and no isolates: chunks are generated as they
   /// are needed, on this isolate. [loadRadius] chunks around the player.
-  static Future<VoxelGame> startHeadless(VoxelGameSpec spec, {int loadRadius = 2, SavedWorld? save}) async {
+  static Future<VoxelGame> startHeadless(VoxelGameSpec spec, {int loadRadius = 2, SavedWorld? save, bool authority = true}) async {
     final blocks = spec.buildBlocks();
     final world = GameWorld.headless(blocks, spec.world, save?.seed ?? spec.seed, loadRadius: loadRadius, liquids: spec.liquids);
-    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: true);
+    final game = VoxelGame._(spec, blocks, spec.buildItems(blocks), world, headless: true, authority: authority);
     game._begin(save);
     await world.start();
     return game;
@@ -138,6 +147,34 @@ class VoxelGame {
     player.position = Vector3(spawn.x + 0.5, g.surfaceHeight(spawn.x, spawn.z).toDouble(), spawn.z + 0.5);
     if (save != null) WorldSaves.restore(this, save);
   }
+
+  /// Hosts this game on [port] (0 picks a free one): other games join it with
+  /// [joinGame]. Returns the session; its host's `port` is the one bound.
+  Future<HostSession> host({int port = 7777}) async {
+    final s = HostSession(this, await NetHost.bind(port: port));
+    session = s;
+    return s;
+  }
+
+  /// Joins the game hosted at [address]:[port]: its world, its players, its
+  /// mobs. [headless] for a test or a bot.
+  static Future<VoxelGame> joinGame(VoxelGameSpec spec, String address, {int port = 7777, bool headless = false}) async {
+    final hello = await joinHost(address, port: port);
+    final game = headless
+        ? await startHeadless(spec, save: hello.world, authority: false)
+        : await start(spec, save: hello.world, authority: false);
+    game.player.restore(hello.spawn, hello.spawn);
+    game.session = ClientSession(game, hello.connection, hello.peer);
+    return game;
+  }
+
+  /// The network side of the game, or null for a game of one.
+  GameSession? session;
+
+  /// Whether this game decides (a lone game, or the host); a client follows.
+  final bool authority;
+
+  int _nextNetId = 1;
 
   /// What was declared.
   final VoxelGameSpec spec;
@@ -291,6 +328,7 @@ class VoxelGame {
     for (final e in List.of(entities)) {
       e.tick(this, dt);
     }
+    session?.tick(this, dt);
     world.tickFlow(dt);
     final net = signals;
     if (net != null) {
@@ -327,15 +365,22 @@ class VoxelGame {
   /// The camera for this frame.
   Camera camera() => view.camera(this);
 
-  /// Every living thing a projectile can hit: the player and the creatures.
+  /// The other players of a networked game.
+  Iterable<RemotePlayer> get remotePlayers => session?.players.values ?? const <RemotePlayer>[];
+
+  /// Every living thing a projectile can hit: the players and the creatures.
   Iterable<Target> get allTargets sync* {
     yield player;
+    yield* remotePlayers;
     yield* mobs;
   }
 
-  /// What a hunter looks for: the player, and the creatures named in [prey].
+  /// What a hunter looks for: the players, and the creatures named in [prey].
   Iterable<Target> targetsOf(List<String> prey) sync* {
     if (!player.isDead) yield player;
+    for (final r in remotePlayers) {
+      if (!r.isDead) yield r;
+    }
     if (prey.isEmpty) return;
     for (final m in mobs) {
       if (prey.contains(m.spec.id)) yield m;
@@ -345,6 +390,7 @@ class VoxelGame {
   /// Adds [entity] to the world.
   T add<T extends GameEntity>(T entity) {
     if (entity is Mob) {
+      if (entity.netId == 0) entity.netId = _nextNetId++;
       mobs.add(entity);
     } else {
       entities.add(entity);
@@ -432,8 +478,9 @@ class VoxelGame {
   /// Called by the player as it dies.
   void playerDied() {}
 
-  /// Stops the worker isolates and the input devices.
+  /// Stops the worker isolates, the input devices and the network.
   void dispose() {
+    session?.close();
     world.dispose();
     input.dispose();
   }

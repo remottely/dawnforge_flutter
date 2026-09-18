@@ -97,7 +97,8 @@ class WorldSaves {
     final s = saved.state;
     game.time = (s['time']! as num).toDouble();
     game.timeOfDay = (s['timeOfDay']! as num).toDouble();
-    final p = s['player']! as Map<String, Object?>;
+    final p = s['player'] as Map<String, Object?>?;
+    if (p == null) return; // a network hello carries the world, not a player
     Vector3 v(Object? o) {
       final l = [for (final e in o! as List<Object?>) (e! as num).toDouble()];
       return Vector3(l[0], l[1], l[2]);
