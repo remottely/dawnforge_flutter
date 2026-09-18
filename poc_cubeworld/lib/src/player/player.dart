@@ -67,6 +67,23 @@ class Player extends SceneBody implements Target {
   static const double reach = 5.0;
   static const double meleeReach = 3.6;
   static const double eyeHeight = 1.62;
+
+  /// Where the third-person eye sits when nothing is in the way: this far
+  /// behind the head, over the right shoulder and a hand above it. Shoulder
+  /// and rise ease in with the distance, so an eye pulled all the way in ends
+  /// up on the head itself and never off to one side of it, inside whatever
+  /// the head is standing against.
+  static const double orbitDistance = 4.8;
+  static const double orbitShoulder = 0.55;
+  static const double orbitRise = 0.15;
+
+  /// Half the box the eye is treated as. The near plane is a rectangle 0.05 m
+  /// in front of the eye, so the eye is not a point: this covers its furthest
+  /// corner at any field of view and leaves a margin over it.
+  static const double eyeRadius = 0.25;
+
+  /// The body hides once the eye is nearer than this to the head.
+  static const double modelHideDistance = 1.1;
   static const double mouseSensitivity = 0.0022;
   static double sensitivityScale = 1.0;
   static double baseFov = 72.0;
@@ -160,7 +177,7 @@ class Player extends SceneBody implements Target {
 
   double yaw = 0.0;
   double pitch = -0.35;
-  double _camDistance = 4.8;
+  double _camDistance = orbitDistance;
   double get camDistance => _camDistance;
   double fov = 72.0;
   /// The skeleton around the aimed block or mob.
@@ -300,7 +317,7 @@ class Player extends SceneBody implements Target {
     firstPerson = fp;
     model.visible = !fp;
     handView.visible = fp;
-    if (!fp) _camDistance = 4.8;
+    if (!fp) _camDistance = _clearOrbit();
   }
 
   String heldItem() => inventory.idAt(selectedSlot);
@@ -345,19 +362,34 @@ class Player extends SceneBody implements Target {
 
   Vector3 get cameraPosition {
     if (firstPerson) return pivotPosition;
-    return pivotPosition + rightVec * 0.55 + upVec * 0.15 + backVec * _camDistance;
+    return pivotPosition + orbitOffset(rightVec, upVec, backVec, _camDistance);
   }
 
+  /// The eye's offset from the pivot at orbit distance [dist]. Both the
+  /// shoulder and the rise are a share of how far out the eye is, so the
+  /// offset shrinks to nothing at the head and the whole segment from the
+  /// pivot to the eye is a straight line [_clearOrbit] can sweep.
+  static Vector3 orbitOffset(Vector3 right, Vector3 up, Vector3 back, double dist) {
+    final t = dist / orbitDistance;
+    return right * (orbitShoulder * t) + up * (orbitRise * t) + back * dist;
+  }
+
+  /// Where the near plane actually sits this frame: the orbit seat plus the
+  /// jolt and the sway. [_updateCamera] keeps *this* point out of the rock,
+  /// not the seat, because a wall does not care which of the three put the eye
+  /// inside it.
+  Vector3 get eyePosition => cameraPosition + _shake + _bobOffset;
+
   PerspectiveCamera camera() => GodotCamera(
-        position: cameraPosition + _shake + _bobOffset,
-        target: cameraPosition + _shake + _bobOffset + forward + upVec * _bobPitch,
+        position: eyePosition,
+        target: eyePosition + forward + upVec * _bobPitch,
         up: upVec + rightVec * _bobRoll,
         fovRadiansY: fov * math.pi / 180.0,
         fovNear: 0.05,
         fovFar: 700.0,
       );
 
-  Vector3 aimOrigin() => firstPerson ? cameraPosition : pivotPosition + rightVec * 0.55;
+  Vector3 aimOrigin() => firstPerson ? cameraPosition : pivotPosition + rightVec * orbitShoulder;
   Vector3 aimDirection() => forward;
 
   /// One swing, in the body and in the first-person hand at once. Every attack,
@@ -372,14 +404,76 @@ class Player extends SceneBody implements Target {
     _updateBob(dt);
     _updateHandView(dt);
     if (firstPerson) return;
-    // Pull the camera in when a block sits between it and the head.
-    final origin = pivotPosition;
-    final shoulder = rightVec * 0.55;
-    var wanted = 4.8;
-    final free = _rayToSolid(origin + shoulder, backVec, wanted + 0.3);
-    if (free >= 0.0) wanted = math.max(free - 0.35, 0.6);
-    _camDistance = lerpd(_camDistance, wanted, dt * (wanted < _camDistance ? 18.0 : 6.0));
-    model.visible = _camDistance > 1.1;
+    final clear = _clearOrbit();
+    // In at once, out gently. An eye *eased* into place is an eye inside the
+    // wall for the length of the ease, and a single frame of that is a frame
+    // of seeing the whole cave system through the rock.
+    _camDistance = clear < _camDistance ? clear : lerpd(_camDistance, clear, dt * 6.0);
+    model.visible = _camDistance > modelHideDistance;
+  }
+
+  /// How far down the orbit the eye may sit this frame.
+  ///
+  /// A bare ray down [backVec] was not enough, and each of the three things it
+  /// left out put the near plane inside a wall — which reads as no wall at
+  /// all, because a face is only drawn from the outside, so every cave behind
+  /// it shows through. The ray started at the shoulder while the eye also
+  /// rises; the ray was a line while the eye carries a near plane around it;
+  /// and the ray ignored the jolt and the sway, which move the eye after the
+  /// fact. So the box the eye really occupies is swept along the exact segment
+  /// it will travel, jolt and sway included, and stops at the last clear step.
+  double _clearOrbit() {
+    final jitter = _shake + _bobOffset;
+    final pivot = pivotPosition;
+    final right = rightVec, up = upVec, back = backVec;
+    return clearDistance(
+      orbitDistance,
+      (double d) => pivot + orbitOffset(right, up, back, d) + jitter,
+      _cellIsClear,
+    );
+  }
+
+  bool _cellIsClear(int x, int y, int z) => y >= 0 && !blocksCamera(world.getBlockXYZ(x, y, z));
+
+  /// A cell the eye may not enter: anything drawn as a full opaque cube (from
+  /// the inside it is not drawn at all) and anything that stops a body — a
+  /// pane of glass, a shut door, a fence. Grass, flowers, torches, rails and
+  /// water are none of those, and the camera passes through them.
+  static bool blocksCamera(int block) => Blocks.isOpaque(block) || Blocks.isSolid(block);
+
+  /// The furthest a box of [eyeRadius] may slide along [eyeAt] from 0 to
+  /// [wanted] with every cell it touches accepted by [cellIsClear]. Marched
+  /// from 0 outward, never from [wanted] inward: an air pocket on the far side
+  /// of a wall is not room the camera may have.
+  static double clearDistance(
+    double wanted,
+    Vector3 Function(double distance) eyeAt,
+    bool Function(int x, int y, int z) cellIsClear,
+  ) {
+    const step = eyeRadius * 0.5;
+    var clear = 0.0;
+    while (clear < wanted) {
+      final next = math.min(clear + step, wanted);
+      if (!boxIsClear(eyeAt(next), eyeRadius, cellIsClear)) return clear;
+      clear = next;
+    }
+    return wanted;
+  }
+
+  /// True when every cell the box of half-width [radius] around [at] touches
+  /// is accepted by [cellIsClear].
+  static bool boxIsClear(Vector3 at, double radius, bool Function(int x, int y, int z) cellIsClear) {
+    final x0 = (at.x - radius).floor(), x1 = (at.x + radius).floor();
+    final y0 = (at.y - radius).floor(), y1 = (at.y + radius).floor();
+    final z0 = (at.z - radius).floor(), z1 = (at.z + radius).floor();
+    for (var y = y0; y <= y1; y++) {
+      for (var z = z0; z <= z1; z++) {
+        for (var x = x0; x <= x1; x++) {
+          if (!cellIsClear(x, y, z)) return false;
+        }
+      }
+    }
+    return true;
   }
 
   /// Stage 32: a random jolt in the camera plane that dies out over
@@ -498,11 +592,6 @@ class Player extends SceneBody implements Target {
       phase: _bobPhase,
       weight: _bobWeight,
     );
-  }
-
-  double _rayToSolid(Vector3 origin, Vector3 direction, double maxDist) {
-    final hit = voxelRaycast(origin, direction, maxDist);
-    return hit?.distance ?? -1.0;
   }
 
   /// VP1.9: voxel_core's grid traversal over this world.

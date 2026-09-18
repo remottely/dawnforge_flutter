@@ -70,6 +70,40 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-17 s18** — you cannot see through a wall the camera is standing in.
+  - **The bug:** in third person, with a block wall at the height of the head, turning until the
+    back of the head was against it showed the whole cave system straight through the rock. A
+    face is only drawn from the outside, so a near plane one centimetre past a wall is a near
+    plane with nothing between it and everything behind. First person never did it, because the
+    eye there is where the body already is and a body is swept out of solid rock every tick.
+  - **Why the ray missed it:** `_updateCamera` cast one ray from the shoulder straight down
+    `backVec` and seated the eye 0.35 m in front of whatever it hit — but never nearer than
+    0.6 m, a floor that pushes the eye *through* any wall standing closer than 0.95 m, which is
+    exactly the wall you get by backing into one. Three more gaps besides: the ray started at
+    the shoulder while the eye also rises 0.15 m, so a ledge only the risen eye meets was never
+    seen; the ray was a line while the eye carries a near plane around it; and the jolt
+    (`_shake`) and the sway (`_bobOffset`) were added to the camera *after* the ray, so nothing
+    had checked where they put it. On top of all that the pull-in was a lerp at 18/s, so a quick
+    turn spent a fifth of a second easing the eye through the wall it was backing into.
+  - **What replaces it:** `Player.clearDistance` sweeps the box the eye really occupies
+    (`eyeRadius` 0.25 m, which covers the near plane's furthest corner at any FOV) along the
+    exact segment the eye will travel — jolt and sway included — and stops at the last clear
+    step. It marches **from the head outward**, never from the seat inward, so an air pocket on
+    the far side of a wall is never mistaken for room the camera may have. The pull-in is
+    immediate now and only the push-out eases. `Player.orbitOffset` eases the shoulder and the
+    rise in with the distance, so an eye pulled all the way in lands on the head itself instead
+    of beside it, inside whatever the head is standing against. `Player.blocksCamera` is the
+    cell test: opaque cubes and anything that stops a body (glass, a shut door, a fence) —
+    where the old ray also stopped on grass, flowers and torches, which the camera now passes
+    through.
+  - **Measured** over a wall at head height, 360 yaws x 17 pitches (6120 views): the eye landed
+    inside the wall in **1602 of them before, 0 after**. It costs ~39 steps of at most eight
+    cell reads a frame.
+  - **Tests:** `test/stage43_test.dart` (12) pin the cell test, the box test, the sweep against a
+    wall, a ledge only the rise meets, a jolt toward the wall, the pocket beyond a wall, a head
+    walled in on every side, the eased shoulder, a step fine enough not to jump a one-cell wall,
+    and the 6120-view sweep — with the rule it replaces failing that same sweep, so the test
+    would catch the bug coming back.
 - **2026-09-17 s17** — nothing of a tree floats: every block of one joins the next by a face, and the walk down those faces always ends on dry ground.
   - **Drawn before it is written:** a tree used to be stamped straight into the chunk, block by block, and whatever the chunk refused or a later builder overwrote was simply left out — with everything that hung off it still in. A tree is now drawn on a canvas of its own (`_ink`, in world coordinates), and `_blitTree` floods the six faces out from its stump and writes **only what the flood reaches**. A frayed leaf with nothing under it, a vine hanging where the crown had already thinned away, a branch touching the trunk by an edge: none of them reach the stump, so none of them is written. The flood also knows what the world will refuse (`_blockedAt`: inside the ground, or under the sea), and it reads that from the position, never from the chunk.
   - **The same tree from either side:** `_crown`, `_placeWillow` and `_vineFall` rolled their frayed rim on the **chunk-local** x and z, so the two chunks that share a tree frayed it differently and each wrote leaves the other had cut the support from. Everything is rolled on world coordinates now. The ground test moved the same way: `_treeGround` (dry land, no cave mouth under the foot) is asked of the position, where the old test could only be asked by the chunk that owned the column — the other one planted the tree regardless and wrote its half of the crown over nothing.

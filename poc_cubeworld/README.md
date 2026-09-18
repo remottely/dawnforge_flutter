@@ -244,8 +244,13 @@ the world as before; `--title-probe` forces the title even then.
   quad's diagonals are mirrored in the mesher and the voxel builder.
 - **Flutter has no pointer lock**; `pointer_lock` (macOS) supplies relative deltas drained
   once per fixed step, which is exactly the shape `InputHelper` would want.
-- **The camera collision ray works the same**, but the model must hide when the orbit
-  camera is pulled inside it (`camDistance < 1.1`).
+- **A camera collision *ray* is not enough here.** The orbit eye sits off the ray (a
+  shoulder across and a hand up), it carries a near plane around it rather than being a
+  point, and the jolt and the sway move it after the fact — so the eye ends up a few
+  centimetres inside a wall, and a wall from the inside is not drawn at all, so every cave
+  behind it shows through. `Player.clearDistance` sweeps a 0.25 m box along the exact
+  segment the eye will travel and comes in at once instead of easing; the model hides when
+  the eye is pulled inside it (`camDistance < 1.1`).
 - **The Flutter tool's build-hook runner rejects symlinks** under the package root
   (`hooks_runner` `wrapLink` → `UnimplementedError`) and the macOS SwiftPM plugin links
   live there, so this project has no app-level `hook/build.dart`: `flutter_scene` compiles
