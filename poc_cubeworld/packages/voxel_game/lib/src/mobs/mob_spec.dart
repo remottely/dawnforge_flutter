@@ -100,6 +100,7 @@ class MobSpec {
     this.drops = const [],
     this.spawn,
     this.knockbackResistance = 0.0,
+    this.hurtSound,
   });
 
   /// The id.
@@ -139,4 +140,8 @@ class MobSpec {
 
   /// 0 takes a full shove, 1 none.
   final double knockbackResistance;
+
+  /// The sound it makes when hurt; by default by its build (a small one
+  /// squeaks, a big one groans, a flier chirps).
+  final String? hurtSound;
 }

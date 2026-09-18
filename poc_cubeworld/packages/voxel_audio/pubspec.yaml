@@ -1,0 +1,22 @@
+name: voxel_audio
+description: >-
+  Procedural game audio for voxel games: sound effects synthesised to WAV at
+  start-up (no audio files), a stock set by block material, and music
+  crossfaded by context, played through flutter_soloud.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_soloud: ^4.1.7
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

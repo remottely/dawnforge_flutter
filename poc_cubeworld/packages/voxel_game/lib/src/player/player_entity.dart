@@ -73,6 +73,9 @@ class PlayerEntity extends NodeBody implements Target {
 
   bool _dead = false;
   double _deadFor = 0.0;
+  double _stepTimer = 0.0;
+  double _digTimer = 0.0;
+  bool _wasInLiquid = false;
   IVec3? _miningCell;
   double _attackCooldown = 0.0;
   double _useCooldown = 0.0;
@@ -152,7 +155,11 @@ class PlayerEntity extends NodeBody implements Target {
   }
 
   /// Adds [count] of [item] to the bag; returns what did not fit.
-  int pickUp(String item, int count) => inventory.add(item, count);
+  int pickUp(String item, int count) {
+    final left = inventory.add(item, count);
+    if (left < count) _game.playSound('pickup', volumeDb: -8.0, pitch: 1.0 + _game.random.nextDouble() * 0.3);
+    return left;
+  }
 
   @override
   double takeDamage(Damage damage) {
@@ -161,6 +168,7 @@ class PlayerEntity extends NodeBody implements Target {
     hp -= damage.amount;
     _invulnerable = 0.4;
     hurtFlash = 1.0;
+    _game.playSound('hurt', volumeDb: -3.0);
     final from = damage.from;
     if (from != null && damage.knockback > 0.0) {
       final push = position - from
@@ -244,6 +252,18 @@ class PlayerEntity extends NodeBody implements Target {
     if (onFloor) speed *= _game.blocks[floor].speed;
     final events = motor.step(dt,
         wish: wish, speed: speed, jump: gameplay && input.down(VoxelAction.jump), sneak: sneaking, onLadder: _onLadder());
+    // A step every 0.4 s on foot (0.3 running), sounding like the ground.
+    final horizontal = math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+    if (onFloor && horizontal > 1.0) {
+      _stepTimer -= dt;
+      if (_stepTimer <= 0.0) {
+        _stepTimer = sprinting ? 0.3 : 0.4;
+        final under = _game.world.getBlockXYZ(position.x.floor(), (position.y - 0.05).floor(), position.z.floor());
+        if (under != 0) _game.playSound('step_${_game.soundFamily(under)}', volumeDb: -8.0);
+      }
+    }
+    if (inLiquid && !_wasInLiquid) _game.playSound('splash', volumeDb: -6.0);
+    _wasInLiquid = inLiquid;
     if (spec.fallDamage && events.landedAfter > 4.0) {
       takeDamage(Damage(((events.landedAfter - 4.0) * 1.2).floorToDouble(), source: 'fall'));
     }
@@ -323,6 +343,10 @@ class PlayerEntity extends NodeBody implements Target {
     final hit = aimedBlock;
     if (hit == null) {
       mineProgress = 0.0;
+      if (pressed) {
+        _swingArm();
+        _game.playSound('swing', volumeDb: -10.0);
+      }
       return;
     }
     if (_miningCell != hit.block) {
@@ -334,6 +358,12 @@ class PlayerEntity extends NodeBody implements Target {
     final time = spec.creative ? (type.hardness < 0 ? -1.0 : 0.0) : _game.mining.mineTime(type, _heldType);
     if (time < 0.0) return;
     if (pressed) _swingArm();
+    _digTimer -= dt;
+    if (_digTimer <= 0.0) {
+      _digTimer = 0.25;
+      _swingArm();
+      _game.playSound('dig', at: Vector3(hit.block.x + 0.5, hit.block.y + 0.5, hit.block.z + 0.5), volumeDb: -10.0);
+    }
     mineProgress += time == 0.0 ? 1.0 : dt / time;
     if (mineProgress < 1.0) return;
     mineProgress = 0.0;
@@ -366,6 +396,7 @@ class PlayerEntity extends NodeBody implements Target {
     if (world.blocks[id].solid && _bodiesIn(cell)) return;
     if (!world.setBlock(cell, id)) return;
     _swingArm();
+    _game.playSound('place_${_game.soundFamily(id)}', at: Vector3(cell.x + 0.5, cell.y + 0.5, cell.z + 0.5), volumeDb: -4.0);
     if (!spec.creative) inventory.remove(item.id, 1);
     _game.spec.onBlockPlaced?.call(_game, item.block!, cell);
   }

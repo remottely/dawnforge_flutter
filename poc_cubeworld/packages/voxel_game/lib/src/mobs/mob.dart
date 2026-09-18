@@ -119,6 +119,14 @@ class Mob extends GameEntity implements Target {
   /// Turns the head toward [point] this step.
   void lookAt(Vector3 point) => _look = point.clone();
 
+  String get _defaultHurt => spec.gait == Gait.fly
+      ? 'hurt_flying'
+      : spec.height < 0.9
+          ? 'hurt_small'
+          : spec.hp >= 30
+              ? 'hurt_large'
+              : 'hit';
+
   /// Its eye, where it looks and shoots from.
   Vector3 eye() => position + Vector3(0, height * 0.85, 0);
 
@@ -301,6 +309,7 @@ class Mob extends GameEntity implements Target {
     _hurtFlash = 0.25;
     lastHurtBy = damage.attacker;
     lastHurtFrom = damage.from?.clone();
+    _game.playSound(spec.hurtSound ?? _defaultHurt, at: centre(), volumeDb: -4.0);
     final from = damage.from;
     if (from != null && damage.knockback > 0.0) {
       final push = position - from

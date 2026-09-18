@@ -4,6 +4,7 @@
 /// game imports this one library.
 library;
 
+export 'package:voxel_audio/voxel_audio.dart' show MusicDirector, SilentSounds, SoundBank, SoundFamily, SoundPlayer, SoundRecipe, StockSounds;
 export 'package:voxel_content/voxel_content.dart';
 export 'package:voxel_core/voxel_core.dart' show BlockShape, IVec3;
 export 'package:voxel_worldgen/voxel_worldgen.dart'
@@ -45,3 +46,4 @@ export 'src/ui/voxel_game_widget.dart';
 export 'src/ui/inventory_screen.dart';
 export 'src/world/world_save.dart';
 export 'src/camera/first_person_view.dart';
+export 'src/spec/sound_spec.dart';

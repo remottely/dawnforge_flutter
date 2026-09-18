@@ -11,6 +11,7 @@ workspace:
   - packages/voxel_core
   - packages/voxel_scene
   - packages/voxel_scene/example
+  - packages/voxel_audio
   - packages/voxel_content
   - packages/voxel_game
   - packages/voxel_game/example

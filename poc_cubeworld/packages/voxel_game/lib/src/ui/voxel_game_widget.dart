@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_scene/scene.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:voxel_audio/voxel_audio.dart';
+import 'package:voxel_core/voxel_core.dart' show IVec3;
 import 'package:voxel_scene/voxel_scene.dart';
 
 import '../core/voxel_game.dart';
@@ -87,6 +89,9 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
 
   WorldSaves? _saves;
   Timer? _autosave;
+  SoundBank? _bank;
+  MusicDirector? _music;
+  Timer? _moodTimer;
 
   @override
   void initState() {
@@ -109,8 +114,34 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
     game.input.attachDevices();
     game.openScreen.addListener(_screenChanged);
     setState(() => _game = game);
+    unawaited(_startAudio(game));
     if (slot != null) _autosave = Timer.periodic(widget.autosave, (_) => _save());
     widget.onReady?.call(game);
+  }
+
+  Future<void> _startAudio(VoxelGame game) async {
+    final sound = widget.spec.sounds;
+    if (!sound.enabled) return;
+    final bank = SoundBank(recipes: {...StockSounds.all, ...sound.recipes}, assets: sound.assets);
+    if (!await bank.init() || _disposed) return;
+    _bank = bank;
+    game.sounds = bank;
+    if (sound.music.isEmpty) return;
+    final music = _music = MusicDirector(sound.music, gain: sound.musicVolume);
+    _moodTimer = Timer.periodic(const Duration(seconds: 1), (_) => music.setMood(_moodOf(game, sound.music)));
+  }
+
+  /// The music's mood: the cave underground, the biome's own track, else day
+  /// or night.
+  static String? _moodOf(VoxelGame game, Map<String, String> tracks) {
+    final p = game.player.position;
+    final cell = IVec3.floor(p);
+    final underground = p.y < game.world.groundHeight(cell.x, cell.z) - 6 && game.world.lightAt(cell).sky < 4;
+    if (underground && tracks.containsKey('cave')) return 'cave';
+    final biome = game.world.generator.biomeAt(cell.x, cell.z).name;
+    if (tracks.containsKey(biome)) return biome;
+    final key = game.daylight > 0.3 ? 'day' : 'night';
+    return tracks.containsKey(key) ? key : null;
   }
 
   void _save() {
@@ -122,6 +153,9 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
   @override
   void dispose() {
     _autosave?.cancel();
+    _moodTimer?.cancel();
+    _music?.setMood(null);
+    _bank?.dispose();
     _save();
     _disposed = true;
     _game?.openScreen.removeListener(_screenChanged);

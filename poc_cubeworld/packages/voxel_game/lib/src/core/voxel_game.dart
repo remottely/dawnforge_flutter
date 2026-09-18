@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
+import 'package:voxel_audio/voxel_audio.dart';
 import 'package:voxel_content/voxel_content.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
@@ -146,6 +147,39 @@ class VoxelGame {
   /// The hand and the mining crack; null headless.
   FirstPersonView? firstPerson;
 
+  /// What plays the sounds: silent until the widget opens the audio device.
+  SoundPlayer sounds = SilentSounds();
+
+  final Map<int, String> _families = {};
+
+  /// The material family block [id] sounds like (see `SoundSpec`).
+  String soundFamily(int id) => _families.putIfAbsent(id, () {
+        final t = blocks[id];
+        for (final tag in t.tags) {
+          if (tag.startsWith('sound:')) return tag.substring(6);
+        }
+        if (t.isLiquid) return SoundFamily.liquid;
+        if (t.tool == 'axe') return SoundFamily.wood;
+        if (t.tool == 'shovel') return SoundFamily.earth;
+        if (t.shape == BlockShape.cross || t.shape == BlockShape.flower || (!t.solid && t.tool == null)) return SoundFamily.plant;
+        if (t.solid && t.alpha < 1.0) return SoundFamily.glass;
+        if (!t.opaque && t.solid && t.tool == null) return SoundFamily.plant;
+        return SoundFamily.stone;
+      });
+
+  /// Plays [name] as heard from [at] by the player: quieter with distance,
+  /// nothing past 32 m; at the player when [at] is null.
+  void playSound(String name, {Vector3? at, double volumeDb = 0.0, double pitch = 1.0}) {
+    if (!spec.sounds.enabled) return;
+    var db = volumeDb;
+    if (at != null) {
+      final d = at.distanceTo(player.eyePosition);
+      if (d > 32.0) return;
+      if (d > 3.0) db -= 20.0 * math.log(d / 3.0) / math.ln10;
+    }
+    sounds.play(name, volumeDb: db, pitch: pitch);
+  }
+
   final FixedStepLoop _loop = FixedStepLoop();
   ({int x, int z}) _spawnColumn = (x: 0, z: 0);
 
@@ -278,6 +312,7 @@ class VoxelGame {
 
   /// Shoots [projectile] from [from] toward [at], by [owner].
   Projectile shoot(ProjectileSpec projectile, {required Vector3 from, required Vector3 at, Target? owner}) {
+    playSound('shoot', at: from, volumeDb: -4.0);
     final to = at - from;
     final d = to.length;
     final dir = d > 0 ? to / d : Vector3(0, 0, -1);
@@ -297,6 +332,7 @@ class VoxelGame {
     if (id == BlockRegistry.air || blocks[id].isLiquid) return;
     final type = blocks[id];
     if (!world.setBlock(cell, BlockRegistry.air)) return;
+    playSound('break_${soundFamily(id)}', at: Vector3(cell.x + 0.5, cell.y + 0.5, cell.z + 0.5), volumeDb: -4.0);
     final item = blocks.dropOf(id);
     if (drop && item.isNotEmpty && items.has(item) && spec.mining.drops(type, dropFor)) {
       dropItem(item, 1, Vector3(cell.x + 0.5, cell.y + 0.3, cell.z + 0.5));
@@ -308,6 +344,7 @@ class VoxelGame {
   /// (falling to 0 at the edge) and, with [breaksBlocks], the breakable
   /// blocks inside it gone.
   void explode(Vector3 centre, {double radius = 3.0, double damage = 12.0, bool breaksBlocks = true, Target? source}) {
+    playSound('explode', at: centre);
     for (final t in allTargets.toList()) {
       if (t.isDead) continue;
       final d = t.centre().distanceTo(centre);

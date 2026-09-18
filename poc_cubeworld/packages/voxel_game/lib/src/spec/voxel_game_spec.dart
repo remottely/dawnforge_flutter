@@ -9,6 +9,7 @@ import '../mobs/mob_spec.dart';
 import '../player/player_spec.dart';
 import '../world/game_world.dart';
 import 'sky_spec.dart';
+import 'sound_spec.dart';
 
 /// A whole game, declared: its blocks, items and recipes, how its world is
 /// generated, its player, its mobs and its sky. [VoxelGameWidget] (or
@@ -34,6 +35,7 @@ class VoxelGameSpec {
     this.player = const PlayerSpec(),
     this.mobs = const [],
     this.sky = const SkySpec(),
+    this.sounds = const SoundSpec(),
     this.seed = 1,
     this.renderDistance = 6,
     this.mining = const MiningRules(),
@@ -66,6 +68,9 @@ class VoxelGameSpec {
 
   /// Day, night and the light between.
   final SkySpec sky;
+
+  /// Sound effects and music.
+  final SoundSpec sounds;
 
   /// The world seed.
   final int seed;

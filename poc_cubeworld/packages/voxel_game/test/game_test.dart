@@ -226,4 +226,27 @@ void main() {
     saves.delete('slot1');
     expect(saves.list(), isEmpty);
   });
+
+  test('the player is heard: steps by the ground, digging, breaking and placing by material', () async {
+    final game = await _start(_flat(player: const PlayerSpec(startingItems: {'planks': 2})));
+    final heard = game.sounds as SilentSounds;
+    final p = game.player;
+    game.input.hold(VoxelAction.moveForward, true);
+    await _run(game, 1.0);
+    game.input.hold(VoxelAction.moveForward, false);
+    expect(heard.played.where((s) => s == 'step_earth').length, greaterThanOrEqualTo(2), reason: 'grass is dug with a shovel: earth');
+    p.pitch = -1.5;
+    game.input.hold(VoxelAction.attack, true);
+    await _run(game, 2.0);
+    game.input.hold(VoxelAction.attack, false);
+    expect(heard.played, contains('dig'));
+    expect(heard.played, contains('break_earth'));
+    p.pitch = -0.9;
+    await _run(game, 0.2);
+    game.input.tap(VoxelAction.use);
+    await _run(game, 0.1);
+    expect(heard.played, contains('place_wood'), reason: 'planks are cut with an axe: wood');
+    expect(game.soundFamily(game.blocks.indexOf('water')), SoundFamily.liquid);
+    expect(game.soundFamily(game.blocks.indexOf('stone')), SoundFamily.stone);
+  });
 }
