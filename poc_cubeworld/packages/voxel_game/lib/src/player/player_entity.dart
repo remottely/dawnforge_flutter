@@ -67,6 +67,10 @@ class PlayerEntity extends NodeBody implements Target {
   /// The outline around what the crosshair rests on; null headless.
   SelectionOutline? outline;
 
+  /// 1 the moment the player is hurt, fading to 0: the HUD's red flash and
+  /// the camera's jolt.
+  double hurtFlash = 0.0;
+
   bool _dead = false;
   double _deadFor = 0.0;
   IVec3? _miningCell;
@@ -156,6 +160,7 @@ class PlayerEntity extends NodeBody implements Target {
     final taken = math.min(hp, damage.amount);
     hp -= damage.amount;
     _invulnerable = 0.4;
+    hurtFlash = 1.0;
     final from = damage.from;
     if (from != null && damage.knockback > 0.0) {
       final push = position - from
@@ -176,6 +181,7 @@ class PlayerEntity extends NodeBody implements Target {
   void tick(VoxelGame game, double dt, {required bool gameplay}) {
     final input = game.input;
     _invulnerable = math.max(_invulnerable - dt, 0.0);
+    hurtFlash = math.max(hurtFlash - dt * 2.5, 0.0);
     if (_dead) {
       _deadFor += dt;
       if (_deadFor >= spec.respawnSeconds) _respawn();
@@ -307,7 +313,7 @@ class PlayerEntity extends NodeBody implements Target {
       mineProgress = 0.0;
       if (_attackCooldown > 0.0) return;
       _attackCooldown = 0.45;
-      rig?.swing();
+      _swingArm();
       final item = _heldType;
       final damage = item == null || item.tool == null ? spec.handDamage : item.damage.toDouble();
       mob.takeDamage(Damage(damage, from: position, knockback: 6.0, attacker: this));
@@ -327,7 +333,7 @@ class PlayerEntity extends NodeBody implements Target {
     final type = _game.blocks[block];
     final time = spec.creative ? (type.hardness < 0 ? -1.0 : 0.0) : _game.mining.mineTime(type, _heldType);
     if (time < 0.0) return;
-    if (pressed) rig?.swing();
+    if (pressed) _swingArm();
     mineProgress += time == 0.0 ? 1.0 : dt / time;
     if (mineProgress < 1.0) return;
     mineProgress = 0.0;
@@ -359,9 +365,14 @@ class PlayerEntity extends NodeBody implements Target {
     // Never into a body: the player's own, or a creature's.
     if (world.blocks[id].solid && _bodiesIn(cell)) return;
     if (!world.setBlock(cell, id)) return;
-    rig?.swing();
+    _swingArm();
     if (!spec.creative) inventory.remove(item.id, 1);
     _game.spec.onBlockPlaced?.call(_game, item.block!, cell);
+  }
+
+  void _swingArm() {
+    rig?.swing();
+    _game.firstPerson?.swing();
   }
 
   bool _bodiesIn(IVec3 cell) {

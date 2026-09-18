@@ -89,6 +89,9 @@ class Rig {
 
   final int _skin, _shirt, _pants;
 
+  /// The main colour, `0xRRGGBB`: a humanoid's skin, an animal's body.
+  int get skinColor => _skin;
+
   /// Builds this rig for a collider [halfWidth] wide and [height] tall.
   RigInstance build(double halfWidth, double height) => RigInstance._(this, halfWidth, height);
 }

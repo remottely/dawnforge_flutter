@@ -32,6 +32,7 @@ class ViewCamera {
   double _distance = 4.8;
   double _bobPhase = 0.0, _bobWeight = 0.0;
   double _lastTime = -1.0;
+  final math.Random _jolt = math.Random(7);
 
   /// The eye's offset from the pivot at orbit distance [dist]: shoulder and
   /// rise grow with the distance, so the segment pivot→eye is straight and can
@@ -82,7 +83,12 @@ class ViewCamera {
     _bobWeight = lerpd(_bobWeight, walking ? (speed / p.spec.walkSpeed).clamp(0.0, 1.7) : 0.0, math.min(1.0, dt * 9.0));
     if (walking) _bobPhase = (_bobPhase + speed * dt * 1.9) % (math.pi * 2);
     final amp = _bobWeight * bobAmplitude;
-    final sway = right * (math.sin(_bobPhase) * amp * 0.16) - up * (math.cos(_bobPhase).abs() * amp);
+    var sway = right * (math.sin(_bobPhase) * amp * 0.16) - up * (math.cos(_bobPhase).abs() * amp);
+    // A hit jolts the eye (never the aim) and dies out.
+    if (p.hurtFlash > 0.0) {
+      final k = 0.08 * p.hurtFlash;
+      sway += right * ((_jolt.nextDouble() * 2 - 1) * k) + up * ((_jolt.nextDouble() * 2 - 1) * k);
+    }
     final Vector3 eye;
     if (p.cameraMode == CameraMode.firstPerson) {
       eye = p.eyePosition + sway;

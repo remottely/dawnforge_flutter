@@ -24,6 +24,7 @@ class DefaultHud extends StatelessWidget {
     const shadow = [Shadow(offset: Offset(1, 1), blurRadius: 2)];
     return Stack(
       children: [
+        if (p.hurtFlash > 0.0) Positioned.fill(child: ColoredBox(color: Colors.red.withValues(alpha: 0.35 * p.hurtFlash))),
         const Center(child: Icon(Icons.add, color: Colors.white70, size: 22)),
         if (p.mineProgress > 0.0)
           Align(

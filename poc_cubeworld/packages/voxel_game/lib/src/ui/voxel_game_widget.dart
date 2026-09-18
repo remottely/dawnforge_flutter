@@ -154,7 +154,7 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
       input.captureLost = false;
       input.releaseKeys();
     }
-    game.gameplay = input.wantCapture && game.openScreen.value == null;
+    game.gameplay = (input.wantCapture || game.playWithoutCapture) && game.openScreen.value == null;
     game.frame(dt);
     _frame.value++;
   }

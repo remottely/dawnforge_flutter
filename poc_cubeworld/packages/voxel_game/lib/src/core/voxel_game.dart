@@ -7,6 +7,7 @@ import 'package:voxel_content/voxel_content.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
+import '../camera/first_person_view.dart';
 import '../camera/view_camera.dart';
 import '../entities/game_entity.dart';
 import '../entities/item_pickup.dart';
@@ -55,6 +56,7 @@ class VoxelGame {
     game.sky = DayNightSky(game.scene!);
     game.scene!.add(world.root!);
     game._begin(save);
+    game.firstPerson = FirstPersonView(game);
     await world.start();
     return game;
   }
@@ -141,6 +143,9 @@ class VoxelGame {
   /// The camera's rig.
   final ViewCamera view = ViewCamera();
 
+  /// The hand and the mining crack; null headless.
+  FirstPersonView? firstPerson;
+
   final FixedStepLoop _loop = FixedStepLoop();
   ({int x, int z}) _spawnColumn = (x: 0, z: 0);
 
@@ -152,6 +157,11 @@ class VoxelGame {
 
   /// Whether the player reads the controls (false while a menu is open).
   bool gameplay = true;
+
+  /// Play without the mouse captured: a demo, a bot or a scripted run driving
+  /// [input] from code. The widget otherwise pauses the controls until a click
+  /// captures the pointer.
+  bool playWithoutCapture = false;
 
   /// The screen the player asked for: null for none, `''` for the bag, a
   /// block id for that station's crafting (a crafting table, a furnace). The
@@ -176,6 +186,7 @@ class VoxelGame {
     final steps = _loop.advance(dt, step);
     if (steps == 0) input.endTick();
     world.update(player.position);
+    firstPerson?.update(dt);
     final s = sky;
     if (s != null) {
       final intensity = s.update(timeOfDay, fogDistance: world.loadRadius * 16.0);
