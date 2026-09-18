@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:flutter_scene/noise.dart';
+import 'package:voxel_worldgen/voxel_worldgen.dart';
 
 import 'package:voxel_core/voxel_core.dart';
 
