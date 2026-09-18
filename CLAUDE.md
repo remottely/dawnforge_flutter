@@ -161,6 +161,22 @@ Never import from it, never resurrect a pattern from it without passing these ru
 8. **Reference the plan step** (`FP<phase>.<step>`) in the commit body when the task
    belongs to the port plan.
 
+### Context budget — stop near 200k tokens
+
+A session's context is not a place to finish everything. When the conversation nears
+**200k tokens of context**, stop starting new work and wind down:
+
+1. Finish or back out the step in hand; never leave uncommitted, half-applied edits.
+2. Commit what is done, with the suite green.
+3. Write where the work stopped into the live plan (its progress table and log) and into
+   memory: the last commit, the next step by its plan ID, anything learned that is not in
+   the code.
+4. End the turn with that summary, so the work continues after `/compact` or in a new
+   session from the plan, not from the conversation.
+
+A multi-phase request is done phase by phase across sessions; ask before opening a new
+phase once a large one lands.
+
 ### Parallel sessions — assume one, always
 
 Another chat may be working in this repository at the same time. Two obligations:
