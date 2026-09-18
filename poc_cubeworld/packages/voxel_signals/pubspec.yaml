@@ -1,0 +1,20 @@
+name: voxel_signals
+description: >-
+  Signals and rails for voxel_core worlds: levers, buttons, plates, wires with
+  decaying strength, lamps, doors, pistons and powered rails as declared block
+  roles, and rails that orient themselves. Pure Dart.
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+resolution: workspace
+
+dependencies:
+  meta: ^1.15.0
+  voxel_core: ^0.0.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

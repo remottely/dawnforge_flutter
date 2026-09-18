@@ -11,6 +11,7 @@ workspace:
   - packages/voxel_core
   - packages/voxel_scene
   - packages/voxel_scene/example
+  - packages/voxel_signals
   - packages/voxel_audio
   - packages/voxel_content
   - packages/voxel_game
@@ -31,6 +32,7 @@ dependencies:
   voxel_content: ^0.0.0
   voxel_core: ^0.0.0
   voxel_scene: ^0.0.0
+  voxel_signals: ^0.0.0
   voxel_worldgen: ^0.0.0
 
 dev_dependencies:
