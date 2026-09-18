@@ -288,6 +288,10 @@ class Blocks {
   /// Stage 29: how a block under a walker's feet scales its speed (soul sand: 0.5).
   static double speedMult(int index) => defs[index].speedMult;
 
+  /// VK1.3: this game's say in voxel_core's [Pathfinder]: lava is never
+  /// entered, a slow floor costs its inverse speed (soul sand 2).
+  static final PathCosts pathCosts = PathCosts(avoid: (b) => liquidKind(b) == 'lava', floorCost: (b) => 1.0 / speedMult(b));
+
   /// Stage 32: the material family a block sounds like: "stone", "wood",
   /// "earth", "metal", "glass", "plant" or "liquid" (`Sfx` has a break / place /
   /// step voice for each), read from the id, first match in this order.

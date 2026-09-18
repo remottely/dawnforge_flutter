@@ -9,6 +9,7 @@ export 'src/grid/selection_box.dart';
 export 'src/grid/voxel_block_table.dart';
 export 'src/math/ivec3.dart';
 export 'src/mesh/chunk_mesher.dart';
+export 'src/navigation/pathfinder.dart';
 export 'src/persistence/edit_delta_codec.dart';
 export 'src/physics/reach.dart';
 export 'src/physics/voxel_body.dart';

@@ -33,7 +33,6 @@ import 'inventory.dart';
 import 'loot.dart';
 import 'music.dart';
 import 'net.dart';
-import 'pathfinder.dart';
 import 'playground.dart';
 import 'portals.dart';
 import 'quests.dart';
@@ -2835,7 +2834,7 @@ class Game extends ChangeNotifier {
     final from = IVec3(start.x.floor(), (start.y + 0.05).floor(), start.z.floor());
     final to = IVec3(stand.x.floor(), (stand.y + 0.05).floor(), stand.z.floor());
     final sw = Stopwatch()..start();
-    final path = Pathfinder.find(world, from, to);
+    final path = Pathfinder.find(world, from, to, costs: Blocks.pathCosts);
     final findMs = sw.elapsedMicroseconds / 1000.0;
     final straight = (from.x - to.x).abs() + (from.z - to.z).abs();
     Mob.pathfindingEnabled = true;

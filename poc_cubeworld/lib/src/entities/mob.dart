@@ -18,7 +18,6 @@ import 'player_model.dart';
 import 'remote_player.dart';
 import 'target.dart';
 import 'scene_body.dart';
-import '../game/pathfinder.dart';
 import 'voxel_mesh_builder.dart';
 
 enum MobState { idle, wander, chase, attack, flee, dead }
@@ -1104,7 +1103,7 @@ class Mob extends SceneBody {
     final to = IVec3(goal.x.floor(), (goal.y + 0.05).floor(), goal.z.floor());
     final blocked = _pathI < _path.length && world.isSolid(IVec3.floor(_path[_pathI]));
     if (_pathTimer <= 0.0 || blocked || _path.isEmpty) {
-      _path = Pathfinder.find(world, from, to);
+      _path = Pathfinder.find(world, from, to, costs: Blocks.pathCosts);
       _pathI = 0;
       _pathTimer = pathPeriod;
       pathReplans += 1;

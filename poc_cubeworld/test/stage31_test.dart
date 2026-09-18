@@ -5,7 +5,6 @@ import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:voxel_core/voxel_core.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/spawner.dart';
-import 'package:cubeworld_poc/src/game/pathfinder.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
@@ -174,11 +173,11 @@ void main() {
         }
       });
       const from = IVec3(4, floorY, 7), to = IVec3(12, floorY, 7);
-      final path = Pathfinder.find(w, from, to);
+      final path = Pathfinder.find(w, from, to, costs: Blocks.pathCosts);
       expect(cellOf(path.last), to);
       expect(path.length, greaterThan(8)); // the straight line is 8
       for (final p in path) {
-        expect(Pathfinder.walkable(w, cellOf(p)), isTrue);
+        expect(Pathfinder.walkable(w, cellOf(p), Blocks.pathCosts), isTrue);
         expect(p.x - p.x.floor(), 0.5);
       }
     });
@@ -189,7 +188,7 @@ void main() {
           put(c, 6, floorY, z, 'stone');
         }
       });
-      final path = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(8, floorY, 7));
+      final path = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(8, floorY, 7), costs: Blocks.pathCosts);
       expect(path.map(cellOf), [
         const IVec3(5, floorY, 7),
         const IVec3(6, floorY + 1, 7),
@@ -209,7 +208,7 @@ void main() {
         }
       });
       const to = IVec3(12, floorY, 12);
-      final path = Pathfinder.find(w, const IVec3(3, floorY, 3), to);
+      final path = Pathfinder.find(w, const IVec3(3, floorY, 3), to, costs: Blocks.pathCosts);
       expect(path, isNotEmpty);
       final last = cellOf(path.last);
       expect(last, isNot(to));

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/game/music.dart';
-import 'package:cubeworld_poc/src/game/pathfinder.dart';
 import 'package:cubeworld_poc/src/game/settings.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,13 +52,13 @@ void main() {
     for (var z = 0; z < 16; z++) {
       w.setBlock(IVec3(8, floorY, z), Blocks.indexOf('oak_fence'));
     }
-    expect(Pathfinder.walkable(w, const IVec3(8, floorY + 1, 7)), isFalse, reason: 'a fence top is no floor');
-    final path = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(12, floorY, 7));
+    expect(Pathfinder.walkable(w, const IVec3(8, floorY + 1, 7), Blocks.pathCosts), isFalse, reason: 'a fence top is no floor');
+    final path = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(12, floorY, 7), costs: Blocks.pathCosts);
     expect(path.every((p) => p.x < 8.0), isTrue, reason: 'the best it can do is wait at the fence');
 
     // A solid block in the line is a step again.
     w.setBlock(const IVec3(8, floorY, 7), Blocks.indexOf('oak_planks'));
-    final over = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(12, floorY, 7));
+    final over = Pathfinder.find(w, const IVec3(4, floorY, 7), const IVec3(12, floorY, 7), costs: Blocks.pathCosts);
     expect([over.last.x, over.last.z], [12.5, 7.5], reason: 'reaches the goal');
     expect(over.any((p) => p.x.floor() == 8 && p.y == floorY + 1), isTrue);
   });
