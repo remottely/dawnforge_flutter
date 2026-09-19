@@ -6,7 +6,7 @@ import 'mob.dart';
 import '../player/player.dart';
 import 'player_model.dart';
 import 'target.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Another peer's body: a PlayerModel moved by the poses that peer sends. No
 /// physics here.

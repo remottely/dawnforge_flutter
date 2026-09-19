@@ -1,5 +1,5 @@
 import 'package:flutter_scene/scene.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// voxel_core's [VoxelBody] with a scene node that carries its visuals: move
 /// the body, then [syncNode].

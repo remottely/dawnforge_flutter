@@ -5,9 +5,9 @@
 library;
 
 export 'package:voxel_audio/voxel_audio.dart' show MusicDirector, SilentSounds, SoundBank, SoundFamily, SoundPlayer, SoundRecipe, StockSounds;
-export 'package:voxel_content/voxel_content.dart';
-export 'package:voxel_core/voxel_core.dart' show BlockShape, IVec3;
-export 'package:voxel_worldgen/voxel_worldgen.dart'
+export 'package:voxel_engine/content.dart';
+export 'package:voxel_engine/core.dart' show BlockShape, IVec3;
+export 'package:voxel_engine/worldgen.dart'
     show
         Biome,
         CaveSpec,
@@ -51,7 +51,7 @@ export 'src/ui/inventory_screen.dart';
 export 'src/world/world_save.dart';
 export 'src/camera/first_person_view.dart';
 export 'src/spec/sound_spec.dart';
-export 'package:voxel_signals/voxel_signals.dart' show SignalNetwork, SignalReaction, SignalReactions, SignalRules, RailGraph, RailVariant;
+export 'package:voxel_engine/signals.dart' show SignalNetwork, SignalReaction, SignalReactions, SignalRules, RailGraph, RailVariant;
 export 'src/spec/signal_spec.dart';
 export 'src/net/remote_player.dart';
 export 'src/net/sessions.dart';

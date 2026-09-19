@@ -1,5 +1,5 @@
-import 'package:voxel_core/voxel_core.dart';
-import 'package:voxel_signals/voxel_signals.dart';
+import 'package:voxel_engine/core.dart';
+import 'package:voxel_engine/signals.dart';
 
 import '../core/blocks.dart';
 import '../world/voxel_world.dart';

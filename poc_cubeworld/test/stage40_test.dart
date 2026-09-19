@@ -6,7 +6,7 @@ import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Stage 40: reach — what is nearest is what is acted on — the step every
 /// creature jumps instead of being lifted up, the swim, and the playground's

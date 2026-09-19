@@ -6,7 +6,7 @@ import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import '../game/circuits.dart';
 import 'terrain_generator.dart';
 import 'package:voxel_scene/voxel_scene.dart';

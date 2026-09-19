@@ -1,6 +1,6 @@
-import 'package:voxel_content/voxel_content.dart';
-import 'package:voxel_core/voxel_core.dart';
-import 'package:voxel_worldgen/voxel_worldgen.dart';
+import 'package:voxel_engine/content.dart';
+import 'package:voxel_engine/core.dart';
+import 'package:voxel_engine/worldgen.dart';
 
 import '../core/voxel_game.dart';
 import '../entities/game_entity.dart';

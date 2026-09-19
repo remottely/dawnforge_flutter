@@ -1,6 +1,6 @@
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// One posable piece of a creature's rig: a pivot node at a rest position,
 /// posed every frame by Euler angles (applied Y, X, Z), a per-axis scale and

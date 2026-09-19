@@ -4,11 +4,11 @@ import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_audio/voxel_audio.dart';
-import 'package:voxel_content/voxel_content.dart';
-import 'package:voxel_net/voxel_net.dart' show NetHost;
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/content.dart';
+import 'package:voxel_engine/net.dart' show NetHost;
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
-import 'package:voxel_signals/voxel_signals.dart';
+import 'package:voxel_engine/signals.dart';
 
 import '../camera/first_person_view.dart';
 import '../camera/view_camera.dart';

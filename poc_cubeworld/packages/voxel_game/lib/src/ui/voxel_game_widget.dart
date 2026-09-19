@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scene/scene.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:voxel_audio/voxel_audio.dart';
-import 'package:voxel_core/voxel_core.dart' show IVec3;
+import 'package:voxel_engine/core.dart' show IVec3;
 import 'package:voxel_scene/voxel_scene.dart';
 
 import '../core/voxel_game.dart';

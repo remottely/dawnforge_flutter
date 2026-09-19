@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
-import 'package:voxel_net/voxel_net.dart';
+import 'package:voxel_engine/core.dart';
+import 'package:voxel_engine/net.dart';
 
 import '../core/voxel_game.dart';
 import '../entities/game_entity.dart';

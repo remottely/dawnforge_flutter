@@ -8,7 +8,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_scene/scene.dart' hide Material;
 import 'package:vector_math/vector_math.dart' as vm;
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
 Future<void> main() async {

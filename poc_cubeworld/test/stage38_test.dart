@@ -6,7 +6,7 @@ import 'package:cubeworld_poc/src/game/music.dart';
 import 'package:cubeworld_poc/src/game/settings.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Stage 38's pure pieces: the music's own volume, and a pen a mob cannot
 /// plan its way out of. The fence heights (a block for the player, a barrier

@@ -1,6 +1,6 @@
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// voxel_core's [VoxelModel]s as flutter_scene meshes: creatures, held items,
 /// drops. The faces wind like the chunk meshes, so they are seen through a

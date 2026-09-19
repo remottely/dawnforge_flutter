@@ -5,7 +5,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import '../core/items.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
 /// VK1.4: this game's voxel models — block and item colours and the item

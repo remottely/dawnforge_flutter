@@ -5,7 +5,7 @@ import 'package:cubeworld_poc/src/entities/mob.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Stage 34's pure pieces (`--anim-probe` and `--model-probe` cover the poses
 /// on screen): the mirrored wing, the wingbeat, the gait rate per body, the

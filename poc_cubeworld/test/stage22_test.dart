@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:cubeworld_poc/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';

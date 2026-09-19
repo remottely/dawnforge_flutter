@@ -6,8 +6,7 @@ the player and the creatures in one `VoxelGameSpec` and call
 inventory and crafting, day and night, creatures with goals, saves and
 multiplayer.
 
-It is the kit over `voxel_core`, `voxel_scene`, `voxel_worldgen`,
-`voxel_content`, `voxel_signals`, `voxel_audio` and `voxel_net`, and it
+It is the kit over `voxel_engine`, `voxel_scene` and `voxel_audio`, and it
 re-exports what a game needs, so a game imports only this library.
 
 > **Status: 0.0.0.** The API can still change. Not published yet.

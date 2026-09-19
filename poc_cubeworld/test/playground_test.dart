@@ -10,7 +10,7 @@ import 'package:cubeworld_poc/src/game/worlds.dart';
 import 'package:cubeworld_poc/src/player/player.dart';
 import 'package:cubeworld_poc/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Stage 33's pure pieces (`--playground` covers the built exhibits in the
 /// app): the flat plaza in the generator, the zone grid, the lists the

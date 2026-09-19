@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/mob.dart';

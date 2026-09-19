@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cubeworld_poc/src/core/blocks.dart';
 import 'package:cubeworld_poc/src/core/items.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:cubeworld_poc/src/entities/boat.dart';
 import 'package:cubeworld_poc/src/entities/item_drop.dart';
 import 'package:cubeworld_poc/src/game/inventory.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_game/voxel_game.dart'
     show BehaviorSlot, CharacterMotor, Goal, GoalSelector, MotorTuning, RigAnimator, RigKind, RigMotion;
 import '../core/species.dart';

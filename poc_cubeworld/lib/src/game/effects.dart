@@ -1,7 +1,7 @@
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_content/voxel_content.dart' as content;
+import 'package:voxel_engine/content.dart' as content;
 
-export 'package:voxel_content/voxel_content.dart' show EffectEvent, EffectRow, EffectType, StatModifier;
+export 'package:voxel_engine/content.dart' show EffectEvent, EffectRow, EffectType, StatModifier;
 
 /// This game's buffs and debuffs. VK3.3: voxel_content's [content.EffectType]
 /// rows; the stat hooks the player reads (speed, damage, armour, mining) are

@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:voxel_content/voxel_content.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/content.dart';
+import 'package:voxel_engine/core.dart';
 
 import '../world/voxel_world.dart';
 
-export 'package:voxel_content/voxel_content.dart' show LootEntry;
+export 'package:voxel_engine/content.dart' show LootEntry;
 
 /// Stage 23: what a structure's chest holds, one table per structure. Every
 /// entry is rolled once: `chance` to appear at all, then `min..max` of it. The

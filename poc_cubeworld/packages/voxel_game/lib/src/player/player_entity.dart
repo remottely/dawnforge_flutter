@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:gamepads/gamepads.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_content/voxel_content.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/content.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
 import '../core/voxel_game.dart';

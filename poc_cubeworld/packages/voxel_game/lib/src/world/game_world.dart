@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter_scene/scene.dart' show Node;
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_content/voxel_content.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/content.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:voxel_scene/voxel_scene.dart';
-import 'package:voxel_worldgen/voxel_worldgen.dart';
+import 'package:voxel_engine/worldgen.dart';
 
 /// Called after a block changes: the cell, what was there, what is there now.
 typedef BlockChangedListener = void Function(IVec3 cell, int oldId, int newId);

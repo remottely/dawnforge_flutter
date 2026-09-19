@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:voxel_worldgen/voxel_worldgen.dart';
+import 'package:voxel_engine/worldgen.dart';
 
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// Pure (seed, position) terrain: biomes from temperature/humidity/continental
 /// noise, a height field with hills and ridged mountains, 3D caves, ores by

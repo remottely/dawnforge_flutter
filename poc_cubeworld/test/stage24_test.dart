@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import 'package:cubeworld_poc/src/core/species.dart';
 import 'package:cubeworld_poc/src/entities/boat.dart';
 import 'package:cubeworld_poc/src/entities/item_drop.dart';

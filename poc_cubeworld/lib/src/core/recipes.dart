@@ -1,8 +1,8 @@
-import 'package:voxel_content/voxel_content.dart' show Recipe, RecipeBook;
+import 'package:voxel_engine/content.dart' show Recipe, RecipeBook;
 
 import '../game/inventory.dart';
 
-export 'package:voxel_content/voxel_content.dart' show Recipe;
+export 'package:voxel_engine/content.dart' show Recipe;
 
 /// Recipe list. station: "" by hand, "crafting_table", "furnace",
 /// "brewing_stand". VK3.3: voxel_content's [Recipe] rows in a [RecipeBook].

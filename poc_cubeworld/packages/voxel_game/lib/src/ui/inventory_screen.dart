@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voxel_content/voxel_content.dart';
+import 'package:voxel_engine/content.dart';
 
 import '../core/voxel_game.dart';
 

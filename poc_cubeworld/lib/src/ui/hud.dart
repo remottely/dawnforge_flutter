@@ -8,7 +8,7 @@ import 'package:vector_math/vector_math.dart' as vm;
 
 import '../core/blocks.dart';
 import '../core/items.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import '../game/effects.dart';
 import '../game/game.dart';
 import '../game/settings.dart';

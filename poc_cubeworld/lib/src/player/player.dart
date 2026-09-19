@@ -8,7 +8,7 @@ import 'package:vector_math/vector_math.dart';
 import '../core/blocks.dart';
 import '../game/settings.dart';
 import '../core/items.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 import '../entities/boat.dart';
 import '../entities/minecart.dart';
 import '../entities/bobber.dart';

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// How a body moves on foot.
 class MotorTuning {

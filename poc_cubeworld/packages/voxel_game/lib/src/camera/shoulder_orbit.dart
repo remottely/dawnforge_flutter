@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 /// The third-person eye: behind the head, over a shoulder and a little above,
 /// pulled in by walls. Shoulder and rise grow with the distance, so the whole

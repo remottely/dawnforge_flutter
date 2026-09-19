@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/painting.dart';
 import 'package:vector_math/vector_math.dart' as vm;
-import 'package:voxel_core/voxel_core.dart';
+import 'package:voxel_engine/core.dart';
 
 import '../entities/voxel_mesh_builder.dart';
 

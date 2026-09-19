@@ -1,6 +1,6 @@
 # voxel_scene
 
-Draws `voxel_core` worlds with [flutter_scene](https://pub.dev/packages/flutter_scene):
+Draws `voxel_engine` worlds with [flutter_scene](https://pub.dev/packages/flutter_scene):
 one scene node per chunk, a terrain material with its own shaders, a day
 and night sky, block models and the selection outline.
 
@@ -10,7 +10,7 @@ and night sky, block models and the selection outline.
 
 - `VoxelChunkView`: a `ChunkMeshSink` that turns each mesh into a scene node.
 - `TerrainMaterial`: the terrain shader (lit, fogged, shadowed).
-- `MirroredCamera`: the camera that shows `voxel_core`'s winding the right way round.
+- `MirroredCamera`: the camera that shows `voxel_engine`'s winding the right way round.
 - `DayNightSky`, `SelectionOutline`, `VoxelModelMesh`, `RigPart`, `NodeBody`.
 
 ## Install
@@ -54,7 +54,7 @@ Dart SDK `^3.13.0`.
    scene.add(view.root);
    ```
 
-3. **Stream `voxel_core` chunks into it.** The view is the streamer's sink.
+3. **Stream `voxel_engine` chunks into it.** The view is the streamer's sink.
 
    ```dart
    final streamer = ChunkStreamer(table: table, sink: view, loadRadius: 6)..jobs = pool;

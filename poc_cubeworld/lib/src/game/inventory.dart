@@ -1,8 +1,8 @@
-import 'package:voxel_content/voxel_content.dart' as content;
+import 'package:voxel_engine/content.dart' as content;
 
 import '../core/items.dart';
 
-export 'package:voxel_content/voxel_content.dart' show ItemStack;
+export 'package:voxel_engine/content.dart' show ItemStack;
 
 /// VK3.3: voxel_content's [content.Inventory] with this game's sizes (36 slots,
 /// a hotbar of 9) and its item table's stack sizes and wear. Slot 0..8 is the
