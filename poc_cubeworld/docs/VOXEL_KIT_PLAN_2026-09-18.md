@@ -46,6 +46,11 @@ voxel_game       Flutter     the kit: VoxelGame widget, loop, input, player
 Dependencies only point down: `voxel_game` → everything; `voxel_worldgen` and `voxel_content`
 → `voxel_core`; `voxel_scene` → `voxel_core`. No package imports `package:cubeworld_poc`.
 
+> **Superseded on 2026-09-19 by `VOXEL_CONSOLIDATION_PLAN_2026-09-19.md`.** The package names in
+> this plan are the ones it was written against. The five pure-Dart packages are now one
+> package, `voxel_engine`, with a library per subject, and `voxel_audio` is `sound_recipes`.
+> The code and the phases are unchanged; only where each piece lives moved.
+
 Out of scope here, named so nothing drifts into the kit by accident: `voxel_audio` (the SoLoud
 synth bank and the music crossfader), `voxel_net` (transport, block prediction, a replicated
 entity channel) and `voxel_signals` (circuits, rails). They follow once VK4 has an entity model

@@ -16,10 +16,10 @@
 
 | Phase | State | Gate |
 |:---|:---|:---|
-| VC1 `voxel_engine` — five pure-Dart packages become one | pending | the POC, `voxel_scene` and `voxel_game` import `package:voxel_engine/<subject>.dart`; every test that passed still passes |
-| VC2 `sound_recipes` — `voxel_audio` renamed | pending | no package named `voxel_audio` remains; the sound board example still builds |
-| VC3 The guard the split used to give for free | pending | a test fails when a subject inside `voxel_engine` imports a subject it may not |
-| VC4 Docs realigned to four packages | pending | four READMEs, four CHANGELOGs, one example folder per package, and a written pre-publish checklist |
+| VC1 `voxel_engine` — five pure-Dart packages become one | **done** 2026-09-19 (`8a2b9853`) | the POC, `voxel_scene` and `voxel_game` import `package:voxel_engine/<subject>.dart`; every test that passed still passes |
+| VC2 `sound_recipes` — `voxel_audio` renamed | **done** 2026-09-19 | no package named `voxel_audio` remains; the sound board example still builds |
+| VC3 The guard the split used to give for free | **done** 2026-09-19 | a test fails when a subject inside `voxel_engine` imports a subject it may not |
+| VC4 Docs realigned to four packages | **done** 2026-09-19 | four READMEs, four CHANGELOGs, one example folder per package, and a written pre-publish checklist |
 
 ---
 
@@ -183,4 +183,35 @@ Gate: the test fails when an illegal import is introduced on purpose, and passes
 
 ## Log
 
-_(filled as the phases land)_
+**VC1, 2026-09-19 (`8a2b9853`).** The merge was mechanical, as designed: five
+`git mv`s into `lib/src/<subject>/`, one `sed` over every importer, five
+dependency lines collapsed into one. `dart analyze` was clean on the first run
+and the merged suite counts 164 tests — 104 + 42 + 12 + 5 + 1, exactly what the
+five counted apart. `lib/src/worldgen/core/` was left where it was rather than
+renamed; nested under `worldgen` it is not ambiguous, and the move was already
+large enough.
+
+A sixth example, `voxel_engine_example.dart`, was written for the merge: it
+declares blocks with `content`, compiles a `worldgen` spec against
+`registry.ids`, meshes a chunk and casts a ray with `core`, and mines what the
+ray hit back into a `content` bag. It is the argument for the package being one
+package, in a form that runs.
+
+**VC2, 2026-09-19.** `voxel_audio` → `sound_recipes`. The API kept every name
+(`SoundRecipe`, `SoundBank`, `StockSounds`, `MusicDirector`) — the new package
+name is taken from them. The `[voxel_audio]` prefix in its debug output and the
+example's app bar moved too.
+
+**VC3, 2026-09-19.** `voxel_engine/test/architecture_test.dart` reads the
+import lines of every file under `lib/src/` and fails on an edge the map above
+does not allow, naming the file and the edge. Verified both ways: an import of
+`worldgen` added to `lib/src/core/math/ivec3.dart` failed it with
+`core must not import worldgen`, and removing it passed. It also checks that
+each subject library exports only its own folder and that the umbrella exports
+all five, so a new subject cannot be added and left out.
+
+**VC4, 2026-09-19.** `voxel_engine` and `sound_recipes` have a README and a
+CHANGELOG; the five old READMEs are folded into the engine's, one usage section
+per subject. `voxel_scene` and `voxel_game` name the new packages. The
+pre-publish checklist is `packages/PUBLISHING.md`, which is written to be read
+on the day the packages move, not today.
