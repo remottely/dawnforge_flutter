@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter_scene/scene.dart';
 import 'package:vector_math/vector_math.dart';
-import 'package:voxel_audio/voxel_audio.dart';
+import 'package:sound_recipes/sound_recipes.dart';
 import 'package:voxel_engine/content.dart';
 import 'package:voxel_engine/net.dart' show NetHost;
 import 'package:voxel_engine/core.dart';

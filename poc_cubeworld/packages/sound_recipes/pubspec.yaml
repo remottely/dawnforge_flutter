@@ -1,8 +1,8 @@
-name: voxel_audio
+name: sound_recipes
 description: >-
-  Procedural game audio for voxel games: sound effects synthesised to WAV at
-  start-up (no audio files), a stock set by block material, and music
-  crossfaded by context, played through flutter_soloud.
+  Game sounds with no audio files: you write a recipe, it is synthesised to WAV
+  at start-up and played through flutter_soloud. A stock set by material, and
+  music crossfaded by context.
 version: 0.0.0
 publish_to: none
 

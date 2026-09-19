@@ -5,7 +5,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:voxel_audio/voxel_audio.dart';
+import 'package:sound_recipes/sound_recipes.dart';
 
 /// A sound of your own: a rising two-tone chime, half a second long. `t` is
 /// the time in seconds, `p` goes 0 to 1 through the sound, `rng` is for noise.
@@ -47,7 +47,7 @@ class SoundBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(audio ? 'voxel_audio' : 'voxel_audio (no audio device)')),
+        appBar: AppBar(title: Text(audio ? 'sound_recipes' : 'sound_recipes (no audio device)')),
         body: Wrap(
           spacing: 8,
           runSpacing: 8,

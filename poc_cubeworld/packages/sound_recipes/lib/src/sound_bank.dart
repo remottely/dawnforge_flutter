@@ -60,7 +60,7 @@ class SoundBank implements SoundPlayer {
       }
       _ready = true;
     } catch (e) {
-      debugPrint('[voxel_audio] audio unavailable: $e');
+      debugPrint('[sound_recipes] audio unavailable: $e');
     }
     return _ready;
   }
@@ -84,7 +84,7 @@ class SoundBank implements SoundPlayer {
       SoLoud.instance.setRelativePlaySpeed(handle, pitch * (0.92 + _rng.nextDouble() * 0.16));
       SoLoud.instance.setPause(handle, false);
     } catch (e) {
-      debugPrint('[voxel_audio] $e');
+      debugPrint('[sound_recipes] $e');
     }
   }
 
@@ -142,7 +142,7 @@ class MusicDirector {
       soloud.fadeVolume(h, gain, fade);
       _active = h;
     } catch (e) {
-      debugPrint('[voxel_audio] music: $e');
+      debugPrint('[sound_recipes] music: $e');
     }
   }
 }

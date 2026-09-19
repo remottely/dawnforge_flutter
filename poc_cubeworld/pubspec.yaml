@@ -8,10 +8,10 @@ environment:
 
 # The voxel packages grow here, out of the POC (docs/VOXEL_PACKAGES_PLAN_2026-09-14.md).
 workspace:
+  - packages/sound_recipes
   - packages/voxel_engine
   - packages/voxel_scene
   - packages/voxel_scene/example
-  - packages/voxel_audio
   - packages/voxel_game
   - packages/voxel_game/example
 
@@ -24,8 +24,8 @@ dependencies:
   hooks: ^2.2.0
   path_provider: ^2.1.6
   pointer_lock: ^0.4.1
+  sound_recipes: ^0.0.0
   vector_math: ^2.4.2
-  voxel_audio: ^0.0.0
   voxel_engine: ^0.0.0
   voxel_game: ^0.0.0
   voxel_scene: ^0.0.0

@@ -1,4 +1,4 @@
-import 'package:voxel_audio/voxel_audio.dart';
+import 'package:sound_recipes/sound_recipes.dart';
 
 /// A game's sound: on or off, extra or replacement sounds, and music by mood.
 ///

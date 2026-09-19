@@ -2,7 +2,7 @@ name: voxel_game
 description: >-
   A Minecraft-like in a few lines: declare blocks, world generation, the player
   and mobs, and get a playable voxel world on flutter_scene. The kit over
-  voxel_engine, voxel_scene and voxel_audio.
+  voxel_engine, voxel_scene and sound_recipes.
 version: 0.0.0
 publish_to: none
 
@@ -19,8 +19,8 @@ dependencies:
   gamepads: ^0.1.12
   path_provider: ^2.1.6
   pointer_lock: ^0.4.1
+  sound_recipes: ^0.0.0
   vector_math: ^2.1.4
-  voxel_audio: ^0.0.0
   voxel_engine: ^0.0.0
   voxel_scene: ^0.0.0
 

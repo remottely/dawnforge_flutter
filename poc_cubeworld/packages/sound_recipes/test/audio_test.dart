@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voxel_audio/voxel_audio.dart';
+import 'package:sound_recipes/sound_recipes.dart';
 
 void main() {
   test('a recipe renders to a mono 16-bit WAV of its length', () {

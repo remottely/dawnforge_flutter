@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:voxel_audio/voxel_audio.dart';
+import 'package:sound_recipes/sound_recipes.dart';
 
 /// Procedural sound effects: short WAV bursts synthesised at startup (no asset
-/// files), played through SoLoud. VK6: voxel_audio's [SoundBank] with its
+/// files), played through SoLoud. VK6: sound_recipes' [SoundBank] with its
 /// stock set — the sounds this file used to synthesise, name for name — plus
 /// this game's recorded footsteps.
 class Sfx {

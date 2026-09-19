@@ -1,9 +1,12 @@
-# voxel_audio
+# sound_recipes
 
-Game audio with no audio files: sound effects written as functions of
-time, rendered to WAV when the game starts, and played through
-`flutter_soloud`. Comes with a stock set of sounds for every block material,
-and music that crossfades by mood.
+Game audio with no audio files: a sound is a recipe — a length and a function
+of time — rendered to WAV when the game starts and played through
+`flutter_soloud`. Comes with a stock set of sounds for every material, and
+music that crossfades by mood.
+
+Nothing here is specific to voxels, or to any genre: it is one file of
+synthesis, a bank and a player.
 
 > **Status: 0.0.0.** The API can still change. Not published yet.
 
@@ -17,12 +20,12 @@ and music that crossfades by mood.
 
 ## Install
 
-`voxel_audio` is at 0.0.0 and not on pub.dev yet. Depend on it by path (or by git):
+`sound_recipes` is at 0.0.0 and not on pub.dev yet. Depend on it by path (or by git):
 
 ```yaml
 dependencies:
-  voxel_audio:
-    path: ../packages/voxel_audio
+  sound_recipes:
+    path: ../packages/sound_recipes
 ```
 
 Dart SDK `^3.13.0`.

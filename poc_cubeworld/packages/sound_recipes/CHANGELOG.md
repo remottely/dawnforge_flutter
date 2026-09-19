@@ -2,7 +2,8 @@
 
 ## 0.0.0
 
-First version, not published.
+First version, not published. It was called `voxel_audio` until 2026-09-19;
+the name went because nothing in it has anything to do with voxels.
 
 - `SoundRecipe` + `renderWav`: sounds written as waveform functions, rendered to WAV.
 - `StockSounds`: break, place and step sounds for every block material, plus combat and interface sounds.
