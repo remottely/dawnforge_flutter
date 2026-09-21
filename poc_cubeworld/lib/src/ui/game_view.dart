@@ -150,6 +150,7 @@ class _GameSessionState extends State<_GameSession> {
           }
         },
         onPointerUp: input.onPointerUp,
+        onPointerCancel: input.onPointerCancel,
         onPointerMove: input.onPointerMove,
         onPointerSignal: (e) {
           if (game.screen == ScreenKind.none) input.onPointerSignal(e);

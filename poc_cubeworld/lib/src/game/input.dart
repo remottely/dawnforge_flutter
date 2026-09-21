@@ -78,6 +78,12 @@ class GameInput {
     GameAction.journal: GamepadButton.touchpad,
   };
 
+  // A finger is the camera, not a mouse button. A touch that travels further
+  // than this many logical pixels is a look drag and swings nothing; one that
+  // lifts where it landed is a tap, and taps once. Holding to mine belongs to
+  // an on-screen button, not to a gesture that also has to steer the view.
+  static const double _tapSlop = 12.0;
+
   static const double _stickDeadzone = 0.2;
   // Triggers arrive as a digital GamepadButton on some platforms and as an
   // analog GamepadAxis (0..1) on others (macOS/GCController reports L2/R2 as
@@ -145,6 +151,10 @@ class GameInput {
   int _wheel = 0;
   double _dragDx = 0.0;
   double _dragDy = 0.0;
+  // Where each live finger landed, and which of them have already travelled
+  // past [_tapSlop] and so became look drags.
+  final Map<int, Offset> _touchOrigin = {};
+  final Set<int> _touchDragged = {};
   StreamSubscription<CaptureState>? _stateSub;
   final NormalizedGamepadState _gamepadState = NormalizedGamepadState();
   final Set<GamepadButton> _gamepadPressed = {};
@@ -236,6 +246,13 @@ class GameInput {
   }
 
   void onPointerDown(PointerDownEvent e) {
+    // A touch reports itself as the primary button, so without this branch
+    // every finger put on the screen held the attack down while it steered
+    // the camera. The gesture is undecided until the finger moves or lifts.
+    if (e.kind == PointerDeviceKind.touch) {
+      _touchOrigin[e.pointer] = e.position;
+      return;
+    }
     if (e.buttons & kPrimaryMouseButton != 0) {
       _leftDown = true;
       _leftPressed = true;
@@ -247,11 +264,39 @@ class GameInput {
   }
 
   void onPointerUp(PointerUpEvent e) {
+    if (e.kind == PointerDeviceKind.touch) {
+      final origin = _touchOrigin.remove(e.pointer);
+      final dragged = _touchDragged.remove(e.pointer);
+      // A finger that never travelled is a tap, and taps the same one-shot the
+      // left mouse button does. A null origin means the touch began over an
+      // open screen (inventory, pause), where it was never the game's to read.
+      if (origin != null && !dragged) _leftPressed = true;
+      return;
+    }
     _leftDown = false;
     _rightDown = false;
   }
 
+  /// A touch the system took away (a system gesture, a call). It decided
+  /// nothing, so it swings nothing — it is only forgotten.
+  void onPointerCancel(PointerCancelEvent e) {
+    _touchOrigin.remove(e.pointer);
+    _touchDragged.remove(e.pointer);
+  }
+
   void onPointerMove(PointerMoveEvent e) {
+    if (e.kind == PointerDeviceKind.touch) {
+      final origin = _touchOrigin[e.pointer];
+      if (origin == null) return;
+      if ((e.position - origin).distance > _tapSlop) _touchDragged.add(e.pointer);
+      // A finger never locks, so it looks by dragging whatever the platform
+      // says about pointer lock.
+      if (_touchDragged.contains(e.pointer) && wantCapture) {
+        _dragDx += e.delta.dx;
+        _dragDy += e.delta.dy;
+      }
+      return;
+    }
     // Drag-to-look fallback where the pointer cannot be locked.
     if (!pointerLockSupported && wantCapture) {
       _dragDx += e.delta.dx;
@@ -339,14 +384,13 @@ class GameInput {
   /// stick is a held deflection rather than a discrete delta, so it needs
   /// [dt] to integrate into a per-tick amount; the mouse path does not.
   Offset takeLookDelta(double dt) {
-    var d = Offset.zero;
-    if (pointerLockSupported) {
-      if (wantCapture) d = PointerLock.instance.takeDelta();
-    } else {
-      d = Offset(_dragDx, _dragDy);
-      _dragDx = 0;
-      _dragDy = 0;
-    }
+    // The drag accumulator drains unconditionally: a finger fills it even on a
+    // platform that does lock the pointer, and a delta left in it would arrive
+    // as a jump the next time the view is captured.
+    var d = Offset(_dragDx, _dragDy);
+    _dragDx = 0;
+    _dragDy = 0;
+    if (pointerLockSupported && wantCapture) d += PointerLock.instance.takeDelta();
     final gx = _gamepadState.axisValue(GamepadAxis.rightStickX);
     final gy = _gamepadState.axisValue(GamepadAxis.rightStickY);
     if (gx.abs() > _stickDeadzone || gy.abs() > _stickDeadzone) {

@@ -1,4 +1,7 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_scene/scene.dart' hide Material;
 import 'package:path_provider/path_provider.dart';
 
@@ -24,8 +27,24 @@ Map<String, String> parseArgs(List<String> raw) {
   return out;
 }
 
+/// A phone or tablet plays this game in landscape and nothing else: the HUD,
+/// the hotbar and the 3D view are all laid out for a wide viewport, and a
+/// Backbone-style controller physically holds the device that way. Desktop
+/// windows are sized by their window manager, so this is a mobile-only call.
+Future<void> _lockLandscape() async {
+  if (!Platform.isAndroid && !Platform.isIOS) return;
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  // Status and navigation bars slide away but come back on a swipe, so the
+  // player can still leave; `immersive` alone would fight every stray touch.
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+}
+
 Future<void> main(List<String> rawArgs) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _lockLandscape();
   final args = parseArgs(rawArgs);
   final support = await getApplicationSupportDirectory();
   final saveRoot = '${support.path}/dawnforge_cubeworld_poc';
