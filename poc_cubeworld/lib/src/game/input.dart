@@ -80,9 +80,15 @@ class GameInput {
 
   // A finger is the camera, not a mouse button. A touch that travels further
   // than this many logical pixels is a look drag and swings nothing; one that
-  // lifts where it landed is a tap, and taps once. Holding to mine belongs to
-  // an on-screen button, not to a gesture that also has to steer the view.
+  // lifts where it landed is a tap, and one that stays down mines
+  // ([touchMineDelay]).
   static const double _tapSlop = 12.0;
+
+  // Minecraft's own reading of a finger on the world: one that stays put this
+  // long is mining, and goes on mining until it lifts. Shorter than this and
+  // an ordinary tap starts a dig it never meant; longer and the pickaxe feels
+  // stuck. A finger that travels first is a look drag and never mines.
+  static const Duration touchMineDelay = Duration(milliseconds: 180);
 
   static const double _stickDeadzone = 0.2;
   // Triggers arrive as a digital GamepadButton on some platforms and as an
@@ -155,6 +161,20 @@ class GameInput {
   // past [_tapSlop] and so became look drags.
   final Map<int, Offset> _touchOrigin = {};
   final Set<int> _touchDragged = {};
+  // The fingers that held still long enough to start mining, and the timers
+  // still waiting to decide (one per live finger).
+  final Set<int> _touchMining = {};
+  final Map<int, Timer> _touchMineTimers = {};
+  // The on-screen controls' half of the input: what a button holds, what it
+  // pressed this tick, where the stick is pushed and which hotbar slot a
+  // finger chose. Every one of them is folded into the same [down] /
+  // [justPressed] / [moveAxisX] / [hotbarPressed] the keyboard and the pad go
+  // through, so nothing downstream knows a finger from a key.
+  final Set<GameAction> _touchHeld = {};
+  final Set<GameAction> _touchPressed = {};
+  double _touchMoveX = 0.0;
+  double _touchMoveY = 0.0;
+  int _touchHotbar = -1;
   StreamSubscription<CaptureState>? _stateSub;
   final NormalizedGamepadState _gamepadState = NormalizedGamepadState();
   final Set<GamepadButton> _gamepadPressed = {};
@@ -192,7 +212,68 @@ class GameInput {
     return KeyEventResult.handled;
   }
 
-  void releaseKeys() => _held.clear();
+  /// What the crosshair is nearest to, written by [Player] every time it
+  /// re-aims: true while a creature is the closest thing in reach. A tap on
+  /// the world swings at a creature and uses anything else (a block placed, a
+  /// door opened, a chest looked into) — Minecraft's split, and the reason a
+  /// phone needs no separate attack button.
+  bool touchTapAttacks = false;
+
+  /// Released by an on-screen button, and by the screens: a menu that opens
+  /// takes the controls off the screen, and an action still held by a button
+  /// that is no longer there would never come back up.
+  void releaseKeys() {
+    _held.clear();
+    _touchHeld.clear();
+    _touchMoveX = 0.0;
+    _touchMoveY = 0.0;
+    for (final t in _touchMineTimers.values) {
+      t.cancel();
+    }
+    _touchMineTimers.clear();
+    _touchMining.clear();
+  }
+
+  /// The on-screen stick, in the left stick's own units: x right, y forward
+  /// (-1 pushes away from the player, the sense [GameAction.moveForward]
+  /// has). The widget writes it on every move and zeroes it on the lift.
+  void touchMove(double x, double y) {
+    _touchMoveX = x.clamp(-1.0, 1.0);
+    _touchMoveY = y.clamp(-1.0, 1.0);
+  }
+
+  /// An on-screen button taking or letting go of an action. Taking it also
+  /// counts as a press for this tick, which is what a one-shot action
+  /// (inventory, pause) reads.
+  void setTouchHeld(GameAction a, bool held) {
+    if (held) {
+      if (_touchHeld.add(a)) _touchPressed.add(a);
+    } else {
+      _touchHeld.remove(a);
+    }
+  }
+
+  /// A finger on a hotbar slot, read like the digit row.
+  void touchHotbar(int slot) {
+    assert(slot >= 0 && slot < 9, 'hotbar slot out of range: $slot');
+    _touchHotbar = slot;
+  }
+
+  /// A finger that stayed where it landed is mining, and goes on mining while
+  /// it is down — even once it starts steering the view, the way a thumb
+  /// nudges the camera mid-dig.
+  void _beginTouchMining(int pointer) {
+    _touchMineTimers.remove(pointer);
+    if (!_touchOrigin.containsKey(pointer)) return;
+    _touchMining.add(pointer);
+  }
+
+  void _forgetTouch(int pointer) {
+    _touchOrigin.remove(pointer);
+    _touchDragged.remove(pointer);
+    _touchMining.remove(pointer);
+    _touchMineTimers.remove(pointer)?.cancel();
+  }
 
   /// One normalized gamepad event, applied to the running state. A button
   /// edge (was up, now down) also lands in [_gamepadPressed], the gamepad's
@@ -251,6 +332,7 @@ class GameInput {
     // the camera. The gesture is undecided until the finger moves or lifts.
     if (e.kind == PointerDeviceKind.touch) {
       _touchOrigin[e.pointer] = e.position;
+      _touchMineTimers[e.pointer] = Timer(touchMineDelay, () => _beginTouchMining(e.pointer));
       return;
     }
     if (e.buttons & kPrimaryMouseButton != 0) {
@@ -267,10 +349,20 @@ class GameInput {
     if (e.kind == PointerDeviceKind.touch) {
       final origin = _touchOrigin.remove(e.pointer);
       final dragged = _touchDragged.remove(e.pointer);
-      // A finger that never travelled is a tap, and taps the same one-shot the
-      // left mouse button does. A null origin means the touch began over an
-      // open screen (inventory, pause), where it was never the game's to read.
-      if (origin != null && !dragged) _leftPressed = true;
+      final mined = _touchMining.remove(e.pointer);
+      _touchMineTimers.remove(e.pointer)?.cancel();
+      // A finger that neither travelled nor stayed is a tap, and taps the same
+      // one-shot a mouse button does: the swing when a creature is the nearest
+      // thing under the crosshair, the use when it is not. A null origin means
+      // the touch began over an open screen (inventory, pause), where it was
+      // never the game's to read.
+      if (origin != null && !dragged && !mined) {
+        if (touchTapAttacks) {
+          _leftPressed = true;
+        } else {
+          _rightPressed = true;
+        }
+      }
       return;
     }
     _leftDown = false;
@@ -279,16 +371,18 @@ class GameInput {
 
   /// A touch the system took away (a system gesture, a call). It decided
   /// nothing, so it swings nothing — it is only forgotten.
-  void onPointerCancel(PointerCancelEvent e) {
-    _touchOrigin.remove(e.pointer);
-    _touchDragged.remove(e.pointer);
-  }
+  void onPointerCancel(PointerCancelEvent e) => _forgetTouch(e.pointer);
 
   void onPointerMove(PointerMoveEvent e) {
     if (e.kind == PointerDeviceKind.touch) {
       final origin = _touchOrigin[e.pointer];
       if (origin == null) return;
-      if ((e.position - origin).distance > _tapSlop) _touchDragged.add(e.pointer);
+      if ((e.position - origin).distance > _tapSlop && _touchDragged.add(e.pointer)) {
+        // The finger moved before it was old enough to mine, so it never will:
+        // this one is steering. A finger already mining keeps mining, and
+        // steers as well.
+        _touchMineTimers.remove(e.pointer)?.cancel();
+      }
       // A finger never locks, so it looks by dragging whatever the platform
       // says about pointer lock.
       if (_touchDragged.contains(e.pointer) && wantCapture) {
@@ -312,9 +406,10 @@ class GameInput {
   }
 
   bool down(GameAction a) {
+    if (_touchHeld.contains(a)) return true;
     switch (a) {
       case GameAction.attack:
-        return _leftDown || _gamepadAttackDown;
+        return _leftDown || _gamepadAttackDown || _touchMining.isNotEmpty;
       case GameAction.use:
         return _rightDown || _gamepadUseDown;
       default:
@@ -327,6 +422,7 @@ class GameInput {
   }
 
   bool justPressed(GameAction a) {
+    if (_touchPressed.contains(a)) return true;
     switch (a) {
       case GameAction.attack:
         return _leftPressed || _gamepadPressed.contains(GamepadButton.rightTrigger);
@@ -349,6 +445,7 @@ class GameInput {
     if (down(GameAction.moveRight)) x += 1;
     final gx = _gamepadState.axisValue(GamepadAxis.leftStickX);
     if (gx.abs() > _stickDeadzone) x += gx;
+    x += _touchMoveX;
     return x.clamp(-1.0, 1.0);
   }
 
@@ -360,11 +457,13 @@ class GameInput {
     if (down(GameAction.moveBack)) y += 1;
     final gy = _gamepadState.axisValue(GamepadAxis.leftStickY);
     if (gy.abs() > _stickDeadzone) y -= gy;
+    y += _touchMoveY;
     return y.clamp(-1.0, 1.0);
   }
 
   /// The hotbar digit pressed this tick (0..8), or -1.
   int hotbarPressed() {
+    if (_touchHotbar >= 0) return _touchHotbar;
     for (var i = 0; i < 9; i++) {
       if (_pressed.contains(_digits[i])) return i;
     }
@@ -406,10 +505,16 @@ class GameInput {
     _leftPressed = false;
     _rightPressed = false;
     _gamepadPressed.clear();
+    _touchPressed.clear();
+    _touchHotbar = -1;
   }
 
   void dispose() {
     _stateSub?.cancel();
     _gamepadSub?.cancel();
+    for (final t in _touchMineTimers.values) {
+      t.cancel();
+    }
+    _touchMineTimers.clear();
   }
 }

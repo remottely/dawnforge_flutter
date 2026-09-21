@@ -256,6 +256,12 @@ class Game extends ChangeNotifier {
   Inventory? chest;
   IVec3 chestPos = IVec3.zero;
   bool debugVisible = true;
+
+  /// Whether the on-screen controls are on the screen: always on a phone or a
+  /// tablet, where there is no keyboard to play with, and on `--touch` so the
+  /// layout can be seen (and captured) from a desktop. The HUD reads it too —
+  /// the bottom-left corner belongs to the movement stick when it is on.
+  bool touchControls = false;
   MapView mapView = MapView.off;
   final ValueNotifier<int> frame = ValueNotifier<int>(0);
   double fps = 0.0;
@@ -297,6 +303,7 @@ class Game extends ChangeNotifier {
   bool get gameplay => screen == ScreenKind.none && !player.isDead && started;
 
   Future<void> init() async {
+    touchControls = _hasArg('--touch') || Platform.isAndroid || Platform.isIOS;
     sunScale = double.tryParse(_arg('--sun=', '')) ?? sunScale;
     ambientScale = double.tryParse(_arg('--amb=', '')) ?? ambientScale;
     _buildEnvironment();

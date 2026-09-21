@@ -47,6 +47,15 @@ class Hud {
     return _c(d.r, d.g, d.b);
   }
 
+  /// The hotbar's nine slots, bottom centre. The painter draws them and the
+  /// on-screen controls tap them, so the geometry lives here and cannot drift
+  /// apart; [TouchControls] asks for slot 9 as well, the empty square past the
+  /// last one where the bag button goes.
+  static const double hotbarSlot = 54.0;
+
+  static Rect hotbarSlotRect(Size size, int i) => Rect.fromLTWH(
+      size.width * 0.5 - hotbarSlot * 4.5 + i * hotbarSlot, size.height - 70.0, hotbarSlot - 4, hotbarSlot - 4);
+
   /// Shared with the inventory, trade and station screens: the item's own
   /// voxel model, the one the hand holds (see [ItemIcon]).
   static void drawItemIcon(Canvas ci, Rect r, String id) => ItemIcon.draw(ci, r, id);
@@ -642,9 +651,11 @@ class HudPainter extends CustomPainter {
           Paint()..color = const Color.fromRGBO(255, 255, 255, 0.9)..strokeWidth = 3..style = PaintingStyle.stroke);
     }
 
-    // Stats (bottom left)
-    const x = 20.0;
-    final y = size.height - 150.0;
+    // Stats: bottom left, unless the on-screen controls are up — then the
+    // bottom-left corner is the movement stick's and the column moves to the
+    // top, clear of the pause button.
+    final x = game.touchControls ? 70.0 : 20.0;
+    final y = game.touchControls ? 14.0 : size.height - 150.0;
     _bar(canvas, x, y, 260, 24, player.hp / player.maxHp, const Color.fromRGBO(217, 38, 51, 1), 'HP ${player.hp.ceil()} / ${player.maxHp.toInt()}');
     _bar(canvas, x, y + 28, 260, 20, player.stamina / player.maxStamina, const Color.fromRGBO(64, 191, 64, 1), 'Stamina');
     _bar(canvas, x, y + 52, 260, 20, player.mana / player.maxMana, const Color.fromRGBO(77, 115, 242, 1), 'Mana ${player.mana.toInt()}');
@@ -669,8 +680,10 @@ class HudPainter extends CustomPainter {
       Hud.text(canvas, '[J] ${player.talentPoints} talent point${player.talentPoints == 1 ? '' : 's'}',
           Offset(x + 270, y + 94), size: 14, color: const Color.fromRGBO(255, 230, 128, 1));
     }
-    // Status effects, stacked above the bars.
-    var ey = y - 30.0;
+    // Status effects, stacked away from the bars: above them at the bottom of
+    // the screen, below them at the top.
+    final estep = game.touchControls ? 26.0 : -26.0;
+    var ey = game.touchControls ? y + 148.0 : y - 30.0;
     for (final id in player.effects.rows.keys) {
       final d = StatusEffects.def(id);
       final left = player.effects.timeLeft(id);
@@ -679,15 +692,13 @@ class HudPainter extends CustomPainter {
       canvas.drawRect(Rect.fromLTWH(x, ey, 6, 22), Paint()..color = col);
       Hud.text(canvas, '${d.name}  ${left.ceil()}s', Offset(x + 12, ey + 16),
           size: 13, color: d.bad ? col : Colors.white);
-      ey -= 26.0;
+      ey += estep;
     }
 
     // Hotbar (bottom centre)
-    const slot = 54.0;
-    final hx = c.dx - slot * 4.5;
-    final hy = size.height - 70.0;
+    final hy = Hud.hotbarSlotRect(size, 0).top;
     for (var i = 0; i < 9; i++) {
-      var r = Rect.fromLTWH(hx + i * slot, hy, slot - 4, slot - 4);
+      var r = Hud.hotbarSlotRect(size, i);
       if (i == player.selectedSlot) {
         // Stage 32: the selection tween.
         final k = game.hud.slotScale;
@@ -760,7 +771,7 @@ class HudPainter extends CustomPainter {
           '${boss.displayName()}   ${boss.hp.ceil()} / ${boss.maxHp.toInt()}');
     }
     // Stage 32: pickup toasts, bottom-right, newest at the bottom.
-    var ty = size.height - 90.0;
+    var ty = size.height - (game.touchControls ? 170.0 : 90.0);
     for (var i = game.hud.toasts.length - 1; i >= 0; i--) {
       final t = game.hud.toasts[i];
       final a = t.t.clamp(0.0, 1.0);
@@ -785,10 +796,11 @@ class HudPainter extends CustomPainter {
       case MapView.full:
         _drawFullMap(canvas, size);
     }
+    final devAt = game.touchControls ? const Offset(12, 172) : const Offset(12, 22);
     if (game.debugVisible) {
-      Hud.text(canvas, game.debugText(), const Offset(12, 22), size: 13, color: const Color.fromRGBO(255, 255, 255, 0.85));
+      Hud.text(canvas, game.debugText(), devAt, size: 13, color: const Color.fromRGBO(255, 255, 255, 0.85));
     } else if (Settings.instance.showFps) {
-      Hud.text(canvas, 'FPS ${game.fps.round()}', const Offset(12, 22), size: 13, color: const Color.fromRGBO(255, 255, 153, 0.9));
+      Hud.text(canvas, 'FPS ${game.fps.round()}', devAt, size: 13, color: const Color.fromRGBO(255, 255, 153, 0.9));
     }
   }
 

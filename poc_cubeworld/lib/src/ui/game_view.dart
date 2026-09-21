@@ -11,6 +11,7 @@ import 'inventory_screen.dart';
 import 'journal_screen.dart';
 import 'menus.dart';
 import 'trade_screen.dart';
+import 'touch_controls.dart';
 import 'tutorial_card.dart';
 import 'zone_card.dart';
 
@@ -140,28 +141,34 @@ class _GameSessionState extends State<_GameSession> {
       focusNode: _focus,
       autofocus: true,
       onKeyEvent: input.onKey,
-      child: Listener(
-        behavior: HitTestBehavior.opaque,
-        onPointerDown: (e) {
-          _focus.requestFocus();
-          if (game.screen == ScreenKind.none) {
-            if (!input.isCaptured && !game.player.isDead) input.capture();
-            input.onPointerDown(e);
-          }
-        },
-        onPointerUp: input.onPointerUp,
-        onPointerCancel: input.onPointerCancel,
-        onPointerMove: input.onPointerMove,
-        onPointerSignal: (e) {
-          if (game.screen == ScreenKind.none) input.onPointerSignal(e);
-        },
-        child: MouseRegion(
-          cursor: game.screen == ScreenKind.none && input.isCaptured ? SystemMouseCursors.none : SystemMouseCursors.basic,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              RepaintBoundary(
-                key: _boundary,
+      child: RepaintBoundary(
+        key: _boundary,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // The world's own pointers. It is the bottom of the stack on
+            // purpose: a Stack hit-tests front to back and stops at the first
+            // child that takes the touch, so a finger on an on-screen control
+            // never reaches the simulation. Were the controls children of this
+            // Listener instead, every button press would also arrive here and
+            // be read as a tap on whatever the crosshair was pointing at.
+            Listener(
+              behavior: HitTestBehavior.opaque,
+              onPointerDown: (e) {
+                _focus.requestFocus();
+                if (game.screen == ScreenKind.none) {
+                  if (!input.isCaptured && !game.player.isDead) input.capture();
+                  input.onPointerDown(e);
+                }
+              },
+              onPointerUp: input.onPointerUp,
+              onPointerCancel: input.onPointerCancel,
+              onPointerMove: input.onPointerMove,
+              onPointerSignal: (e) {
+                if (game.screen == ScreenKind.none) input.onPointerSignal(e);
+              },
+              child: MouseRegion(
+                cursor: game.screen == ScreenKind.none && input.isCaptured ? SystemMouseCursors.none : SystemMouseCursors.basic,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -174,14 +181,19 @@ class _GameSessionState extends State<_GameSession> {
                       },
                     ),
                     CustomPaint(painter: HudPainter(game, _worldMap, repaint: game.frame)),
-                    const TutorialCard(), // stage 30
-                    if (game.playground != null) ZoneCard(playground: game.playground!), // stage 33
-                    ?overlay,
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            // A phone's controls, off the screen while a screen of its own is
+            // open or the body is dead — both are surfaces with their own
+            // buttons, and a stick behind them would still be walking.
+            if (game.touchControls && game.screen == ScreenKind.none && !game.player.isDead)
+              TouchControls(input: input),
+            const TutorialCard(), // stage 30
+            if (game.playground != null) ZoneCard(playground: game.playground!), // stage 33
+            ?overlay,
+          ],
         ),
       ),
     );

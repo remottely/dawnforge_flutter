@@ -534,6 +534,10 @@ class Player extends SceneBody implements Target {
     // whichever is nearer; a creature behind the block is not in the way of it.
     final mobDist = mob?.rayDistance(origin, dir) ?? double.infinity;
     isAiming = hit != null && hit.distance <= mobDist;
+    // A tap on the screen has no button to tell attack from use, so the
+    // crosshair tells it: the nearest thing in reach decides (see
+    // [GameInput.touchTapAttacks]).
+    main.input.touchTapAttacks = mob != null && !isAiming;
     if (isAiming) {
       aimedBlock = hit!.block;
       aimedNormal = hit.normal;

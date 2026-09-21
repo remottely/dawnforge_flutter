@@ -70,6 +70,52 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-20 s20** — a phone can play it: a stick, five buttons and a finger that knows
+  what it means.
+  - **What was missing:** s19 (`3f886bde`, logged nowhere, so it is logged here) made the
+    Backbone work on Android and iOS, locked both to landscape, and taught a touch to tell a
+    tap from a look drag. What it left behind it said so in its own message: without a
+    physical pad on the phone there was no way to walk, jump, open the bag or reach the pause
+    menu — the one thing a finger could do was swing once.
+  - **Why widgets and not the HUD painter:** a `CustomPainter` is handed a canvas and never a
+    pointer, so a control painted there cannot be pressed. The controls are real widgets, and
+    — this is the part that matters — they are *siblings* of the world's `Listener`, above it
+    in the same `Stack`, not children of it. A `Stack` hit-tests front to back and stops at
+    the first child that takes the touch, so an opaque button is the end of the road for that
+    finger. Had they been children, every jump would also have arrived at
+    `GameInput.onPointerDown` and been read as a tap on whatever the crosshair was pointing
+    at: one press, two readers, the bug that closes a menu while opening another.
+  - **One input, three devices:** `TouchControls` writes only to `GameInput` —
+    `touchMove(x, y)` folds into `moveAxisX/Y` beside the left stick, `setTouchHeld(action,
+    bool)` into `down` / `justPressed` beside the keys and the pad buttons, `touchHotbar(i)`
+    into `hotbarPressed` beside the digit row. `Player` and `Game` are untouched by any of
+    it and cannot tell a thumb from a key.
+  - **What a finger on the world means** (Minecraft's own split, since a phone has no second
+    mouse button): lift where it landed = *use* — a block placed, a door opened, a chest
+    looked into — unless a creature is the nearest thing under the crosshair, and then it is
+    a swing. `Player._updateAim` writes that one bit into `GameInput.touchTapAttacks` every
+    time it re-aims. Stay put for 180 ms = mine, and go on mining until the finger lifts,
+    still steering the view while it digs. Travel more than 12 px first = the camera, and
+    nothing else. A gesture that mined is never also a tap on the way up.
+  - **The stick sprints** at the rim (past 92% of the ring), which is how Minecraft sprints
+    on a phone — there is no button for it, and there is no room for one. Sneak latches
+    instead of holding: a thumb cannot hold a button and still work the rest of the screen.
+  - **The HUD moved for it:** the stats column lived exactly where the stick had to go, so
+    with the controls up it sits at the top left (past the pause button), the status effects
+    stack downward from it instead of upward, the pickup toasts rise clear of the jump
+    button, and the F1/FPS text drops under the column. All of it behind `Game.touchControls`
+    — on a desktop nothing moved. The hotbar's nine rects are `Hud.hotbarSlotRect` now, read
+    by the painter that draws them and the layer that taps them, so the two cannot drift.
+  - **Seen running:** `--touch` turns the layer on from a desktop (`README.md`), and the
+    capture at 1600x900 shows the stick, the cluster, the bag at the hotbar's end and the
+    pause button in place. `test/stage44_test.dart` pins fifteen of these: the three meanings
+    of a finger, the one-tick press, the latch, the rim, and the layer letting go of
+    everything it held when a menu takes it off the screen.
+  - **Still keyboard-only on a phone**, on purpose (asked, and deferred): the abilities R and
+    Q, dodge, eat, drop, the map, the journal and the view toggle. The HUD still names their
+    keys in a corner a phone has no keys for. The tutorial card is 600 px wide over a 852 px
+    screen and covers the stats column; mobile render performance was not touched.
+
 - **2026-09-17 s18** — you cannot see through a wall the camera is standing in.
   - **The bug:** in third person, with a block wall at the height of the head, turning until the
     back of the head was against it showed the whole cave system straight through the rock. A
