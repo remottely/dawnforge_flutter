@@ -70,6 +70,31 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-21 s23b** — `CL-002` closes: the app's frame bank is the kit's.
+  - **What moved:** six lines and one field. `Game._acc` and the `while (_acc >= fixedStep
+    && steps < 4)` are gone; `onFrame` now says `_loop.advance(dt, _tick)` over a
+    `FixedStepLoop(step: fixedStep)` from `voxel_game`. Every number is the one the app
+    already used, so no timing changed — but two things came along that the app's copy
+    never had: `advance` clamps the bank when it spends its fourth step, so a run of long
+    frames cannot become a spiral of catch-up, and `alpha` is now available for smoothing
+    a pose between two steps. Nothing reads `alpha` yet; it is there for the first thing
+    that stutters.
+  - **Why it was safe to trust so quickly:** because the pair's one real difference had
+    already been dealt with an hour earlier. The defect both copies carried —
+    `if (steps == 0) input.endTick()`, the line that threw away one-shot presses on any
+    frame that ran no step — was fixed in `CL-003`'s commit in both files, so this one is
+    a straight swap of a bank for the same bank.
+  - **How it was verified:** `tool/probe_baseline.sh --check` was run and its output
+    compared not against `docs/baseline/` (stale on this machine, see s23) but against the
+    output of the same command on a build of `be939852` in a throwaway worktree: the two
+    are byte-identical. `--touch --touch-probe` on seed 42 repeated its figures to the
+    digit, the dig taking 132 ticks against 133 — the one number a frame rate moves.
+    The suite is unchanged: analyze clean, 194 + 168 + 10 + 4 + 32 = 408.
+  - **What is left on the ledger:** `CL-004` through `CL-008`, none of which is a
+    duplicate pair — `CL-005` (the kit's default HUD and bag are witnessed by nothing but
+    an example) and `CL-007` (no test compares the app's copies with the kit's) are the
+    two with teeth now that the three pairs are gone.
+
 - **2026-09-21 s23** — `CL-003` closes: the finger moves into the kit, and a press stops
   going missing.
   - **What moved:** `GameInput` is no longer a second input system. It kept what is

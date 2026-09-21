@@ -20,13 +20,6 @@
 
 ## Open
 
-### CL-002 · The fixed-step loop is six lines, written twice, to the same constants
-
-- **Lens:** packages / duplicated kit layer
-- **Evidence:** `lib/src/game/game.dart:701-706` banks the frame and spends it — `_acc += math.min(dt, 0.1)`, `while (_acc >= fixedStep && steps < 4)`. `packages/voxel_game/lib/src/loop/fixed_step_loop.dart:23` is the same algorithm with the same numbers (`maxFrame` 0.1, `maxSteps` 4, `step` 1/60), plus `:37` `alpha`, the sub-step fraction for smoothing a pose between two ticks, which the app does not have. *(Amended 2026-09-21, `CL-003` closed: the copies also carried the same defect, `if (steps == 0) input.endTick()`, which threw away every one-shot press a frame beat to the simulation — `--touch-probe` read 0 of 20 taps arriving at 120 fps. That line is gone from both, in both files, because it had to be; the bank itself is still written twice and this entry stands.)*
-- **Cost of leaving it:** small in lines and large in what it signals — this is the one piece of `voxel_game` that carries no Dawnforge flavour at all, so if even this is not shared, nothing above `CharacterMotor` ever will be, and `voxel_game`'s top half stays a package validated only by its own example (`CL-005`). The concrete loss is `alpha`: the app cannot interpolate a pose between steps without reimplementing a third copy of the bank.
-- **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
-
 ### CL-004 · `Worlds` and `WorldSaves` are homonyms, not a duplicate pair
 
 - **Lens:** naming / false duplicate
@@ -63,6 +56,14 @@
 - **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
 
 ## Closed
+
+### CL-002 · The fixed-step loop is six lines, written twice, to the same constants
+
+- **Lens:** packages / duplicated kit layer
+- **Evidence:** `lib/src/game/game.dart:701-706` banks the frame and spends it — `_acc += math.min(dt, 0.1)`, `while (_acc >= fixedStep && steps < 4)`. `packages/voxel_game/lib/src/loop/fixed_step_loop.dart:23` is the same algorithm with the same numbers (`maxFrame` 0.1, `maxSteps` 4, `step` 1/60), plus `:37` `alpha`, the sub-step fraction for smoothing a pose between two ticks, which the app does not have. *(Amended 2026-09-21, `CL-003` closed: the copies also carried the same defect, `if (steps == 0) input.endTick()`, which threw away every one-shot press a frame beat to the simulation — `--touch-probe` read 0 of 20 taps arriving at 120 fps. That line is gone from both, in both files, because it had to be; the bank itself is still written twice and this entry stands.)*
+- **Cost of leaving it:** small in lines and large in what it signals — this is the one piece of `voxel_game` that carries no Dawnforge flavour at all, so if even this is not shared, nothing above `CharacterMotor` ever will be, and `voxel_game`'s top half stays a package validated only by its own example (`CL-005`). The concrete loss is `alpha`: the app cannot interpolate a pose between steps without reimplementing a third copy of the bank.
+- **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
+- **Closed by:** 2026-09-21, this commit. `Game` holds a `FixedStepLoop(step: fixedStep)` and `onFrame` is one line, `_loop.advance(dt, _tick)`; `_acc` and the hand-written `while` are gone. The numbers did not move (0.1 s of frame at most, whole steps of 1/60, at most 4 a frame), and two things arrived with the kit's version: the clamp that stops a run of full frames becoming a spiral of catch-up, which the app's copy never had, and `alpha`, which nothing reads yet but is now there to smooth a pose between two steps. The defect the pair shared — `if (steps == 0) input.endTick()` — had already gone in `CL-003`'s commit, in both files, because that one could not wait. Seen running: `tool/probe_baseline.sh --check` produced diffs byte-identical to a build of `be939852` run the same way (the logs themselves are stale on this machine: a 1600x900 @1x window against this Mac's 1512x900 @2x), and `--touch --touch-probe` on seed 42 reported the same figures as on the app's own loop — the dig 132 ticks against 133, everything else to the digit, one-shots 20 of 20 at 120 fps.
 
 ### CL-003 · Touch input landed in the POC and never rose; the kit's input is desktop-only by omission
 

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart'
     show Offset, PointerCancelEvent, PointerDeviceKind, PointerDownEvent, PointerMoveEvent, PointerUpEvent;
 import 'package:flutter/widgets.dart' show Size, WidgetsBinding;
+import 'package:voxel_game/voxel_game.dart' show FixedStepLoop;
 import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
 
@@ -271,7 +272,9 @@ class Game extends ChangeNotifier {
   int _fpsCount = 0;
   double _structTimer = 0.0;
   double _autosave = 0.0;
-  double _acc = 0.0;
+  /// The frame bank, `voxel_game`'s (`CL-002`): `alpha` is how far into the
+  /// next step it stands, for smoothing a pose between two.
+  final FixedStepLoop _loop = FixedStepLoop(step: fixedStep);
   double _sleepFrom = 0, _sleepTo = 0, _sleepT = -1.0;
   bool started = false;
   bool ready = false;
@@ -700,18 +703,17 @@ class Game extends ChangeNotifier {
       _fpsAcc = 0.0;
       _fpsCount = 0;
     }
-    _acc += math.min(dt, 0.1);
-    var steps = 0;
-    while (_acc >= fixedStep && steps < 4) {
-      _tick(fixedStep);
-      _acc -= fixedStep;
-      steps++;
-    }
-    // A frame that ran no step does NOT drain the one-shots: a press set
+    // The bank is `voxel_game`'s `FixedStepLoop`: the same six lines this file
+    // used to carry, to the same numbers (0.1 s of frame at most, whole steps
+    // of 1/60, at most 4 a frame), plus the clamp that stops a hitch becoming
+    // a spiral of catch-up and `alpha`, the fraction into the next step.
+    //
+    // A frame that runs no step does NOT drain the one-shots: a press set
     // between two frames is read by the next step, whenever that lands. The
     // drain used to live here, and above 60 fps it threw away every press it
     // beat to the simulation — `--touch-probe` measured 0 of 20 taps arriving
     // at 120 fps, because a frame that just spent the bank runs no step.
+    _loop.advance(dt, _tick);
     world.update();
     _ambientTimer += dt;
     _updateSky();
