@@ -70,6 +70,25 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-21 s24** — the relayout is planned, nothing moved:
+  [`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md)
+  (`VR0`–`VR6`). This folder becomes the `voxel_game` package itself — the other three
+  packages hang under its `packages/`, and today's root app moves whole into `demo/` as
+  `voxel_game_demo`. Two findings decided the shape. The first: a pub workspace **root**
+  can be published — a throwaway workspace with its `workspace:` key in place passed
+  `dart pub publish --dry-run` — so `voxel_game` being both the root and the released
+  package is not a contradiction. The second: that same dry run shipped the nested
+  member's files inside the tarball, and only a root `.pubignore` naming `packages/` and
+  `demo/` brought the archive back to `lib/`. Without it every release of `voxel_game`
+  would carry the kit twice and the whole demo. `ROADMAP.md` itself is why `docs/` and
+  `tool/` follow the app into `demo/`: Flutter serves assets only from inside the
+  declaring package, and the credits screen reads this file at runtime. The port's
+  vocabulary — "cubeworld", "poc", "minecraft" — stays in the `.md` files, which are the
+  lineage, and leaves every Dart file, shader, script and native config, doc comments
+  included, because `voxel_game`'s dartdoc is published. The demo's save root moves to
+  `…/com.example.voxelGameDemo/voxel_game_demo/worlds/`, so the worlds on this machine
+  and the path parity with the Godot POC both end there; the save *format* is untouched.
+
 - **2026-09-21 s23b** — `CL-002` closes: the app's frame bank is the kit's.
   - **What moved:** six lines and one field. `Game._acc` and the `while (_acc >= fixedStep
     && steps < 4)` are gone; `onFrame` now says `_loop.advance(dt, _tick)` over a
