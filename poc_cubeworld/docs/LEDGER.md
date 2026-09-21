@@ -11,15 +11,14 @@
 > things. This project is a different product under a different rule set (`CLAUDE.md`),
 > so it gets a different space rather than a shared counter that neither repo can hand
 > out. A citation of `CL-001` is unambiguous from either side.
+>
+> An entry that gets fixed **moves to `## Closed`, it is never deleted** — same four
+> fields, kept as they were written, plus a fifth `Closed by` naming the commit and what
+> was seen running. The evidence of a closed entry is a set of `file:line` that no longer
+> exists, and that is the point: it is how the next session tells "this was looked at and
+> resolved" from "this was never noticed".
 
 ## Open
-
-### CL-001 · The socket layout was shared, the socket was not
-
-- **Lens:** packages / duplicated engine layer
-- **Evidence:** `voxel_engine` ships a TCP layer — `packages/voxel_engine/lib/src/net/net_host.dart` (`NetHost.bind`, peer numbering from 2, `onJoin`/`onMessage`/`onLeave`) and `connection.dart` (newline-delimited JSON) — and `grep 'voxel_engine/net' lib/` returns nothing. The POC keeps its own: `lib/src/game/net.dart:93-97` (`ServerSocket? _server`, `Socket? _client`, `Map<int,_Peer> _peers`, `int _nextPeer = 2`, `StringBuffer _clientBuf`), `:173` `host()`, `:194` `join()`, `:213` `_feed`, `:230` `_sendTo`, `:238` `_broadcast` — the same shape, peer 2 included. The contrast is inside one subject: the *save* layout was shared correctly, `lib/src/world/voxel_world.dart:279-285` taking `EditDeltaCodec` from the engine with the comment "the byte layout lives in voxel_core's `EditDeltaCodec`". The same reasoning was available for the wire and was not applied.
-- **Cost of leaving it:** roughly 80 of `net.dart`'s 1,312 lines are the duplicate — the other 1,200 are Dawnforge's protocol (mounts, boats, carts, chests, bobbers) and belong in the app. But the 80 are the framing and reconnect layer, the part where a bug is a hung session rather than a wrong number, and it is now debugged twice from two sets of symptoms. It is also the entry that is cheapest to close: the protocol does not move, only the transport under it, and the engine's version is already covered by `packages/voxel_engine/test/net/net_test.dart` where the POC's is covered by nothing.
-- **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
 
 ### CL-002 · The fixed-step loop is six lines, written twice, to the same constants
 
@@ -59,7 +58,7 @@
 ### CL-007 · Nothing in the suite compares the app's copy with the kit's, and the divergence is already in HEAD
 
 - **Lens:** testing / drift between the two codebases
-- **Evidence:** the suite is 179 + 168 + 10 + 4 + 20 = 381 tests (`CLAUDE.md` §Execution Workflow, green at `b0b94ebd`). None of them puts `lib/src/game/game.dart:701-706` next to `FixedStepLoop.advance`, `lib/src/game/input.dart` next to `InputMap`, or `lib/src/game/net.dart` next to `NetHost`. `CL-003` is the proof this matters: stage 44 added a whole input mode to one of a twinned pair and the suite stayed green, at the commit that is HEAD.
+- **Evidence:** the suite is 179 + 168 + 10 + 4 + 20 = 381 tests (`CLAUDE.md` §Execution Workflow, green at `b0b94ebd`). None of them puts `lib/src/game/game.dart:701-706` next to `FixedStepLoop.advance`, `lib/src/game/input.dart` next to `InputMap`, or `lib/src/game/net.dart` next to `NetHost`. `CL-003` is the proof this matters: stage 44 added a whole input mode to one of a twinned pair and the suite stayed green, at the commit that is HEAD. *(Amended 2026-09-21, `CL-001` closed: the net pair no longer exists to drift — `net.dart` is `NetHost`'s only caller in the app. The loop and input pairs stand, and so does the entry: no test compares them.)*
 - **Cost of leaving it:** the repository's answer to "are the app and the kit still the same thing underneath?" is currently a human reading two files side by side, which is how `CL-001`, `CL-002` and `CL-003` were found in the first place — by hand, three days after the last one landed. Every extraction step (`VK`, `VC`) was gated on probes precisely because a test could not see it; the pairs that were *not* extracted have neither a probe nor a test. A `flutter test` that fails when the app's loop constants stop matching the kit's is cheap and would have caught the input drift the day it happened.
 - **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
 
@@ -69,3 +68,13 @@
 - **Evidence:** `docs/VOXEL_KIT_PLAN_2026-09-18.md:415` (`VKD1`) records the decision as "**Five packages**, the kit on top" and justifies it with "a game that only wants the world takes `voxel_worldgen` + `voxel_scene`"; `:418` (`VKD4`) says the noise is copied "into `voxel_worldgen`". `VC1` (`8a2b9853`) folded `voxel_worldgen` and four others into `voxel_engine` and `VC2` (`e349d46e`) renamed `voxel_audio`, so both decisions cite packages that were deleted two days later. `docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` records the new answer but does not mark the old one superseded, and `VKD1` is the entry a reader reaches first, since it is the register's first row.
 - **Cost of leaving it:** a decision register is consulted precisely when somebody is about to re-litigate a settled question — `CLAUDE.md` rule 4 ("a new package earns its place by an optional heavy dependency, never by being a different subject") is the *current* answer and it contradicts `VKD1` as written. The failure mode is a future session splitting a subject back out on the authority of the register, which is doing exactly what it was built to prevent.
 - **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
+
+## Closed
+
+### CL-001 · The socket layout was shared, the socket was not
+
+- **Lens:** packages / duplicated engine layer
+- **Evidence:** `voxel_engine` ships a TCP layer — `packages/voxel_engine/lib/src/net/net_host.dart` (`NetHost.bind`, peer numbering from 2, `onJoin`/`onMessage`/`onLeave`) and `connection.dart` (newline-delimited JSON) — and `grep 'voxel_engine/net' lib/` returns nothing. The POC keeps its own: `lib/src/game/net.dart:93-97` (`ServerSocket? _server`, `Socket? _client`, `Map<int,_Peer> _peers`, `int _nextPeer = 2`, `StringBuffer _clientBuf`), `:173` `host()`, `:194` `join()`, `:213` `_feed`, `:230` `_sendTo`, `:238` `_broadcast` — the same shape, peer 2 included. The contrast is inside one subject: the *save* layout was shared correctly, `lib/src/world/voxel_world.dart:279-285` taking `EditDeltaCodec` from the engine with the comment "the byte layout lives in voxel_core's `EditDeltaCodec`". The same reasoning was available for the wire and was not applied.
+- **Cost of leaving it:** roughly 80 of `net.dart`'s 1,312 lines are the duplicate — the other 1,200 are Dawnforge's protocol (mounts, boats, carts, chests, bobbers) and belong in the app. But the 80 are the framing and reconnect layer, the part where a bug is a hung session rather than a wrong number, and it is now debugged twice from two sets of symptoms. It is also the entry that is cheapest to close: the protocol does not move, only the transport under it, and the engine's version is already covered by `packages/voxel_engine/test/net/net_test.dart` where the POC's is covered by nothing.
+- **Found while:** 2026-09-21 — answering why `lib/` imports `voxel_game` in only two files.
+- **Closed by:** 2026-09-21, this commit. `lib/src/game/net.dart` now holds `NetHost? _host` and `NetConnection? _conn` from `package:voxel_engine/net.dart`; `_Peer`, `_feed`, `_sendTo` and the two raw sockets are gone, and with them the `dart:io` import. The estimate was right: the transport moved and the protocol did not — `host()`, `join()`, `stats` and every Dawnforge message keep their signatures, so nothing that calls `Net.instance` changed. Seen running as a real two-process host + client pair (`--host` / `--join=127.0.0.1`, `--seed=42 --radius=4 --wait-peer --stage21b`): the host numbered the client **peer 2**, the client read the host's chest as 3 apples, wore the spider's poison, took the 2 iron ingots it was handed and captured the host's puppet riding its horse in the storm. The one probe line that varies between runs (`effects []` instead of `[poison]`) was reproduced on a build of `e97dfb5a` in a throwaway worktree before the change was trusted: it flakes identically on both, because a poisoned client sometimes dies of the poison before it prints.

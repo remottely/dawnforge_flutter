@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -9,6 +8,7 @@ import 'package:vector_math/vector_math.dart';
 import '../core/blocks.dart';
 import '../core/items.dart';
 import 'package:voxel_engine/core.dart';
+import 'package:voxel_engine/net.dart';
 import '../core/species.dart';
 import '../entities/boat.dart';
 import '../entities/bobber.dart';
@@ -23,13 +23,6 @@ import 'inventory.dart';
 import 'weather.dart';
 
 enum NetMode { solo, host, client }
-
-class _Peer {
-  _Peer(this.id, this.socket);
-  final int id;
-  final Socket socket;
-  final StringBuffer _buf = StringBuffer();
-}
 
 /// A client's predicted block edits waiting for the host's ack (stage 25): the
 /// bookkeeping only, so it is testable without a socket.
@@ -90,11 +83,12 @@ class Net {
   bool connected = false;
   bool _applying = false;
   bool _mobPacketSeen = false;
-  ServerSocket? _server;
-  Socket? _client;
-  final Map<int, _Peer> _peers = {};
-  int _nextPeer = 2;
-  final StringBuffer _clientBuf = StringBuffer();
+
+  /// The transport: `voxel_engine`'s TCP layer. The host owns a [NetHost] (it
+  /// numbers peers from 2 and frames the JSON lines); a client owns the single
+  /// [NetConnection] to it. Everything above this pair is Dawnforge's protocol.
+  NetHost? _host;
+  NetConnection? _conn;
 
   /// Stage 21b: the drops the host owns, and the replicas a client draws.
   final Map<int, ItemDrop> _drops = {};
@@ -171,85 +165,50 @@ class Net {
   bool get isClient => mode == NetMode.client;
 
   Future<bool> host() async {
+    final NetHost h;
     try {
-      _server = await ServerSocket.bind(InternetAddress.anyIPv4, port);
+      h = await NetHost.bind(port: port);
     } catch (e) {
       debugPrint('[net] could not open port $port: $e');
       return false;
     }
+    _host = h;
     mode = NetMode.host;
-    _server!.listen((socket) {
-      final peer = _Peer(_nextPeer++, socket);
-      _peers[peer.id] = peer;
-      debugPrint('[net] peer ${peer.id} joined');
-      socket.setOption(SocketOption.tcpNoDelay, true);
-      unawaited(socket.done.then((_) {}, onError: (Object e) => debugPrint('[net] peer ${peer.id} socket closed: $e')));
-      utf8.decoder.bind(socket).listen((chunk) => _feed(peer._buf, chunk, (m) => _onHostMessage(peer.id, m)),
-          onDone: () => _onPeerLeft(peer.id), onError: (Object e) => _onPeerLeft(peer.id));
-      _onPeerJoined(peer.id);
-    });
+    h
+      ..onJoin = (peer) {
+        debugPrint('[net] peer ${peer.id} joined');
+        _onPeerJoined(peer);
+      }
+      ..onMessage = ((peer, m) => _onHostMessage(peer.id, m))
+      ..onLeave = ((peer) => _onPeerLeft(peer.id));
     return true;
   }
 
   Future<bool> join(String ip) async {
+    final NetConnection c;
     try {
-      _client = await Socket.connect(ip, port, timeout: const Duration(seconds: 5));
+      c = await connectToHost(ip, port: port);
     } catch (e) {
       debugPrint('[net] join failed: $e');
       return false;
     }
+    _conn = c;
     mode = NetMode.client;
-    _client!.setOption(SocketOption.tcpNoDelay, true);
-    unawaited(_client!.done.then((_) {}, onError: (Object e) => debugPrint('[net] socket closed: $e')));
     GameState.instance.worldName = 'client_${DateTime.now().millisecondsSinceEpoch % 100000}';
     GameState.instance.freshWorld = true;
-    utf8.decoder.bind(_client!).listen((chunk) => _feed(_clientBuf, chunk, _onClientMessage), onDone: () {
+    c.listen(_onClientMessage);
+    unawaited(c.done.then((_) {
       debugPrint('[net] server disconnected');
       main?.notify('Host left');
-    }, onError: (Object e) => debugPrint('[net] $e'));
+    }));
     return true;
   }
 
-  void _feed(StringBuffer buf, String chunk, void Function(Map<String, dynamic>) handle) {
-    buf.write(chunk);
-    final s = buf.toString();
-    final last = s.lastIndexOf('\n');
-    if (last < 0) return;
-    buf.clear();
-    buf.write(s.substring(last + 1));
-    for (final line in s.substring(0, last).split('\n')) {
-      if (line.isEmpty) continue;
-      try {
-        handle(jsonDecode(line) as Map<String, dynamic>);
-      } catch (e) {
-        debugPrint('[net] bad message: $e');
-      }
-    }
-  }
+  void _broadcast(NetMessage m) => _host?.broadcast(m);
 
-  void _sendTo(Socket s, Map<String, Object?> m) {
-    try {
-      s.write('${jsonEncode(m)}\n');
-    } catch (e) {
-      debugPrint('[net] send failed: $e');
-    }
-  }
+  void _toHost(NetMessage m) => _conn?.send(m);
 
-  void _broadcast(Map<String, Object?> m) {
-    for (final p in _peers.values) {
-      _sendTo(p.socket, m);
-    }
-  }
-
-  void _toHost(Map<String, Object?> m) {
-    final c = _client;
-    if (c != null) _sendTo(c, m);
-  }
-
-  void _toPeer(int id, Map<String, Object?> m) {
-    final p = _peers[id];
-    if (p != null) _sendTo(p.socket, m);
-  }
+  void _toPeer(int id, NetMessage m) => _host?.peers[id]?.send(m);
 
   static List<double> _v(Vector3 v) => [v.x, v.y, v.z];
   static Vector3 _vec(dynamic l) {
@@ -259,28 +218,26 @@ class Net {
 
   static Map<String, Object> _stackJson(ItemStack? s) => s?.toJson() ?? <String, Object>{};
 
-  void _onPeerJoined(int id) {
+  void _onPeerJoined(NetPeer peer) {
     final m = main;
     if (m == null) return;
     m.saveGame();
     final bytes = m.world.editsToBytes();
-    final socket = _peers[id]!.socket;
-    _sendTo(socket, {'t': 'hello', 'seed': m.world.seedValue, 'time': m.timeOfDay, 'edits': base64Encode(bytes)});
+    peer.send({'t': 'hello', 'seed': m.world.seedValue, 'time': m.timeOfDay, 'edits': base64Encode(bytes)});
     for (final e in _drops.entries) {
       final d = e.value;
-      _sendTo(socket, {'t': 'drop', 'id': e.key, 'item': d.itemId, 'n': d.count, 'pos': _v(d.position), 'vel': _v(d.velocity)});
+      peer.send({'t': 'drop', 'id': e.key, 'item': d.itemId, 'n': d.count, 'pos': _v(d.position), 'vel': _v(d.velocity)});
     }
     for (final e in _boats.entries) {
-      _sendTo(socket, {'t': 'boat', 'id': e.key, 'pos': _v(e.value.position), 'yaw': e.value.yaw});
+      peer.send({'t': 'boat', 'id': e.key, 'pos': _v(e.value.position), 'yaw': e.value.yaw});
     }
     for (final c in _carts.values) {
-      _sendTo(socket, _cartSpawnMessage(c));
+      peer.send(_cartSpawnMessage(c));
     }
-    _sendTo(socket, {'t': 'weather', 'kind': m.weather.kind.index, 'target': m.weather.target});
+    peer.send({'t': 'weather', 'kind': m.weather.kind.index, 'target': m.weather.target});
   }
 
   void _onPeerLeft(int id) {
-    _peers.remove(id);
     final p = _puppets.remove(id);
     if (p != null) p.removed = true;
     _releaseMount(id);
@@ -756,10 +713,8 @@ class Net {
   // --- damage: the host decides, the peer's own body applies it -----------------------
 
   void hurtPeer(int id, double amount, String source, Vector3? from) {
-    final p = _peers[id];
-    if (mode == NetMode.host && p != null) {
-      _sendTo(p.socket, {'t': 'hurt', 'amount': amount, 'source': source, 'from': from == null ? null : _v(from)});
-    }
+    if (mode != NetMode.host) return;
+    _toPeer(id, {'t': 'hurt', 'amount': amount, 'source': source, 'from': from == null ? null : _v(from)});
   }
 
   /// Stage 32: the crit rides the damage-number message as one extra bool.
@@ -836,11 +791,10 @@ class Net {
 
   /// Host: a puppet reached a drop; the peer's own inventory receives it.
   void givePeer(int id, String item, int count, int bonus) {
-    final p = _peers[id];
-    if (mode != NetMode.host || p == null) return;
+    if (mode != NetMode.host || _host?.peers[id] == null) return;
     lastGive = (id, item, count);
     debugPrint('[net] gave peer $id $item x$count');
-    _sendTo(p.socket, {'t': 'give', 'item': item, 'n': count, 'bonus': bonus});
+    _toPeer(id, {'t': 'give', 'item': item, 'n': count, 'bonus': bonus});
   }
 
   /// Client: the host handed an item over; what does not fit goes back.
@@ -1290,10 +1244,8 @@ class Net {
   // --- status effects: the host decides, the peer's own body wears it ----------
 
   void effectPeer(int id, String effect, double seconds) {
-    final p = _peers[id];
-    if (mode == NetMode.host && p != null) {
-      _sendTo(p.socket, {'t': 'effect', 'id': effect, 'seconds': seconds});
-    }
+    if (mode != NetMode.host) return;
+    _toPeer(id, {'t': 'effect', 'id': effect, 'seconds': seconds});
   }
 
   List<RemotePlayer> puppetBodies() => _puppets.values.toList();
@@ -1301,12 +1253,12 @@ class Net {
   List<(int, Vector3)> puppetPositions() => [for (final e in _puppets.entries) (e.key, e.value.position)];
 
   void shutdown() {
-    _server?.close();
-    _client?.close();
-    for (final p in _peers.values) {
-      p.socket.close();
-    }
-    _peers.clear();
+    final h = _host;
+    final c = _conn;
+    _host = null;
+    _conn = null;
+    if (h != null) unawaited(h.close());
+    if (c != null) unawaited(c.close());
     mode = NetMode.solo;
   }
 }
