@@ -176,7 +176,7 @@ clone stops being one.
    cd packages/voxel_game    && flutter test
    ```
 
-   Green as of `b0b94ebd`: analyze clean · 179 + 168 + 10 + 4 + 20 = **381 tests**.
+   Green as of `f6155a18`: analyze clean · 194 + 168 + 10 + 4 + 32 = **408 tests**.
    A count that drops without a deletion in the diff is a suite that stopped finding files.
 4. **See it running** (rule 18) for anything visual, and diff the probe baseline
    (`tool/probe_baseline.sh --check`) for anything that moved code between packages.

@@ -90,10 +90,15 @@ the Godot POC's, so the two roadmaps line up.
     are byte-identical. `--touch --touch-probe` on seed 42 repeated its figures to the
     digit, the dig taking 132 ticks against 133 — the one number a frame rate moves.
     The suite is unchanged: analyze clean, 194 + 168 + 10 + 4 + 32 = 408.
-  - **What is left on the ledger:** `CL-004` through `CL-008`, none of which is a
-    duplicate pair — `CL-005` (the kit's default HUD and bag are witnessed by nothing but
-    an example) and `CL-007` (no test compares the app's copies with the kit's) are the
-    two with teeth now that the three pairs are gone.
+  - **What is left on the ledger:** `CL-004` through `CL-009`, none of which is a
+    duplicate pair. Two were written at the end of this session, checking what did *not*
+    move: `CL-009`, the kit reads a finger and draws no thumb — the gesture rose into
+    `InputMap` and the on-screen stick and buttons stayed in the app, because they are
+    laid out against the app's own hotbar geometry — and an amendment to `CL-007`, whose
+    three named pairs are all closed now, so what it guards has moved up a level to the
+    surfaces that differ on purpose (`CL-005`, `CL-006`). `CLAUDE.md`'s suite snapshot was
+    stale by two sessions and now reads 408 at `f6155a18`; it is the number that is
+    supposed to catch a suite that stopped finding files, so an old one catches nothing.
 
 - **2026-09-21 s23** — `CL-003` closes: the finger moves into the kit, and a press stops
   going missing.
