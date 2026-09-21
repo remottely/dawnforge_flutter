@@ -299,9 +299,14 @@ class VoxelGame {
 
   /// Advances by [dt] seconds of real time: whole fixed steps, the chunk
   /// streaming, the sky.
+  ///
+  /// A frame that runs no step does **not** drain the one-shot presses: a tap
+  /// or a click set between two frames waits for the step that reads it. The
+  /// drain used to live here, and above 60 fps — where a frame that has just
+  /// spent the bank runs no step — it threw away roughly half of every
+  /// player's presses before anything could see them.
   void frame(double dt) {
-    final steps = _loop.advance(dt, step);
-    if (steps == 0) input.endTick();
+    _loop.advance(dt, step);
     world.update(player.position);
     firstPerson?.update(dt);
     final s = sky;
@@ -314,6 +319,16 @@ class VoxelGame {
   /// One fixed step of [dt]: the player, the creatures, the items, the
   /// liquids, spawning, then the spec's systems and hook.
   void step(double dt) {
+    // One arbiter for the two buttons every surface shares: the step that
+    // drains the one-shots is the only thing that reads them, so one press
+    // cannot close a screen here and open another there.
+    if (openScreen.value != null) {
+      if (input.justPressed(VoxelAction.inventory) || input.justPressed(VoxelAction.pause)) openScreen.value = null;
+    } else if (gameplay && input.justPressed(VoxelAction.inventory)) {
+      openScreen.value = '';
+    } else if (input.justPressed(VoxelAction.pause) && input.wantCapture) {
+      input.release();
+    }
     if (!player.placed) {
       player.tryPlace(_spawnColumn.x, _spawnColumn.z);
       input.endTick();

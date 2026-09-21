@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart'
+    show Offset, PointerCancelEvent, PointerDeviceKind, PointerDownEvent, PointerMoveEvent, PointerUpEvent;
 import 'package:flutter/widgets.dart' show Size, WidgetsBinding;
 import 'package:flutter_scene/scene.dart' hide Spawner;
 import 'package:vector_math/vector_math.dart';
@@ -705,7 +707,11 @@ class Game extends ChangeNotifier {
       _acc -= fixedStep;
       steps++;
     }
-    if (steps == 0) input.endTick();
+    // A frame that ran no step does NOT drain the one-shots: a press set
+    // between two frames is read by the next step, whenever that lands. The
+    // drain used to live here, and above 60 fps it threw away every press it
+    // beat to the simulation — `--touch-probe` measured 0 of 20 taps arriving
+    // at 120 fps, because a frame that just spent the bank runs no step.
     world.update();
     _ambientTimer += dt;
     _updateSky();
@@ -2298,6 +2304,7 @@ class Game extends ChangeNotifier {
     if (_hasArg('--stage22')) await _probeStage22();
     if (_hasArg('--move-probe')) await _probeMovement();
     if (_hasArg('--reach-probe')) await _probeReach();
+    if (_hasArg('--touch-probe')) await _probeTouch();
     if (_hasArg('--map-probe')) await _probeMap();
     if (_hasArg('--model-probe')) await _probeModel();
     if (_hasArg('--anim-probe')) await _probeAnimation();
@@ -3452,6 +3459,178 @@ class Game extends ChangeNotifier {
     player.dismount();
     horse.removed = true;
     player.setLook(0.0, 0.0);
+  }
+
+  /// `--touch-probe`: a finger plays the game. Every read below goes through
+  /// the kit's `InputMap` (`CL-003`), which is what `GameInput` became, so
+  /// this probe is the product's own touch scheme running inside the app:
+  /// a finger that stays put mines a real block, one that lifts in place uses
+  /// what the crosshair points at (and swings when that is a creature), one
+  /// that travels only turns the head, and one the system takes away does
+  /// nothing at all. The on-screen half — stick, button, hotbar slot — is
+  /// driven through the same three calls `TouchControls` makes.
+  Future<void> _probeTouch() async {
+    const finger = 1;
+    const at = Offset(400, 300);
+    void down([Offset where = at]) =>
+        input.onPointerDown(PointerDownEvent(pointer: finger, kind: PointerDeviceKind.touch, position: where));
+    void move(Offset to, Offset delta) =>
+        input.onPointerMove(PointerMoveEvent(pointer: finger, kind: PointerDeviceKind.touch, position: to, delta: delta));
+    void up([Offset where = at]) =>
+        input.onPointerUp(PointerUpEvent(pointer: finger, kind: PointerDeviceKind.touch, position: where));
+
+    final stone = Blocks.indexOf('stone');
+    final base = IVec3.floor(player.position);
+    final floor = base.y - 1;
+    for (var dx = -6; dx < 7; dx++) {
+      for (var dz = -6; dz < 7; dz++) {
+        // Three courses deep: a hole the finger digs must not drop the body
+        // into the sea underneath the beach.
+        for (var dy = 0; dy < 3; dy++) {
+          world.setBlock(IVec3(base.x + dx, floor - dy, base.z + dz), stone);
+        }
+        for (var dy = 1; dy < 7; dy++) {
+          world.setBlock(IVec3(base.x + dx, floor + dy, base.z + dz), Blocks.air);
+        }
+      }
+    }
+    player.setFirstPerson(true);
+    _probePlace(Vector3(base.x + 0.5, floor + 1.01, base.z + 0.5));
+    player.setLook(0.0, -1.2); // down at the floor just ahead of the boots
+    player.inventory.setSlot(player.selectedSlot, ItemStack('stone', 8));
+    // A phone never locks the pointer, so this is what its first tap sets; a
+    // probe sets it by hand rather than grabbing the developer's real mouse.
+    input.wantCapture = true;
+    await _ticks(12);
+
+    // A finger that stays where it landed digs, and goes on digging until it
+    // lifts: no button was pressed, the gesture held the primary one.
+    final target = player.aimedBlock;
+    world.setBlock(target, Blocks.indexOf('dirt')); // the bare hand's own block
+    await _ticks(6);
+    down();
+    await _ticks(20); // well past the 180 ms the gesture waits before it digs
+    final holds = input.down(GameAction.attack);
+    var ticks = 0;
+    for (var i = 0; i < 240; i++) {
+      await _ticks(1);
+      ticks = i + 1;
+      if (world.getBlock(target) == Blocks.air) break;
+    }
+    final mined = world.getBlock(target) == Blocks.air;
+    up();
+    await _ticks(2);
+    debugPrint('[probe] touch hold: the finger holds attack=$holds and broke $target=$mined after $ticks ticks, '
+        'and let go=${!input.down(GameAction.attack)} (a dig is never also a tap: use pressed=${input.justPressed(GameAction.use)})');
+
+    // A finger that lifts where it landed uses what the crosshair points at:
+    // the hole it just dug is filled back in from the hotbar.
+    await _ticks(6);
+    final tapAttacks = input.touchTapAttacks;
+    final placed = await _probeTouchTap(() => world.getBlock(target) != Blocks.air, down, up);
+    debugPrint('[probe] touch tap: aim=${player.aimedBlock} tapAttacks=$tapAttacks (expect false, no creature), '
+        'the block came back=${placed > 0} (${Blocks.idOf(world.getBlock(target))}) on tap $placed');
+
+    // The same tap, with a creature as the nearest thing under the crosshair:
+    // Player writes that one bit every time it re-aims, and the tap swings.
+    player.setLook(0.0, 0.0);
+    final aim = player.aimDirection().clone()..y = 0.0;
+    aim.normalize();
+    final zombie = Mob()..setupMob(world, this, player, Species.def('zombie'));
+    zombie.position = player.aimOrigin() + aim * 2.0
+      ..y = floor + 1.05;
+    addMob(zombie);
+    zombie.stun(30.0, false); // it holds its two metres while the finger decides
+    await _ticks(8);
+    final hpBefore = zombie.hp;
+    final swingsAt = input.touchTapAttacks;
+    final hits = await _probeTouchTap(() => zombie.hp < hpBefore, down, up);
+    debugPrint('[probe] touch tap on a creature: tapAttacks=$swingsAt (expect true), aimed=${player.aimedMob?.species.id ?? '-'}, '
+        'the zombie took ${(hpBefore - zombie.hp).toStringAsFixed(1)} damage on tap $hits');
+
+    // A finger that travels is the camera and nothing else.
+    final yawBefore = player.yaw;
+    final standing = player.aimedBlock;
+    down();
+    move(at + const Offset(60, 0), const Offset(60, 0));
+    await _ticks(20);
+    final minedWhileDragging = input.down(GameAction.attack);
+    up(at + const Offset(60, 0));
+    await _ticks(3);
+    debugPrint('[probe] touch drag: yaw ${yawBefore.toStringAsFixed(3)} -> ${player.yaw.toStringAsFixed(3)} '
+        '(turned ${(player.yaw - yawBefore).abs().toStringAsFixed(3)} rad), mining=$minedWhileDragging (expect false), '
+        'nothing placed=${world.getBlock(standing) == Blocks.air || standing == target}');
+
+    // A finger the system takes away decides nothing.
+    down();
+    input.onPointerCancel(const PointerCancelEvent(pointer: finger, kind: PointerDeviceKind.touch, position: at));
+    await _ticks(20);
+    debugPrint('[probe] touch cancel: mining=${input.down(GameAction.attack)} (expect false), '
+        'use pressed=${input.justPressed(GameAction.use)} (expect false)');
+    zombie.removed = true;
+
+    // The on-screen half: the stick walks and runs, a button jumps, a slot is
+    // chosen. TouchControls makes exactly these three calls.
+    world.setBlock(target, stone); // the hole filled in, whatever the tap did
+    _probePlace(Vector3(base.x + 0.5, floor + 1.01, base.z + 0.5));
+    player.setLook(0.0, 0.0);
+    await _ticks(8);
+    final from = player.position.clone();
+    input.touchMove(0.0, -1.0);
+    await _ticks(30);
+    input.touchMove(0.0, 0.0);
+    final walked = (player.position - from).length;
+    await _ticks(10);
+    final floorY = player.position.y;
+    input.setTouchHeld(GameAction.jump, true);
+    var peak = floorY;
+    for (var i = 0; i < 40; i++) {
+      await _ticks(1);
+      peak = math.max(peak, player.position.y);
+    }
+    input.setTouchHeld(GameAction.jump, false);
+    await _ticks(30);
+    final wasSlot = player.selectedSlot;
+    var slotTaps = 0;
+    for (var i = 0; i < 8 && player.selectedSlot == wasSlot; i++) {
+      input.touchHotbar(3);
+      slotTaps = i + 1;
+      await _ticks(1);
+    }
+    debugPrint('[probe] touch controls: the stick walked ${walked.toStringAsFixed(2)} m in 30 ticks, '
+        'the jump button lifted ${(peak - floorY).toStringAsFixed(2)} m, '
+        'the hotbar went slot $wasSlot -> ${player.selectedSlot} on tap $slotTaps');
+
+    // How many one-shot presses reach the simulation at all. A press set
+    // between two frames is only read by a frame that runs a simulation step,
+    // and `onFrame` used to drain the one-shots on a frame that ran none — so
+    // above 60 fps a share of every tap, on every device, was thrown away
+    // before anything read it: this line read 0 of 20 at 120 fps before the
+    // drain moved into the step, and 20 of 20 after.
+    var landed = 0;
+    for (var i = 0; i < 20; i++) {
+      final slot = i % 8 + 1;
+      input.touchHotbar(slot);
+      await _ticks(1);
+      if (player.selectedSlot == slot) landed++;
+    }
+    debugPrint('[probe] touch one-shot: $landed of 20 taps reached the simulation at ${fps.toStringAsFixed(0)} fps');
+    input.releaseKeys();
+  }
+
+  /// A tap on the world, repeated until the simulation acts on it, with the
+  /// number of taps it took. One tap is one press and one press is enough, so
+  /// anything above 1 here is a press that went missing between the finger and
+  /// the step — which is what this helper is for: it counts them instead of
+  /// hiding them.
+  Future<int> _probeTouchTap(bool Function() landed, void Function() down, void Function() up) async {
+    for (var i = 0; i < 8; i++) {
+      down();
+      up();
+      await _ticks(3);
+      if (landed()) return i + 1;
+    }
+    return 0;
   }
 
   /// `--outline-probe`: no two parts of any creature share a face plane, and

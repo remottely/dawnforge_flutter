@@ -213,7 +213,8 @@ class PlayerEntity extends NodeBody implements Target {
         cameraMode = cameraMode == CameraMode.firstPerson ? CameraMode.thirdPerson : CameraMode.firstPerson;
       }
       if (input.justPressed(VoxelAction.drop)) _dropHeld();
-      if (input.justPressed(VoxelAction.inventory)) game.openScreen.value = '';
+      // The bag is not opened from here: `VoxelGame.step` is the one reader of
+      // that button, so a press cannot open it and close it in one step.
     }
     _walk(dt, gameplay);
     _updateAim();

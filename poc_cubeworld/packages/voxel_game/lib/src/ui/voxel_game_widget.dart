@@ -9,7 +9,6 @@ import 'package:voxel_engine/core.dart' show IVec3;
 import 'package:voxel_scene/voxel_scene.dart';
 
 import '../core/voxel_game.dart';
-import '../input/voxel_action.dart';
 import '../spec/voxel_game_spec.dart';
 import 'default_hud.dart';
 import 'inventory_screen.dart';
@@ -198,22 +197,20 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
   void _screenChanged() {
     final game = _game;
     if (game == null) return;
-    if (game.openScreen.value != null) game.input.release();
+    // The screen is the arbiter of the pointer: opening frees it, closing
+    // takes it back, whoever asked for the change.
+    if (game.openScreen.value != null) {
+      game.input.release();
+    } else {
+      game.input.capture();
+    }
     setState(() {});
   }
 
-  void _closeScreen(VoxelGame game) {
-    game.openScreen.value = null;
-    game.input.capture();
-  }
+  void _closeScreen(VoxelGame game) => game.openScreen.value = null;
 
   void _tick(VoxelGame game, double dt) {
     final input = game.input;
-    if (game.openScreen.value != null && (input.justPressed(VoxelAction.inventory) || input.justPressed(VoxelAction.pause))) {
-      _closeScreen(game);
-    } else if (input.justPressed(VoxelAction.pause) && input.wantCapture) {
-      input.release();
-    }
     if (input.captureLost) {
       input.captureLost = false;
       input.releaseKeys();
@@ -244,6 +241,7 @@ class _VoxelGameWidgetState extends State<VoxelGameWidget> {
           game.input.onPointerDown(e);
         },
         onPointerUp: game.input.onPointerUp,
+        onPointerCancel: game.input.onPointerCancel,
         onPointerMove: game.input.onPointerMove,
         onPointerSignal: game.input.onPointerSignal,
         child: Stack(

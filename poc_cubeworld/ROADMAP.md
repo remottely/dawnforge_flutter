@@ -70,6 +70,63 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-21 s23** — `CL-003` closes: the finger moves into the kit, and a press stops
+  going missing.
+  - **What moved:** `GameInput` is no longer a second input system. It kept what is
+    Dawnforge's — the key table, the pad table, which action sits on which mouse button,
+    and the one unit the kit does not share (it answers the look in pixels, because
+    `Player` has owned the pixels-to-radians multiply since stage 4) — and handed every
+    read to `InputMap<GameAction>` from `voxel_game`. 520 lines became 248, and the whole
+    stage 44 touch scheme rose with them: `tapSlop` and `mineDelay` are constructor
+    fields now, a finger that stays put holds whatever action the game bound to the
+    primary mouse button, a tap presses that one or the secondary according to
+    `touchTapPrimary`, and the on-screen stick, buttons and hotbar slots arrive through
+    `touchMove` / `setTouchHeld` / `touchDigit` into the same `axis()` and
+    `digitPressed()` a key goes through. `VoxelGameWidget` finally forwards
+    `onPointerCancel`. Nothing in `lib/` outside `input.dart` changed a line, which was
+    the test of whether the two really were twins: they were.
+  - **The bug the probe found, and why it was fixed instead of recorded:** `--touch-probe`
+    drives a scripted finger and prints what the simulation did with it. The first runs
+    said the finger dug and dragged perfectly but that a tap on a zombie needed eight
+    attempts and a hotbar tap seven. That is not a touch bug: `onFrame` ended with
+    `if (steps == 0) input.endTick()`, so any frame that ran no simulation step drained
+    the one-shot presses — and above 60 fps a frame that has just spent the bank runs
+    none. The probe's own line measured it: **0 of 20 taps reached the simulation at
+    120 fps**. It hit taps, clicks and keys alike, on every device, worse the better the
+    display; the 396-test suite never saw it because no test runs the loop at a frame
+    rate. Rule 21 says record and do not fix, so this was put to the human, who chose to
+    fix it here. The drain now belongs to the step alone, in the app and in the kit, and
+    the same line reads **20 of 20**.
+  - **What the fix dragged with it:** if a press survives across frames, anything reading
+    one-shots *per frame* reads them twice. Only one place did — the kit's
+    `VoxelGameWidget._tick`, which closed a screen on inventory / pause before calling
+    `frame(dt)`. That moved into `VoxelGame.step`, which is where the drain is, and
+    `PlayerEntity` stopped opening the bag: the step is now the single reader of both
+    shared buttons (rule 25). The old arrangement had a latent bug of its own — the
+    widget closed the bag, then the step in the same frame saw the same press and the
+    player reopened it — which the dropped presses had been hiding.
+  - **How it was trusted:** the app is the kit's witness now, because the code under the
+    finger is literally `InputMap`'s. On seed 42 with `--touch --touch-probe`: a finger
+    that stayed put dug a real block in 133 ticks with no button pressed; a tap that
+    lifted in place put it back; a tap with a zombie under the crosshair swung for 1.0
+    damage (`tapAttacks=true`, written by `Player._updateAim`); a 60 px drag turned the
+    head 0.132 rad and mined nothing; a cancelled touch decided nothing; the on-screen
+    stick walked 2.05 m, the jump button lifted 1.49 m and a slot tap selected hotbar 3 —
+    every one of them on the first tap. The capture shows the phone layout over the world.
+    `packages/voxel_game/example` was built and launched to see the changed widget boot
+    clean; it has no probe flag, so nothing visual is claimed for it.
+  - **A trap for the next session:** `tool/probe_baseline.sh --check` fails on this
+    machine, and not because of this commit. `docs/baseline/*.log` was recorded on a
+    1600x900 @1x window; this Mac renders 1512x900 @2x, which moves the camera-settle
+    and site lines with it. A build of `be939852` in a throwaway worktree produced
+    byte-identical diffs, so the comparison that matters — this tree against unmodified
+    HEAD — is clean. Compare against a baseline *build*, never against the logs alone.
+  - **What is left:** `CL-002`, the fixed-step bank still written twice. Its entry is
+    amended: the copies shared the defect above, which is now gone from both, but the six
+    lines are still six lines in two files, and the kit's `alpha` still has no user.
+    Stage 44 has no row in the table above (the table stops at 33; stages 34+ live in this
+    log), so this entry is where its touch scheme's new address is recorded.
+
 - **2026-09-21 s22** — `CL-001` closes: the app stops owning a socket.
   - **What moved:** `lib/src/game/net.dart` had its own TCP transport under the Dawnforge
     protocol — a `ServerSocket`, a client `Socket`, a private `_Peer` holding a socket and a
@@ -139,7 +196,9 @@ the Godot POC's, so the two roadmaps line up.
     extras), with `CL-002` riding along with either.
 
 - **2026-09-20 s20** — a phone can play it: a stick, five buttons and a finger that knows
-  what it means.
+  what it means. *(Amended 2026-09-21, s23: the scheme described below now lives in
+  `voxel_game`'s `InputMap`; `GameInput` is the Dawnforge binding tables over it. Behaviour
+  unchanged — same slop, same mine delay, same tap rule.)*
   - **What was missing:** s19 (`3f886bde`, logged nowhere, so it is logged here) made the
     Backbone work on Android and iOS, locked both to landscape, and taught a touch to tell a
     tap from a look drag. What it left behind it said so in its own message: without a

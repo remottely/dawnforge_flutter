@@ -382,4 +382,34 @@ void main() {
     expect(motion.wingAngle(1.5707963267948966, 1.0), closeTo(0.95, 1e-9));
     expect(RigMotion.gaitRateOf(RigKind.bird), greaterThan(RigMotion.gaitRateOf(RigKind.quadruped)), reason: 'short legs take more steps');
   });
+
+  test('a press waits for the step that reads it, however fast the frames come', () async {
+    final game = await _start(_flat());
+    await _run(game, 0.5);
+    final slot = game.player.selectedSlot;
+    // Two frames that each carry half a step: neither runs one, and above
+    // 60 fps that is most of them. The press must survive to the third.
+    game.input.touchDigit(slot == 3 ? 4 : 3);
+    game.frame(1 / 240);
+    game.frame(1 / 240);
+    expect(game.player.selectedSlot, slot, reason: 'no step ran, so nothing read it');
+    expect(game.input.digitPressed(), isNot(-1), reason: 'and nothing threw it away either');
+    game.frame(1 / 60);
+    expect(game.player.selectedSlot, slot == 3 ? 4 : 3, reason: 'the first step to run reads it');
+    expect(game.input.digitPressed(), -1, reason: 'and that step drains it');
+  });
+
+  test('one press, one arbiter: the step opens and closes the bag, and only it', () async {
+    final game = await _start(_flat());
+    await _run(game, 0.5);
+    game.input.tap(VoxelAction.inventory);
+    await _run(game, 1 / 60);
+    expect(game.openScreen.value, '', reason: 'the bag opens on the press the step read');
+    game.input.tap(VoxelAction.inventory);
+    await _run(game, 1 / 60);
+    expect(game.openScreen.value, isNull, reason: 'and the same button closes it');
+    // A press is spent once: the steps that follow read nothing.
+    await _run(game, 0.2);
+    expect(game.openScreen.value, isNull);
+  });
 }

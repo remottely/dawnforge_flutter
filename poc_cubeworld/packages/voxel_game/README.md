@@ -15,7 +15,10 @@ re-exports what a game needs, so a game imports only this library.
 
 - `VoxelGameSpec`: blocks, items, recipes, world, player, mobs, sky, sounds, circuits, liquids.
 - `runVoxelGame` / `VoxelGameWidget`: the 3D view, a HUD, the inventory and crafting screen.
-- Controls for keyboard and mouse, gamepad; first and third person.
+- Controls for keyboard and mouse, gamepad and touch; first and third person. A finger on
+  the world is a gesture: lift in place to use (or swing), stay put to mine, drag to look —
+  and `InputMap.touchMove` / `setTouchHeld` / `touchDigit` take an on-screen stick, button
+  or hotbar slot, which the game reads as the same actions a key presses.
 - `MobSpec` with a `Rig` (humanoid, quadruped, bird, blob), a `Gait` and a brain of goals:
   `Wander`, `Hunt`, `MeleeAttack`, `RangedAttack`, `FleeWhenHurt`, `Explode`, `LookAtPlayer`, or `Behavior.custom`.
 - `Goal` / `GoalSelector`: the same goal system for your own creature classes.

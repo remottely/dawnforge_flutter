@@ -6,7 +6,19 @@ First version, not published.
 
 - `VoxelGameSpec` + `runVoxelGame`: a playable voxel game from one declaration.
 - Mining, placing, an inventory and crafting screen, a HUD, first and third person.
-- Keyboard and mouse, and gamepad controls.
+- Keyboard and mouse, gamepad and touch controls.
+- `InputMap` reads a finger as a gesture, not as a mouse button: one that lifts where it
+  landed presses the primary or the secondary button (`touchTapPrimary`, the game's own
+  "is a creature under the crosshair" bit), one that stays put for `mineDelay` holds the
+  primary one until it lifts, and one that travels past `tapSlop` is the look and presses
+  nothing. `touchMove`, `setTouchHeld` and `touchDigit` are the on-screen controls' half,
+  read through the same `down` / `justPressed` / `axis(..., touch:)` / `digitPressed()`
+  a key or a pad goes through. `VoxelGameWidget` forwards `onPointerCancel`, so a pointer
+  the system takes away is dropped instead of left down.
+- A one-shot press waits for the step that reads it. A frame that runs no simulation step
+  no longer drains them, which above 60 fps threw away about half of every player's taps
+  and clicks; and `VoxelGame.step` is now the single reader of the bag and pause buttons,
+  so one press can no longer close a screen in one place and open another somewhere else.
 - Mobs from `MobSpec`: rigs, gaits, drops, spawn rules and a brain of goals.
 - `Goal` / `GoalSelector`: the goal system, usable with any creature class.
 - Day and night sky, sounds, circuits (`SignalSpec`), liquids.
