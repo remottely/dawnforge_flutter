@@ -48,6 +48,7 @@ Dart through `MainFlutterWindow.swift`, which is what makes the probes work).
 | Consolidation plan (VC — eight packages became four) | `docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` |
 | Kit plan (VK — how the packages were extracted) | `docs/VOXEL_KIT_PLAN_2026-09-18.md` |
 | Flutter vs Godot performance study | `docs/PERFORMANCE_VS_GODOT_2026-09-11.md` |
+| Architecture ledger (rule 21) — IDs are `CL-nnn` | `docs/LEDGER.md` |
 | Probe baseline logs, diffed on every move | `docs/baseline/` · `tool/probe_baseline.sh` |
 | The Godot twin (the port's spec) | `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/` (branch `poc_cubeworld` of `tessera_project`) — read-only from here |
 | The 2D study track (sibling, paused at 0.78.0) | `../` — read-only from here, never imported |

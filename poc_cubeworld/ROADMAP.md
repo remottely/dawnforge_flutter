@@ -70,6 +70,37 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-21 s21** — the ledger opens, with eight entries and no fixes.
+  - **The question that started it:** why does `lib/` import `package:voxel_game` in only two
+    files? The answer is that it does not consume the kit's top half at all — two `show`
+    clauses (`player.dart:33`, `mob.dart:8`) for `CharacterMotor`, `MotorTuning`,
+    `ShoulderOrbit` and `ViewBob` — while importing `voxel_engine` twenty-five times and
+    `voxel_scene` thirteen. The kit is eaten from below and barely from above.
+  - **Why that is mostly right:** VK5 delegated exactly what is engine-neutral (locomotion,
+    camera, rig) and left what is Dawnforge's look and content, and `VKD5` settled that the
+    kit grows first and the POC moves onto it after. `voxel_game`'s `VoxelGame` is 490 lines
+    against the app's 6,379 `Game`; that is not an import away, and `CLAUDE.md` forbids
+    rewriting the POC wholesale for good reason.
+  - **Where it is not right:** three pairs duplicate code that carries no Dawnforge flavour
+    whatsoever — the TCP transport (`CL-001`, and the save *codec* was shared correctly in
+    the same subject, so the reasoning existed), the six-line fixed-step loop (`CL-002`), and
+    `GameInput` against `InputMap`, twins down to their seven imports. The third one is the
+    lesson: stage 44 put a whole touch scheme in the app's half and none in the kit's, so the
+    product cannot be played on a phone while the demo can, and all 381 tests stayed green
+    through it (`CL-003`, `CL-007`).
+  - **Recorded, not fixed** — rule 21. `docs/LEDGER.md` is new; its IDs are `CL-nnn` and not
+    `L-nnn` on purpose, because the 2D track's ledger owns that space and its own `L-013` is
+    the entry about two ID spaces one hyphen apart. `CL-004` and `CL-005` say what is *not*
+    broken (`Worlds` vs `WorldSaves` are homonyms; the kit's default HUD and bag are right to
+    differ — they are simply witnessed by nothing but an example app). `CL-006` and `CL-008`
+    are documentation drift: `CLAUDE.md` rule 12 names one `ScreenKind` where two exist, and
+    the VK decision register still answers `VKD1` with "five packages" and `VKD4` with
+    `voxel_worldgen`, both deleted by VC1 two days after they were written.
+  - **The order to close them, when someone does:** `CL-001` first (the protocol does not
+    move, only the transport under it, and the engine's side is already tested), then
+    `CL-003` (touch rises, `GameInput` becomes `InputMap<GameAction>` plus Dawnforge's
+    extras), with `CL-002` riding along with either.
+
 - **2026-09-20 s20** — a phone can play it: a stick, five buttons and a finger that knows
   what it means.
   - **What was missing:** s19 (`3f886bde`, logged nowhere, so it is logged here) made the
