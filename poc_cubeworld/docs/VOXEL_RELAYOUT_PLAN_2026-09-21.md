@@ -32,7 +32,7 @@ repository of its own, apart from the kit, and that move is a later conversation
 
 | Step | State | Gate |
 |:---|:---|:---|
-| VR0 The baseline, frozen before anything moves | todo | the six suite commands green and `tool/probe_baseline.sh --check` clean, with the numbers written into this table's row |
+| VR0 The baseline, frozen before anything moves | **done** 2026-09-22 at `fadede2d`: analyze clean · 194 + 168 + 10 + 4 + 32 = **408 tests** · `--check` against `docs/baseline/` fails as s23 recorded (1512x900 @2x here, the logs were cut at 1600x900 @1x; the code is byte-identical to `f6155a18`), so the reference is HEAD's own raw logs on this Mac, recorded twice and stable between runs (stage31 15 lines, stage32 17, window 7) — VR1 diffs against those, not against `docs/baseline/` | the six suite commands green and `tool/probe_baseline.sh --check` clean, with the numbers written into this table's row |
 | VR1 The relayout — the kit moves under `packages/voxel_game/`, the app leaves the workspace | todo | analyze clean in both trees, the same test count, no hosted package changed version, probe logs match `docs/baseline/`, `flutter run -d macos` plays |
 | VR2 The terms leave the kit's implementation | todo | `grep -ri 'minecraft\|cube ?world\|\bpoc\b'` over every non-`.md` file under `packages/voxel_game/` returns nothing |
 | VR3 The docs realigned to the two trees | todo | every path in both `CLAUDE.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md` and the moved plans resolves |
@@ -167,6 +167,15 @@ tool/probe_baseline.sh --check
 
 Expected at `f6155a18`: analyze clean · 194 + 168 + 10 + 4 + 32 = **408 tests** · probe logs
 match. Keep a copy of today's `pubspec.lock` in the scratchpad: VR1 compares against it.
+
+**As run (2026-09-22):** the counts matched; the probe did not, for a reason that is not in
+the tree. `docs/baseline/` was recorded on a 1600x900 @1x window and this Mac renders
+1512x900 @2x, which moves the camera-settle and site lines (and the stage 32 footsteps line
+is compared on one side only: its current wording carries `0.35 s`, which the filter drops).
+So the gate is the one s23 used — this tree against unmodified HEAD on the same machine. A
+copy of `tool/probe_baseline.sh` with its output directory redirected wrote HEAD's raw logs
+into the scratchpad twice; the two runs were identical after the script's own filter. VR1's
+probe gate is a third run of that copy on the relaid tree, diffed the same way.
 
 ### VR1 — the relayout (one commit; the tree is unbuildable between its halves)
 
