@@ -70,6 +70,27 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-22 s25** — the relayout is replanned before any of it ran:
+  [`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md) is now
+  `VR0`–`VR5`, and s24's shape is dead. The app does not become a `demo/` of the kit: it
+  will leave for a repository of its own, apart from the kit, and that move is a later
+  conversation. So nothing about the app moves — not its folder, not `cubeworld_poc`, not
+  its bundle ids, not its save root, so there is no save bill and the Godot parity
+  survives. What moves is the kit, *into* `packages/voxel_game/`: that folder becomes the
+  workspace root and the published package, `voxel_engine`, `voxel_scene` and
+  `sound_recipes` hang under its own `packages/`, and it takes `PUBLISHING.md`, the three
+  extraction plans and its ledger entries with it — so that one folder, moved whole, is the
+  new repository. The app stops being a workspace root and reaches the kit the way any
+  outside project would. One probe decided how: an app outside a workspace that lives
+  inside its own folder resolves the nested workspace fine, but **only** through
+  `dependency_overrides` — with plain `path:` dependencies pub refuses, because the kit
+  asks for `voxel_engine: ^0.0.0` from hosted while the app offers it from a path. Four
+  path overrides are therefore the single edge between the two trees, and the one that
+  has to be replaced the day the folder leaves. The last step, `VR5`, builds a copy of
+  `packages/voxel_game/` outside the repository with nothing beside it; the move itself is
+  the developer's. The vocabulary rule narrows with it: "minecraft", "cube world" and
+  "poc" leave the kit's 19 non-`.md` files and stay in the app, which *is* the POC.
+
 - **2026-09-21 s24** — the relayout is planned, nothing moved:
   [`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md)
   (`VR0`–`VR6`). This folder becomes the `voxel_game` package itself — the other three

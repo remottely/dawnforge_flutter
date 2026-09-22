@@ -1,88 +1,114 @@
-# The relayout — this folder becomes the `voxel_game` package, the app becomes its demo
+# The relayout — `packages/voxel_game/` becomes the kit's repository, the app is cut loose
 
-**Step IDs: `VR0`–`VR6`.** Written 2026-09-21 at `7fd182ca`, before any file moved. Nothing
-in this plan changes behaviour: it moves files, rewrites paths and renames things. Every
-gate is "the same suite, the same probe logs, the same game".
+**Step IDs: `VR0`–`VR5`.** Written 2026-09-21 at `7fd182ca`; **rewritten 2026-09-22** at
+`e5b9a4b5`, before any file moved. Nothing in this plan changes behaviour: it moves files,
+rewrites paths and renames things. Every gate is "the same suite, the same probe logs, the
+same game".
 
 The sibling plans are [`VOXEL_KIT_PLAN_2026-09-18.md`](./VOXEL_KIT_PLAN_2026-09-18.md) (how
 the packages were extracted) and
 [`VOXEL_CONSOLIDATION_PLAN_2026-09-19.md`](./VOXEL_CONSOLIDATION_PLAN_2026-09-19.md) (why
-there are four). This one is the last structural move before a first release: it gives the
-kit the shape it will have in its own repository, and it takes the POC's vocabulary out of
-the code.
+there are four). This one is the last structural move before the kit leaves: it gives
+`packages/voxel_game/` the shape of the repository it will become, with the other three
+packages inside it, and it takes the POC's vocabulary out of the kit's code.
+
+### What the rewrite changed, and why
+
+The first version (`e5b9a4b5`) turned this whole folder into `voxel_game` and moved the app
+into a `demo/` beside it. That is not where the app is going. The app will leave for a
+repository of its own, apart from the kit, and that move is a later conversation. So:
+
+- **The app stays exactly where and what it is** — `poc_cubeworld/`, `cubeworld_poc`, its
+  bundle ids, its save root. No `demo/`, no app rename, no save bill.
+- **`voxel_game` stays at `packages/voxel_game/`** and becomes the root of the future kit
+  repository: the workspace root, the published package, and the folder that holds the other
+  three packages. Moving that one folder moves the whole kit.
+- **The app is decoupled from the kit's workspace.** It stops being the workspace root and
+  consumes the kit the way any outside project would, through one edge that is easy to cut.
+- The old `VR2` (the demo's name) and `VR6` (renaming `poc_cubeworld/`) are gone. The rest —
+  baseline, relayout, terms, docs, publish readiness — is kept, re-aimed at the new root.
 
 ## Progress
 
 | Step | State | Gate |
 |:---|:---|:---|
 | VR0 The baseline, frozen before anything moves | todo | the six suite commands green and `tool/probe_baseline.sh --check` clean, with the numbers written into this table's row |
-| VR1 The relayout — `demo/` is born, the root becomes `voxel_game` | todo | analyze clean, the same test count, probe logs match `docs/baseline/`, `flutter run -d macos` from `demo/` plays |
-| VR2 The demo's name — `cubeworld_poc` → `voxel_game_demo` | todo | no `cubeworld_poc` anywhere outside `.md`; the app builds, boots, and writes a world under the new save root |
-| VR3 The terms leave the implementation | todo | `grep -ri 'minecraft\|cube ?world\|\bpoc\b'` over every `lib/`, `test/`, `tool/`, shader and native file returns nothing |
-| VR4 The docs realigned to the new tree | todo | every path in `README.md`, `CLAUDE.md`, `ROADMAP.md`, `packages/PUBLISHING.md` and the three plans resolves |
-| VR5 Publish readiness for the four packages | todo | `pub publish --dry-run` green for `voxel_engine`, `sound_recipes`, `voxel_scene`, `voxel_game` |
-| VR6 The folder itself — `poc_cubeworld/` → `voxel_game/` | todo | the parent worktree builds and tests from the new path; no absolute path in the repo still says `poc_cubeworld` |
+| VR1 The relayout — the kit moves under `packages/voxel_game/`, the app leaves the workspace | todo | analyze clean in both trees, the same test count, no hosted package changed version, probe logs match `docs/baseline/`, `flutter run -d macos` plays |
+| VR2 The terms leave the kit's implementation | todo | `grep -ri 'minecraft\|cube ?world\|\bpoc\b'` over every non-`.md` file under `packages/voxel_game/` returns nothing |
+| VR3 The docs realigned to the two trees | todo | every path in both `CLAUDE.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md` and the moved plans resolves |
+| VR4 Publish readiness for the four packages | todo | `pub publish --dry-run` green for `voxel_engine`, `sound_recipes`, `voxel_scene`, `voxel_game` |
+| VR5 Ready to move — the kit folder stands alone | todo | a copy of `packages/voxel_game/` taken outside the repo resolves, analyzes, tests and dry-runs with nothing else beside it |
 
 ---
 
 ## The shape, before and after
 
-Today the root is the POC app and the kit hangs off it. After VR1 it is the other way
-round: the root **is** `voxel_game`, the other three packages are its `packages/`, and the
-app that proves them is `demo/`.
+Today `poc_cubeworld/` is the app **and** the workspace root, and the four packages are
+siblings under its `packages/`. After VR1 the app is a plain Flutter project and the kit is
+one folder that holds everything it needs.
 
 ```
-voxel_game/                     (was poc_cubeworld/ — renamed in VR6)
-├── pubspec.yaml                name: voxel_game · the workspace root · the published package
-├── lib/  test/  example/       ← packages/voxel_game/{lib,test,example}
-├── README.md  CHANGELOG.md  analysis_options.yaml   ← packages/voxel_game/
-├── .pubignore                  new — keeps packages/ and demo/ out of the tarball
-├── CLAUDE.md                   rewritten for this tree (VR4)
-├── packages/
-│   ├── voxel_engine/           unchanged
-│   ├── voxel_scene/            unchanged (its example stays under it)
-│   └── sound_recipes/          unchanged
-└── demo/                       name: voxel_game_demo (was cubeworld_poc)
-    ├── lib/ test/ assets/ flutter_scene_generated/
-    ├── android/ ios/ macos/
-    ├── tool/                   probe_baseline.sh, perf_loop.sh — they drive the demo
-    ├── docs/                   the whole of today's docs/, baseline logs included
-    ├── ROADMAP.md              stage SSOT *and* a demo asset (the credits read it)
-    ├── README.md               how to run it and every probe flag
-    └── pubspec.yaml            resolution: workspace
+poc_cubeworld/                      the app — name, bundle ids and save root unchanged
+├── pubspec.yaml                    name: cubeworld_poc · no workspace: any more ·
+│                                   dependency_overrides → the four packages by path
+├── pubspec.lock                    the app's own (it was the whole workspace's)
+├── lib/ test/ assets/ android/ ios/ macos/ flutter_scene_generated/
+├── tool/                           probe_baseline.sh, perf_loop.sh — they drive the app
+├── docs/                           the app's: baseline/, the Godot perf study, its ledger
+├── ROADMAP.md  README.md  CLAUDE.md  AGENTS.md
+└── packages/
+    └── voxel_game/                 THE FUTURE KIT REPOSITORY — moved out whole in the end
+        ├── pubspec.yaml            name: voxel_game · the workspace root · the published package
+        ├── pubspec.lock            the kit workspace's lock
+        ├── lib/ test/ example/     unchanged
+        ├── README.md  CHANGELOG.md  analysis_options.yaml   unchanged in place
+        ├── .pubignore              new — keeps packages/ and the build dirs out of the tarball
+        ├── .gitignore              new — the kit must ignore its own build output once alone
+        ├── CLAUDE.md  AGENTS.md    new — the kit's rules, lifted from the app's (VR3)
+        ├── PUBLISHING.md           ← packages/PUBLISHING.md
+        ├── docs/                   the kit's plans and its ledger (VR1, VR3)
+        └── packages/
+            ├── voxel_engine/       ← packages/voxel_engine
+            ├── voxel_scene/        ← packages/voxel_scene (its example stays under it)
+            └── sound_recipes/      ← packages/sound_recipes
 ```
 
-`packages/voxel_game/` ceases to exist. `voxel_scene/example` and the new root `example/`
-stay `publish_to: none` apps, as before.
+`poc_cubeworld/packages/` ends up holding only `voxel_game/`. `voxel_scene/example` and
+`voxel_game/example` stay `publish_to: none` apps, as before.
 
-### The decisions behind that shape (taken 2026-09-21, do not re-litigate)
+### The decisions behind that shape (taken 2026-09-22, do not re-litigate)
 
-1. **The root is the package, not a wrapper.** The kit is the product; the app is the demo
-   that proves it. A published `repository:` should point at a tree whose root is the thing
-   you installed.
-2. **Everything the app owns moves with the app** — `ROADMAP.md`, `tool/` and `docs/` all
-   land in `demo/`. `ROADMAP.md` has no choice: Flutter only serves assets from inside the
-   declaring package, and the credits screen reads it at runtime
-   (`lib/src/ui/credits_screen.dart`, `roadmapAsset = 'ROADMAP.md'`).
-3. **"cubeworld", "poc" and "minecraft" are documentation words from now on.** They keep
-   their place in `.md` files — that is the lineage, and the port's whole story — and leave
-   every Dart file, test, shader, script and native config, including doc comments. The
-   dartdoc of `voxel_game` is published; it should describe what the code does, not which
-   game it was measured against.
-4. **The app is `voxel_game_demo`**, shown as "Voxel Game Demo".
-5. **The native identity drops `com.remottely`** — macOS/iOS become
-   `com.example.voxelGameDemo`, Android `com.example.voxel_game_demo`. The demo is an
-   example app, not a shipped product of anyone's.
-6. **The saves are the bill** (rule 16). The save root moves from
-   `…/com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/worlds/` to
-   `…/com.example.voxelGameDemo/voxel_game_demo/worlds/`: every existing world becomes
-   unreachable, and the byte-level path parity with the Godot POC's save folder ends. The
-   *format* stays identical; only the folder that holds it moves. Existing worlds are
-   deleted, not migrated.
+1. **The kit's root is the package, not a wrapper.** The kit is the product. A published
+   `repository:` should point at a tree whose root is the thing you installed — so the
+   future repository's root is `voxel_game`, and the three packages it depends on hang
+   under its `packages/`. They go together because they version together: every breaking
+   change in `voxel_engine` is a release of `voxel_scene` and `voxel_game` too
+   (`PUBLISHING.md` §The version graph). Being on pub.dev separately does not change that.
+2. **The app is a consumer, not a member.** It leaves the workspace and reaches the kit
+   through `dependency_overrides` with `path:` entries — the same edge any outside project
+   has, and the only edge that must be cut or replaced on the day the kit leaves. A nested
+   workspace (the app's workspace containing the kit's) would keep the two coupled in one
+   resolution; that is exactly what this plan removes.
+3. **Everything the kit owns moves inside its folder** — `PUBLISHING.md`, the three plans
+   that record how it was extracted, this plan, its ledger entries, a rules file of its own.
+   **Everything the app owns stays with the app** — `ROADMAP.md` (a Flutter asset the
+   credits read at runtime), `tool/`, `docs/baseline/`, the Godot performance study.
+4. **"cubeworld", "poc" and "minecraft" leave the kit's code and stay everywhere else.**
+   `voxel_game`'s dartdoc is published; it should describe what the code does, not which
+   game it was measured against. They keep their place in `.md` files (the lineage) and in
+   the app, which *is* the POC and keeps its name until its own move is discussed.
+5. **No save bill.** The app's name, bundle ids and save root
+   (`…/com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/worlds/`) do not change, so the
+   worlds on this machine and the byte-level parity with the Godot POC both survive.
+6. **The move itself is not a step.** The plan ends when the folder is ready to leave
+   (VR5). Moving it into the new repository is done by the developer; what the app does
+   once it is gone is the next conversation, not this plan (§After the move).
 
 ---
 
-## What was verified before writing this (2026-09-21, `7fd182ca`)
+## What was verified before writing this
+
+On 2026-09-21, at `7fd182ca`:
 
 - **A workspace root can be published.** A throwaway workspace (`ws_root_probe` with one
   member) passed `dart pub publish --dry-run` with its `workspace:` key in place; the only
@@ -90,24 +116,37 @@ stay `publish_to: none` apps, as before.
   published package is not a contradiction. Residual risk: pub.dev "may enforce additional
   checks" that a local dry run does not. Fallback if the server refuses, in order of
   preference: publish from a clean copy of the tree with the `workspace:` key removed, or
-  drop the workspace entirely and give `demo/` and the examples `path:` dependencies.
+  drop the workspace entirely and give the examples `path:` dependencies.
 - **A nested package is bundled unless it is ignored.** The same probe shipped its member's
   `lib/` and `pubspec.yaml` inside the tarball. A root `.pubignore` naming `packages/`,
-  `demo/`, `build/`, `.dart_tool/`, `example/macos/` and `example/build/` removed them — the
-  archive came back down to `lib/`, `README`, `CHANGELOG`, `LICENSE`, `pubspec.yaml`.
+  `build/`, `.dart_tool/`, `example/macos/` and `example/build/` removed them — the archive
+  came back down to `lib/`, `README`, `CHANGELOG`, `LICENSE`, `pubspec.yaml`.
   **`.pubignore` is not optional in this layout**; without it every release of `voxel_game`
-  ships the other three packages and the whole demo as dead weight.
-- **The surface of the rename**: 28 Dart files import `package:cubeworld_poc/…`; the string
-  `cubeworld` / `cube world` / `poc` / `minecraft` appears in 57 tracked non-generated files,
-  about 35 of them doc comments inside `lib/` (both trees) and the rest in native config,
-  scripts and `.md`.
-- **The probe scripts survive the move for free.** Both start with
-  `cd "$(dirname "$0")/.."`, so moving `tool/` into `demo/` keeps them rooted at the app.
-  Only the built binary's path changes, and only in VR2 (`cubeworld_poc.app` →
-  `voxel_game_demo.app`).
+  ships the other three packages as dead weight.
 - **The parent repo does not resolve this tree.** `../pubspec.yaml` (the 2D track) declares
   no workspace covering `poc_cubeworld/`, so the relayout cannot break the 2D project's
   resolution.
+
+On 2026-09-22, at `e5b9a4b5`:
+
+- **An app outside a workspace can consume a workspace nested inside its own folder.** A
+  throwaway tree (`app/` with `app/packages/kit/` as a workspace root and
+  `app/packages/kit/packages/eng/` as its member, `resolution: workspace`) resolved both
+  ways: `dart pub get` inside `kit/` wrote a `workspace_ref.json` in `eng/` pointing at
+  `kit/`, not at `app/`; and `app/` ran code from both packages.
+- **…but only through `dependency_overrides`.** With plain `path:` dependencies the app's
+  resolution fails: `kit` asks for `eng: ^0.0.0` from *hosted*, the app offers `eng` from
+  *path*, and pub refuses the two sources. Overriding all four packages by path is what
+  works — and it is also what keeps working unchanged after VR4 swaps the `^0.0.0`s for
+  real ranges.
+- **The kit is already self-contained.** Nothing under `packages/` reaches outside it except
+  `PUBLISHING.md`'s link to `../docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` and its prose
+  naming `poc_cubeworld` — both moved or rewritten in VR1/VR3. The `../../Flutter/…`
+  includes in the examples' `xcconfig`s are internal to each example.
+- **The surface of the terms**: 19 tracked non-`.md` files under `packages/` still say
+  `minecraft`, `cube world` or `poc` — doc comments in 13 `lib/src/` files, one test comment,
+  the `voxel_game` pubspec's description, its example's pubspec and `main.dart`, and
+  `voxel_scene/shaders/terrain.frag`.
 
 ---
 
@@ -127,101 +166,158 @@ tool/probe_baseline.sh --check
 ```
 
 Expected at `f6155a18`: analyze clean · 194 + 168 + 10 + 4 + 32 = **408 tests** · probe logs
-match. A relayout with a red baseline is a relayout that cannot be judged.
+match. Keep a copy of today's `pubspec.lock` in the scratchpad: VR1 compares against it.
 
 ### VR1 — the relayout (one commit; the tree is unbuildable between its halves)
 
-Order matters: the app has to vacate the root before the package can occupy it.
+`git status --short` first — move only the tracked paths listed, never a file somebody else
+has in flight.
 
-1. `git mv` into a new `demo/`: `lib`, `test`, `assets`, `android`, `ios`, `macos`,
-   `flutter_scene_generated`, `tool`, `docs`, `ROADMAP.md`, `README.md`,
-   `analysis_options.yaml`, `.metadata`, `pubspec.yaml`. (`.gitignore` and `CLAUDE.md` stay
-   at the root; `pubspec.lock` stays — the workspace keeps one lock, at its root.)
-2. `git mv packages/voxel_game/{lib,test,example,README.md,CHANGELOG.md,analysis_options.yaml,pubspec.yaml} .`
-   and remove the empty `packages/voxel_game/`.
-3. Root `pubspec.yaml`: the `voxel_game` one, minus `resolution: workspace` (a root does not
-   resolve into another workspace), plus
-   `workspace: [packages/sound_recipes, packages/voxel_engine, packages/voxel_scene, packages/voxel_scene/example, demo, example]`.
-4. `demo/pubspec.yaml`: keep `name: cubeworld_poc` for now (VR2 renames it), add
-   `resolution: workspace`, keep the asset list as-is — `ROADMAP.md` now sits beside it, so
-   the asset declaration finally points at a file in its own package.
-5. New root `.pubignore` (see above). `.gitignore`: the app-relative entries
-   (`/build/`, `/android/app/{debug,profile,release}`) become `demo/…`, and
-   `packages/*/build/` keeps its meaning.
-6. `flutter clean` in both trees (`build/` and `.dart_tool/` hold absolute paths),
-   `flutter pub get` at the root, then the whole suite from the new directories, then
-   `demo/tool/probe_baseline.sh --check`.
+1. `git mv packages/voxel_engine packages/voxel_scene packages/sound_recipes packages/voxel_game/packages/`
+   and `git mv packages/PUBLISHING.md packages/voxel_game/`.
+2. `git mv` into `packages/voxel_game/docs/`: `VOXEL_PACKAGES_PLAN_2026-09-14.md`,
+   `VOXEL_KIT_PLAN_2026-09-18.md`, `VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` and this plan.
+   `PERFORMANCE_VS_GODOT_2026-09-11.md`, `LEDGER.md` and `baseline/` stay in `docs/`.
+3. `packages/voxel_game/pubspec.yaml`: drop `resolution: workspace` (a root does not resolve
+   into another workspace) and add
+   `workspace: [packages/sound_recipes, packages/voxel_engine, packages/voxel_scene, packages/voxel_scene/example, example]`.
+   The three moved packages and the two examples keep `resolution: workspace` — their root
+   is now `packages/voxel_game/`.
+4. `poc_cubeworld/pubspec.yaml`: delete the `workspace:` block (and its comment), keep the
+   four `^0.0.0` dependencies as they are, and add
+   ```yaml
+   # The kit is not part of this project's resolution: it is consumed by path, the one
+   # edge that changes when packages/voxel_game/ leaves for its own repository.
+   dependency_overrides:
+     voxel_game:    {path: packages/voxel_game}
+     voxel_engine:  {path: packages/voxel_game/packages/voxel_engine}
+     voxel_scene:   {path: packages/voxel_game/packages/voxel_scene}
+     sound_recipes: {path: packages/voxel_game/packages/sound_recipes}
+   ```
+5. **The locks.** Copy the current `pubspec.lock` to `packages/voxel_game/pubspec.lock` before
+   the first `pub get`, so both resolutions start from the pinned versions instead of the
+   newest ones. After `pub get`, diff both locks against VR0's copy: a hosted package may
+   *disappear* from one of them (the app no longer resolves the examples' dependencies),
+   none may change version.
+6. New `packages/voxel_game/.pubignore` (as verified above: `packages/`, `build/`,
+   `.dart_tool/`, `example/macos/`, `example/build/`) and `packages/voxel_game/.gitignore`
+   (`build/`, `.dart_tool/`, `.flutter-plugins-dependencies`, `**/doc/api/`, `.idea/`,
+   `*.iml`, `.DS_Store`). The app's `.gitignore` line `packages/*/build/` becomes redundant
+   and goes.
+7. `flutter clean` in the app and in every package (`build/` and `.dart_tool/` hold absolute
+   paths, and every package moved one level down), then `flutter pub get` in
+   `packages/voxel_game/` **and** in `poc_cubeworld/`, then the suite from the new
+   directories, then `tool/probe_baseline.sh --check`.
 
-**Gate:** analyze clean, 408 tests, probe logs identical, and `cd demo && flutter run -d macos`
-plays. Rule 18: a screenshot probe is what closes this step, not the tests.
+The suite from VR1 on:
 
-### VR2 — the demo's name
+```sh
+flutter analyze && flutter test                               # the app
+cd packages/voxel_game                  && flutter analyze && flutter test
+cd packages/voxel_game/packages/voxel_engine  && dart test
+cd packages/voxel_game/packages/voxel_scene   && flutter test
+cd packages/voxel_game/packages/sound_recipes && flutter test
+```
 
-`cubeworld_poc` → `voxel_game_demo` everywhere it is an identifier:
+**Gate:** analyze clean in both trees, 408 tests, no hosted package changed version, probe
+logs identical, and `flutter run -d macos` plays. Rule 18: a screenshot probe is what closes
+this step, not the tests. The shaders need no rebuild — `terrain.shaderbundle` moves as a
+file and its `packages/voxel_scene/…` asset key does not depend on where the package sits.
 
-- `demo/pubspec.yaml` `name:`, and the 28 `package:cubeworld_poc/…` imports in `demo/test/`.
-- macOS: `PRODUCT_NAME = voxel_game_demo`, `PRODUCT_BUNDLE_IDENTIFIER = com.example.voxelGameDemo`
-  (`macos/Runner/Configs/AppInfo.xcconfig`), the copyright line, the Xcode project and scheme
-  strings, and the window title in `MainFlutterWindow.swift` → `"Voxel Game Demo"`.
-- iOS: `Info.plist` bundle name/display name, `Runner.xcodeproj` product name, the bundle id.
-- Android: `namespace` and `applicationId` → `com.example.voxel_game_demo`,
-  `android:label="Voxel Game Demo"`, and the Kotlin package folder
-  `android/app/src/main/kotlin/com/example/cubeworld_poc/` renamed with its `MainActivity.kt`.
-- The save root in `demo/lib/main.dart`: `'${support.path}/dawnforge_cubeworld_poc'` →
-  `'${support.path}/voxel_game_demo'`. **Delete the local `worlds/` folders** rather than
-  moving them, and say so in the commit body (rule 16).
-- `demo/tool/*.sh`: the built binary path.
-- Regenerate `demo/docs/baseline/*.log` (they are written by a run whose binary path changed)
-  and eyeball that only the path lines moved.
-
-Generated/ephemeral files under `ios/Flutter/ephemeral`, `macos/Flutter/ephemeral` and
-`example/macos/Flutter/ephemeral` are rewritten by the next build — never hand-edited
-(rule 17).
-
-### VR3 — the terms leave the implementation
+### VR2 — the terms leave the kit's implementation
 
 Rewrite, do not delete: a comment that says *why* the number is what it is keeps its
 reasoning and loses the trademark. `/// Minecraft's view bobbing: the eye drops by |cos|…`
-becomes `/// View bobbing: the eye drops by |cos|…`. Names to clear, in both trees:
+becomes `/// View bobbing: the eye drops by |cos|…`. Scope: every non-`.md` file under
+`packages/voxel_game/` — the 19 found above:
 
-- **Strings on screen** — `demo/lib/src/ui/credits_screen.dart` (`'CUBEWORLD POC'`, the
-  tagline) and `title_screen.dart` (`'a Cube World + Minecraft clone — proof of concept'`).
-  Their replacements obey rule 22: short words a seven-year-old reads.
-- **Doc comments** — ~35 across `packages/voxel_game/lib`, `packages/voxel_engine/lib`,
-  `packages/sound_recipes/lib`, `demo/lib` and `packages/voxel_scene/shaders/terrain.frag`.
-- **`packages/voxel_game/pubspec.yaml` and `lib/voxel_game.dart`** both open with "A
+- **Doc comments** in `lib/` of all four packages (13 files under `lib/src/`), one comment in
+  `voxel_engine/test/core/physics/physics_test.dart`, and
+  `packages/voxel_scene/shaders/terrain.frag` (a shader comment changes no bytes of the
+  compiled bundle, so no rebuild).
+- **`voxel_game`'s `pubspec.yaml` and `lib/voxel_game.dart`** both open with "A
   Minecraft-like in a few lines" — that is the package's pub.dev description; it is rewritten
-  to say what it is ("a voxel sandbox in a few lines").
-- The word `poc` in native comments (`AppDelegate.swift`, `MainFlutterWindow.swift`).
+  to say what it is ("a voxel sandbox in a few lines"). Same for `example/pubspec.yaml` and
+  `example/lib/main.dart`.
 
-`.md` files are untouched by this step. `ROADMAP.md` §Design decisions still says "Look:
-Cube World" — that is the reference the art was measured against and it stays.
+**The app is out of scope.** `lib/`, its screens (`'CUBEWORLD POC'` on the credits, the title
+screen's tagline), its native config and its tests keep every word — it is the POC. `.md`
+files are untouched too: the packages' `CHANGELOG.md`s and the plans are the lineage.
 
-### VR4 — the docs realigned
+### VR3 — the docs realigned to the two trees
 
-- Root `README.md` = the package's: what `voxel_game` is, the four-package graph, and a
-  pointer to `demo/` and `example/`. Today's root README (run + probe flags + lineage) is
-  `demo/README.md`, with its paths fixed.
-- `CLAUDE.md`: the map table, every rule that names a path (1, 2, 15, 17, 19, 20), the suite
-  commands, and §"Two codebases" — `lib/` is no longer the POC app, it is the package.
-- `packages/PUBLISHING.md`: the workspace root's new address, the `.pubignore` requirement,
-  and the release order unchanged.
-- The three plans' progress tables and this one; `ROADMAP.md` §Session log gets the entry.
+- **The kit gets its own rules**: `packages/voxel_game/CLAUDE.md` (and `AGENTS.md`, the same
+  text, as the app keeps the pair). It carries the kit half of today's `CLAUDE.md` — rules 1–
+  14, 17, 20, 21, the packages' testing policy, the commit and parallel-session customs — with
+  every path rewritten from the kit's root and without anything that only makes sense next to
+  the app (§Two codebases, rule 15's block table and Godot parity, rule 18's probes, the
+  `ROADMAP.md` duties). It must read correctly the day it is the root of its own repository.
+- **The kit's ledger**: `packages/voxel_game/docs/LEDGER.md` takes `CL-005`, `CL-008` and
+  `CL-009` — the entries about the kit's surface and its plans — with their IDs kept, so
+  every reference to them still resolves by name. `CL-004`, `CL-006`, `CL-007` (the app and
+  the kit side by side) and the closed ones stay in the app's; each moved entry leaves a
+  one-line pointer behind.
+- **`packages/voxel_game/README.md`** adds the four-package graph and a "working on the kit"
+  section (the suite commands above, from the kit's root). **`PUBLISHING.md`**: the workspace
+  root is now its own folder, `.pubignore` is a requirement, the release commands run from
+  `packages/<p>` and `.`, the link to the consolidation plan becomes `docs/…`, and "a
+  repository of its own" becomes the next thing that happens instead of a wish.
+- **The app's `CLAUDE.md` and `AGENTS.md`** (the latter still says 381 tests at `b0b94ebd` —
+  resynced here): the map table, the package graph section ("resolved through the pub
+  workspace declared in `pubspec.yaml`" is no longer true — the kit is its own workspace,
+  consumed by path overrides), the suite commands, rule 17's shader path, and a line saying
+  that `packages/voxel_game/` is governed by its own `CLAUDE.md`.
+- **The app's `README.md`**: the kit's paths. **`ROADMAP.md`**: links to the moved plans
+  (`packages/voxel_game/docs/…`) and a §Session log entry for the step.
+- The moved plans' own relative links (`./VOXEL_KIT_PLAN_…` between themselves keep working;
+  anything pointing at `../lib/…`, `ROADMAP.md` or `docs/baseline/` is the app's and is
+  rewritten as prose, since those links break on the move).
 
-### VR5 — publish readiness
+### VR4 — publish readiness
 
-Exactly `packages/PUBLISHING.md`'s checklist, now unblocked: a `LICENSE` in each of the four,
+Exactly `PUBLISHING.md`'s checklist, now unblocked: a `LICENSE` in each of the four,
 `homepage`/`repository`/`issue_tracker`/`topics` in each pubspec, real version ranges instead
 of `^0.0.0`, `0.1.0` as the first number, `publish_to: none` removed from the four and kept
-on the two example apps. Then the four dry runs, in dependency order. `voxel_game` cannot be
-released before the three it depends on exist on pub.dev.
+on the two example apps. Then the four dry runs, in dependency order, reading each file list
+(the `.pubignore` guard). `voxel_game` cannot be released before the three it depends on exist
+on pub.dev.
 
-### VR6 — the folder
+**One input is the developer's, not the plan's:** the new repository's URL, which fills
+`repository`, `homepage` and `issue_tracker`, and the license. Ask for both when this step
+opens; do not guess them. The app's overrides need no change — they already win over any
+version range.
 
-`git mv poc_cubeworld voxel_game` from the parent repo, last, when nothing else is in
-flight — it invalidates every absolute path a running session holds. Then grep the parent
-tree for `poc_cubeworld` in paths (the 2D `CLAUDE.md`, `.claude/` hooks, any doc) and fix
-what refers to this directory rather than to the git branch of the same name.
+### VR5 — ready to move
+
+Prove the folder stands alone by doing to a copy exactly what the move will do to it:
+
+```sh
+rsync -a --exclude build --exclude .dart_tool packages/voxel_game/ "$SCRATCH/voxel_game/"
+cd "$SCRATCH/voxel_game" && flutter pub get && flutter analyze && flutter test
+# … the three packages' tests, and the four publish dry runs
+```
+
+and `grep -rn 'poc_cubeworld\|cubeworld_poc\|\.\./\.\./\.\.' packages/voxel_game` over
+non-`.md` files returns nothing. Then the step is closed and the folder is handed over. The
+move itself — and whether it carries history (`git subtree split
+--prefix=poc_cubeworld/packages/voxel_game` keeps only the history under the new path; the
+extraction commits before VR1 stay here) — is the developer's.
+
+---
+
+## After the move — not planned here
+
+Written down so nobody is surprised, and so the next conversation starts from it:
+
+- **The app stops resolving** the moment `packages/voxel_game/` leaves: its four
+  `dependency_overrides` point at a folder that is gone. The replacement is one of: a `git:`
+  dependency on the new repository (`PUBLISHING.md` §The step before publishing), a path to a
+  sibling checkout, or pub.dev ranges once VR4's releases exist. Choosing is part of the app's
+  own move.
+- The app's links into `packages/voxel_game/docs/` break with it; they become links into the
+  new repository.
+- `docs/baseline/` and `tool/probe_baseline.sh` stay with the app — they are the app's
+  evidence. The kit's out-of-the-box surface still has no witness of its own (`CL-005`).
 
 ---
 
@@ -230,8 +326,10 @@ what refers to this directory rather than to the git branch of the same name.
 | Risk | Cost | Guard |
 |:---|:---|:---|
 | pub.dev refuses a pubspec carrying `workspace:` | `voxel_game` cannot be released from this tree | verified green on a local dry run; two fallbacks written above |
-| `.pubignore` forgotten | every release ships the kit twice and the whole demo | VR5's dry run prints the file list — read it |
-| Stale `build/` and `.dart_tool/` after the move | a build that fails for a reason that is not in the diff | `flutter clean` in both trees is part of VR1 |
+| `.pubignore` forgotten | every release of `voxel_game` ships the other three packages | VR4's dry run prints the file list — read it |
+| The app's first `pub get` outside the workspace picks newer hosted versions | a behaviour change hidden inside a file move | both locks seeded from VR0's copy; VR1's gate diffs them |
+| Plain `path:` dependencies instead of overrides | the app does not resolve at all | verified: only `dependency_overrides` works; written into VR1 |
+| Stale `build/` and `.dart_tool/` after the move | a build that fails for a reason that is not in the diff | `flutter clean` everywhere is part of VR1 |
 | Another session holding uncommitted work in this tree | a `git mv` that eats somebody's file | `git status --short` before VR1; move only the tracked paths listed |
-| The rename lands before the layout | two unrelated failures in one diff, impossible to read | VR2 and VR3 are separate commits, after VR1's gate is green |
-| The credits screen loses its asset | a blank credits roll, seen only by playing | `ROADMAP.md` moves into `demo/` in the same step as the app, and `--open-credits` is in the probe set |
+| The kit's rules file still assumes the app beside it | the new repository's first session follows rules about files it does not have | VR3 writes it from the kit's root; VR5 reads it from the copy |
+| Something in the kit reaches outside its folder | the kit breaks only after the move, where nobody is looking | VR5 builds a copy with nothing beside it |
