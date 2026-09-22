@@ -6,15 +6,6 @@ version: 0.1.0+1
 environment:
   sdk: ^3.13.0
 
-# The voxel packages grow here, out of the POC (docs/VOXEL_PACKAGES_PLAN_2026-09-14.md).
-workspace:
-  - packages/sound_recipes
-  - packages/voxel_engine
-  - packages/voxel_scene
-  - packages/voxel_scene/example
-  - packages/voxel_game
-  - packages/voxel_game/example
-
 dependencies:
   flutter:
     sdk: flutter
@@ -29,6 +20,14 @@ dependencies:
   voxel_engine: ^0.0.0
   voxel_game: ^0.0.0
   voxel_scene: ^0.0.0
+
+# The kit is not part of this project's resolution: it is consumed by path, the one
+# edge that changes when packages/voxel_game/ leaves for its own repository.
+dependency_overrides:
+  voxel_game:    {path: packages/voxel_game}
+  voxel_engine:  {path: packages/voxel_game/packages/voxel_engine}
+  voxel_scene:   {path: packages/voxel_game/packages/voxel_scene}
+  sound_recipes: {path: packages/voxel_game/packages/sound_recipes}
 
 dev_dependencies:
   flutter_test:

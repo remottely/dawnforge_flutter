@@ -9,7 +9,14 @@ publish_to: none
 environment:
   sdk: ^3.13.0
 
-resolution: workspace
+# The kit's workspace: this package is its root, the other three and the two example apps
+# resolve through it (docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md, VR1).
+workspace:
+  - packages/sound_recipes
+  - packages/voxel_engine
+  - packages/voxel_scene
+  - packages/voxel_scene/example
+  - example
 
 dependencies:
   flutter:

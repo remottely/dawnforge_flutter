@@ -1,0 +1,7 @@
+# voxel_game is also the workspace root: without these lines every release would ship the
+# other three packages, the example's native build and the local caches inside its tarball.
+packages/
+build/
+.dart_tool/
+example/macos/
+example/build/
