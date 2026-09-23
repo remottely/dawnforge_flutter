@@ -15,11 +15,11 @@ dependencies:
   hooks: ^2.2.0
   path_provider: ^2.1.6
   pointer_lock: ^0.4.1
-  sound_recipes: ^0.0.0
+  sound_recipes: ^0.1.0
   vector_math: ^2.4.2
-  voxel_engine: ^0.0.0
-  voxel_game: ^0.0.0
-  voxel_scene: ^0.0.0
+  voxel_engine: ^0.1.0
+  voxel_game: ^0.1.0
+  voxel_scene: ^0.1.0
 
 # The kit is not part of this project's resolution: it is consumed by path, the one
 # edge that changes when packages/voxel_game/ leaves for its own repository.

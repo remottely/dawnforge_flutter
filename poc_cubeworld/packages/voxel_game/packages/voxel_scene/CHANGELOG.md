@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.0
+## 0.1.0
 
-First version, not published.
+First version.
 
 - `VoxelChunkView`: `voxel_engine` chunk meshes as flutter_scene nodes.
 - `TerrainMaterial` with its compiled shader bundle.

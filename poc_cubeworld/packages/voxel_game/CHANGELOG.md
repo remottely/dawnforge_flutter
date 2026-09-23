@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.0
+## 0.1.0
 
-First version, not published.
+First version.
 
 - `VoxelGameSpec` + `runVoxelGame`: a playable voxel game from one declaration.
 - Mining, placing, an inventory and crafting screen, a HUD, first and third person.

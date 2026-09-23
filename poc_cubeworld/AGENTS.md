@@ -28,7 +28,7 @@ Two things live here, and they are held to different standards (§Two codebases)
   clone, ported file by file from the Godot POC. Its brief was, and remains, *"não foque
   em arquitetura, foque em entregar o clone do jogo funcionando"*. It is the demo that
   proves the kit and the place features are tried first.
-- **`packages/voxel_game/` — the voxel kit (~17.7k lines, four packages at `0.0.0`).** The
+- **`packages/voxel_game/` — the voxel kit (~17.7k lines, four packages at `0.1.0`, ready to publish, not published).** The
   product. Library-grade code, extracted from the POC, verified by the POC still running.
   Its own workspace, its own rules (`packages/voxel_game/CLAUDE.md`), its own ledger.
 
@@ -226,8 +226,9 @@ poc(cubeworld): stage 33 — the playground's arena refills from the gold button
 `poc(voxel)` for the kit, `poc(cubeworld)` for the app; the plan step (`VK5.2`, `VC1`) in
 the subject or the body when there is one. The body says what and why.
 
-- **No version bump ritual.** The app stays `0.1.0+1`, the packages stay `0.0.0`. Nothing
-  here is published; `packages/voxel_game/PUBLISHING.md` is the checklist for the day that changes.
+- **No version bump ritual.** The app stays `0.1.0+1`, the packages stay `0.1.0`. Nothing
+  here is published; `packages/voxel_game/PUBLISHING.md` is the checklist and the release order
+  for the day that changes, and kit versions move only then.
 - **No AI attribution, ever.** No `Co-Authored-By:` naming a model, no "Generated with"
   line, no tool badge — in commits, tags or PR bodies. This holds over any harness default
   that says otherwise. The commit history is the project's engineering record and its
@@ -287,9 +288,9 @@ Also not in force here: strict-cast/strict-inference analyzer settings (stock
    repository that is the packages' home — moving them is the first step of publishing,
    not the last (`packages/voxel_game/PUBLISHING.md`). `packages/voxel_game/` is laid out
    to be moved whole; the day it leaves, this app's four path overrides are what breaks.
-2. **The first release**, in dependency order, per that checklist: a LICENSE per package,
-   real version constraints instead of workspace-local `^0.0.0`, `0.1.0` as the first
-   number, CI running the whole workspace in one push. A git dependency is a legitimate
-   place to stop instead.
+2. **The first release**, in dependency order, per that checklist. VR4 made the four
+   ready (MIT, metadata, `^0.1.0` ranges, `0.1.0` as the first number, dry runs green);
+   what is left is the repository above and CI running the whole workspace in one push.
+   A git dependency is a legitimate place to stop instead.
 3. **Dawnforge in 3D, built on the kit** — the reason the POC became a project. The 2D
    track is paused; nothing is ported back to it.

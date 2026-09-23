@@ -36,7 +36,7 @@ repository of its own, apart from the kit, and that move is a later conversation
 | VR1 The relayout — the kit moves under `packages/voxel_game/`, the app leaves the workspace | **done** 2026-09-22: analyze clean in both trees · 194 + 32 + 168 + 10 + 4 = **408 tests** · no hosted package changed version in either lock (the kit's lost `flutter_soloud`/`hooks` as *direct* deps, the app's lost 25 hosted packages: `voxel_engine`'s dev dependency `test` and what it pulls — corrected in VR3, this row said 26) · the three probe logs identical to VR0's after the filter · a `--screenshot` of the relaid build shows the world, water, sky and HUD | analyze clean in both trees, the same test count, no hosted package changed version, probe logs match `docs/baseline/`, `flutter run -d macos` plays |
 | VR2 The terms leave the kit's implementation | **done** 2026-09-22: 21 rewrites in the 19 files, the gate grep empty over tracked files and over the disk (build dirs and locks aside) · `terrain.shaderbundle` recompiled and byte-identical · 408 tests, probe logs identical to VR0's · the library header also stopped naming the pre-consolidation packages · `McBrightness` in `terrain.frag` kept its name (outside the grep, and renaming it changes the compiled bundle) | `grep -ri 'minecraft\|cube ?world\|\bpoc\b'` over every non-`.md` file under `packages/voxel_game/` returns nothing |
 | VR3 The docs realigned to the two trees | **done** 2026-09-22: every markdown link in both `CLAUDE.md`s/`AGENTS.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md`, both ledgers and the moved plans resolves; backticked paths in the current-state docs resolve (the plans' and the session log's old paths are history and stay) · the kit's `CLAUDE.md` renumbers the kit's rules 1–17 · its ledger holds `CL-005`/`008`/`009` and numbers new entries `KL-nnn` · its `README.md` install section now shows the four overrides a plain `path:` cannot replace · the app's `AGENTS.md` resynced to its `CLAUDE.md` | every path in both `CLAUDE.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md` and the moved plans resolves |
-| VR4 Publish readiness for the four packages | todo | `pub publish --dry-run` green for `voxel_engine`, `sound_recipes`, `voxel_scene`, `voxel_game` |
+| VR4 Publish readiness for the four packages | **done** 2026-09-23: MIT `LICENSE` (the repo root's text, `2026 kevinkobori`) in each · `homepage`/`repository`/`issue_tracker` on `github.com/fluttely/voxel_game` (the nested three at `tree/main/packages/<p>`) and five `topics` each · `0.1.0` everywhere, `^0.1.0` between the four, in both examples and in the app · `publish_to: none` only on the two examples · two descriptions trimmed under 180 characters · `.pubignore` also keeps out `CLAUDE.md`, `AGENTS.md`, `PUBLISHING.md`, `docs/`, `tool/` and repeats `.gitignore`'s lines · the nested three **cannot dry-run in place** (below), so `tool/publish_package.sh` runs them from a git-less copy · dry runs: `voxel_engine` 127 KB / 0 warnings, `sound_recipes` 7 KB / 0, `voxel_scene` 468 KB / 1, `voxel_game` 71 KB / 1 — the one warning is the exact `flutter_scene: 0.23.0` pin, kept by the developer's decision · every file list read · 408 tests, analyze clean in both trees | `pub publish --dry-run` green for `voxel_engine`, `sound_recipes`, `voxel_scene`, `voxel_game` |
 | VR5 Ready to move — the kit folder stands alone | todo | a copy of `packages/voxel_game/` taken outside the repo resolves, analyzes, tests and dry-runs with nothing else beside it |
 
 ---
@@ -122,7 +122,9 @@ On 2026-09-21, at `7fd182ca`:
   `build/`, `.dart_tool/`, `example/macos/` and `example/build/` removed them — the archive
   came back down to `lib/`, `README`, `CHANGELOG`, `LICENSE`, `pubspec.yaml`.
   **`.pubignore` is not optional in this layout**; without it every release of `voxel_game`
-  ships the other three packages as dead weight.
+  ships the other three packages as dead weight. *(Corrected in VR4: that probe did not
+  dry-run the member. Inside a git repository the same line hides the member from its own
+  publish — see VR4 §As run.)*
 - **The parent repo does not resolve this tree.** `../pubspec.yaml` (the 2D track) declares
   no workspace covering `poc_cubeworld/`, so the relayout cannot break the 2D project's
   resolution.
@@ -300,6 +302,24 @@ Decide what the package carries before the dry run, and read its file list again
 `repository`, `homepage` and `issue_tracker`, and the license. Ask for both when this step
 opens; do not guess them. The app's overrides need no change — they already win over any
 version range.
+
+**As run (2026-09-23).** The developer chose MIT and `https://github.com/fluttely/voxel_game`.
+The first dry run, `voxel_engine`'s, came back with an archive under 1 KB and "the pubspec
+is hidden". **Inside a git repository pub applies the ignore files of every folder from the
+git root down to the package**, so the kit's `packages/` line hides each nested package from
+itself, and a nested `.pubignore` (`!*`, `!**`) cannot re-include it. A scratch probe showed
+both sides: the same tree in a `git init`-ed folder fails, and with no `.git` it publishes.
+That is why §What was verified passed on 2026-09-21. It will stay true in the kit's own
+repository. Decision 1 stands. The fix is the fallback this plan already named: publish
+from a clean copy, only for the three nested packages. `tool/publish_package.sh` copies
+the folder without `.git`, `build/` and `.dart_tool/`, resolves the workspace there, and
+publishes from `packages/<p>`. `voxel_game` publishes in place, where its `.pubignore` is
+needed. Running `pub publish` inside a nested package by mistake fails safe.
+The four READMEs (the pub.dev pages) now install with `^0.1.0`. `voxel_scene` and
+`voxel_game` keep `flutter_scene: 0.23.0` exact: the developer accepted pub's warning over
+loosening a pin that guards a private import (`PUBLISHING.md` §Releasing). `voxel_scene`'s
+tarball also carries its example's `macos/` (about 35 KB); an example's native project is
+normal content for a package.
 
 ### VR5 — ready to move
 

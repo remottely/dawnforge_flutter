@@ -6,7 +6,7 @@ generation, blocks and items, circuits and a network layer. It draws nothing —
 a renderer (`voxel_scene`) takes the meshes, and `voxel_game` ties everything
 into a playable game.
 
-> **Status: 0.0.0.** The API can still change. Not published yet.
+> **Status: 0.1.0**, the first release. The API can still change.
 
 ## The five subjects
 
@@ -23,12 +23,9 @@ Each one is a library of its own. Import only what you use, or
 
 ## Install
 
-`voxel_engine` is at 0.0.0 and not on pub.dev yet. Depend on it by path (or by git):
-
 ```yaml
 dependencies:
-  voxel_engine:
-    path: ../packages/voxel_engine
+  voxel_engine: ^0.1.0
 ```
 
 Dart SDK `^3.13.0`. No Flutter dependency: it runs in `dart test`, on a server

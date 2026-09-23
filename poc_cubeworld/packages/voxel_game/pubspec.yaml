@@ -1,10 +1,18 @@
 name: voxel_game
 description: >-
-  A voxel sandbox in a few lines: declare blocks, world generation, the player
-  and mobs, and get a playable voxel world on flutter_scene. The kit over
-  voxel_engine, voxel_scene and sound_recipes.
-version: 0.0.0
-publish_to: none
+  A voxel sandbox in a few lines: declare blocks, world generation, player and
+  mobs, get a playable world on flutter_scene. The kit over voxel_engine,
+  voxel_scene and sound_recipes.
+version: 0.1.0
+homepage: https://github.com/fluttely/voxel_game
+repository: https://github.com/fluttely/voxel_game
+issue_tracker: https://github.com/fluttely/voxel_game/issues
+topics:
+  - voxel
+  - game
+  - game-engine
+  - sandbox
+  - flutter-scene
 
 environment:
   sdk: ^3.13.0
@@ -26,10 +34,10 @@ dependencies:
   gamepads: ^0.1.12
   path_provider: ^2.1.6
   pointer_lock: ^0.4.1
-  sound_recipes: ^0.0.0
+  sound_recipes: ^0.1.0
   vector_math: ^2.1.4
-  voxel_engine: ^0.0.0
-  voxel_scene: ^0.0.0
+  voxel_engine: ^0.1.0
+  voxel_scene: ^0.1.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

@@ -4,7 +4,7 @@ Draws `voxel_engine` worlds with [flutter_scene](https://pub.dev/packages/flutte
 one scene node per chunk, a terrain material with its own shaders, a day
 and night sky, block models and the selection outline.
 
-> **Status: 0.0.0.** The API can still change. Not published yet.
+> **Status: 0.1.0**, the first release. The API can still change.
 
 ## Features
 
@@ -15,12 +15,9 @@ and night sky, block models and the selection outline.
 
 ## Install
 
-`voxel_scene` is at 0.0.0 and not on pub.dev yet. Depend on it by path (or by git):
-
 ```yaml
 dependencies:
-  voxel_scene:
-    path: ../packages/voxel_scene
+  voxel_scene: ^0.1.0
 ```
 
 Dart SDK `^3.13.0`.

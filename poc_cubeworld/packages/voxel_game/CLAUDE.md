@@ -34,7 +34,10 @@ voxel_game      Flutter          VoxelGameSpec, loop, input, player, cameras, mo
 root. `pubspec.yaml`'s `workspace:` lists `packages/voxel_engine`, `packages/voxel_scene`,
 `packages/sound_recipes` and the two example apps (`example/`,
 `packages/voxel_scene/example/`), which stay `publish_to: none` for good. `.pubignore` keeps
-`packages/` and the build output out of `voxel_game`'s tarball — it is not optional.
+`packages/`, the build output and this folder's own working files (`CLAUDE.md`, `AGENTS.md`,
+`PUBLISHING.md`, `docs/`, `tool/`) out of `voxel_game`'s tarball — it is not optional, and it
+is why the three nested packages publish from a git-less copy through
+`tool/publish_package.sh`, never in place (`PUBLISHING.md`).
 
 Target: every platform Flutter supports. **macOS is the development platform** (Flutter GPU
 is enabled in each example's `macos/Runner/Info.plist`).
@@ -47,6 +50,7 @@ is enabled in each example's `macos/Runner/Info.plist`).
 | The three packages under it | `packages/{voxel_engine,voxel_scene,sound_recipes}/` |
 | The smallest game built on it | `example/lib/main.dart` |
 | Pre-publish checklist, release order, the version graph | `PUBLISHING.md` |
+| Publishing (or dry-running) one of the four | `tool/publish_package.sh <package> [--dry-run]` |
 | How the packages were extracted (VP, VK) and consolidated (VC) | `docs/VOXEL_PACKAGES_PLAN_2026-09-14.md` · `docs/VOXEL_KIT_PLAN_2026-09-18.md` · `docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` |
 | How this folder got its shape (VR) | `docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md` |
 | Architecture ledger (rule 17) | `docs/LEDGER.md` |
@@ -100,7 +104,8 @@ is enabled in each example's `macos/Runner/Info.plist`).
     that built it, and a stale one fails at boot.
 16. **Every automation is a script, named for the job** (app 20), runnable standalone from
     its package's root, `--dry-run`/`--check` when it writes something committed. Today
-    there is one: `packages/voxel_scene/tool/build_shaders.dart`.
+    there are two: `packages/voxel_scene/tool/build_shaders.dart` and
+    `tool/publish_package.sh` (from this folder's root).
 17. **Record an architectural observation, do not fix it mid-task** (app 21). A structural
     problem found while doing something else goes to `docs/LEDGER.md` as one 4-line entry
     (`Lens`, `Evidence` with `file:line`, `Cost of leaving it`, `Found while`), in the

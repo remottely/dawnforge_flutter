@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.0
+## 0.1.0
 
-First version, not published. It was called `voxel_audio` until 2026-09-19;
+First version. It was called `voxel_audio` until 2026-09-19;
 the name went because nothing in it has anything to do with voxels.
 
 - `SoundRecipe` + `renderWav`: sounds written as waveform functions, rendered to WAV.

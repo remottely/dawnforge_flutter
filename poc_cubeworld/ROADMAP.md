@@ -70,6 +70,27 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-23 s27** — `VR4` of
+  [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md):
+  the four packages are ready to publish. Each is `0.1.0` under MIT, points at
+  `github.com/fluttely/voxel_game`, and depends on the others with `^0.1.0`, and the
+  four dry runs pass. This app's four ranges moved to `^0.1.0` too; its overrides are
+  untouched, so it builds exactly as before (408 tests).
+  - **A nested package cannot publish in place in this layout, and the 2026-09-21 probe
+    missed it.** Inside a git repository pub applies every parent folder's ignore file up
+    to the git root. So the `.pubignore` line that keeps `packages/` out of `voxel_game`'s
+    tarball also hides `voxel_engine` from its own publish: the archive comes out empty,
+    "the pubspec is hidden". A nested `.pubignore` cannot re-include anything. The
+    original probe had no `.git`, and without one pub reads only the package's own
+    folders. The layout stays; `packages/voxel_game/tool/publish_package.sh` publishes
+    the three nested packages from a copy with no `.git`, and `voxel_game` in place.
+  - **The `flutter_scene: 0.23.0` pin stays and costs a warning.** Pub wants a range, but
+    `voxel_scene` imports a private `flutter_scene` file, and patch releases of that
+    package have happened before. The developer chose the warning. `PUBLISHING.md` now
+    says a dry run ending with only that warning is green.
+  - **Next:** `VR5` — a copy of the kit taken out of the repository resolves, analyzes,
+    tests and dry-runs alone.
+
 - **2026-09-22 s26** — the relayout runs: `VR0`–`VR3` of
   [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md),
   one commit each. The kit now lives in `packages/voxel_game/` — `voxel_game` at the root

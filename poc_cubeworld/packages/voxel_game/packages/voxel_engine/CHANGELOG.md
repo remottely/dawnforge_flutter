@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.0
+## 0.1.0
 
-First version, not published. It is the five pure-Dart packages that came
+First version. It is the five pure-Dart packages that came
 before it — `voxel_core`, `voxel_worldgen`, `voxel_content`, `voxel_signals`
 and `voxel_net` — merged into one package with a library per subject. No code
 changed in the move; `package:voxel_core/voxel_core.dart` became
