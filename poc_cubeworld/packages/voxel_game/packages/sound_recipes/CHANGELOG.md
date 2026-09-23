@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0
+## 0.1.0-dev
 
 First version. It was called `voxel_audio` until 2026-09-19;
 the name went because nothing in it has anything to do with voxels.

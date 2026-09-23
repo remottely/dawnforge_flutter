@@ -1,7 +1,7 @@
 # Publishing these packages
 
 Nothing here is published yet, but all four packages are ready to be: each is at
-`0.1.0` under the MIT license, with its metadata and real version ranges, and the
+`0.1.0-dev` under the MIT license, with its metadata and real version ranges, and the
 four dry runs pass (`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`, VR4). They resolve
 each other through the pub workspace declared in this folder's `pubspec.yaml`:
 `voxel_game` is both the workspace root and a published package, and the other
@@ -60,11 +60,14 @@ Done in VR4 (2026-09-23):
 - **A license**: MIT, the same `LICENSE` in each of the four.
 - **Metadata in each pubspec**: `homepage`, `repository`, `issue_tracker`,
   `topics`, and a `description` between 60 and 180 characters.
-- **Real version constraints**: `^0.1.0` between the four, and in the two
+- **Real version constraints**: `^0.1.0-dev` between the four, and in the two
   example apps. (`^0.0.0` means `>=0.0.0 <0.0.1`; it only resolved because pub
   resolves workspace members locally.)
-- **`0.1.0` as the first version.** It says "usable, the API still moves" far
-  better than `0.0.1`, and leaves `0.0.x` unused rather than spent.
+- **`0.1.0-dev` as the first version.** It says "usable, the API still moves" far
+  better than `0.0.1`, and leaves `0.0.x` unused rather than spent. The `-dev`
+  pre-release tag says the same thing about the number itself: nothing at
+  `0.1.0-dev` has been published, so `0.1.0` stays free for the first real
+  release instead of being spent on a version nobody outside this repo ever saw.
 - **`publish_to: none` removed** from the four packages, kept on the two example
   apps.
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0
+## 0.1.0-dev
 
 First version. It is the five pure-Dart packages that came
 before it — `voxel_core`, `voxel_worldgen`, `voxel_content`, `voxel_signals`
