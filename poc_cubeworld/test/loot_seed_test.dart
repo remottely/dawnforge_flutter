@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:voxel_engine/core.dart';
-import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/game/loot.dart';
+import 'package:voxel_game_minecraft/src/entities/mob.dart';
+import 'package:voxel_game_minecraft/src/game/loot.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Chest loot, chest-minecart cargo and villager offers are seeded by an

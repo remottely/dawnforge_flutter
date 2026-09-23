@@ -12,7 +12,7 @@ class MainFlutterWindow: NSWindow {
     let windowFrame = self.frame
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)
-    self.title = "Dawnforge Cubeworld POC (Flutter)"
+    self.title = "Voxel Minecraft (Flutter)"
     // Never restore a saved frame: the size comes from the nib (1600x900) and
     // the app delegate, and the probe's exit(0) would otherwise pin a stale one.
     self.isRestorable = false

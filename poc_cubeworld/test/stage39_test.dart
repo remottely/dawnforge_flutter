@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:cubeworld_poc/src/ui/hud.dart';
-import 'package:cubeworld_poc/src/ui/hud_state.dart';
+import 'package:voxel_game_minecraft/src/ui/hud.dart';
+import 'package:voxel_game_minecraft/src/ui/hud_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Stage 39: one map in two frames. The dash pose is measured by

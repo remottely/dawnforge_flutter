@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:cubeworld_poc/src/core/species.dart';
-import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/player/player.dart';
-import 'package:cubeworld_poc/src/ui/hud.dart';
+import 'package:voxel_game_minecraft/src/core/species.dart';
+import 'package:voxel_game_minecraft/src/entities/mob.dart';
+import 'package:voxel_game_minecraft/src/player/player.dart';
+import 'package:voxel_game_minecraft/src/ui/hud.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';

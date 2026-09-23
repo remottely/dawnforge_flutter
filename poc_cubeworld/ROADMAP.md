@@ -6,7 +6,7 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Design decisions (settled, do not re-litigate)
 
-- **Look**: Cube World — flat vertex colours, per-voxel ±5% colour noise, baked AO (4-level) in
+- **Look**: flat vertex colours, per-voxel ±5% colour noise, baked AO (4-level) in
   the vertex colour; since stage 31 sky + block light ride the second UV set and the terrain
   shader (`shaders/terrain.frag`, flutter_scene's standard lit shader plus the voxel light term)
   scales the sky half by the time of day. PBR roughness 1, specular 0, lit by one sun (Godot's
@@ -46,7 +46,7 @@ the Godot POC's, so the two roadmaps line up.
 | 12 | Rivers, falling sand, beds, farming, fly mode F5, boss bar, F2 screenshot, footsteps, pause settings | ✅ | `--fly` aerial probe |
 | 13 | **Play it by hand** — mining feel, combat feel, inventory clicks, trading, sleeping, farming | ☐ | needs a human at the keyboard; pointer lock only verified by code |
 | 14 | Weapon rarity + random bonuses, spawner blocks, TNT chains, the Boomer, roaming bosses | ✅ | |
-| 13b | Ranged combat, Cube World style: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley | ✅ | `--fire=secondary` with `--class=mage` seen |
+| 13b | Ranged combat: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley | ✅ | `--fire=secondary` with `--class=mage` seen |
 | 16 | Doors, wall torches, boats, enchanting table, sleeping animation | ✅ | `--stage16` seen |
 | 17 | **Close the stage 15 gaps.** Melee hit owned by the simulation: `meleeStrike(dir, dmg, followUp, attacker)` runs the reach check from the attacker's own centre; a client sends `melee` and the host resolves it against the puppet it owns. Mobs hunt the nearest body in `targets()` (the local player + `puppetBodies()` on the host); a `RemotePlayer` answers `centre()` / `isDead` / `takeDamage()` through the `Target` interface and forwards the damage to its peer as `hurt`; damage numbers reach clients as `dmg`. Probe flag `--strike`. | ✅ | re-verified 2026-09-14: solo zombie 18 → 8 at 2.01 m, the Godot figure; the host-side resolve and `hurt` were seen in the stage 15 two-process run. Engine difference: Godot splits mob packets into ≤6-row unreliable ENet packets with an epoch to stay under the MTU; TCP + JSON lines is a stream, so one `mobs` line carries every row and needs no split |
 | 18 | **RPG depth + weather.** Status effects (poison, burning, slow, regen, speed, strength, resistance, haste, well fed; chips on the HUD, ticks as coloured damage numbers), potions brewed at the brewing stand, talents (six shared + one signature per class, three ranks) spent in the journal (J), elite mobs (8% of hostiles: Swift / Sturdy / Venomous / Burning / Chilling / Giant, an aura light, ×2.5 XP), dodge roll (Left Alt, 0.4 s invulnerable), 20 achievements, waypoint blocks that teleport, a bestiary, and weather (rain / storm / snow on `flutter_scene`'s `ParticleEmitterComponent`, overcast sky, lightning flash + thunder). Probe flags `--stage18`, `--weather=`, `--journal=`. | ✅ | seen: storm with rain streaks, effect chips, the journal's talent tab; headless: 2 effects, Venomous elite spider, a talent spent, 2 waypoints + travel, dodge invulnerable |
@@ -70,6 +70,25 @@ the Godot POC's, so the two roadmaps line up.
 | 33 | **Playground: every feature around one spawn (Flutter only).** A sixth title button, **Playground**, opens a panel (what it is, the keys, a class row) whose *Build a new playground* makes a new slot through `Worlds.createPlayground` (`world.json` `type: playground`, creative, seed 42) and boots it; `GameState.playground` rides the stats block and `WorldEntry.playground` labels the list row *Playground*. **Generator** (`TerrainGenerator.playground`, passed through `VoxelWorld` and the isolate factory): a 144 x 144 plaza (`plazaMin` -64 .. `plazaMax` 80) at `plazaFloor` 64, plains, no caves, no decoration within 4, no structure within 48, the natural height eased back over `plazaBlend` 16. **`Playground`** (`lib/src/game/playground.dart`): nine `PlaygroundZone`s of 48 in a 3 x 3 grid around (8, 8), one built per 0.25 s poll once all its chunks are loaded (a write into an unloaded chunk is dropped), `built` saved as `playground` in `player.json`; hub (glider tower, 5 chests of all 171 items, stations, the hub waypoint and the world tour: 8 structure kinds within 48 chunks and 7 biomes within 1.5 km as block-less waypoint labels), block gallery (118 blocks + two liquid tanks), shapes & building, redstone (the stage 27 rows + a lamp row), rails (a 24 x 14 loop with a two-high hill and a powered stretch, `railLoop`), water / lava / portal, farm & animals, monster arena (`arenaMobs` 14, a spawner block ticked by the playground, `bossPlates` 6 summoning on the step, the gold refill button polled on its lit edge), light & mining. Creatures carry `Mob.exhibit`: the spawner neither despawns nor counts them and the save does not keep them, so the zoo and arena are placed again on every boot; villagers, companions, carts and the boat are placed once and saved. F7 / F8 / F9 (`GameAction.cycleWeather` / `cycleTime` / `rebuildExhibit`) cycle the weather, the time of day and rebuild the zone under the player. `ZoneCard` shows the exhibit's card for 12 s after entering; the HUD names the aimed block; the journal's waypoint tab runs in two columns past ten; the fresh kit is 36 showcase items, level 10 and 10 talent points. Probe `--playground` (`--shot=`, `--shots=`, `--pg-checks`), `--title-probe --open-playground`. Unit tests `test/playground_test.dart`. | ✅ | seed 42: `zones built=9/9 in 1119 ms, edits=11719 exhibit mobs=27 villagers=2 pets=3 carts=2 boats=1 chests=6 waypoints=16 gallery=118 library=171`, plaza surface 64, 0 structures inside; checks: steps / half step / climb wall / ladder / stairs roof / iron door cells right, troll summoned 1 and a second step keeps 1 with the boss bar, arena 15 -> 14 -> 15 through the gold button, F7 Rain, F8 0.50 then 0.74, F9 wall air -> oak_planks, save built 9 / flag / 16 waypoints / 5 pets; the reload boot read the nine back with `edits=0` and 27 exhibit creatures placed again. Seen: the aerial plaza, all nine exhibits, the pool from underwater, the arena inside, the dark hall, the steps, the journal's tour in two columns, the title panel. |
 
 ## Session log
+
+- **2026-09-23 s30** — the app is renamed `voxel_game_minecraft`, ahead of its move into the
+  kit's repository as an example for the kit's users. About 95% of what was built here is
+  Minecraft, not Cube World, so the name says Minecraft now: the Dart package, the
+  macOS/iOS/Android product and bundle ids (`com.remottely.voxelGameMinecraft`,
+  `com.example.voxel_game_minecraft`), the binary the probes launch, the window, title and
+  credits text ("Voxel Minecraft"), the save folder, and the commit scope `poc(minecraft)`.
+  Comments that credited a mechanic to Cube World (climbing, talents, staff spray, bonus
+  loot) keep the mechanic and drop the credit. What still says cubeworld is a real name
+  somewhere else: this folder, the branch, the Godot twin's path, and this log's history.
+  The bundle id and the save folder both moved, so worlds saved under
+  `com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/` are no longer found; delete them.
+  Before the rename the multiplayer was re-checked, because it looked abandoned: it is not.
+  A `--host --wait-peer --stage21b` process and a `--join=127.0.0.1 --wait-peer --stage21b
+  --strike` process on one Mac got the hello (seed + edits), mob puppets, the host's clock,
+  a forced storm, a chest's contents, a given item, a poison bite through `hurt`, a melee
+  strike resolved on the host, and the host riding a horse, which the client's screenshot
+  showed. What it lacks is everything past a LAN: no discovery, no NAT traversal, no
+  authentication, and JSON lines over TCP.
 
 - **2026-09-23 s29** — the fog stops looking like weather. On a clear noon the world read
   as overcast: the linear ramp from s7 began at 45% of the render distance, so with the

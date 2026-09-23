@@ -111,7 +111,7 @@ done
 # Flutter POC (from this poc_cubeworld/)
 flutter build macos --release
 for R in 8 12 16; do
-  /usr/bin/time -l build/macos/Build/Products/Release/cubeworld_poc.app/Contents/MacOS/cubeworld_poc \
+  /usr/bin/time -l build/macos/Build/Products/Release/voxel_game_minecraft.app/Contents/MacOS/voxel_game_minecraft \
     --new --seed=42 --radius=$R --frames=3000 --settle=900 \
     --screenshot=/tmp/f_r$R.png 2>&1 | grep -E "window filled|probe\] fps|maximum resident"
 done

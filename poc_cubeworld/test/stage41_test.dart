@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/world/terrain_generator.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Stage 41's trees: the patch grid that spaces them, the clearance under the

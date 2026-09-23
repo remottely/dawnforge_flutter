@@ -1,4 +1,4 @@
-package com.example.cubeworld_poc
+package com.example.voxel_game_minecraft
 
 import android.hardware.input.InputManager
 import android.os.Handler

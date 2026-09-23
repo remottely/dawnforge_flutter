@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = cubeworld_poc
+PRODUCT_NAME = voxel_game_minecraft
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.remottely.cubeworldPoc
+PRODUCT_BUNDLE_IDENTIFIER = com.remottely.voxelGameMinecraft
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.remottely. All rights reserved.

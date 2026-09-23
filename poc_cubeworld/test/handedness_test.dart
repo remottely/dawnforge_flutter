@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui' show Size;
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/player/player.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/player/player.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 import 'package:flutter_scene/scene.dart';
 import 'package:flutter_test/flutter_test.dart';

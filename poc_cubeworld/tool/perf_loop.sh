@@ -39,7 +39,7 @@ raw=$shots/raw.tsv
 : >"$raw"
 
 measure() { # label dir radius extra-flags
-  local app=$2/build/macos/Build/Products/Release/cubeworld_poc.app/Contents/MacOS/cubeworld_poc out
+  local app=$2/build/macos/Build/Products/Release/voxel_game_minecraft.app/Contents/MacOS/voxel_game_minecraft out
   [[ -x $app ]] || { echo "no release build at $app" >&2; exit 66; }
   out=$( { perl -e 'alarm 300; exec @ARGV' /usr/bin/time -l "$app" --new --seed=42 --radius="$3" \
     --frames=3000 --settle=900 --screenshot="$shots/$1-r$3.png" $4; } 2>&1 || true)

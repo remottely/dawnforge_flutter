@@ -209,8 +209,8 @@ class _TitleScreenState extends State<TitleScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Cubeworld POC', style: TextStyle(fontSize: 58, color: Colors.white, shadows: shadow)),
-            const Text('a Cube World + Minecraft clone — proof of concept',
+            const Text('Voxel Minecraft', style: TextStyle(fontSize: 58, color: Colors.white, shadows: shadow)),
+            const Text('a Minecraft clone built on voxel_game',
                 style: TextStyle(fontSize: 15, color: Colors.white, shadows: [Shadow(color: Color.fromRGBO(0, 0, 0, 0.7), offset: Offset(1, 1))])),
             const SizedBox(height: 20),
             for (var i = 0; i < TitleScreen.buttonLabels.length; i++)

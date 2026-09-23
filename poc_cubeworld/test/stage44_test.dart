@@ -1,6 +1,6 @@
-import 'package:cubeworld_poc/src/game/input.dart';
-import 'package:cubeworld_poc/src/ui/hud.dart';
-import 'package:cubeworld_poc/src/ui/touch_controls.dart';
+import 'package:voxel_game_minecraft/src/game/input.dart';
+import 'package:voxel_game_minecraft/src/ui/hud.dart';
+import 'package:voxel_game_minecraft/src/ui/touch_controls.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

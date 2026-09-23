@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
-import 'package:cubeworld_poc/src/core/items.dart';
-import 'package:cubeworld_poc/src/entities/hand_view.dart';
-import 'package:cubeworld_poc/src/entities/item_drop.dart';
-import 'package:cubeworld_poc/src/entities/voxel_mesh_builder.dart';
-import 'package:cubeworld_poc/src/ui/item_icon.dart';
+import 'package:voxel_game_minecraft/src/core/items.dart';
+import 'package:voxel_game_minecraft/src/entities/hand_view.dart';
+import 'package:voxel_game_minecraft/src/entities/item_drop.dart';
+import 'package:voxel_game_minecraft/src/entities/voxel_mesh_builder.dart';
+import 'package:voxel_game_minecraft/src/ui/item_icon.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 

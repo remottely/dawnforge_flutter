@@ -1,5 +1,5 @@
-import 'package:cubeworld_poc/src/core/species.dart';
-import 'package:cubeworld_poc/src/entities/mob.dart';
+import 'package:voxel_game_minecraft/src/core/species.dart';
+import 'package:voxel_game_minecraft/src/entities/mob.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:voxel_game/voxel_game.dart' show BehaviorSlot;
 

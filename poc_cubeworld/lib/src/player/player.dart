@@ -663,7 +663,7 @@ class Player extends SceneBody implements Target {
       _finishTick(dt, input, gameplay, fwd, wish, sprinting);
       return;
     }
-    // Climbing (Cube World): push into a wall while holding jump. Behind the
+    // Climbing: push into a wall while holding jump. Behind the
     // `climbWalls` setting, off by default. The motor climbs it as a ladder.
     final wallClimb =
         Settings.instance.climbWalls && jumpHeld && wish.length > 0.1 && wallAhead(wish) && !inLiquid && stamina > 0.5;
@@ -886,7 +886,7 @@ class Player extends SceneBody implements Target {
   }
 
   /// Holding the attack button: ranged weapons keep firing at their own rate
-  /// (Cube World's staff spray); everything else mines the aimed block.
+  /// (the staff spray); everything else mines the aimed block.
   void _attackTick(double dt) {
     final style = weaponStyle();
     if (style == 'bow' || style == 'staff') {
@@ -1006,7 +1006,7 @@ class Player extends SceneBody implements Target {
     main.spawnProjectile(_muzzle(), dir * 26.0, _rangedDamage(staff, 0.6), this, 'bolt', 0.35, 3.0);
   }
 
-  /// Arc (right button with a staff): Cube World's cone, as five bolts across 50°.
+  /// Arc (right button with a staff): a cone of five bolts across 50°.
   void _castArc(String staff) {
     if (!hasMana(manaCost(staffArcMana))) {
       notify('Not enough mana');

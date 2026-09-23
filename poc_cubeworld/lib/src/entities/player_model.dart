@@ -7,7 +7,7 @@ import 'package:voxel_engine/core.dart';
 import 'voxel_mesh_builder.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 
-/// A Cube World style humanoid built from voxels, with procedural walk / swing
+/// A blocky humanoid built from voxels, with procedural walk / swing
 /// animation.
 class PlayerModel {
   static const double s = 0.055; // metres per voxel

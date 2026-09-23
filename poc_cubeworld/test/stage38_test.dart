@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/game/music.dart';
-import 'package:cubeworld_poc/src/game/settings.dart';
-import 'package:cubeworld_poc/src/world/voxel_world.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/game/music.dart';
+import 'package:voxel_game_minecraft/src/game/settings.dart';
+import 'package:voxel_game_minecraft/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:voxel_engine/core.dart';
 

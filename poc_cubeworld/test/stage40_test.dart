@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/game/game_state.dart';
-import 'package:cubeworld_poc/src/player/player.dart';
-import 'package:cubeworld_poc/src/world/voxel_world.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/game/game_state.dart';
+import 'package:voxel_game_minecraft/src/player/player.dart';
+import 'package:voxel_game_minecraft/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_engine/core.dart';

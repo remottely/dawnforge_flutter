@@ -43,7 +43,7 @@ class CreditsScreen extends StatefulWidget {
   static Future<List<String>> loadStages() async => parseStages(await rootBundle.loadString(roadmapAsset));
 
   static List<String> creditsLines(List<String> stages) => [
-        'CUBEWORLD POC', '', 'a Cube World + Minecraft clone, built to be played', '',
+        'VOXEL MINECRAFT', '', 'a Minecraft clone built on voxel_game, made to be played', '',
         'Engine', 'Flutter + flutter_scene 0.23 (Flutter GPU / Impeller), Dart ${Platform.version.split(' ').first}',
         'Dart for the game, a pool of isolates for chunk generation and meshing', '',
         'Fonts', 'the system fallback font (no font files)', '',

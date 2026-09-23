@@ -1,7 +1,7 @@
-# Dawnforge Cubeworld POC (Flutter) — the Cube World + Minecraft clone, ported to `flutter_scene`
+# Voxel Minecraft (Flutter) — a Minecraft clone, ported to `flutter_scene`
 
 **What this is.** A self-contained Flutter project on branch `poc_cubeworld` of the
-Dawnforge Flutter repo, in the worktree `../dawnforge_cubeworld_poc/`. It is the Flutter twin
+Dawnforge Flutter repo, in its folder `poc_cubeworld/` (the package is `voxel_game_minecraft`). It is the Flutter twin
 of the Godot POC at `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/`
 (branch `poc_cubeworld` of `tessera_project`): same game, same block table, same save
 format, same probe flags, ported file by file onto
@@ -28,7 +28,7 @@ tables; Godot's `CanvasItem` HUD became a `CustomPainter`; ENet became TCP + JSO
 cd poc_cubeworld
 flutter run -d macos                                   # Flutter GPU is enabled in Info.plist
 flutter build macos --debug                            # then:
-build/macos/Build/Products/Debug/cubeworld_poc.app/Contents/MacOS/cubeworld_poc \
+build/macos/Build/Products/Debug/voxel_game_minecraft.app/Contents/MacOS/voxel_game_minecraft \
   --screenshot=/tmp/shot.png --frames=300 --seed=1337 --new    # self-report, exits when captured
 flutter test                                           # tables, generator, mesher (pure Dart)
 ```
@@ -179,7 +179,7 @@ Apple silicon) with the arguments flutter_gpu_shaders' hook uses, `--gles-langua
 include path. A bundle is tied to the engine that compiled it: a stale one fails at boot with
 a message naming the script.
 
-Saves live in `~/Library/Application Support/com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/worlds/<name>/`
+Saves live in `~/Library/Application Support/com.remottely.voxelGameMinecraft/voxel_game_minecraft/worlds/<name>/`
 (`world.json` from the New World form, `blocks.bin` edit delta + `player.json`, the same bytes
 as the Godot POC). F2 writes a screenshot next to them.
 

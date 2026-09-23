@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
 import 'package:voxel_engine/core.dart';
-import 'package:cubeworld_poc/src/core/items.dart';
-import 'package:cubeworld_poc/src/core/species.dart';
-import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/game/inventory.dart';
-import 'package:cubeworld_poc/src/game/loot.dart';
-import 'package:cubeworld_poc/src/game/music.dart';
-import 'package:cubeworld_poc/src/game/sfx.dart';
-import 'package:cubeworld_poc/src/world/terrain_generator.dart';
+import 'package:voxel_game_minecraft/src/core/items.dart';
+import 'package:voxel_game_minecraft/src/core/species.dart';
+import 'package:voxel_game_minecraft/src/entities/mob.dart';
+import 'package:voxel_game_minecraft/src/game/inventory.dart';
+import 'package:voxel_game_minecraft/src/game/loot.dart';
+import 'package:voxel_game_minecraft/src/game/music.dart';
+import 'package:voxel_game_minecraft/src/game/sfx.dart';
+import 'package:voxel_game_minecraft/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 

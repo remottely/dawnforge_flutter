@@ -1,7 +1,7 @@
 import '../player/player.dart';
 import 'sfx.dart';
 
-/// A chain of small quests (Cube World style): kill / collect / craft / reach.
+/// A chain of small quests: kill / collect / craft / reach.
 /// One active at a time; rewards XP and items.
 class Quest {
   const Quest(this.id, this.title, this.text, this.kind, this.target, this.n, this.xp, this.items);

@@ -23,7 +23,7 @@ class Settings {
   bool viewBob = true; // the camera's walking sway; off for a still image
   bool tutorialDone = false; // stage 30: the guided first steps, shown once
 
-  /// Cube World's wall climbing: hold jump against a wall. Off by default;
+  /// Wall climbing: hold jump against a wall. Off by default;
   /// ladders climb either way. `--climb` turns it on for one run.
   bool climbWalls = false;
 

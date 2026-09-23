@@ -1,4 +1,4 @@
-# Architecture Ledger — poc_cubeworld
+# Architecture Ledger — voxel_game_minecraft
 
 > Where rule 21 writes. One entry per structural observation found mid-task that was
 > **not** the task. Four mandatory fields: `Lens`, `Evidence` (`file:line`), `Cost of

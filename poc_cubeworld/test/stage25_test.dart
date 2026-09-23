@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/core/items.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/core/items.dart';
 import 'package:voxel_engine/core.dart';
-import 'package:cubeworld_poc/src/entities/boat.dart';
-import 'package:cubeworld_poc/src/entities/item_drop.dart';
-import 'package:cubeworld_poc/src/game/inventory.dart';
-import 'package:cubeworld_poc/src/game/net.dart';
-import 'package:cubeworld_poc/src/world/voxel_world.dart';
+import 'package:voxel_game_minecraft/src/entities/boat.dart';
+import 'package:voxel_game_minecraft/src/entities/item_drop.dart';
+import 'package:voxel_game_minecraft/src/game/inventory.dart';
+import 'package:voxel_game_minecraft/src/game/net.dart';
+import 'package:voxel_game_minecraft/src/world/voxel_world.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 

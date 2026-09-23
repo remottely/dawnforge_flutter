@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cubeworld_poc/src/game/game_state.dart';
-import 'package:cubeworld_poc/src/game/settings.dart';
-import 'package:cubeworld_poc/src/game/tutorial.dart';
-import 'package:cubeworld_poc/src/game/worlds.dart';
-import 'package:cubeworld_poc/src/ui/credits_screen.dart';
-import 'package:cubeworld_poc/src/ui/settings_panel.dart';
+import 'package:voxel_game_minecraft/src/game/game_state.dart';
+import 'package:voxel_game_minecraft/src/game/settings.dart';
+import 'package:voxel_game_minecraft/src/game/tutorial.dart';
+import 'package:voxel_game_minecraft/src/game/worlds.dart';
+import 'package:voxel_game_minecraft/src/ui/credits_screen.dart';
+import 'package:voxel_game_minecraft/src/ui/settings_panel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Stage 30's pure pieces (Godot `--stage30` covers the rest in the app): the
@@ -220,7 +220,7 @@ void main() {
       expect(stages.length, rows);
       expect(stages.length, greaterThanOrEqualTo(33));
       expect(stages.first, 'Stage 0 — Worktree + project skeleton');
-      expect(stages, contains('Stage 13b — Ranged combat, Cube World style: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley'));
+      expect(stages, contains('Stage 13b — Ranged combat: simulation-owned projectiles, staff spray / arc, bow / fan, 8-way volley'));
       expect(stages, contains('Stage 29 — The Underworld, a second dimension'));
       expect(stages, contains('Stage 30 — Title screen, world list, creative mode, tutorial, credits, stats'));
       expect(stages.any((s) => s.contains('**') || s.endsWith('.')), isFalse);
@@ -237,7 +237,7 @@ void main() {
 
     test('the credits frame the stages', () {
       final lines = CreditsScreen.creditsLines(['Stage 1 — A', 'Stage 2 — B']);
-      expect(lines.first, 'CUBEWORLD POC');
+      expect(lines.first, 'VOXEL MINECRAFT');
       expect(lines, containsAllInOrder(['Engine', 'Fonts', 'Music and sound', 'Lineage', 'Stages', 'Stage 1 — A', 'Stage 2 — B', 'Thanks for playing.']));
       expect(lines.last, 'Esc closes');
     });

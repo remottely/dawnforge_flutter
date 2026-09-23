@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/core/items.dart';
-import 'package:cubeworld_poc/src/game/game_state.dart';
-import 'package:cubeworld_poc/src/game/playground.dart';
-import 'package:cubeworld_poc/src/game/rails.dart';
-import 'package:cubeworld_poc/src/game/worlds.dart';
-import 'package:cubeworld_poc/src/player/player.dart';
-import 'package:cubeworld_poc/src/world/terrain_generator.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/core/items.dart';
+import 'package:voxel_game_minecraft/src/game/game_state.dart';
+import 'package:voxel_game_minecraft/src/game/playground.dart';
+import 'package:voxel_game_minecraft/src/game/rails.dart';
+import 'package:voxel_game_minecraft/src/game/worlds.dart';
+import 'package:voxel_game_minecraft/src/player/player.dart';
+import 'package:voxel_game_minecraft/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:voxel_engine/core.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:cubeworld_poc/src/core/blocks.dart';
-import 'package:cubeworld_poc/src/world/terrain_generator.dart';
+import 'package:voxel_game_minecraft/src/core/blocks.dart';
+import 'package:voxel_game_minecraft/src/world/terrain_generator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Stage 42: nothing of a tree floats. Every block a tree writes touches the

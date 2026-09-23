@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
-import 'package:cubeworld_poc/src/core/species.dart';
-import 'package:cubeworld_poc/src/entities/mob.dart';
-import 'package:cubeworld_poc/src/player/player.dart';
+import 'package:voxel_game_minecraft/src/core/species.dart';
+import 'package:voxel_game_minecraft/src/entities/mob.dart';
+import 'package:voxel_game_minecraft/src/player/player.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_engine/core.dart';

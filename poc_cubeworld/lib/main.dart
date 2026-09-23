@@ -48,7 +48,7 @@ Future<void> main(List<String> rawArgs) async {
   await _lockLandscape();
   final args = parseArgs(rawArgs);
   final support = await getApplicationSupportDirectory();
-  final saveRoot = '${support.path}/dawnforge_cubeworld_poc';
+  final saveRoot = '${support.path}/voxel_game_minecraft';
   // Stage 24: the settings file sits beside worlds/ (Godot's user://settings.cfg).
   Settings.instance.path = '$saveRoot/settings.cfg';
   Settings.instance.loadFile();
@@ -61,18 +61,18 @@ Future<void> main(List<String> rawArgs) async {
   PacedScene.log = args.containsKey('--pace-probe');
   // Audio comes up in the background; the game plays silently until it does.
   Sfx.init();
-  runApp(CubeworldApp(args: args, saveRoot: saveRoot));
+  runApp(MinecraftApp(args: args, saveRoot: saveRoot));
 }
 
-class CubeworldApp extends StatelessWidget {
-  const CubeworldApp({super.key, required this.args, required this.saveRoot});
+class MinecraftApp extends StatelessWidget {
+  const MinecraftApp({super.key, required this.args, required this.saveRoot});
   final Map<String, String> args;
   final String saveRoot;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dawnforge Cubeworld POC',
+      title: 'Voxel Minecraft',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(useMaterial3: true),
       home: _Launcher(args: args, saveRoot: saveRoot),

@@ -1732,7 +1732,7 @@ class Game extends ChangeNotifier {
     _platesFired.clear();
   }
 
-  /// A weapon with a random bonus (Cube World style loot): rarity from the bonus size.
+  /// A weapon with a random bonus: rarity from the bonus size.
   Loot randomLootWeapon(math.Random rng, [int minBonus = 1]) {
     const pool = ['stone_sword', 'iron_sword', 'iron_dagger', 'bow', 'longbow', 'staff', 'diamond_sword', 'crystal_staff'];
     final id = pool[rng.nextInt(pool.length)];

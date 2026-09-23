@@ -1,4 +1,4 @@
-# Dawnforge Cubeworld (Flutter 3D) — Developer & AI Instructions
+# Voxel Minecraft (Flutter 3D) — Developer & AI Instructions
 
 > **This file governs `poc_cubeworld/` — except `packages/voxel_game/`.** It is the 3D
 > track: the voxel POC that worked and became a project of its own. The four-package voxel
@@ -24,8 +24,8 @@ Flutter · Dart · **`flutter_scene`** (Flutter GPU / Impeller — no Flame, no 
 
 Two things live here, and they are held to different standards (§Two codebases):
 
-- **`lib/` — the POC app (`cubeworld_poc`, ~22.5k lines).** A Cube World + Minecraft
-  clone, ported file by file from the Godot POC. Its brief was, and remains, *"não foque
+- **`lib/` — the POC app (`voxel_game_minecraft`, ~22.5k lines).** A Minecraft clone,
+  ported file by file from the Godot POC. Its brief was, and remains, *"não foque
   em arquitetura, foque em entregar o clone do jogo funcionando"*. It is the demo that
   proves the kit and the place features are tried first.
 - **`packages/voxel_game/` — the voxel kit (~17.7k lines, four packages at `0.1.0`, ready to publish, not published).** The
@@ -55,7 +55,7 @@ Dart through `MainFlutterWindow.swift`, which is what makes the probes work).
 | The Godot twin (the port's spec) | `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/` (branch `poc_cubeworld` of `tessera_project`) — read-only from here |
 | The 2D study track (sibling, paused at 0.78.0) | `../` — read-only from here, never imported |
 
-Saves: `~/Library/Application Support/com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/worlds/<slot>/`
+Saves: `~/Library/Application Support/com.remottely.voxelGameMinecraft/voxel_game_minecraft/worlds/<slot>/`
 — byte-compatible with the Godot POC's.
 
 ### The package graph
@@ -97,7 +97,7 @@ clone stops being one.
 
 1. **Dependencies point down, always.** `voxel_game` → everything; `voxel_scene` →
    `voxel_engine`; `sound_recipes` → nothing of ours. **No package imports
-   `package:cubeworld_poc`** — if the kit needs it, it moves into the kit.
+   `package:voxel_game_minecraft`** — if the kit needs it, it moves into the kit.
 2. **Inside `voxel_engine`, the five subjects obey its `test/architecture_test.dart`**
    (`core` ← `worldgen`/`content`/`signals`, `net` alone). A new subject folder declares
    its edges in that test or the suite fails. This test is what replaced the five packages
@@ -220,10 +220,10 @@ survives. Write it as prose, not as a bullet list of file names.
 
 ```
 poc(voxel): VC3 and VC4 — the subject guard, and the docs on four packages
-poc(cubeworld): stage 33 — the playground's arena refills from the gold button
+poc(minecraft): stage 33 — the playground's arena refills from the gold button
 ```
 
-`poc(voxel)` for the kit, `poc(cubeworld)` for the app; the plan step (`VK5.2`, `VC1`) in
+`poc(voxel)` for the kit, `poc(minecraft)` for the app; the plan step (`VK5.2`, `VC1`) in
 the subject or the body when there is one. The body says what and why.
 
 - **No version bump ritual.** The app stays `0.1.0+1`, the packages stay `0.1.0`. Nothing

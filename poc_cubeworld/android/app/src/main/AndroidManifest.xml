@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="cubeworld_poc"
+        android:label="voxel_game_minecraft"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- screenOrientation below is landscape from the launch theme onward, so

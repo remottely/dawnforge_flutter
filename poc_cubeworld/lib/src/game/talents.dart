@@ -1,4 +1,4 @@
-/// The talent tree (Cube World's skill points): one point per level from level
+/// The talent tree (skill points): one point per level from level
 /// 2, spent in the journal. Six talents every class shares plus one signature
 /// per class, three ranks each.
 class TalentDef {

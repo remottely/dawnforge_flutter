@@ -15,7 +15,7 @@ base=docs/baseline
 if [[ $mode == --check ]]; then out=$(mktemp -d); else out=$base; mkdir -p "$out"; fi
 
 flutter build macos --debug >/dev/null
-app=build/macos/Build/Products/Debug/cubeworld_poc.app/Contents/MacOS/cubeworld_poc
+app=build/macos/Build/Products/Debug/voxel_game_minecraft.app/Contents/MacOS/voxel_game_minecraft
 shots=$(mktemp -d)
 
 # A probe gets 240 s. On 2026-09-14 one --stage32 run hung for 9 minutes and the same
