@@ -291,6 +291,11 @@ on the two example apps. Then the four dry runs, in dependency order, reading ea
 (the `.pubignore` guard). `voxel_game` cannot be released before the three it depends on exist
 on pub.dev.
 
+**Found in VR3, for this step:** VR3 put `CLAUDE.md`, `AGENTS.md` and `docs/` (the plans and
+the ledger) at the kit's root, beside `PUBLISHING.md`, and today's `.pubignore` names none of
+them — so `voxel_game`'s tarball would ship the kit's rules, its four plans and its ledger.
+Decide what the package carries before the dry run, and read its file list against it.
+
 **One input is the developer's, not the plan's:** the new repository's URL, which fills
 `repository`, `homepage` and `issue_tracker`, and the license. Ask for both when this step
 opens; do not guess them. The app's overrides need no change — they already win over any
