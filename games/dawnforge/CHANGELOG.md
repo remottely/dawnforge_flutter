@@ -8,6 +8,13 @@
 > A new section is written as `## 0.0.0-NEXT` and stamped by the commit command
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.1
+
+### 🧹 Internal
+
+- Nothing in the game changed. The tools that build it were updated to their
+  newest small versions, and the lock files were saved.
+
 ## 0.78.0
 
 ### 🧹 Internal

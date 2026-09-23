@@ -8,6 +8,13 @@
 > Uma seção nova é escrita como `## 0.0.0-NEXT` e carimbada pelo comando de commit
 > (CLAUDE.md §Parallel sessions).
 
+## 0.78.1
+
+### 🧹 Internal
+
+- Nada mudou no jogo. As ferramentas que o constroem foram atualizadas para as
+  versões pequenas mais novas, e os arquivos de trava foram salvos.
+
 ## 0.78.0
 
 ### 🧹 Internal
