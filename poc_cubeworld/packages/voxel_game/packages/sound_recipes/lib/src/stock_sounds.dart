@@ -35,8 +35,8 @@ abstract final class SoundFamily {
   static const List<String> all = [stone, wood, earth, plant, glass, metal, liquid];
 }
 
-/// The kit's stock sounds, every one synthesised (the Cube World POC's set,
-/// with footsteps made the same way). Per material family `break_<family>`,
+/// The kit's stock sounds, every one synthesised (the set the kit was first
+/// played with, and footsteps made the same way). Per material family `break_<family>`,
 /// `place_<family>` and `step_<family>`; and `dig`, `hit`, `hurt`, `pickup`,
 /// `swing`, `shoot`, `splash`, `eat`, `click`, `door`, `levelup`, `explode`,
 /// `thunder`, `heartbeat`, `hurt_small`, `hurt_large`, `hurt_undead`,

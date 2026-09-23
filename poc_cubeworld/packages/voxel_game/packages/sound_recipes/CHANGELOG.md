@@ -10,3 +10,4 @@ the name went because nothing in it has anything to do with voxels.
 - `SoundBank`: plays recipes and asset files by name through `flutter_soloud`.
 - `SoundPlayer` / `SilentSounds` for silent tests and servers.
 - `MusicDirector`: music by mood, crossfaded.
+- `StockSounds`' dartdoc no longer names the game the set was first played in.

@@ -151,7 +151,7 @@ class InputMap<A extends Object> {
   /// What a tap on the world means, written by the game every time it re-aims:
   /// true presses the primary mouse button (the swing at whatever the
   /// crosshair is nearest to), false presses the secondary (place, open, use).
-  /// This is Minecraft's own split, and the reason a phone needs no separate
+  /// It is the mouse's own split, and the reason a phone needs no separate
   /// attack button.
   bool touchTapPrimary = false;
 

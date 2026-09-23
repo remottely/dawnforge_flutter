@@ -1,6 +1,6 @@
 name: voxel_game
 description: >-
-  A Minecraft-like in a few lines: declare blocks, world generation, the player
+  A voxel sandbox in a few lines: declare blocks, world generation, the player
   and mobs, and get a playable voxel world on flutter_scene. The kit over
   voxel_engine, voxel_scene and sound_recipes.
 version: 0.0.0

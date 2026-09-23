@@ -13,8 +13,8 @@ enum BehaviorSlot {
   attack,
 }
 
-/// One thing a creature of type [M] does in a game of type [G], Minecraft's
-/// "goal": it asks to start, runs while it may continue, and competes for
+/// One thing a creature of type [M] does in a game of type [G], a "goal":
+/// it asks to start, runs while it may continue, and competes for
 /// [slots] by [priority] (lower wins).
 ///
 /// Engine-neutral: the kit's [Behavior] is a `Goal<Mob, VoxelGame>`, and a

@@ -11,7 +11,7 @@ enum CameraMode {
 
 /// The player, declared.
 class PlayerSpec {
-  /// A player; the defaults are Minecraft's feel.
+  /// A player; the defaults are a block sandbox's usual feel.
   const PlayerSpec({
     this.hp = 20.0,
     this.reach = 5.0,

@@ -10,7 +10,7 @@ import 'shoulder_orbit.dart';
 import 'view_bob.dart';
 
 /// The player's camera: the eye in first person, a [ShoulderOrbit] in third
-/// person that is pulled in by walls, and Minecraft's [ViewBob] on foot.
+/// person that is pulled in by walls, and a [ViewBob] on foot.
 class ViewCamera {
   /// The third-person seat.
   final ShoulderOrbit orbit = ShoulderOrbit();

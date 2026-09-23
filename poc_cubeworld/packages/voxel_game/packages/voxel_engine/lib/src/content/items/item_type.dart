@@ -56,7 +56,7 @@ class ItemType {
   final String? tool;
 
   /// Its tool tier: 0 hand, then up (wood 1, stone 2, iron 3, diamond 4 in a
-  /// Minecraft-like).
+  /// classic block sandbox).
   final int tier;
 
   /// Melee damage.

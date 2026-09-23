@@ -3,8 +3,8 @@ import 'package:voxel_engine/content.dart';
 
 import '../core/voxel_game.dart';
 
-/// The bag and crafting: every slot (the hotbar last, as Minecraft lays it
-/// out), a stack on the cursor to move between slots, and the recipes of
+/// The bag and crafting: every slot (the hotbar last, as block sandboxes lay
+/// it out), a stack on the cursor to move between slots, and the recipes of
 /// [station] (`''` for the hand) with what each needs. Click a slot to pick
 /// up or put down; right-click to take or leave one.
 ///

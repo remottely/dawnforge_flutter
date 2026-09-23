@@ -5,7 +5,7 @@ import 'package:voxel_engine/core.dart';
 
 /// How a body moves on foot.
 class MotorTuning {
-  /// The kit's defaults: a Minecraft-paced walker.
+  /// The kit's defaults: a walker paced like a block-sandbox player.
   const MotorTuning({
     this.jumpVelocity = 8.6,
     this.groundAccel = 14.0,

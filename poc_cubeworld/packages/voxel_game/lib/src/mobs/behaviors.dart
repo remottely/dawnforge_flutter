@@ -8,7 +8,7 @@ import '../entities/target.dart';
 import 'goal.dart';
 import 'mob.dart';
 
-/// One thing a mob does, Minecraft's "goal": it asks to start, runs while it
+/// One thing a mob does, a "goal": it asks to start, runs while it
 /// may continue, and competes for [slots] by [priority] (lower wins). A mob's
 /// brain is a list of them; add your own by subclassing, or inline with
 /// [Behavior.custom]. It is a [Goal] over the kit's [Mob], chosen by a

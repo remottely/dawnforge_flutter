@@ -208,7 +208,7 @@ void main() {
     }
   });
 
-  /// Walks [b] along +x at 4 m/s with a Minecraft-style auto-step: a blocked
+  /// Walks [b] along +x at 4 m/s with a block-sandbox auto-step: a blocked
   /// body on the floor jumps 8.6 m/s (the player's jump) when a full step
   /// would fit, else the same jump anyway (a mob that tries its luck).
   double walkAndJump(VoxelBody b, double seconds) {

@@ -5,7 +5,7 @@ import 'package:vector_math/vector_math.dart';
 import '../math/ivec3.dart';
 
 /// A small voxel model: a map from voxel to linear rgb colour, the way
-/// creatures, held items and drops are drawn (Cube World style). These are
+/// creatures, held items and drops are drawn (coloured cubes, no textures). These are
 /// the tools that paint one; a renderer turns it into a mesh through
 /// [VoxelModel.arrays].
 abstract final class VoxelModel {

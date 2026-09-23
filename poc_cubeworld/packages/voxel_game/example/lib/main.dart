@@ -1,4 +1,4 @@
-// A small Minecraft-like in one declaration: `flutter run -d macos`.
+// A small voxel sandbox in one declaration: `flutter run -d macos`.
 import 'package:voxel_game/voxel_game.dart';
 
 void main() => runVoxelGame(game, title: 'Voxel game', saveSlot: 'world1');

@@ -45,7 +45,7 @@ enum VoxelAction {
   /// Pause; free the mouse (Escape, start).
   pause;
 
-  /// The default bindings: Minecraft's keys and an Xbox / PlayStation pad.
+  /// The default bindings: the usual WASD keys and an Xbox / PlayStation pad.
   static const InputBindings<VoxelAction> defaultBindings = InputBindings(
     keys: {
       moveForward: [PhysicalKeyboardKey.keyW],

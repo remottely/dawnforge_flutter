@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart';
 import 'package:voxel_engine/core.dart';
 
-/// Minecraft's view bobbing: the eye drops by `|cos|` of the walk phase,
+/// View bobbing: the eye drops by `|cos|` of the walk phase,
 /// sways sideways by `sin` at a fraction of that, and picks up a breath of
 /// roll and nose-up on each footfall. The cycle is advanced by distance, so
 /// it keeps step with the feet at any speed. It moves the eye only, never the

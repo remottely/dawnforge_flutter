@@ -24,3 +24,6 @@ First version, not published.
 - Day and night sky, sounds, circuits (`SignalSpec`), liquids.
 - Save slots, and hosting or joining a multiplayer world.
 - Hooks: `onBlockBroken`, `onBlockPlaced`, `onMobKilled`, `onTick`, `GameSystem`.
+- The package description and the dartdoc say what the kit does, not which game it was
+  measured against: "a voxel sandbox in a few lines". The library's header names the
+  three packages it sits on as they are called today.

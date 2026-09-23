@@ -52,8 +52,8 @@ class VoxelBody {
   bool headInLiquid = false;
 
   /// Standing on the floor with the head in the open: the body wades through a
-  /// shallow liquid instead of swimming in it. Minecraft walks a one-block
-  /// puddle; only water deep enough to cover the head is swum.
+  /// shallow liquid instead of swimming in it. A one-block puddle is walked;
+  /// only water deep enough to cover the head is swum.
   bool get wading => inLiquid && onFloor && !headInLiquid;
 
   /// The liquid kind at the feet cell, or [VoxelBlockDef.noLiquid].

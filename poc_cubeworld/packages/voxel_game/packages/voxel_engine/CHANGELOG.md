@@ -22,3 +22,5 @@ changed in the move; `package:voxel_core/voxel_core.dart` became
 - `net.dart`: `NetHost`, `NetConnection` and `connectToHost` over TCP.
 - `voxel_engine.dart` exports all five.
 - A sixth example, `voxel_engine_example.dart`, runs the subjects together.
+- Dartdoc describes the behaviour in its own words instead of by reference to another
+  game (`ItemType.tier`, `VoxelModel`, `VoxelBody.wading`).

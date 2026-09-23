@@ -1,6 +1,6 @@
 name: voxel_game_example
 description: >-
-  voxel_game's example: a Minecraft-like declared in one file — blocks,
+  voxel_game's example: a voxel sandbox declared in one file — blocks,
   a four-biome world with towers, a player, animals and night creatures.
 publish_to: none
 version: 0.0.0

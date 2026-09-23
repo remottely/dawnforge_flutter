@@ -1,7 +1,7 @@
-/// A Minecraft-like in a few lines: declare blocks, world generation, the
-/// player and mobs in a [VoxelGameSpec] and run it. The kit over voxel_core,
-/// voxel_scene, voxel_worldgen and voxel_content, which it re-exports, so a
-/// game imports this one library.
+/// A voxel sandbox in a few lines: declare blocks, world generation, the
+/// player and mobs in a [VoxelGameSpec] and run it. The kit over voxel_engine,
+/// voxel_scene and sound_recipes; it re-exports the parts of voxel_engine and
+/// sound_recipes a game declares with, so a game imports this one library.
 library;
 
 export 'package:sound_recipes/sound_recipes.dart' show MusicDirector, SilentSounds, SoundBank, SoundFamily, SoundPlayer, SoundRecipe, StockSounds;
