@@ -469,9 +469,10 @@ packages:
   sound_recipes:
     dependency: "direct main"
     description:
-      path: "packages/voxel_game/packages/sound_recipes"
-      relative: true
-    source: path
+      name: sound_recipes
+      sha256: "65ad98b0ad0a5ad958ececff3efccce31a07ffb10c278e23f801c2139d132d0b"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0-dev"
   source_span:
     dependency: transitive
@@ -548,23 +549,26 @@ packages:
   voxel_engine:
     dependency: "direct main"
     description:
-      path: "packages/voxel_game/packages/voxel_engine"
-      relative: true
-    source: path
+      name: voxel_engine
+      sha256: "660990bcc6ee9a61ae4583e11449e16c3991c39134773c384ef6f189cb506524"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0-dev"
   voxel_game:
     dependency: "direct main"
     description:
-      path: "packages/voxel_game"
-      relative: true
-    source: path
+      name: voxel_game
+      sha256: "94389806d8b27cdd55bb96ad2779e6196c750a9f9f856a113e23b0af5ef24cf9"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0-dev"
   voxel_scene:
     dependency: "direct main"
     description:
-      path: "packages/voxel_game/packages/voxel_scene"
-      relative: true
-    source: path
+      name: voxel_scene
+      sha256: "60520493a428b23de3f85026df984ede3a47b08c50f5799bf5f8f45386ab35c0"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0-dev"
   web:
     dependency: transitive
