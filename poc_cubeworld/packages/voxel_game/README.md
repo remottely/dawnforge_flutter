@@ -11,6 +11,22 @@ re-exports what a game needs, so a game imports only this library.
 
 > **Status: 0.0.0.** The API can still change. Not published yet.
 
+## The four packages
+
+This folder is `voxel_game` and the three packages it sits on, which live under
+`packages/`:
+
+```
+voxel_engine    pure Dart        core · worldgen · content · signals · net
+voxel_scene     flutter_scene    chunk views, terrain material, rigs, outlines, sky   → voxel_engine
+sound_recipes   flutter_soloud   sounds synthesised from recipes, no audio files      → (nothing of ours)
+voxel_game      Flutter          VoxelGameSpec, loop, input, player, cameras, mobs,   → all three
+                                 spawns, drops, HUD, save, host / join
+```
+
+A game needs only `voxel_game`. The other three are there for a game that wants less:
+`voxel_engine` alone runs a world with no screen (a server, a test, a worker isolate).
+
 ## Features
 
 - `VoxelGameSpec`: blocks, items, recipes, world, player, mobs, sky, sounds, circuits, liquids.
@@ -28,12 +44,19 @@ re-exports what a game needs, so a game imports only this library.
 
 ## Install
 
-`voxel_game` is at 0.0.0 and not on pub.dev yet. Depend on it by path (or by git):
+`voxel_game` is at 0.0.0 and not on pub.dev yet. Depend on it from a checkout, and
+override all four packages by path — a plain `path:` on `voxel_game` alone does not
+resolve, because it asks for the other three from pub.dev:
 
 ```yaml
 dependencies:
-  voxel_game:
-    path: ../packages/voxel_game
+  voxel_game: ^0.0.0
+
+dependency_overrides:
+  voxel_game:    {path: ../voxel_game}
+  voxel_engine:  {path: ../voxel_game/packages/voxel_engine}
+  voxel_scene:   {path: ../voxel_game/packages/voxel_scene}
+  sound_recipes: {path: ../voxel_game/packages/sound_recipes}
 ```
 
 Dart SDK `^3.13.0`.
@@ -105,3 +128,20 @@ flutter run -d macos
 [`example/lib/main.dart`](example/lib/main.dart) is a small game in one file:
 twelve blocks, two biomes with trees and coal, a few recipes, a player with a
 pickaxe, sheep by day and zombies by night.
+
+## Working on the kit
+
+This folder is a pub workspace: `pubspec.yaml` lists the three packages and the two
+example apps, and one `flutter pub get` here resolves them all. The suite, from this
+folder:
+
+```sh
+flutter analyze                                         # zero issues, all four packages
+flutter test                                            # voxel_game
+(cd packages/voxel_engine  && dart test)                # pure Dart
+(cd packages/voxel_scene   && flutter test)
+(cd packages/sound_recipes && flutter test)
+```
+
+The rules the code is held to are in [`CLAUDE.md`](CLAUDE.md); releasing is
+[`PUBLISHING.md`](PUBLISHING.md).

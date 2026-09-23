@@ -10,6 +10,12 @@ It shares NOTHING with `lib/src/core` of the study track on purpose: the brief i
 as the Godot one — *"não foque em arquitetura, foque em entregar o clone do jogo
 funcionando"*. Nothing here is merged as-is.
 
+**The kit.** The voxel packages this app grew — `voxel_engine`, `voxel_scene`,
+`sound_recipes` and `voxel_game` — live in [`packages/voxel_game/`](packages/voxel_game/),
+a pub workspace of its own with its own [README](packages/voxel_game/README.md) and rules,
+laid out to leave for a repository of its own. This app is not part of that workspace: it
+consumes the kit through four `dependency_overrides` by path in `pubspec.yaml`.
+
 **Lineage.** Every file in `lib/src/` is a port of its Godot sibling (`src/**.gd` and
 `csharp/*.cs`). The C# `TerrainGenerator` and `ChunkMesher` became pure-Dart classes that
 run on a pool of isolates (`chunk_worker.dart`); the GDScript autoloads became static
@@ -150,13 +156,14 @@ Captures: `--shot=combat` (a zombie mid-knockback, the flashes, the numbers and 
 
 ### The terrain shader (stage 31)
 
-The lit terrain draws with `shaders/terrain.frag`, flutter_scene's standard lit fragment
-shader with the voxel light term folded into the albedo (`lib/src/world/terrain_material.dart`).
-It is compiled by hand into `assets/shaders/terrain.shaderbundle` (committed, a plain pubspec
-asset; there is no app-level build hook):
+The lit terrain draws with the kit's shader, `voxel_scene`'s `shaders/terrain.frag`:
+flutter_scene's standard lit fragment shader with the voxel light term folded into the albedo
+(`TerrainMaterial`, `packages/voxel_game/packages/voxel_scene/lib/src/terrain_material.dart`).
+It is compiled by hand into that package's `assets/shaders/terrain.shaderbundle` (committed, a
+plain pubspec asset; there is no build hook):
 
 ```bash
-cd poc_cubeworld
+cd packages/voxel_game/packages/voxel_scene
 dart tool/build_shaders.dart   # after editing shaders/*.frag, and after every Flutter upgrade
 ```
 

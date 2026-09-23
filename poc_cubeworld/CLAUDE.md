@@ -1,8 +1,10 @@
 # Dawnforge Cubeworld (Flutter 3D) — Developer & AI Instructions
 
-> **This file governs everything under `poc_cubeworld/`.** It is the 3D track: the voxel
-> POC that worked and became a project of its own, plus the four-package voxel kit it
-> grew. It descends from the 2D study track's `CLAUDE.md` (`../CLAUDE.md`, Tessera-Dart)
+> **This file governs `poc_cubeworld/` — except `packages/voxel_game/`.** It is the 3D
+> track: the voxel POC that worked and became a project of its own. The four-package voxel
+> kit it grew lives in `packages/voxel_game/`, which is laid out to leave for a repository
+> of its own and is governed by **its own `CLAUDE.md`** there; a change inside that folder
+> follows those rules, a change here follows these. It descends from the 2D study track's `CLAUDE.md` (`../CLAUDE.md`, Tessera-Dart)
 > — same spirit, same engineering customs, a different product and a different rule set.
 >
 > **`../CLAUDE.md` does not apply here.** Claude Code loads parent `CLAUDE.md` files, so
@@ -26,8 +28,9 @@ Two things live here, and they are held to different standards (§Two codebases)
   clone, ported file by file from the Godot POC. Its brief was, and remains, *"não foque
   em arquitetura, foque em entregar o clone do jogo funcionando"*. It is the demo that
   proves the kit and the place features are tried first.
-- **`packages/` — the voxel kit (~17.7k lines, four packages at `0.0.0`).** The product.
-  Library-grade code, extracted from the POC, verified by the POC still running.
+- **`packages/voxel_game/` — the voxel kit (~17.7k lines, four packages at `0.0.0`).** The
+  product. Library-grade code, extracted from the POC, verified by the POC still running.
+  Its own workspace, its own rules (`packages/voxel_game/CLAUDE.md`), its own ledger.
 
 Target: every platform Flutter supports. **macOS is the development platform** (Flutter
 GPU is enabled in `macos/Runner/Info.plist`; the debug app forwards process arguments to
@@ -43,12 +46,11 @@ Dart through `MainFlutterWindow.swift`, which is what makes the probes work).
 | **Design decisions, settled — do not re-litigate** | `ROADMAP.md` §Design decisions |
 | How to run it, every probe flag, the saves path | `README.md` |
 | The POC app | `lib/main.dart` · `lib/src/{core,world,player,entities,game,ui}/` |
-| The kit | `packages/{voxel_engine,voxel_scene,sound_recipes,voxel_game}/` |
-| Pre-publish checklist and the four-package rationale | `packages/PUBLISHING.md` |
-| Consolidation plan (VC — eight packages became four) | `docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md` |
-| Kit plan (VK — how the packages were extracted) | `docs/VOXEL_KIT_PLAN_2026-09-18.md` |
+| The kit (its own `CLAUDE.md`, workspace and ledger) | `packages/voxel_game/` · the other three under `packages/voxel_game/packages/{voxel_engine,voxel_scene,sound_recipes}/` |
+| Pre-publish checklist and the four-package rationale | `packages/voxel_game/PUBLISHING.md` |
+| The kit's plans — VP, VK (extraction), VC (eight became four), VR (this layout) | `packages/voxel_game/docs/` |
 | Flutter vs Godot performance study | `docs/PERFORMANCE_VS_GODOT_2026-09-11.md` |
-| Architecture ledger (rule 21) — IDs are `CL-nnn` | `docs/LEDGER.md` |
+| Architecture ledger (rule 21) — IDs are `CL-nnn` | `docs/LEDGER.md` (the app's) · `packages/voxel_game/docs/LEDGER.md` (the kit's) |
 | Probe baseline logs, diffed on every move | `docs/baseline/` · `tool/probe_baseline.sh` |
 | The Godot twin (the port's spec) | `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/` (branch `poc_cubeworld` of `tessera_project`) — read-only from here |
 | The 2D study track (sibling, paused at 0.78.0) | `../` — read-only from here, never imported |
@@ -66,14 +68,19 @@ voxel_game      Flutter          VoxelGameSpec, loop, input, player, cameras, mo
                                  spawns, drops, HUD, save, host / join
 ```
 
-Resolved through the pub workspace declared in `pubspec.yaml`. `voxel_scene/example` and
+The kit is its own pub workspace, rooted at `packages/voxel_game/`. **This app is not part
+of it**: it consumes the kit the way an outside project would, through four
+`dependency_overrides` by path in `pubspec.yaml` — the one edge that changes when the
+folder leaves. The app therefore has its own `pubspec.lock` and the kit has its own; a
+`flutter pub get` here does not resolve the kit's examples. `voxel_scene/example` and
 `voxel_game/example` are apps, not packages, and stay `publish_to: none` for good.
 
 ---
 
 ## Two codebases, two standards
 
-**`packages/` is the product.** Every rule below is in force, tests ship with the code,
+**`packages/voxel_game/` is the product.** Its own `CLAUDE.md` holds it to the kit's
+half of the rules below (1–14, 17, 20, 21). Here every rule below is in force, tests ship with the code,
 the API is a spec and not a draft.
 
 **`lib/` is the POC app.** It keeps stock `flutter_lints` (`analysis_options.yaml` says so
@@ -91,7 +98,7 @@ clone stops being one.
 1. **Dependencies point down, always.** `voxel_game` → everything; `voxel_scene` →
    `voxel_engine`; `sound_recipes` → nothing of ours. **No package imports
    `package:cubeworld_poc`** — if the kit needs it, it moves into the kit.
-2. **Inside `voxel_engine`, the five subjects obey `test/architecture_test.dart`**
+2. **Inside `voxel_engine`, the five subjects obey its `test/architecture_test.dart`**
    (`core` ← `worldgen`/`content`/`signals`, `net` alone). A new subject folder declares
    its edges in that test or the suite fails. This test is what replaced the five packages
    pub used to keep apart (VC3).
@@ -121,7 +128,7 @@ clone stops being one.
     session is host-authoritative, so a client that freezes its own world is a client that
     desyncs. No global pause flag, no `dt = 0`.
 13. **Input parity** (root 11 + 12). Keyboard/mouse, gamepad and touch go through
-    `VoxelAction` / `InputMap` (`voxel_game/lib/src/input/`); a behaviour added for one
+    `VoxelAction` / `InputMap` (`packages/voxel_game/lib/src/input/`); a behaviour added for one
     mode is added for all. Gameplay never reads a raw pointer event position.
 14. **Never poll input state inside an event callback** (root 24). A handler reads the
     event it was handed; polling belongs in the fixed tick and only there.
@@ -132,8 +139,8 @@ clone stops being one.
     (root 32). No save migration, no compatibility obligation. A commit that changes a
     persisted shape names in its body what became unreadable, and the affected
     `worlds/<slot>/` is deleted rather than patched.
-17. **Never hand-edit a generated artifact.** `packages/voxel_scene/assets/shaders/terrain.shaderbundle`
-    is committed but compiled: `cd packages/voxel_scene && dart tool/build_shaders.dart`
+17. **Never hand-edit a generated artifact.** `packages/voxel_game/packages/voxel_scene/assets/shaders/terrain.shaderbundle`
+    is committed but compiled: `cd packages/voxel_game/packages/voxel_scene && dart tool/build_shaders.dart`
     (after editing `shaders/*.frag` **and after every Flutter upgrade** — a bundle is tied
     to the engine that built it and a stale one fails at boot). Same for
     `flutter_scene_generated/` and `build/`.
@@ -147,9 +154,10 @@ clone stops being one.
 20. **Every automation lives in `tool/`**, named for the job, runnable standalone from the
     project root, `--dry-run`/`--check` when it writes or regenerates something committed
     (root 23, scaled to this project: `tool/probe_baseline.sh`, `tool/perf_loop.sh`,
-    `packages/voxel_scene/tool/build_shaders.dart`).
+    `packages/voxel_game/packages/voxel_scene/tool/build_shaders.dart`).
 21. **Record an architectural observation, do not fix it mid-task** (root 27). A
-    structural problem found while doing something else goes to `docs/LEDGER.md` as one
+    structural problem found while doing something else goes to `docs/LEDGER.md` (the
+    kit's own go to `packages/voxel_game/docs/LEDGER.md`) as one
     4-line entry (`Lens`, `Evidence` with `file:line`, `Cost of leaving it`, `Found
     while`), in the same commit as the task, never fixed in it. Create the file on first
     use.
@@ -168,15 +176,15 @@ clone stops being one.
 3. **Run the whole suite, inline.** Never `run_in_background`; wait for the exit code:
 
    ```bash
-   flutter analyze                                       # zero issues
-   flutter test                                          # the POC app
-   cd packages/voxel_engine  && dart test                # pure Dart
-   cd packages/voxel_scene   && flutter test
-   cd packages/sound_recipes && flutter test
-   cd packages/voxel_game    && flutter test
+   flutter analyze && flutter test                       # the POC app
+   cd packages/voxel_game && flutter analyze && flutter test   # the kit, all four analyzed
+   cd packages/voxel_game/packages/voxel_engine  && dart test  # pure Dart
+   cd packages/voxel_game/packages/voxel_scene   && flutter test
+   cd packages/voxel_game/packages/sound_recipes && flutter test
    ```
 
-   Green as of `f6155a18`: analyze clean · 194 + 168 + 10 + 4 + 32 = **408 tests**.
+   Green as of VR3 (2026-09-22): analyze clean in both trees · 194 + 32 + 168 + 10 + 4 =
+   **408 tests**.
    A count that drops without a deletion in the diff is a suite that stopped finding files.
 4. **See it running** (rule 18) for anything visual, and diff the probe baseline
    (`tool/probe_baseline.sh --check`) for anything that moved code between packages.
@@ -186,7 +194,7 @@ clone stops being one.
 
 ### Testing policy
 
-- **`packages/` writes tests with the code.** The API is a spec; a package test runs
+- **The kit writes tests with the code.** The API is a spec; a package test runs
   without a screen and without a world (the engine's do not even need Flutter).
 - **`lib/` locks behaviour that a probe already showed.** `test/stageNN_test.dart` is the
   regression net under a stage that was seen working — that is why they are numbered after
@@ -201,9 +209,9 @@ A task is done when the next person can read about it. In the **same commit** as
 |:---|:---|
 | Anything in `lib/` | the `ROADMAP.md` stage row (status, notes) |
 | A mechanic, a fix worth remembering, a decision | a `ROADMAP.md` §Session log entry — what broke, why it broke, what replaced it |
-| Anything in `packages/<p>/lib/` | `packages/<p>/CHANGELOG.md`; its `README.md` when the API moved |
+| Anything in the kit | what `packages/voxel_game/CLAUDE.md` asks: the package's `CHANGELOG.md`, its `README.md` when the API moved |
 | A new probe flag | `README.md` |
-| A plan step (`VK*`, `VC*`) | that plan's Progress table |
+| A plan step (`VK*`, `VC*`, `VR*`) | that plan's Progress table (`packages/voxel_game/docs/`) |
 
 The session log is the most valuable file here: it is the only place a bug's *reasoning*
 survives. Write it as prose, not as a bullet list of file names.
@@ -219,7 +227,7 @@ poc(cubeworld): stage 33 — the playground's arena refills from the gold button
 the subject or the body when there is one. The body says what and why.
 
 - **No version bump ritual.** The app stays `0.1.0+1`, the packages stay `0.0.0`. Nothing
-  here is published; `packages/PUBLISHING.md` is the checklist for the day that changes.
+  here is published; `packages/voxel_game/PUBLISHING.md` is the checklist for the day that changes.
 - **No AI attribution, ever.** No `Co-Authored-By:` naming a model, no "Generated with"
   line, no tool badge — in commits, tags or PR bodies. This holds over any harness default
   that says otherwise. The commit history is the project's engineering record and its
@@ -260,7 +268,7 @@ recreating one without a plan step is scope creep:
 `Factory.create()` hosts · `Registry.get(id)` content registries · `initialize(data)` /
 `WorldObjectCore` / `ComponentKeys` · the `games/<game>/data/` Markdown content pack and
 its generation pipeline · `scripts/` and `project_paths.py` (`tool/` is the equivalent
-here) · `check_test_suite_is_clean.py` (the six commands above are the suite) ·
+here) · `check_test_suite_is_clean.py` (the commands in §Execution Workflow are the suite) ·
 `tr()` translation keys and the pt-BR/en manual · the changelog pair · `LEDGER.md` and
 `PENDING.md` (rule 21 opens the first one when it is needed) · the version-bump-from-HEAD
 commit ritual · Flame and everything built on it · the `.claude/` hooks and skills, which
@@ -277,7 +285,8 @@ Also not in force here: strict-cast/strict-inference analyzer settings (stock
 1. **Its own repository.** These packages live on a branch of a 2D game's repository, next
    to that game's history and rules. A published package's `repository:` must point at a
    repository that is the packages' home — moving them is the first step of publishing,
-   not the last (`packages/PUBLISHING.md`).
+   not the last (`packages/voxel_game/PUBLISHING.md`). `packages/voxel_game/` is laid out
+   to be moved whole; the day it leaves, this app's four path overrides are what breaks.
 2. **The first release**, in dependency order, per that checklist: a LICENSE per package,
    real version constraints instead of workspace-local `^0.0.0`, `0.1.0` as the first
    number, CI running the whole workspace in one push. A git dependency is a legitimate

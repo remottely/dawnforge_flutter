@@ -70,8 +70,41 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-22 s26** — the relayout runs: `VR0`–`VR3` of
+  [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md),
+  one commit each. The kit now lives in `packages/voxel_game/` — `voxel_game` at the root
+  as package and workspace root, the other three under its `packages/`, with
+  `PUBLISHING.md`, the four voxel plans, three ledger entries and a `CLAUDE.md` of its own
+  — and this app reaches it through four `dependency_overrides` by path, with a
+  `pubspec.lock` of its own. Nothing changed behaviour: 408 tests before and after every
+  step, and the probe logs identical after each one.
+  - **The baseline had to be taken again, and s23's trap is why.** `tool/probe_baseline.sh
+    --check` against `docs/baseline/` fails on this Mac before anything moves (1512x900 @2x
+    against logs cut at 1600x900 @1x), so `VR0` recorded HEAD's own raw logs twice with a
+    scratch copy of the script and every later gate diffed against those. One more thing
+    the diff showed: the stage 32 footsteps line is compared on one side only, because its
+    current wording carries `0.35 s` and the filter drops any line with a time in seconds.
+    Re-cutting `docs/baseline/` on this machine would fix both; it is not a relayout step.
+  - **Leaving the workspace thinned the app's lock and moved no version.** The kit's lock
+    was seeded from the app's before the first `pub get`. Afterwards the app's had lost 25
+    hosted packages, all of them `voxel_engine`'s dev dependency `test` and what it pulls, and the kit's
+    had only demoted `flutter_soloud` and `hooks` from direct to transitive (they were the
+    app's direct dependencies). A parser compared every hosted entry: no version moved.
+  - **The terms (`VR2`).** 21 comments in 19 files lost "Minecraft", "Cube World" and "POC"
+    and kept their reasons; `voxel_game`'s pub description is now "a voxel sandbox in a few
+    lines". Its library header had also been naming `voxel_core`, `voxel_worldgen` and
+    `voxel_content` since `VC` deleted them. The shader bundle, recompiled after the
+    `.frag` comments changed, came out byte-identical. `McBrightness` kept its name.
+  - **The docs (`VR3`).** The kit's `CLAUDE.md` carries rules 1–14, 17, 20 and 21
+    renumbered 1–17, written from the kit's root. Its ledger took `CL-005`, `CL-008`,
+    `CL-009` with their IDs and gives new entries `KL-nnn`, so the two ledgers cannot hand
+    out the same number once they are in two repositories. The kit's `README.md` had been
+    telling outside projects to depend on it with a plain `path:`, which cannot resolve in
+    this layout; it now shows the four overrides.
+  - **Next:** `VR4` — it waits on the developer's choice of license.
+
 - **2026-09-22 s25** — the relayout is replanned before any of it ran:
-  [`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md) is now
+  [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md) is now
   `VR0`–`VR5`, and s24's shape is dead. The app does not become a `demo/` of the kit: it
   will leave for a repository of its own, apart from the kit, and that move is a later
   conversation. So nothing about the app moves — not its folder, not `cubeworld_poc`, not
@@ -92,7 +125,7 @@ the Godot POC's, so the two roadmaps line up.
   "poc" leave the kit's 19 non-`.md` files and stay in the app, which *is* the POC.
 
 - **2026-09-21 s24** — the relayout is planned, nothing moved:
-  [`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md)
+  [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md)
   (`VR0`–`VR6`). This folder becomes the `voxel_game` package itself — the other three
   packages hang under its `packages/`, and today's root app moves whole into `demo/` as
   `voxel_game_demo`. Two findings decided the shape. The first: a pub workspace **root**

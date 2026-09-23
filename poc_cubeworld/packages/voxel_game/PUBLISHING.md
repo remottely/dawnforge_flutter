@@ -1,10 +1,13 @@
 # Publishing these packages
 
 Nothing here is published. Every package is at `0.0.0` with `publish_to: none`,
-and they resolve each other through the pub workspace declared in
-`poc_cubeworld/pubspec.yaml`. This file is the checklist for the day that
-changes. The reasoning behind the four-package split is in
-[`../docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md`](../docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md).
+and they resolve each other through the pub workspace declared in this folder's
+`pubspec.yaml`: `voxel_game` is both the workspace root and a published package,
+and the other three live under `packages/`. This file is the checklist for the
+day that changes. The reasoning behind the four-package split is in
+[`docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md`](docs/VOXEL_CONSOLIDATION_PLAN_2026-09-19.md),
+and how the folder got this shape in
+[`docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md).
 
 ## The four packages
 
@@ -15,15 +18,24 @@ changes. The reasoning behind the four-package split is in
 | `sound_recipes` | Flutter + flutter_soloud | — |
 | `voxel_game` | Flutter | all three |
 
-`voxel_game/example` and `voxel_scene/example` are apps, not packages. They stay
+`example/` and `packages/voxel_scene/example/` are apps, not packages. They stay
 `publish_to: none` for good.
+
+**`.pubignore` is a requirement, not a tidy-up.** `voxel_game` sits at the root of
+the folder that holds the other three packages, and `pub publish` bundles every
+file under the package it is not told to ignore. Without the `.pubignore` beside
+`pubspec.yaml` (`packages/`, `build/`, `.dart_tool/`, `example/macos/`,
+`example/build/`), every release of `voxel_game` would ship `voxel_engine`,
+`voxel_scene` and `sound_recipes` inside its own tarball. Read the file list the
+dry run prints for `voxel_game` every time.
 
 ## Before the first release
 
-1. **A repository of its own.** These live on the `poc_cubeworld` branch of a
-   game repository, next to that game's history and its own rules. A published
-   package's `repository:` has to point at a repository that is the packages'
-   home. Moving them is the first step, not the last.
+1. **A repository of its own — the next thing that happens.** This folder is
+   laid out to be that repository as it stands: moved out whole, its root is the
+   package you install, and nothing in it reaches outside it. Until then it lives
+   on the `poc_cubeworld` branch of a game repository, and a published package's
+   `repository:` has to point at the packages' own home.
 2. **A license.** One `LICENSE` per package, the same one, chosen by the
    developer. Without it the code is "all rights reserved" to everyone who finds
    it, and pub.dev docks the score for it.
@@ -45,10 +57,11 @@ Always in dependency order, because a package cannot be published against
 versions that do not exist yet:
 
 ```sh
-cd packages/voxel_engine   && dart pub publish --dry-run
-cd packages/sound_recipes  && flutter pub publish --dry-run
-cd packages/voxel_scene    && flutter pub publish --dry-run
-cd packages/voxel_game     && flutter pub publish --dry-run
+# from this folder
+(cd packages/voxel_engine  && dart pub publish --dry-run)
+(cd packages/sound_recipes && flutter pub publish --dry-run)
+(cd packages/voxel_scene   && flutter pub publish --dry-run)
+flutter pub publish --dry-run                                  # voxel_game itself
 ```
 
 Then the same four without `--dry-run`, in that order, bumping the constraint in
@@ -77,7 +90,7 @@ dependencies:
   voxel_engine:
     git:
       url: https://github.com/<you>/<repo>.git
-      path: packages/voxel_engine
+      path: packages/voxel_engine   # voxel_game itself has no path: it is the root
       ref: <a tag or a commit>
 ```
 
