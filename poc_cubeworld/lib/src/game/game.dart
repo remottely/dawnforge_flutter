@@ -13,6 +13,7 @@ import 'package:vector_math/vector_math.dart';
 
 import '../core/blocks.dart';
 import '../core/items.dart';
+import '../ui/paced_scene.dart';
 import 'package:voxel_engine/core.dart';
 import '../core/species.dart';
 import '../entities/boat.dart';
@@ -175,7 +176,7 @@ class Game extends ChangeNotifier {
   /// Stage 30: set by the launcher; the pause menu's "Save & back to title"
   /// (Godot's `change_scene_to_file("res://menu.tscn")`).
   void Function()? exitToTitle;
-  final Scene scene = Scene();
+  final Scene scene = PacedScene(); // the glyph atlas survives a busy GPU (paced_scene.dart)
   late VoxelWorld world;
   late Player player;
   final Node entities = Node(name: 'Entities');

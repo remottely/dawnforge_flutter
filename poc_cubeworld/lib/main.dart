@@ -11,6 +11,7 @@ import 'src/game/settings.dart';
 import 'src/game/sfx.dart';
 import 'src/game/worlds.dart';
 import 'src/ui/game_view.dart';
+import 'src/ui/paced_scene.dart';
 import 'src/ui/title_screen.dart';
 
 /// `--k=v` becomes `args['--k='] = v`; a bare `--flag` becomes `args['--flag'] = ''`.
@@ -57,6 +58,7 @@ Future<void> main(List<String> rawArgs) async {
   if (args.containsKey('--stage30')) Settings.instance.path = '$saveRoot/settings_probe30.cfg';
   Worlds.root = '$saveRoot/worlds'; // stage 30: the world list's slots
   await Scene.initializeStaticResources();
+  PacedScene.log = args.containsKey('--pace-probe');
   // Audio comes up in the background; the game plays silently until it does.
   Sfx.init();
   runApp(CubeworldApp(args: args, saveRoot: saveRoot));

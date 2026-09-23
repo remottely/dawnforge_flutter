@@ -70,6 +70,35 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
+- **2026-09-23 s28** — the menu's letters turned to noise, and the fix is to stop showing
+  the 3D scene before the GPU has finished it. Hovering a title button made the others
+  flicker. The playground panel was unreadable. In play a few letters broke. The move of
+  the kit to pub.dev was not the cause: the published code and the terrain shader bundle
+  are byte-identical to the path copy. The trigger is load. With radius 0 or 1 (25
+  chunks) the vista's text is clean; with the full 81 chunks it breaks, and it breaks on
+  every capture once a second process is using the GPU. Allocating 256 MB of buffers
+  without drawing does not break it, and neither does rendering the scene without
+  drawing its picture. The Impeller source bundled with the SDK explains why. Impeller
+  uploads new glyphs through its transient buffer, which it reuses every 4 frames with no
+  GPU fence on Metal (`kHostBufferArenaSize`). A Flutter frame that samples the scene's
+  texture waits on the GPU until the scene's command buffers finish, but the raster
+  thread keeps building frames. A late frame then copies glyph bytes that a newer frame
+  has already overwritten. The GPU ran ~2.7 frames behind on average, with peaks near 4.
+  `lib/src/ui/paced_scene.dart` (`PacedScene`, used by the title vista and by `Game`)
+  records each scene frame into a picture. A frame is drawn only after the completion
+  tracker (`rendererSubmissions`) reports its submissions done. A new frame is submitted
+  only when none is in flight, because flutter_scene draws into a ring of two swapchain
+  textures. Limiting frames in flight while still drawing the newest picture was tried
+  first and was not enough: 3 of 4 captures under load still broke. Under load the old
+  build broke every capture and `PacedScene` none of seven. At idle the scene renders on
+  about half the vsyncs (156 of 300; ~60 Hz on this 120 Hz display) and shows one frame
+  late. The HUD's FPS went from 57 to 85, because the UI no longer queues behind the GPU.
+  Probe: `--title-probe --open-playground --pace-probe`. To reproduce the bug, run two
+  other copies of the app first. The real fix belongs upstream (Impeller's host buffer,
+  or flutter_scene's `SceneView`). The kit's `VoxelGameWidget` draws through a plain
+  `SceneView` and is exposed the same way. It lives in another repository now, so that
+  finding goes to the kit's session.
+
 - **2026-09-23 s27** — `VR4` and `VR5` of
   [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md):
   the four packages are ready to publish. Each is `0.1.0` under MIT, points at

@@ -19,6 +19,7 @@ import '../player/player.dart';
 import 'package:voxel_scene/voxel_scene.dart';
 import '../world/voxel_world.dart';
 import 'credits_screen.dart';
+import 'paced_scene.dart';
 import 'settings_panel.dart';
 import 'world_list.dart';
 
@@ -55,7 +56,7 @@ class TitleScreen extends StatefulWidget {
 }
 
 class _TitleScreenState extends State<TitleScreen> {
-  final Scene _scene = Scene();
+  final Scene _scene = PacedScene();
   VoxelWorld? _world;
   bool _disposed = false;
   bool _music = false;
