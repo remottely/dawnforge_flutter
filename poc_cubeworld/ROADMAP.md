@@ -74,14 +74,14 @@ the Godot POC's, so the two roadmaps line up.
 - **2026-09-23 s30** — the app is renamed `voxel_game_minecraft`, ahead of its move into the
   kit's repository as an example for the kit's users. About 95% of what was built here is
   Minecraft, not Cube World, so the name says Minecraft now: the Dart package, the
-  macOS/iOS/Android product and bundle ids (`com.remottely.voxelGameMinecraft`,
+  macOS/iOS/Android product and bundle ids (`com.example.voxelGameMinecraft`,
   `com.example.voxel_game_minecraft`), the binary the probes launch, the window, title and
   credits text ("Voxel Minecraft"), the save folder, and the commit scope `poc(minecraft)`.
   Comments that credited a mechanic to Cube World (climbing, talents, staff spray, bonus
   loot) keep the mechanic and drop the credit. What still says cubeworld is a real name
   somewhere else: this folder, the branch, the Godot twin's path, and this log's history.
   The bundle id and the save folder both moved, so worlds saved under
-  `com.remottely.cubeworldPoc/dawnforge_cubeworld_poc/` are no longer found; delete them.
+  `com.example.voxelGameMinecraft/dawnforge_cubeworld_poc/` are no longer found; delete them.
   Before the rename the multiplayer was re-checked, because it looked abandoned: it is not.
   A `--host --wait-peer --stage21b` process and a `--join=127.0.0.1 --wait-peer --stage21b
   --strike` process on one Mac got the hello (seed + edits), mob puppets, the host's clock,

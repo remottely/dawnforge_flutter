@@ -55,7 +55,7 @@ Dart through `MainFlutterWindow.swift`, which is what makes the probes work).
 | The Godot twin (the port's spec) | `~/Documents/godot/remottely/dawnforge_cubeworld_poc/poc_cubeworld/` (branch `poc_cubeworld` of `tessera_project`) — read-only from here |
 | The 2D study track (sibling, paused at 0.78.0) | `../` — read-only from here, never imported |
 
-Saves: `~/Library/Application Support/com.remottely.voxelGameMinecraft/voxel_game_minecraft/worlds/<slot>/`
+Saves: `~/Library/Application Support/com.example.voxelGameMinecraft/voxel_game_minecraft/worlds/<slot>/`
 — byte-compatible with the Godot POC's.
 
 ### The package graph

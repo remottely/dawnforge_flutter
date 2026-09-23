@@ -179,7 +179,7 @@ Apple silicon) with the arguments flutter_gpu_shaders' hook uses, `--gles-langua
 include path. A bundle is tied to the engine that compiled it: a stale one fails at boot with
 a message naming the script.
 
-Saves live in `~/Library/Application Support/com.remottely.voxelGameMinecraft/voxel_game_minecraft/worlds/<name>/`
+Saves live in `~/Library/Application Support/com.example.voxelGameMinecraft/voxel_game_minecraft/worlds/<name>/`
 (`world.json` from the New World form, `blocks.bin` edit delta + `player.json`, the same bytes
 as the Godot POC). F2 writes a screenshot next to them.
 
