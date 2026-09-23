@@ -11,8 +11,9 @@ the Godot POC's, so the two roadmaps line up.
   shader (`shaders/terrain.frag`, flutter_scene's standard lit shader plus the voxel light term)
   scales the sky half by the time of day. PBR roughness 1, specular 0, lit by one sun (Godot's
   0.6) with cascaded shadows and a constant-diffuse ambient. No textures. Sun scale 0.6,
-  ambient 0.6, ACES; distance fog linear in the horizon colour, from 45% to 92% of the render
-  distance, so the last loaded chunks dissolve into the sky (s7). In first person the walk is
+  ambient 0.6, ACES; distance fog exponential-squared in the horizon colour, from 72% of the
+  render distance to full at 97%, so the last loaded chunks dissolve into the sky and the
+  rest stays clear (s7, s29). In first person the walk is
   carried by the hand in the corner of the screen (`HandView`, s9), not by the eye, which only
   nudges.
 - **World**: dense chunks 16×128×16 (`Uint8List`, byte = block index), sea level 46, radius 8
@@ -69,6 +70,18 @@ the Godot POC's, so the two roadmaps line up.
 | 33 | **Playground: every feature around one spawn (Flutter only).** A sixth title button, **Playground**, opens a panel (what it is, the keys, a class row) whose *Build a new playground* makes a new slot through `Worlds.createPlayground` (`world.json` `type: playground`, creative, seed 42) and boots it; `GameState.playground` rides the stats block and `WorldEntry.playground` labels the list row *Playground*. **Generator** (`TerrainGenerator.playground`, passed through `VoxelWorld` and the isolate factory): a 144 x 144 plaza (`plazaMin` -64 .. `plazaMax` 80) at `plazaFloor` 64, plains, no caves, no decoration within 4, no structure within 48, the natural height eased back over `plazaBlend` 16. **`Playground`** (`lib/src/game/playground.dart`): nine `PlaygroundZone`s of 48 in a 3 x 3 grid around (8, 8), one built per 0.25 s poll once all its chunks are loaded (a write into an unloaded chunk is dropped), `built` saved as `playground` in `player.json`; hub (glider tower, 5 chests of all 171 items, stations, the hub waypoint and the world tour: 8 structure kinds within 48 chunks and 7 biomes within 1.5 km as block-less waypoint labels), block gallery (118 blocks + two liquid tanks), shapes & building, redstone (the stage 27 rows + a lamp row), rails (a 24 x 14 loop with a two-high hill and a powered stretch, `railLoop`), water / lava / portal, farm & animals, monster arena (`arenaMobs` 14, a spawner block ticked by the playground, `bossPlates` 6 summoning on the step, the gold refill button polled on its lit edge), light & mining. Creatures carry `Mob.exhibit`: the spawner neither despawns nor counts them and the save does not keep them, so the zoo and arena are placed again on every boot; villagers, companions, carts and the boat are placed once and saved. F7 / F8 / F9 (`GameAction.cycleWeather` / `cycleTime` / `rebuildExhibit`) cycle the weather, the time of day and rebuild the zone under the player. `ZoneCard` shows the exhibit's card for 12 s after entering; the HUD names the aimed block; the journal's waypoint tab runs in two columns past ten; the fresh kit is 36 showcase items, level 10 and 10 talent points. Probe `--playground` (`--shot=`, `--shots=`, `--pg-checks`), `--title-probe --open-playground`. Unit tests `test/playground_test.dart`. | ✅ | seed 42: `zones built=9/9 in 1119 ms, edits=11719 exhibit mobs=27 villagers=2 pets=3 carts=2 boats=1 chests=6 waypoints=16 gallery=118 library=171`, plaza surface 64, 0 structures inside; checks: steps / half step / climb wall / ladder / stairs roof / iron door cells right, troll summoned 1 and a second step keeps 1 with the boss bar, arena 15 -> 14 -> 15 through the gold button, F7 Rain, F8 0.50 then 0.74, F9 wall air -> oak_planks, save built 9 / flag / 16 waypoints / 5 pets; the reload boot read the nine back with `edits=0` and 27 exhibit creatures placed again. Seen: the aerial plaza, all nine exhibits, the pool from underwater, the arena inside, the dark hall, the steps, the journal's tour in two columns, the title panel. |
 
 ## Session log
+
+- **2026-09-23 s29** — the fog stops looking like weather. On a clear noon the world read
+  as overcast: the linear ramp from s7 began at 45% of the render distance, so with the
+  default 8 chunks everything past ~58 m was already washing out, half of the view. The
+  fog is only there to hide the finite horizon, so it now lives only at the horizon. It is
+  `FogMode.exponentialSquared` with `start` at 72% of the distance to the nearest unloaded
+  chunk and a density that puts it at 98% at 97% (`1 - exp(-x²)` hits 98% where x² = ln 50).
+  The curve is flat at first and steep at the end: about a third at 80%, 87% at 90%. Seen
+  with `--seed=1337 --new --time=0.45 --weather=clear`, from the ground (the village and
+  the sea stay sharp, the sea dissolves only at the horizon) and from the air with
+  `--fly --tp=60,95,60` (no chunk edge shows). Rain and storms still pull the edge in by
+  up to 35%, as before.
 
 - **2026-09-23 s28** — the menu's letters turned to noise, and the fix is to stop showing
   the 3D scene before the GPU has finished it. Hovering a title button made the others

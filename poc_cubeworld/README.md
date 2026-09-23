@@ -262,7 +262,7 @@ the world as before; `--title-probe` forces the title even then.
   (Godot holds 120 fps at 2.3 M faces, `flutter_scene` falls to 70 at 2.2 M).
 - **`flutter_scene` carries the whole rendering stack** the Godot POC leaned on: vertex
   colours through `MeshGeometry.fromArrays`, a `GradientSkySource` that doubles as the
-  `SunLight` with cascaded shadows, linear distance fog in the horizon colour, ACES tone
+  `SunLight` with cascaded shadows, exponential-squared distance fog in the horizon colour, only at the edge, ACES tone
   mapping, `PointLightComponent` for the held torch. 225 chunks / ~300k faces render at 60
   fps on an M-series Mac in a debug build.
 - **Isolates replace `WorkerThreadPool`.** Generation and meshing are pure Dart on three
