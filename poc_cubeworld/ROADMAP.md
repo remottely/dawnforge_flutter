@@ -70,7 +70,7 @@ the Godot POC's, so the two roadmaps line up.
 
 ## Session log
 
-- **2026-09-23 s27** — `VR4` of
+- **2026-09-23 s27** — `VR4` and `VR5` of
   [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md):
   the four packages are ready to publish. Each is `0.1.0` under MIT, points at
   `github.com/fluttely/voxel_game`, and depends on the others with `^0.1.0`, and the
@@ -88,8 +88,14 @@ the Godot POC's, so the two roadmaps line up.
     `voxel_scene` imports a private `flutter_scene` file, and patch releases of that
     package have happened before. The developer chose the warning. `PUBLISHING.md` now
     says a dry run ending with only that warning is green.
-  - **Next:** `VR5` — a copy of the kit taken out of the repository resolves, analyzes,
-    tests and dry-runs alone.
+  - **`VR5` closes the plan.** A copy of the kit's 237 tracked files, taken outside the
+    repository and `git init`-ed, resolved to the same lock, analyzed clean, passed its
+    214 tests and gave the same four dry runs; nothing in it names this app outside the
+    `.md` lineage. The folder is ready to leave.
+  - **Next:** not in this plan. The developer moves `packages/voxel_game/` into
+    `github.com/fluttely/voxel_game` (with or without `git subtree split` history). This
+    app's four overrides then point at nothing, and choosing their replacement — git,
+    a sibling checkout, or pub.dev once `0.1.0` is out — is the app's own move.
 
 - **2026-09-22 s26** — the relayout runs: `VR0`–`VR3` of
   [`packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md`](packages/voxel_game/docs/VOXEL_RELAYOUT_PLAN_2026-09-21.md),

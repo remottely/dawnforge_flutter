@@ -37,7 +37,7 @@ repository of its own, apart from the kit, and that move is a later conversation
 | VR2 The terms leave the kit's implementation | **done** 2026-09-22: 21 rewrites in the 19 files, the gate grep empty over tracked files and over the disk (build dirs and locks aside) · `terrain.shaderbundle` recompiled and byte-identical · 408 tests, probe logs identical to VR0's · the library header also stopped naming the pre-consolidation packages · `McBrightness` in `terrain.frag` kept its name (outside the grep, and renaming it changes the compiled bundle) | `grep -ri 'minecraft\|cube ?world\|\bpoc\b'` over every non-`.md` file under `packages/voxel_game/` returns nothing |
 | VR3 The docs realigned to the two trees | **done** 2026-09-22: every markdown link in both `CLAUDE.md`s/`AGENTS.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md`, both ledgers and the moved plans resolves; backticked paths in the current-state docs resolve (the plans' and the session log's old paths are history and stay) · the kit's `CLAUDE.md` renumbers the kit's rules 1–17 · its ledger holds `CL-005`/`008`/`009` and numbers new entries `KL-nnn` · its `README.md` install section now shows the four overrides a plain `path:` cannot replace · the app's `AGENTS.md` resynced to its `CLAUDE.md` | every path in both `CLAUDE.md`s, both `README.md`s, `ROADMAP.md`, `PUBLISHING.md` and the moved plans resolves |
 | VR4 Publish readiness for the four packages | **done** 2026-09-23: MIT `LICENSE` (the repo root's text, `2026 kevinkobori`) in each · `homepage`/`repository`/`issue_tracker` on `github.com/fluttely/voxel_game` (the nested three at `tree/main/packages/<p>`) and five `topics` each · `0.1.0` everywhere, `^0.1.0` between the four, in both examples and in the app · `publish_to: none` only on the two examples · two descriptions trimmed under 180 characters · `.pubignore` also keeps out `CLAUDE.md`, `AGENTS.md`, `PUBLISHING.md`, `docs/`, `tool/` and repeats `.gitignore`'s lines · the nested three **cannot dry-run in place** (below), so `tool/publish_package.sh` runs them from a git-less copy · dry runs: `voxel_engine` 127 KB / 0 warnings, `sound_recipes` 7 KB / 0, `voxel_scene` 468 KB / 1, `voxel_game` 71 KB / 1 — the one warning is the exact `flutter_scene: 0.23.0` pin, kept by the developer's decision · every file list read · 408 tests, analyze clean in both trees | `pub publish --dry-run` green for `voxel_engine`, `sound_recipes`, `voxel_scene`, `voxel_game` |
-| VR5 Ready to move — the kit folder stands alone | todo | a copy of `packages/voxel_game/` taken outside the repo resolves, analyzes, tests and dry-runs with nothing else beside it |
+| VR5 Ready to move — the kit folder stands alone | **done** 2026-09-23 at `2c3f2f34`: a copy of exactly the folder's 237 tracked files, taken outside the repository, resolved to a `pubspec.lock` identical to the in-tree one · analyze clean · 32 + 168 + 10 + 4 = **214 tests** · after `git init` in the copy (the kit's future home is a git repository), the four dry runs through `tool/publish_package.sh` gave the same archives and warnings as in-tree (127 KB / 0, 7 KB / 0, 468 KB / 1, 71 KB / 1 — the pin), and `pub publish` inside a nested package failed safe · the grep empty over tracked files and over the disk · every relative link in the kit's docs resolves in the copy · **the plan is closed; the folder is handed over** | a copy of `packages/voxel_game/` taken outside the repo resolves, analyzes, tests and dry-runs with nothing else beside it |
 
 ---
 
@@ -332,7 +332,16 @@ cd "$SCRATCH/voxel_game" && flutter pub get && flutter analyze && flutter test
 ```
 
 and `grep -rn 'poc_cubeworld\|cubeworld_poc\|\.\./\.\./\.\.' packages/voxel_game` over
-non-`.md` files returns nothing. Then the step is closed and the folder is handed over. The
+non-`.md` files returns nothing. Then the step is closed and the folder is handed over.
+
+**As run (2026-09-23).** The copy was stricter than the `rsync` above. It took exactly
+`git ls-files` (237 files), because an `rsync` of the disk also carries untracked local
+state (`.flutter-plugins-dependencies`, the examples' `ephemeral/`), and the new repository
+will receive none of it. The dry runs ran after a `git init` in the copy: the kit will
+live in a git repository, and that is where VR4's parent-ignore trap applies. Both gates
+held; numbers in the Progress row. The kit's `CLAUDE.md` names `poc_cubeworld` and
+Dawnforge only under "while it still lives inside…", which reads correctly from either
+place. The
 move itself — and whether it carries history (`git subtree split
 --prefix=poc_cubeworld/packages/voxel_game` keeps only the history under the new path; the
 extraction commits before VR1 stay here) — is the developer's.
